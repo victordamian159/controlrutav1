@@ -1,0 +1,211 @@
+<div class="card">
+    <p-growl [value]="msgs"></p-growl>
+                            <p-gmap 
+                                #gmap
+                                [options]="options" 
+                                [overlays]="overlays"
+                                [style]="{'width':'100%','height':'460px'}" 
+                                (onMapClick)="handleMapClick($event)"
+                                (onOverlayClick)="handleOverClick($event)"
+                                (onOverlayDragEnd)="handleDragEnd($event)">
+                            </p-gmap>
+    <!--barra para pendientes de envio-->
+	<div class="card-header">
+
+		<div id="loader" style="display: none">
+			<i class="fa-spinner fa-spin fa-2x"> </i> Getting values
+		</div>
+
+		<span >Pendientes de Envio</span>
+
+	</div>
+
+    <!--agregando estilos card de bootstrap-->
+    <!--Ruta-->
+	<div class="card-block" style="padding:3">
+		<div class="card-title ">
+            <!--caja de texto para buscar-->
+			<input placeholder="Buscar..." type="text"  id="gb1" #filtroGlobal />
+            <!--para la busquedar-->
+			<span class="text-xs-right" >
+                <!--
+				<button (click)="addEmitido()" pButton icon="fa-file-text-o" label="Nuevo" class="btn btn-succes"></button>
+                -->
+                <button type="button" class="btn btn-succes" data-toggle="modal" data-target="#mydata">Nuevo</button>
+			</span>
+		</div>
+
+		<div class="card-text">
+            <h4>Registro de Ruta</h4>
+            <!--paginacion de la filas de la datatable-->
+			<p-dataTable [value]="rutasPresentar" [rows]="10" [paginator]="true"  
+                
+                [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal" 
+                scrollable="true"  scrollWidth="100%" selectionMode="single"
+                [(selection)]="selectedRutaPresentar" (onRowSelect)="onRowSelect($event)">
+
+                    <!--<p-column *ngFor="let col of columnDefs" [field]="col.field" [header]="col.header"></p-column>-->
+                    <!--botones para la 1era columa -->
+                    <p-column styleClass="col-button" [style]="{'width':'6em'}">
+
+                        <!--Boton actualizar-->
+                        <template pTemplate="header">
+                            <button type="button" pButton icon="fa-refresh"></button>
+                        </template>
+                        
+                        <!--Botones de cada fila-->
+                        <template let-col let-envioPresentar="rowData" pTemplate="body" >
+                            <!--Boton editar-->
+                            <button type="button" pButton (click)="editEmitido(envioPresentar.Id)" icon="fa-pencil-square-o" class="btn">EDit</button>
+                            <!--Boton eliminar-->
+                            <button type="button" pButton (click)="confirmaDeleteEmitido(envioPresentar.Id,envioPresentar.TramNumero)" icon="fa-trash" class="btn">Eliminar</button>					
+                            <!--Boton mapa-->
+                            <button type="button" pButton (click)="mapa" class="btn"></button>
+                        </template>          
+
+                    </p-column>
+                    <!--Nombre de las columnas de datatable-->
+                    <p-column field="RuId" header="Ruta Id" [sortable]="true" [style]="{'width':'8em'}" hidden="true"></p-column>
+                    <p-column field="EmId" header="Emp. Id" [sortable]="true" [style]="{'width':'8em'}" hidden="true"></p-column>
+                    <p-column field="RuDescripcion" header="Descripcion" [sortable]="true" [style]="{'width':'25em'}" ></p-column>
+                    <p-column field="RuFechaCreacion" header="Creacion" [sortable]="true" [style]="{'width':'10em'}" ></p-column>
+                    <p-column field="RuRegMunicipal" header="Registro Munic." [sortable]="true" [style]="{'width':'12em'}" ></p-column>
+                    <p-column field="RuKilometro" header="Kilometro" [sortable]="true" [style]="{'width':'8em'}" hidden="true"></p-column>
+                    <p-column field="RuActivo" header="Activo" [sortable]="true" [style]="{'width':'5em'}" hidden="true" ></p-column>
+                    <p-column field="UsId" header="Usuario" [sortable]="true" [style]="{'width':'8em'}" ></p-column>
+                    <p-column field="UsFechaReg" header="Fecha Registro" [sortable]="true" [style]="{'width':'10em'}"></p-column>
+			</p-dataTable>
+		</div>
+
+         <!--Modal boton registro-->
+           <div class="modal fade" id="mydata" tabindex="-1" role="dialog" aria-labelledby="mymodaltitle">
+               <div class="modal-dialog" role="document">
+                   <div class="modal-content">
+                       <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h5 class="modal-title" id="mymodaltitle">Registro Ruta</h5>
+                       </div>
+                       <div class="modal-body">
+                           <form>
+                               <div class="form-group row">
+                                   <label for="descripcion" class="col-4 col-form-label">Descripcion: </label>
+                                   <div class="col-8">
+                                        <textarea class="form-control" id="descripcion" row="4" [(ngModel)]="Ruta.RuDescripcion" name="descripcion" ></textarea>
+                                   </div>
+                               </div>
+                               <div class="form-group row">
+                                   <label for="fechacreacion" class="col-4 col-form-label">Fecha Creacion:</label>
+                                   <div class="col-8">
+                                        <input type="date" class="form-control" id="fechacreacion" [(ngModel)]="Ruta.RuFechaCreacion" name="fcreacion">
+                                   </div>
+                               </div>
+                               <div class="form-group row">
+                                   <label for="regmunicipal" class="col-4 col-form-label">Nro. Registro:</label>
+                                   <div class="col-8">
+                                        <input type="text" class="form-control" id="regmunicipal" [(ngModel)]="Ruta.RuRegMunicipal" name="regmunicipal">
+                                   </div>
+                               </div>
+                               <div class="form-group row">
+                                   <label for="kilometro" class="col-4 col-form-label">Kilometro: </label>
+                                   <div class="col-8">
+                                        <input type="number" class="form-control" id="kilometro" [(ngModel)]="Ruta.RuKilometro" name="kilometro">
+                                   </div>
+                               </div>
+                               <div class="form-group row">
+                                   <label for="iduser" class="col-4 col-form-label">Usuario: </label>
+                                   <div class="col-8">
+                                        <input type="input" class="form-control" id="iduser" readonly [(ngModel)]="Ruta.UsId" name="userid">
+                                   </div>
+                               </div>
+                               <div class="form-group row">
+                                   <label for="fecharegruta" class="col-4 col-form-label">Fecha Registro: </label>
+                                   <div class="col-8">
+                                        <input type="date" class="form-control" id="fecharegruta" readonly [(ngModel)]="Ruta.UsFechaReg" name="fregistro">
+                                   </div>
+                               </div>
+                           </form>
+                       </div>
+                       <div class="modal-footer">
+                           <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                           <button type="button" class="btn btn-primary">Guardar</button>
+                       </div>
+                   </div>
+               </div>
+           </div>
+	</div>
+
+    <!--detalle ruta-->
+    <div class="card-block" style="padding: 3">
+        <h4>Lista de Puntos de Control</h4>
+        <div class="card-title">
+            <input placeholder="Buscar..." type="text" id="gb2" #filtroGlobal/>
+            <span class="text-xs-right">
+                <!--
+                <button (click)="unafuncion" pButton icon="fa-file-text-o" label="Mapa" class="btn btn-succes"></button>
+                -->
+                <button type="button" class="btn btn-succes" data-toggle="modal" data-target="#mymapa">Mapa</button>
+            </span> 
+        </div>
+
+        <div class="card-text">
+            <p-dataTable [value]="rutaDetallepresentar" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal" 
+                        scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedrutaDetallepresentar" (onRowSelect)="onRowSelect($event)">
+                        <!--primera columna-->
+                        <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                            <template pTemplate="header">
+                                <button type="button" pButton icon="fa-refresh"></button>
+                            </template>
+
+                            <template let-col let-envioPresentar="rowData" pTemplate="body">
+                                <button type="button" pButton (click)="editEmitido(envioPresentar.Id)" icon="fa-pencil-square-o" class="btn">Editar</button>
+                                <button type="button" pButton (click)="confirmaDeleteEmitido(envioPresentar.Id, envioPresentar.TramNumero)" icon="fa-trash" class="btn">Eliminar</button>
+                                <button type="button" pButton (click)="mapa" class="btn"></button>
+                            </template>
+                        </p-column>
+                        <!--demas columnas-->
+                        <p-column field="RuId"            header="ID Ruta"      [sortable]="true" [style]="{'width':'10.5em'}" hidden="true"></p-column>
+                        <p-column field="RuDeIndex"       header="N° Punto"     [sortable]="true" [style]="{'width':'10em'}"></p-column>
+                        <p-column field="RuDeDescripcion" header="Descripcion"  [sortable]="true" [style]="{'width':'25em'}" hidden="true"></p-column>
+                        <p-column field="Latitud"         header="Latitud"      [sortable]="true" [style]="{'width':'8em'}" hidden="true"></p-column>
+                        <p-column field="Longitud"        header="Longitud"     [sortable]="true" [style]="{'width':'8em'}"  hidden="true"></p-column>
+                        <p-column field="UsId"            header="Usuario"      [sortable]="true" [style]="{'width':'8em'}" ></p-column>
+                        <p-column field="UsFechaReg"      header="Fecha Registro" [sortable]="true" [style]="{'width':'8em'}" ></p-column>
+            </p-dataTable>
+        </div>
+
+        <div class="modal fade" id="mymapa" tabindex="-1" role="dialog" aria-labelledby="mymaparuta" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="mymaparuta">Mapa de la Ciudad</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <!--
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                        -->
+                        <!--(click)="funcione en el app.component.ts"-->
+                        <button type="button" pButton label="Clear" (click)="clear()" ></button>
+                        <button type="button" pButton label="Editar" (click)="editar()" ></button>
+                        <button type="button" pButton label="Zoom +" (click)="zoomIn(gmap.getMap())" ></button>
+                        <button type="button" pButton label="Zoom -" (click)="zoomOut(gmap.getMap())" ></button>
+                        <button type="button" pButton label="Terminar Ruta" (click)="ultimalinea()" ></button>
+                        <button type="button" pButton label="Guardar" (click)="guardar()" ></button>
+                        <button type="button" pButton label="Deshacer" (click)="deshacer()" ></button>
+                    </div>
+                </div>
+            </div>
+        </div><!--final modal mapa-->
+    </div><!--final ruta detalle-->
+
+</div>

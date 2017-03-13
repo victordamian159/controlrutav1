@@ -1,0 +1,53 @@
+<div class="card">
+	<div class="card-header">
+		<div id="loader" style="display: none">
+			<i class="fa-spinner fa-spin fa-2x"> </i> Getting values
+		</div>
+		<span >Pendientes de Envio</span>
+	</div>
+	<div class="card-block" style="padding:3">
+
+		<div class="card-title ">
+			<input placeholder="Buscar..." type="text"  id="gb1" #filtroGlobal />
+			<span class="text-xs-right" >
+				<button (click)="addEmitido()" pButton icon="fa-file-text-o" label="Nuevo"
+					class="btn btn-succes" >                   
+				</button>
+			</span>
+		</div>
+
+		<div class="card-text">
+
+			<p-dataTable [value]="rutasPresentar" [rows]="10" [paginator]="true"  
+			[pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal" 
+			scrollable="true"  scrollWidth="100%" selectionMode="single" 
+			[(selection)]="selectedRutaPresentar" (onRowSelect)="onRowSelect($event)">
+
+				<!--<p-column *ngFor="let col of columnDefs" [field]="col.field" [header]="col.header"></p-column>-->
+				<p-column styleClass="col-button" [style]="{'width':'6em'}">
+
+					<!--Boton actualizar-->
+					<template pTemplate="header">
+						<button type="button" pButton icon="fa-refresh"></button>
+					</template>
+					
+					<template let-col let-envioPresentar="rowData" pTemplate="body" >
+						<!--Boton editar-->
+						<button type="button" pButton (click)="editEmitido(envioPresentar.Id)" icon="fa-pencil-square-o" class="btn"></button>
+						<!--Boton cancelar-->
+						<button type="button" pButton (click)="confirmaDeleteEmitido(envioPresentar.Id,envioPresentar.TramNumero)" icon="fa-trash" class="btn"></button>					
+					</template>
+
+				</p-column>
+
+				<p-column field="RuDescripcion" header="RuDescripcion" [sortable]="true" [style]="{'width':'10.5em'}"></p-column>
+				<p-column field="RuFechaCreacion" header="RuFechaCreacion" [sortable]="true" [style]="{'width':'10em'}"></p-column>
+				<p-column field="RuKilometro" header="RuKilometro" [sortable]="true" [style]="{'width':'8em'}"></p-column>
+				<p-column field="EmConsorcio" header="EmConsorcio" [sortable]="true" [style]="{'width':'25em'}"></p-column>
+				<p-column field="EmTipo" header="EmTipo" [sortable]="true" [style]="{'width':'8em'}"></p-column>
+			</p-dataTable>
+
+		</div>
+
+	</div>
+</div>

@@ -1,3 +1,97 @@
-<h1>
-  {{title}}
-</h1>
+<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse"  style="background-color: #e3f2fd;">
+  <button class="navbar-toggler navbar-toggler-right" type="button" 
+          data-toggle="collapse" data-target="#navbarNavDropdown" 
+          aria-controls="navbarNavDropdown" aria-expanded="false" 
+          aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand" href="#">Inicio</a>
+  
+  
+  <div class="navbar-collapse collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+
+      <!--Boton Ruta-->
+      <li class="nav-item active">
+        <a href="#" class="nav-link" routerLink="/ruta" routerLinkActive="active">Ruta</a>						
+      </li>		
+
+       <!--Boton Puntos Control-->
+      <li class="nav-item active">
+        <a href="#" class="nav-link" routerLink="/pcontrol" routerLinkActive="active">Puntos de Control</a>						
+      </li>						
+
+      <!--Boton Programaciones-->
+      <li class="nav-item active">
+        <a href="#" class="nav-link" routerLink="/prog" routerLinkActive="active">Programacion</a>						
+      </li>		
+
+      <!--Boton Tarjeta de Control-->
+      <li class="nav-item active">
+        <a href="#" class="nav-link" routerLink="/tcontrol" routerLinkActive="active">Tarjeta de Control</a>						
+      </li>		
+
+      <!--Boton Registro de Tiempos-->
+      <li class="nav-item active">
+        <a href="#" class="nav-link" routerLink="/regtime" routerLinkActive="active">Reg Tiempo</a>						
+      </li>
+
+
+      <!-- Lista despliegue hacia abajo-->
+      <li class="nav-item dropdown">
+
+        <a href="#" class="nav-link dropdown-toggle"  id="navbarDropdownMenuLink" 
+           data-toggle="dropdown" >Bandeja<b class="caret"></b></a>
+
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="#">Reportes</a>
+          <a class="dropdown-item" href="#">Bandeja Interno 1</a>
+          <a class="dropdown-item" href="#">Bandeja Interno 2</a>
+          <a class="dropdown-item" href="#">Bandeja Interno 3</a>
+          <a class="dropdown-item" href="#">Bandeja Interno 4</a>
+          <a class="dropdown-item" href="#">Bandeja Interno 5</a>
+          <a class="dropdown-item" href="#">Bandeja Interno 6</a>
+        </div>					
+        
+      </li>					
+    </ul>
+  
+    <ul class="navbar-nav navbar-right">
+      <li><a  class="nav-link" href="#"></a></li><!-- Login: {{currentUser.nombrecom}}-->
+      <li><a class="nav-link" href="#" (click)="logout()">Salir</a></li>
+    </ul>
+  </div><!--/.nav-collapse -->
+</nav>
+
+
+<!--
+<br>
+<br>
+<br>
+<div class="container">
+  <div class="btn-group-vertical" role="group" aria-label=".....">
+      <button type="button" class="btn btn-primary btn-md ">Block level button</button>
+      <br>
+      <button type="button" class="btn btn-primary btn-md ">Block level button</button>
+      <br>
+      <button type="button" class="btn btn-primary btn-md ">Block level button</button>
+      <br>
+      <button type="button" class="btn btn-primary btn-md ">Block level button</button>
+      <br>
+      <button type="button" class="btn btn-primary btn-md ">Block level button</button>
+      <br>
+      <button type="button" class="btn btn-primary btn-md ">Block level button</button>
+  </div>
+</div>
+-->
+<router-outlet></router-outlet>
+
+<!--
+<div class="container-fluid">
+  <div class="content">
+    
+        
+  
+  </div>
+</div>
+-->

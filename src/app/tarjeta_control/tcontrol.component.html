@@ -1,0 +1,190 @@
+<div class="card">
+
+    <div>
+        <h4>Tarjeta de Control</h4>
+    </div>
+
+    <div class="card-block" style="padding:3">
+
+<div class="card-title">
+    <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+
+    <!--boton nuevo-->
+    <span class="text-xs-right">
+                <button (click)="addEmitido()" pButton icon="fa-file-text-o" label="Nuevo" 
+                        class="btn btn-succes" data-toggle="modal" data-target="#modalbtnNuevo">
+                </button>
+            </span>
+
+    <!--modal boton nuevo-->
+    <div class="modal fade" id="modalbtnNuevo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <!--modal header-->
+                <div class="modal-header">
+                    <!--boton cerrar-->
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                    </button>
+                    <!--titulo formulario modal-->
+                    <h5 class="modal-title" id="myModalLabel">Nueva Programacion</h5>
+                </div>
+
+                <!--modal body -->
+                <div class="modal-body">
+                    <form>
+
+                        <!--combo tarjetas-->
+                        <div class="form-group row ">
+                            <label class="col-2 col-form-label" for="sorteos">Sorteo: </label>
+                            <div class="col-10">
+                                <select class="form-control" id="sorteos">
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!--fecha -->
+                        <div class="form-group row ">
+                            <label class="col-2 col-form-label" for="date1">Fecha:</label>
+                            <div class="col-10">
+                                <input class="form-control" id="date1" name="fecha" placeholder="MM/DD/YYY" type="date" />
+                            </div>
+                        </div>
+                    
+                        <!--programacion-->
+                        <div class="form-group row">
+                            <label for="selprogram" class="col-3 col-form-label">Programacion:</label>
+                            <div class="col-9">
+                                <select  class="form-control "id = "selprogram" multiple  size = "4">
+                                    <option value = "Prog1">Programacion 1</option>
+                                    <option value = "Prog2">Programacion 2</option>
+                                    <option value = "Prog3">Programacion 3</option>
+                                    <option value = "Prog4">Programacion 4</option>
+                                    <option value = "Prog5">Programacion 5</option>
+                                    <option value = "Prog6">Programacion 6</option>
+                                    <option value = "Prog7">Programacion 7</option>
+                                    <option value = "Prog8">Programacion 8</option>
+                                    <option value = "Prog9">Programacion 9</option>
+                                    <option value = "Prog10">Programacion 10</option> 
+                                </select>
+                                <button type = "button" onclick = "">OK </button>          
+                                <button type = "button" onclick = "">X </button>   
+                            </div>                                                
+                        </div>
+
+                        <!--hora salida-->
+                        <div class="form-group row">
+                            <label for="hora" class="col-2 col-form-label">Salida:</label>
+                            <div class="col-10">
+                                <input class="form-control" type="time" value="05:00:00" id="hora">
+                            </div>
+                        </div>
+
+                        <!--nro vuelta-->
+                        <div class="form-group row ">
+                            <label for="nrobuses" class="col-2 col-form-label">Vueltas:</label>
+                            <div class="col-10">
+                                <input class="form-control" type="number" value="50" id="nrobuses">
+                            </div>
+                            
+                        </div>
+                        <!--monto cuota-->       
+                        <div class="form-group row ">
+                            <label for="cuota" class="col-2 col-form-label">Cuota:</label>
+                            <div class="col-10">
+                                <input class="form-control" type="text"  value="0" id="cuota">
+                            </div>
+                            
+                        </div>     
+                    </form>
+                </div>
+
+                <!--modal footer-->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>               
+                    <!--boton guardar-->
+                    <span class="text-xs-right">
+                        <button (click)="addEmitido()" pButton  label="Guardar" class="btn btn-succes" data-dismiss="modal">
+                        </button>
+                    </span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!--tablas-->
+<div class="card-text">
+    <p-dataTable [value]="progPresentar" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal"
+        scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelect($event)">
+
+        <p-column styleClass="col-button" [style]="{'width':'6em'}">
+            <!--botones para la columna-->
+            <!--encabezado-->
+            <template pTempalte="header">
+                <button type="button" pButton icon="fa-refresh">  </button>
+            </template>
+
+            <!--botones de las filas-->
+
+            <template let-col let-envioPresentar="rowData" pTemplate="body">
+                <!--Boton editar-->
+                <button type="button" class="btn"> </button>
+                <!--Boton eliminar-->
+                <button type="button" class="btn"> </button>
+            </template>
+        </p-column>
+
+        <!--campos de la datatable-->
+        <p-column field="PrCantidadBuses" header="Nro Buses" [sortable]="true" [style]="{'width':'4em'}"></p-column>
+        <p-column field="PrFechaInicio" header="Inicio" [sortable]="true" [style]="{'width':'9em'}"></p-column>
+        <p-column field="PrFechaFinFin" header="Fin" [sortable]="true" [style]="{'width':'9em'}"></p-column>
+        <p-column field="PrTipo" header="Tipo" [sortable]="true" [style]="{'width':'6em'}"></p-column>
+    </p-dataTable>
+</div>
+
+</div>
+</div>
+
+<br><br><br>
+
+<!--Detalle tarjeta control-->
+<div class="card">
+    <div>
+        <h4>Detalle de Programacion</h4>
+    </div>
+<div class="card-block" style="padding:3">
+
+    <div class="card-text">
+        <p-dataTable [value]="progPresentar" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal"
+            scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelect($event)">
+
+            <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                <!--botones para la columna-->
+                <!--encabezado-->
+                <template pTempalte="header">
+                    <button type="button" pButton icon="fa-refresh">  </button>
+                </template>
+                <!--botones de las filas-->
+                <template let-col let-envioPresentar="rowData" pTemplate="body">
+                    <!--Boton editar-->
+                    <button type="button" class="btn"> </button>
+                    <!--Boton eliminar-->
+                    <button type="button" class="btn"> </button>
+                </template>
+            </p-column>
+
+            <!--campos de la datatable-->
+            <p-column field="PrDeOrden" header="Orden" [sortable]="true" [style]="{'width':'4em'}"></p-column>
+            <p-column field="PrDePrid" header="Bus" [sortable]="true" [style]="{'width':'9em'}"></p-column>
+            <p-column field="PrDeFecha" header="Fecha" [sortable]="true" [style]="{'width':'9em'}"></p-column>
+            <p-column field="PrDeTipo" header="Tipo" [sortable]="true" [style]="{'width':'6em'}"></p-column>
+        </p-dataTable>
+    </div>
+
+</div>
+</div>

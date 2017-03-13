@@ -1,0 +1,205 @@
+<div class="card">
+<div><h4>Programaciones</h4></div>
+
+        <div class="card-block" style="padding:3">
+
+            <div class="card-title">
+                <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+
+                <!--boton nuevo-->
+                <span class="text-xs-right">
+                            <button (click)="addEmitido()" pButton icon="fa-file-text-o" label="Nuevo" 
+                                    class="btn btn-succes" data-toggle="modal" data-target="#modalbtnNuevo">
+                            </button>
+                        </span>
+                <!--modal boton nuevo-->
+                <div class="modal fade" id="modalbtnNuevo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <!--modal header-->
+                            <div class="modal-header">
+                                <!--boton cerrar-->
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <!--boton cerrar pequeño-->
+                                                <span aria-hidden="true">&times;</span>
+                                </button>
+                                <!--titulo formulario modal-->
+                                <h5 class="modal-title" id="myModalLabel">Programacion Base</h5>
+                            </div>
+
+                            <!--modal body -->
+                            <div class="modal-body">
+                                <form>
+
+                                    <!--Descripcion-->
+                                    <div class="form-group">
+                                        <label for="message-text" class="control-label">Descripcion:</label>
+                                        <textarea class="form-control" id="message-text"></textarea>
+                                    </div>
+
+                                    <!--combo Tipo de Registro-->
+                                    <div class="form-group ">
+                                        <label for="sorteos">Sorteo:</label>
+                                        <select class="form-control" id="sorteos">
+                                                    <option>Manual</option>
+                                                    <option>Automatico</option>
+                                                </select>
+                                    </div>
+
+                                    <!--lista de placas-->
+                                    
+                                    <!--cantidad de buses-->
+                                    <div class="form-group">
+                                        <label for="nrobuses" class="control-label">Nro Buses:</label>
+                                        <input class="form-control" type="number" value="50" id="nrobuses">
+                                    </div>
+
+                                </form>
+                            </div>
+
+                            <!--modal footer-->
+                            <div class="modal-footer">
+                                
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            
+                                <!--boton guardar y pasar al modal de registro de programacion-->
+                                <span class="text-xs-right">
+                                    <button  type="button" class="btn btn-succes" data-toggle="modal" data-target="#modalbtnregistro">Continuar</button>
+                                </span>
+
+                                <!--modal del boton guardar-->
+                                <div class="modal fade" id="modalbtnregistro" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            
+                                            <!--encabezado-->
+                                            <div class="modal-header">
+                                                <!--boton cerrar-->
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <!--titulo formulario modal-->
+                                                <h5 class="modal-title" id="myModalLabel">Generar Programacion</h5>
+                                            </div>
+
+                                            <!--cuerpo-->
+                                            <div class="modal-body">
+                                                <!--textarea para descripcion de la prograamcion-->
+                                                <div class="form-group">
+                                                    <label for="message-text" class="control-label">Descripcion:</label>
+                                                    <textarea class="form-control" id="message-text"></textarea>
+                                                </div>
+
+                                                <!--combobox tipo de programcion-->
+                                                <div class="form-group ">
+                                                    <label for="sorteos">Tipo: </label>
+                                                    <select class="form-control" id="sorteos">
+                                                                <option>Escala</option>
+                                                                <option>Cocodrilo</option>
+                                                                <option>Escarabajo</option>
+                                                            </select>
+                                                </div>
+
+                                                <!--fechas -->
+                                                <div class="form-group">
+                                                    <label class="control-label" for="date1">De:</label>
+                                                    <input class="form-control" id="date1" name="finicio" placeholder="MM/DD/YYY" type="date" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label" for="date2">Hasta:</label>
+                                                    <input class="form-control" id="date2" name="ffinal" placeholder="MM/DD/YYY" type="date" />
+                                                </div>
+
+                                                <!--cantidad de buses-->
+                                                <div class="form-group">
+                                                    <label for="nrobuses" class="control-label">Nro Buses:</label>
+                                                    <input class="form-control" type="number" value="50" id="nrobuses">
+                                                </div>
+
+                                            </div>
+
+                                            <!--pie modal-->
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                                <button type="button" class="btn btn-primary" >Generar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!--tablas-->
+            <div class="card-text">
+                <p-dataTable [value]="progPresentar" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal"
+                    scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelect($event)">
+
+                    <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                        <!--botones para la columna-->
+                        <!--encabezado-->
+                        <template pTempalte="header">
+                            <button type="button" pButton icon="fa-refresh">  </button>
+                        </template>
+
+                        <!--botones de las filas-->
+
+                        <template let-col let-envioPresentar="rowData" pTemplate="body">
+                            <!--Boton editar-->
+                            <button type="button" class="btn"> </button>
+                            <!--Boton eliminar-->
+                            <button type="button" class="btn"> </button>
+                        </template>
+                    </p-column>
+
+                    <!--campos de la datatable-->
+                    <p-column field="PrCantidadBuses" header="Nro Buses" [sortable]="true" [style]="{'width':'4em'}"></p-column>
+                    <p-column field="PrFechaInicio" header="Inicio" [sortable]="true" [style]="{'width':'9em'}"></p-column>
+                    <p-column field="PrFechaFinFin" header="Fin" [sortable]="true" [style]="{'width':'9em'}"></p-column>
+                    <p-column field="PrTipo" header="Tipo" [sortable]="true" [style]="{'width':'6em'}"></p-column>
+                </p-dataTable>
+            </div>
+        </div>
+
+        <!--tabla detalle programacion-->
+        <div class="card">
+            <div><h4>Detalle de Programacion</h4></div>
+            <div class="card-block" style="padding:3">
+                    <div class="card-text">
+                        <p-dataTable [value]="progPresentar" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal"
+                            scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelect($event)">
+
+                            <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                                <!--botones para la columna-->
+                                <!--encabezado-->
+                                <template pTempalte="header">
+                                    <button type="button" pButton icon="fa-refresh">  </button>
+                                </template>
+
+                                <!--botones de las filas-->
+
+                                <template let-col let-envioPresentar="rowData" pTemplate="body">
+                                    <!--Boton editar-->
+                                    <button type="button" class="btn"> </button>
+                                    <!--Boton eliminar-->
+                                    <button type="button" class="btn"> </button>
+                                </template>
+                            </p-column>
+
+                            <!--campos de la datatable-->
+                            <p-column field="PrDeOrden" header="Orden" [sortable]="true" [style]="{'width':'4em'}"></p-column>
+                            <p-column field="PrDePrid" header="Bus" [sortable]="true" [style]="{'width':'9em'}"></p-column>
+                            <p-column field="PrDeFecha" header="Fecha" [sortable]="true" [style]="{'width':'9em'}"></p-column>
+                            <p-column field="PrDeTipo" header="Tipo" [sortable]="true" [style]="{'width':'6em'}"></p-column>
+                        </p-dataTable>
+                    </div>
+            </div>
+        </div>
+</div>
+
+
+

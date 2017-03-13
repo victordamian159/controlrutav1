@@ -1,0 +1,142 @@
+<div class="card">
+    <div><h4>Puntos de Control</h4></div>
+    <div class="card-block" style="padding:3">
+
+            <div class="card-title">
+                <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+                <!--boton nuevo-->
+                <span class="text-xs-right">
+                            <button (click)="addEmitido()" pButton icon="fa-file-text-o" label="Nuevo" 
+                                    class="btn btn-succes" data-toggle="modal" data-target="#modalbtnNuevo">
+                            </button>
+                        </span>
+                <!--modal boton nuevo-->
+                <div class="modal fade" id="modalbtnNuevo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+
+                            <!--modal header-->
+                            <div class="modal-header">
+                                <!--boton cerrar-->
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <!--boton cerrar pequeño-->
+                                                <span aria-hidden="true">&times;</span>
+                                </button>
+                                <!--titulo formulario modal-->
+                                <h5 class="modal-title" id="myModalLabel">Punto de Control</h5>
+                            </div>
+
+                            <!--modal body -->
+                            <div class="modal-body">
+                                <form>
+
+                                    <!--combo tarjeta-->
+                                    <div class="form-group ">
+                                        <label for="sorteos">Tarjeta:</label>
+                                        <select class="form-control" id="sorteos">
+                                                    <option>Tarjeta 1</option>
+                                                    <option>Tarjeta 2</option>
+                                                    <option>Tarjeta 3</option>
+                                                </select>
+                                    </div>
+                                    <!--ubicacion -->
+                                    <div class="form-group">
+                                        <label for="ubicacion">Ubicacion:></label>
+                                        <!--modal boton para buscar el punto de control-->
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Mapa</button>
+                                    </div>
+                                    <!--tiempo -->
+                                    <div class="form-group">
+                                        <label class="control-label" for="timeb">Tiempo:</label>
+                                        <input class="form-control" id="timbeb" name="timebus"  type="time" />
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!--modal footer-->
+                            <div class="modal-footer">
+                                
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Guardar</button>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div><!--final boton nuevo-->
+
+            </div>
+
+            <!--tablas-->
+            <div class="card-text">
+                <p-dataTable [value]="progPresentar" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal"
+                    scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelect($event)">
+
+                    <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                        <!--botones para la columna-->
+                        <!--encabezado-->
+                        <template pTempalte="header">
+                            <button type="button" pButton icon="fa-refresh">  </button>
+                        </template>
+
+                        <!--botones de las filas-->
+
+                        <template let-col let-envioPresentar="rowData" pTemplate="body">
+                            <!--Boton editar-->
+                            <button type="button" class="btn"> </button>
+                            <!--Boton eliminar-->
+                            <button type="button" class="btn"> </button>
+                        </template>
+                    </p-column>
+
+                    <!--campos de la datatable-->
+                    <p-column field="PrCantidadBuses" header="Nro Buses" [sortable]="true" [style]="{'width':'4em'}"></p-column>
+                    <p-column field="PrFechaInicio" header="Inicio" [sortable]="true" [style]="{'width':'9em'}"></p-column>
+                    <p-column field="PrFechaFinFin" header="Fin" [sortable]="true" [style]="{'width':'9em'}"></p-column>
+                    <p-column field="PrTipo" header="Tipo" [sortable]="true" [style]="{'width':'6em'}"></p-column>
+                </p-dataTable>
+            </div>
+
+    </div>
+    <!--tabla detalle punto de control-->
+    <div class="card-block" style="padding:3">
+        <div class="card">
+            <div><h4>Detalle de Punto de Control</h4></div>
+            <div class="card-block" style="padding:3">
+                <!--columnas de la tabla-->
+                <div class="card-text">
+                    <p-dataTable [value]="progPresentar" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal"
+                        scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelect($event)">
+
+                        <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                            <!--botones para la columna-->
+                            <!--encabezado-->
+                            <template pTempalte="header">
+                                <button type="button" pButton icon="fa-refresh">  </button>
+                            </template>
+
+                            <!--botones de las filas-->
+
+                            <template let-col let-envioPresentar="rowData" pTemplate="body">
+                                <!--Boton editar-->
+                                <button type="button" class="btn"> </button>
+                                <!--Boton eliminar-->
+                                <button type="button" class="btn"> </button>
+                            </template>
+                        </p-column>
+
+                        <!--campos de la datatable-->
+                        <p-column field="PrDeOrden" header="Orden" [sortable]="true" [style]="{'width':'4em'}"></p-column>
+                        <p-column field="PrDePrid" header="Bus" [sortable]="true" [style]="{'width':'9em'}"></p-column>
+                        <p-column field="PrDeFecha" header="Fecha" [sortable]="true" [style]="{'width':'9em'}"></p-column>
+                        <p-column field="PrDeTipo" header="Tipo" [sortable]="true" [style]="{'width':'6em'}"></p-column>
+                    </p-dataTable>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
