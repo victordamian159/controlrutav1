@@ -5,68 +5,67 @@ import {Observable} from 'rxjs';
 @Injectable()
 
 export class RutaService{
-    private baseUrl: string = 'http://controlbus-controlbus.44fs.preview.openshiftapps.com/bus/rest/ruta/';
-	private baseUrl2: string = 'http://controlbus-controlbus.44fs.preview.openshiftapps.com/bus/rest/rutadetalle/';
-    //private baseUrl: string = 'http://localhost:8081/bus/rest/ruta/';
+    private baseUrl: string = 'http://controlbus-controlbus.44fs.preview.openshiftapps.com/bus/rest/puntocontrol/';
+	private baseUrl2: string = 'http://controlbus-controlbus.44fs.preview.openshiftapps.com/bus/rest/puntocontroldetalle/';
     constructor(private http: Http) { }
-	getAllRutaByEm(emId: number) {
+	getAllPuntoControlByEmRu(emId: number,ruId:number) {
 		return this.http
-				.get(this.baseUrl+ "getallrutabyem?emId="+emId) 
+				.get(this.baseUrl+ "getallpuntocontrolbyemru?emId="+emId+"&ruId="+ruId) 
 				.map((r: Response) => r.json() )             
 				.catch(this.handleError);
 	}
-	getRutaById(ruId:number){
+	getPuntoControlById(puCoId:number){
 		return this.http
-			.get(this.baseUrl+ ruId )
+			.get(this.baseUrl+ puCoId )
 			.map((r: Response) => r.json() )
 			.catch((error:any) => Observable.throw(error.json().error || 'Server error'));
 	}	
-    newRuta(){
+    newPuntoControl(){
 		return this.http
 			.get(this.baseUrl+ 'new')
 			.map((r: Response) => r.json() )
 			.catch((error:any) => Observable.throw(error.json().error || 'Server error'));
 
 	}
-	saveRuta(ruta:Object){
+    savePuntoControl(puntoControl:Object){
 		//si en caso se quiere enviar mas de un objeto
 		//let data=JSON.stringify({ Album: tramiteMov, User: tramiteMov, UserToken: tramiteMov })
-		return this.http.post(this.baseUrl+ "save", ruta) // ...using post request
+		return this.http.post(this.baseUrl+ "save", puntoControl) // ...using post request
                          .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
                          .catch((error:any) => Observable.throw(error.json().error || 'Server error')); //...errors if any
 	}
-	deleteRuta(id:number){
+	deletePuntoControl(id:number){
 		return this.http.delete(this.baseUrl+ "delete/"+id) // ...using post request
                          .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
                          .catch((error:any) => Observable.throw(error.json().error || 'Server error')); //...errors if any
 	}
-	//Objeto RutaDetalle 
-	getAllRutaDetalleByRu(ruId:number){
+    //Objeto PuntoControlDetalle 
+	getAllPuntoControlDetalleByPuCo(puCoId:number){
 		return this.http
-			.get(this.baseUrl2+'ruid/'+ruId )
+			.get(this.baseUrl2+'pucoid/'+puCoId )
 			.map((r: Response) => r.json() )
 			.catch((error:any) => Observable.throw(error.json().error || 'Server error'));
 	}
-	newRutaDetalle(){
+	newPuntoControlDetalle(){
 		return this.http
 			.get(this.baseUrl2+ 'new')
 			.map((r: Response) => r.json() )
 			.catch((error:any) => Observable.throw(error.json().error || 'Server error'));
 
 	}
-	deleteRutaDetalleByRu(ruId:number){
-		return this.http.delete(this.baseUrl+ "delete/ruid/"+ruId) // ...using post request
+	deletePuntoControlDetalleByRu(puCoId:number){
+		return this.http.delete(this.baseUrl2+ "delete/pucoid/"+puCoId) // ...using post request
                          .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
                          .catch((error:any) => Observable.throw(error.json().error || 'Server error')); //...errors if any
 	}
-	saveRutaDetalle(rutaDetalle:Object[]){
+	savePuntoControlDetalle(puntoControlDetalle:Object[]){
 		//si en caso se quiere enviar mas de un objeto
 		//let data=JSON.stringify({ Album: tramiteMov, User: tramiteMov, UserToken: tramiteMov })
-		return this.http.post(this.baseUrl2+ "save", rutaDetalle) // ...using post request
+		return this.http.post(this.baseUrl2+ "save", puntoControlDetalle) // ...using post request
                          .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
                          .catch((error:any) => Observable.throw(error.json().error || 'Server error')); //...errors if any
 	}
-    // this could also be a private method of the component class
+       // this could also be a private method of the component class
 	handleError (error: any) {
 		// log error
 		// could be something more sofisticated
