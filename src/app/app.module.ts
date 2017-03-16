@@ -24,6 +24,8 @@ import {TcontrolComponent} from './tarjeta_control/tcontrol.component';
 //para el routing
 import {AppRoutingModule} from './app-routing.module';
 
+//proveedor ruta service
+import {RutaService} from './ruta/ruta.service'
   
 @NgModule({
   //modulos del aplicativo
@@ -57,7 +59,7 @@ import {AppRoutingModule} from './app-routing.module';
       GrowlModule
 
   ],
-  providers: [],
+  providers: [RutaService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
