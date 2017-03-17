@@ -19,6 +19,8 @@ import { ProgComponent } from './programaciones/prog.component';
 import {RegtimeComponent} from './registro_tiempos/regtime.component';
 import {TcontrolComponent} from './tarjeta_control/tcontrol.component';
 
+import { RutaService } from './service/ruta.service';
+import { PuntoControlService } from './service/pcontrol.service';
 //para el routing
 import {AppRoutingModule} from './app-routing.module';
 
@@ -55,7 +57,7 @@ import {AppRoutingModule} from './app-routing.module';
       GrowlModule
 
   ],
-  providers: [],
+  providers: [RutaService, PuntoControlService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
