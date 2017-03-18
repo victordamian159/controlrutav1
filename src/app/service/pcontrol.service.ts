@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 
 @Injectable()
 
-export class RutaService{
+export class PuntoControlService{
     private baseUrl: string = 'http://controlbus-controlbus.44fs.preview.openshiftapps.com/bus/rest/puntocontrol/';
 	private baseUrl2: string = 'http://controlbus-controlbus.44fs.preview.openshiftapps.com/bus/rest/puntocontroldetalle/';
     constructor(private http: Http) { }
