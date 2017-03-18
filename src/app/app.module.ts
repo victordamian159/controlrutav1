@@ -4,8 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 
-
-
 //COmponentes primefaces// Esto lo uso para la grilla
 import {GMapModule,DataTableModule,SharedModule,DataListModule} from 'primeng/primeng';
 import {ButtonModule,DialogModule,OverlayPanelModule,TabViewModule} from 'primeng/primeng';
