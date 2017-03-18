@@ -19,13 +19,11 @@ import { ProgComponent } from './programaciones/prog.component';
 import {RegtimeComponent} from './registro_tiempos/regtime.component';
 import {TcontrolComponent} from './tarjeta_control/tcontrol.component';
 
-import { RutaService } from './service/ruta.service';
-import { PuntoControlService } from './service/pcontrol.service';
 //para el routing
 import {AppRoutingModule} from './app-routing.module';
 
 //proveedor ruta service
-import {RutaService} from './ruta/ruta.service'
+import {RutaService} from './service/ruta.service';
   
 @NgModule({
   //modulos del aplicativo
@@ -59,11 +57,7 @@ import {RutaService} from './ruta/ruta.service'
       GrowlModule
 
   ],
-<<<<<<< HEAD
   providers: [RutaService],
-=======
-  providers: [RutaService, PuntoControlService],
->>>>>>> 67a6400eb7cfea05128472a13d533bbb02447e39
   bootstrap: [AppComponent]
 })
 export class AppModule { }

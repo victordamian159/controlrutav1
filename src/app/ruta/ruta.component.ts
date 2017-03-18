@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Message} from 'primeng/primeng';
 //import {Ruta, RutaDetalle} from 'app/variables';
 import {puntosRuta} from 'app/variables'
-import { RutaService } from './ruta.service';
+import { RutaService } from '../service/ruta.service';
 
 declare var google: any;
 
@@ -15,16 +15,18 @@ declare var google: any;
 
 export class RutaComponent implements OnInit{
     //objetos
-    Ruta={
-        RuId : "1",
-        EmId : "1",
-        RuDescripcion : "Empresa de Trans. Omega",
-        RuFechaCreacion:  '1991-01-15',
-        RuRegMunicipal : "AWD-REGTACNA 574454",
-        RuKilometro : "45",
-        RuActivo:"si",
-        UsId:"2",
-        UsFechaReg:"2017-01-10"
+    Ruta2:any;
+
+    Ruta: any ={
+        RuId : 0,
+        EmId : 0,
+        RuDescripcion : "",
+        RuFechaCreacion:  '0-0-0',
+        RuRegMunicipal : "",
+        RuKilometro : 0,
+        RuActivo : true,
+        UsId: 0,
+        UsFechaReg: '0-0-0'
     }
     RutaDetalle = {
         RuId:"",
@@ -91,10 +93,13 @@ export class RutaComponent implements OnInit{
         else {
             //mensaje si alguna forma es selecciona
             this.msgs.push({severity:'info', summary:'Linea', detail: ''});
-            this.addMarkerInLine();
             //console.log(":s");
         }              
     }
+   
+     
+
+     
 
      //evento click en el mapa
     handleMapClick(event) {
@@ -208,13 +213,6 @@ export class RutaComponent implements OnInit{
     }
 
     //agregar marcador sobre la linea
-    addMarkerInLine(){
-        if(this.RutaTerminada==0){
-            console.log("se va editar :3");
-        }else if(this.RutaTerminada==1){
-            console.log("se va editar :3");
-        }
-    }
 
     eliminarmarcador(){
         console.log("marcador eliminado");
@@ -242,6 +240,41 @@ export class RutaComponent implements OnInit{
 
     constructor(private rutaService: RutaService){}
 
+
+     newRuta(){
+        this.Ruta2 = this.rutaService.newRuta().subscribe(
+            data => {this.Ruta2 = data}
+        );
+     }
+     
+     saveRuta(){
+       
+            this.Ruta2.RuId = this.Ruta.RuId,
+            this.Ruta2.EmId = this.Ruta.EmId,
+            this.Ruta2.RuDescripcion = this.Ruta.RuDescripcion,
+            this.Ruta2.RuFechaCreacion =  this.Ruta.RuFechaCreacion,
+            this.Ruta2.RuRegMunicipal = this.Ruta.RuRegMunicipal,
+            this.Ruta2.RuKilometro = this.Ruta.RuKilometro,
+            this.Ruta2.RuActivo = this.Ruta.RuActivo,
+            this.Ruta2.UsId = this.Ruta.UsId,
+            this.Ruta2.UsFechaReg = this.Ruta.UsFechaReg
+        
+         //this.rutas.Id
+         console.log(this.Ruta2);
+         //this.rutaService.saveRuta(objRuta).then((response)=>{console.info(response);}).catch()
+         this.rutaService.saveRuta
+         (this.Ruta2).subscribe( realizar => { this.mostrargrillaruta();} ,
+                                      err => { this.errorMessage = err });		
+            
+         /*
+            data => { this.rutas = data; this.mostrargrillaruta();},
+                    err => {this.errorMessage = err}, 
+                    () =>this.isLoading = false*/
+            
+         //console.log(objRuta);
+         //console.log(this.rutas);
+     }
+
     getAllRutaByEm(emId: number){
         this.rutaService.getAllRutaByEm(emId).subscribe(
             data => { this.rutas = data; this.mostrargrillaruta();},
@@ -249,6 +282,15 @@ export class RutaComponent implements OnInit{
                     () =>this.isLoading = false
             );
         //console.log(this.rutas);
+        console.log(typeof this.Ruta.RuId);
+        console.log(typeof this.Ruta.EmId);
+        console.log(typeof this.Ruta.RuDescripcion);
+        console.log(typeof this.Ruta.RuFechaCreacion);
+        console.log(typeof this.Ruta.RuRegMunicipal);
+        console.log(typeof this.Ruta.RuKilometro);
+        console.log(typeof this.Ruta.RuActivo);
+        console.log(typeof this.Ruta.UsId);
+        console.log(typeof this.Ruta.UsFechaReg);
     }
 
     mostrargrillaruta(){
@@ -267,8 +309,8 @@ export class RutaComponent implements OnInit{
                 UsId: ruta.UsId,
                 UsFechaReg: ruta.UsFechaReg
             });
-        console.log(this.rutas);//incorrecto
-        console.log(this.rutasPresentar); //correcto
+        //console.log(this.rutas);//incorrecto
+        //console.log(this.rutasPresentar); //correcto
         }
     }
 
