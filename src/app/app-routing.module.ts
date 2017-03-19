@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 //llamando clases de los componentes .ts
-import {RutaComponent} from './ruta/ruta.component';
-import {PcontrolComponent} from './puntos_control/pcontrol.component';
-import {ProgComponent} from './programaciones/prog.component';
-import {RegtimeComponent} from './registro_tiempos/regtime.component';
-import {TcontrolComponent} from './tarjeta_control/tcontrol.component';
+import {RutaComponent} from './components/ruta.component';
+import {PcontrolComponent} from './components/pcontrol.component';
+import {ProgComponent} from './components/prog.component';
+import {RegtimeComponent} from './components/regtime.component';
+import {TcontrolComponent} from './components/tcontrol.component';
 
 //estableciencido las path para los componentes del aplicativo
 const app_routes: Routes = [
