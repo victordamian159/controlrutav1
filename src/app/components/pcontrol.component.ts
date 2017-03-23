@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Message} from 'primeng/primeng';
-import {puntoscontrol, puntosRuta} from 'app/variables';
+import {puntoscontrol, puntosTrazaRuta} from 'app/variables';
 declare var google: any;
 @Component({
     selector:'app-pcontrol',
@@ -98,10 +98,10 @@ Puntocontroldetalle={
     // se agrega la ruta con un boton :S cambiar a seleccionar uno de data-table
     cargarRuta(){
         //cargando las coordenadas al array local coor
-        for(this.i=0; this.i<puntosRuta.length; this.i++){
+        for(this.i=0; this.i<puntosTrazaRuta.length; this.i++){
             this.coor.push( pos={ 
-                    lat:puntosRuta[this.i].Latitud, 
-                    lng:puntosRuta[this.i].Longitud}
+                    lat:puntosTrazaRuta[this.i].Latitud, 
+                    lng:puntosTrazaRuta[this.i].Longitud}
                 );
         }
             //cargando la ruta almacenada en la variable y mostrando

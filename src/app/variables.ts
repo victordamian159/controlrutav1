@@ -1,4 +1,4 @@
 //export var variable="victor ingeniero";
 
-export var puntosRuta:any[]=[];
+export var puntosTrazaRuta:any[]=[];
 export var puntoscontrol:any[]=[];
