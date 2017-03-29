@@ -6,18 +6,16 @@
                 <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
                 <!--boton nuevo-->
                 <span class="text-xs-right">
-                            <button (click)="addEmitido()" pButton icon="fa-file-text-o" label="Nuevo" 
-                                    class="btn btn-succes" data-toggle="modal" data-target="#modalbtnNuevo">
-                            </button>
+                    <button (click)="newPuntoControlMaestro()" pButton icon="fa-file-text-o" label="Nuevo"></button>
                 </span>
             </div>
 
             <!--tablas-->
-            <div class="card-text">
-                <p-dataTable [value]="progPresentar" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal"
+           
+                <p-dataTable [value]="pCMaestroMostrar" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal"
                     scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelect($event)">
 
-                    <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
                         <!--botones para la columna-->
                         <!--encabezado-->
                         <template pTempalte="header">
@@ -35,56 +33,54 @@
                     </p-column>
 
                     <!--campos de la datatable-->
-                    <p-column field="PuCoId"    header="Id" [sortable]="true" [style]="{'width':'4em'}" ></p-column>
+                    <p-column field="PuCoId"    header="Id" [sortable]="true" [style]="{'width':'3em'}" ></p-column>
                     <p-column field="RuId"      header="Ruta" [sortable]="true" [style]="{'width':'9em'}" hidden="true"></p-column>
-                    <p-column field="PuCoTiempoBus" header="T. Vuelta" [sortable]="true" [style]="{'width':'9em'}"></p-column>
-                    <p-column field="PuCoClase"     header="Clase" [sortable]="true" [style]="{'width':'6em'}"></p-column>
+                    <p-column field="PuCoTiempoBus" header="T. Vuelta" [sortable]="true" [style]="{'width':'9em'}" hidden="true"></p-column>
+                    <p-column field="PuCoClase"     header="Tipo" [sortable]="true" [style]="{'width':'6em'}"></p-column>
                     <p-column field="UsId"      header="Usuario" [sortable]="true" [style]="{'width':'9em'}" hidden="true"></p-column>
-                    <p-column field="UsFechaReg" header="Fecha" [sortable]="true" [style]="{'width':'6em'}" hidden="true"></p-column>
+                    <p-column field="UsFechaReg" header="Fecha" [sortable]="true" [style]="{'width':'6em'}" ></p-column>
                 </p-dataTable>
-            </div>
+            
 
             <!--tabla detalle punto de control-->
             <div class="card-block" style="padding:3">
                 <div class="card">
-                    <div><h4>Puntos</h4></div>
                     <div class="card-block" style="padding:3">
-                        <!--columnas de la tabla-->
-                        <div class="card-text">
-                            <p-dataTable [value]="progPresentar" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal"
-                                scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelect($event)">
+                                    <p-dataTable [value]="pCDetalleMostrar" [rows]="10"  [globalFilter]="filtroGlobal"
+                                        scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" 
+                                        (onRowSelect)="onRowSelect($event)">
 
-                                <p-column styleClass="col-button" [style]="{'width':'6em'}">
-                                    <!--botones para la columna-->
-                                    <!--encabezado-->
-                                    <template pTempalte="header">
-                                        <button type="button" pButton icon="fa-refresh">  </button>
-                                    </template>
+                                        <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                                            <!--botones para la columna-->
+                                            <!--encabezado-->
+                                            <template pTempalte="header">
+                                                <button type="button" pButton icon="fa-refresh">  </button>
+                                            </template>
 
-                                    <!--botones de las filas-->
+                                            <!--botones de las filas-->
 
-                                    <template let-col let-envioPresentar="rowData" pTemplate="body">
-                                        <!--Boton editar-->
-                                        <button type="button" class="btn"> </button>
-                                        <!--Boton eliminar-->
-                                        <button type="button" class="btn"> </button>
-                                    </template>
-                                </p-column>
+                                            <template let-col let-envioPresentar="rowData" pTemplate="body">
+                                                <!--Boton editar-->
+                                                <button type="button" class="btn"> </button>
+                                                <!--Boton eliminar-->
+                                                <button type="button" class="btn"> </button>
+                                            </template>
+                                        </p-column>
 
-                                <!--campos de la datatable-->
-                                <p-column field="PuCoDeId" header="Nro" [sortable]="true" [style]="{'width':'4em'}" hidden="true"></p-column>
-                                <p-column field="PuCoId" header="N° Punto" [sortable]="true" [style]="{'width':'9em'}"></p-column>
-                                <p-column field="PuCoDeLatitud" header="Latitud" [sortable]="true" [style]="{'width':'9em'}" hidden="true"></p-column>
-                                <p-column field="PuCoDeLongitud" header="Longitud" [sortable]="true" [style]="{'width':'6em'}" hidden="true"></p-column>
-                                <p-column field="PuCoDeDescripcion" header="Descripcion" [sortable]="true" [style]="{'width':'9em'}"></p-column>
-                                <p-column field="PuCoDeHora" header="Tiempo" [sortable]="true" [style]="{'width':'9em'}"></p-column>
-                                <p-column field="UsId" header="Usuario" [sortable]="true" [style]="{'width':'9em'}" hidden="true"></p-column>
-                                <p-column field="UsFechaReg" header="Fecha" [sortable]="true" [style]="{'width':'9em'}" hidden="true"></p-column>                    
-                            </p-dataTable>
-                        </div>
+                                        <!--campos de la datatable-->
+                                        <p-column field="PuCoDeId"      header="N°"         [style]="{'width':'2em'}" ></p-column>
+                                        <p-column field="PuCoId"        header="PuCoId"    [style]="{'width':'3em'}" hidden="true"></p-column>
+                                        <p-column field="PuCoDeLatitud" header="Latitud"     [style]="{'width':'6em'}" hidden="true"></p-column>
+                                        <p-column field="PuCoDeLongitud" header="Longitud"  [style]="{'width':'6em'}" hidden="true"></p-column>
+                                        <p-column field="PuCoDeDescripcion" header="Lugar"  [style]="{'width':'9em'}"></p-column>
+                                        <p-column field="PuCoDeHora"        header="Hora"      [style]="{'width':'4em'}"></p-column>
+                                        <p-column field="UsId"              header="Usuario"     [style]="{'width':'9em'}" hidden="true"></p-column>
+                                        <p-column field="UsFechaReg"    header="Fecha"   [style]="{'width':'9em'}"     hidden="true"></p-column>                    
+                                    </p-dataTable>
                     </div>
                 </div>
             </div>
+
             <!--mapa-->
             <div class="container">
                      
@@ -101,89 +97,67 @@
                     <!--
                        <p-dialog showEffect="fade" [(visible)]="dialogVisible" header="New Location">
                     -->
-                    <p-dialog [(visible)]="display" modal="modal" width="300" responsive="true" header="Nombre Punto">
+                    <!--cuadro modal nuevo punto de control detalle-->
+                    <p-dialog [(visible)]="displayNuevoPunto" modal="modal" width="300" responsive="true"  [closable]="false">
                         <div class="ui-grid ui-grid-pad ui-fluid" *ngIf="selectedPosition">
-                            
-                                <div class="ui-grid-row">
-                                    <div class="ui-grid-col-2"><label for="title">Label</label></div>
-                                    <div class="ui-grid-col-10"><input type="text" pInputText id="title" ></div>
+                                <!--nombre puntos control (ubicacion)-->
+                                <div class="form-group col-7">
+                                    <label class="control-label" for="namePControl">Nombre: </label>
+                                    <input class="form-control"   id="namePControl" name="namePunto" [(ngModel)]="pcDetalle.PuCoDeDescripcion" type="text">
                                 </div>
+                                 <!--tiempo -->
+                                 
+                                <div class="form-group col-7">
+                                    <label class="control-label" for="time">Tiempo:</label>
+                                    <input class="form-control" id="time" name="time"  [(ngModel)]="pcDetalle.PuCoDeHora" type="number" />
+                                </div>
+                                <!--
+                                <div class="col-3">
+                                    <label class="control-label" for="timeSeg">Seg:</label>
+                                    <input class="form-control" id="timeSeg" name="timeSegundos" placeholder="00" type="number" />
+                                </div>
+                                -->
+                                 
                         </div>
                         <p-footer>
                             <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                                <button type="button" pButton label="Add Marker" icon="fa-plus" ></button>
+                                <button type="button" pButton label="Agregar"  (click)="guardarPunto()" ></button>
+                                <button type="button" pButton label="Cancelar" (click)="deshacerPunto()"></button>
                             </div>
                         </p-footer>
                     </p-dialog>
                     
                 <div class="container">
                     <button type="button" pButton label="Cargar Ruta" (click)="cargarRuta()" ></button>
-                    <!--(click)="funcione en el app.component.ts"
-                    <button type="button" pButton label="Borrar" (click)="clear()" ></button>
-                    <button type="button" pButton label="Editar" (click)="editar()" ></button>
-                    <button type="button" pButton label="Zoom +" (click)="zoomIn(gmap.getMap())" ></button>
-                    <button type="button" pButton label="Zoom -" (click)="zoomOut(gmap.getMap())" ></button>
-                    <button type="button" pButton label="Terminar Ruta" (click)="ultimalinea()" ></button>
-                    <button type="button" pButton label="Guardar" (click)="guardar()" ></button>
-                    <button type="button" pButton label="Deshacer" (click)="deshacer()" ></button>
-                    -->
+                    <button type="button" pButton label="Guardar Puntos" (click)="guardarpuntosDetalleRest()" ></button>
                 </div>
             </div>
             
             
-            <!--modal boton nuevo-->
-                <div class="modal fade" id="modalbtnNuevo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
+            <!--modal boton nuevo punto control maestro-->
+            <p-dialog header="Nuevo Lista Puntos de control" [(visible)]="displayListaPuntos" 
+                      modal="modal" width="350" responsive="true">
+                <!--tipo tarjeta-->
+                <div class="form-group ">
+                    <label class="control-label" for="tipetarj">Tipo de Tarjeta:</label>
+                    <input class="form-control" id="tipetarj" name="tipetarjeta"  type="text" [(ngModel)]="pcMaestro.PuCoClase"/>
+                </div>
+                
+                <!--tiempo -->
+                <div class="form-group">
+                    <label class="control-label" for="timeb">Tiempo de Recorrido:</label>
+                    <input class="form-control" id="timeb" name="timebus"  type="text" [(ngModel)]="pcMaestro.PuCoTiempoBus"/>
+                </div>
 
-                            <!--modal header-->
-                            <div class="modal-header">
-                                <!--boton cerrar-->
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <!--boton cerrar pequeño-->
-                                                <span aria-hidden="true">&times;</span>
-                                </button>
-                                <!--titulo formulario modal-->
-                                <h5 class="modal-title" id="myModalLabel">Punto de Control</h5>
-                            </div>
-
-                            <!--modal body -->
-                            <div class="modal-body">
-                                <form>
-
-                                    <!--combo tarjeta-->
-                                    <div class="form-group ">
-                                        <label for="sorteos">Tarjeta:</label>
-                                        <select class="form-control" id="sorteos">
-                                                    <option>Tarjeta 1</option>
-                                                    <option>Tarjeta 2</option>
-                                                    <option>Tarjeta 3</option>
-                                                </select>
-                                    </div>
-                                    <!--ubicacion -->
-                                    <div class="form-group">
-                                        <label for="ubicacion">Ubicacion:></label>
-                                        <!--modal boton para buscar el punto de control-->
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Mapa</button>
-                                    </div>
-                                    <!--tiempo -->
-                                    <div class="form-group">
-                                        <label class="control-label" for="timeb">Tiempo:</label>
-                                        <input class="form-control" id="timbeb" name="timebus"  type="time" />
-                                    </div>
-                                </form>
-                            </div>
-
-                            <!--modal footer-->
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Guardar</button>
-                            </div>
-                        </div>
+                <!--modal footer-->
+                <p-footer>
+                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                        <button type="button" pButton  (click)="guardarPCMaestro()" label="Guardar"></button>
+                        <button type="button" pButton  (click)="cancelarPCMaestro()" label="Close"></button>
                     </div>
-                </div><!--final boton nuevo modal-->
-
-            
+                </p-footer>
+            </p-dialog>    
+                <!--final boton nuevo modal-->
 </div>
 
 

@@ -17,16 +17,16 @@
 			<input placeholder="Buscar..." type="text"  id="gb1" #filtroGlobal />
             <!--para la busquedar-->
 			<span class="text-xs-right" >
-                <!--
-				<button (click)="addEmitido()" pButton icon="fa-file-text-o" label="Nuevo" class="btn btn-succes"></button>
-                -->
                 <button (click)="newRuta()" type="button" class="btn btn-succes" data-toggle="modal" data-target="#mydata">Nuevo</button>
 			</span>
 		</div>
-        <!--tabla padre ruta-->
+
+        <!--tabla maestro ruta-->
 		<div class="card-text">
             
             <!--paginacion de la filas de la datatable-->
+            <!-- value:para la funcion de mostrar grilla -->
+            <!-- selection: averiguar -->
 			<p-dataTable [value]="rutasPresentar" [rows]="10" [paginator]="true"  
                 
                 [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal" 
@@ -59,20 +59,21 @@
                      <p-column field="RuDescripcion" header="Descripcion" [sortable]="true" [style]="{'width':'10em'}" ></p-column>                   
                     <p-column field="EmTipo" header="Tipo" [sortable]="true" [style]="{'width':'5em'}"  ></p-column>
                      <p-column field="RuId" header="Ruta Id" [sortable]="true" [style]="{'width':'8em'}"></p-column>
-                    
 			</p-dataTable>
 		</div><!--fin tabla ruta-->
 
-         <!--Modal boton registro-->
+         <!--Modal boton nuevo ruta-Maestro-->
            <div class="modal fade" id="mydata" tabindex="-1" role="dialog" aria-labelledby="mymodaltitle">
                <div class="modal-dialog" role="document">
                    <div class="modal-content">
+
                        <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             <h5 class="modal-title" id="mymodaltitle">Registro Ruta</h5>
                        </div>
+
                        <div class="modal-body">
                            <form>
                                <div class="form-group row">
@@ -113,10 +114,12 @@
                                </div>
                            </form>
                        </div>
+
                        <div class="modal-footer">
                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                            <button type="button" (click)="saveRuta()" class="btn btn-primary" data-dismiss="modal" >Guardar</button>
                        </div>
+                       
                    </div>
                </div>
            </div>
@@ -141,7 +144,8 @@
                 <div class="container">
                     <!--(click)="funcione en el app.component.ts"-->
                     <button type="button" pButton label="Borrar" (click)="clear()" ></button>
-                    <button type="button" pButton label="Editar" (click)="editar()" ></button>
+                    <!--boton de modal editar ruta-->
+                    <button type="button" pButton label="Editar" (click)="showmodalEditar()" ></button>
                     <button type="button" pButton label="Zoom +" (click)="zoomIn(gmap.getMap())" ></button>
                     <button type="button" pButton label="Zoom -" (click)="zoomOut(gmap.getMap())" ></button>
                     <button type="button" pButton label="Terminar Ruta" (click)="ultimalinea()" ></button>
@@ -150,5 +154,15 @@
                 </div>
             </div>
          <!--end mapa-->
+         <!--modal boton editar-->
+         <p-dialog  [(visible)]="displayfromEditar" modal="modal" width="250" responsive="true">
+            <p>¿Desea editar el mapa?</p>
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton icon="fa-close" (click)="displayfromEditar=false" label="No"></button>
+                    <button type="button" pButton icon="fa-check" (click)="editar()" label="Si"></button>
+                </div>
+            </p-footer>
+         </p-dialog>
 	</div>
 </div>

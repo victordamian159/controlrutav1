@@ -7,132 +7,112 @@
                 <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
 
                 <!--boton nuevo-->
+
                 <span class="text-xs-right">
-                            <button (click)="addEmitido()" pButton icon="fa-file-text-o" label="Nuevo" 
-                                    class="btn btn-succes" data-toggle="modal" data-target="#modalbtnNuevo">
-                            </button>
-                        </span>
+                    <button type="text" (click)="showNuevaProgramacion()" pButton  label="Nuevo"></button>
+                </span>
+
                 <!--modal boton nuevo-->
-                <div class="modal fade" id="modalbtnNuevo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <!--modal header-->
-                            <div class="modal-header">
-                                <!--boton cerrar-->
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <!--boton cerrar pequeño-->
-                                                <span aria-hidden="true">&times;</span>
-                                </button>
-                                <!--titulo formulario modal-->
-                                <h5 class="modal-title" id="myModalLabel">Programacion Base</h5>
+               <p-dialog header="Nueva Programacion" [(visible)]="displayNuevaProgramacion" modal="modal" width="400" responsive="true">
+                            <!--Descripcion-->
+                            <div class="form-group">
+                                <label for="message-text" class="control-label">Descripcion:</label>
+                                <textarea class="form-control" id="message-text"></textarea>
                             </div>
 
-                            <!--modal body -->
-                            <div class="modal-body">
-                                <form>
-
-                                    <!--Descripcion-->
-                                    <div class="form-group">
-                                        <label for="message-text" class="control-label">Descripcion:</label>
-                                        <textarea class="form-control" id="message-text"></textarea>
+                            <!--combo Tipo de Registro-->
+                            <div class="form-group ">
+                                <label for="sorteos">Sorteo:</label>
+                                <select class="form-control" id="sorteos">
+                                            <option>Sorteo A:</option>
+                                            <option>Sorteo B</option>
+                                            <option>Sorteo C</option>
+                                            <option>Sorteo D</option>
+                                            <option>Sorteo E</option>
+                                        </select>
+                            </div>
+                            <!--fechas -->
+                                    <div class="form-group row">
+                                        <div class="form-group">
+                                            <label class="control-label" for="date1">De:</label>
+                                            <input class="form-control" id="date1" name="finicio" placeholder="MM/DD/YYY" type="date" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label" for="date2">Hasta:</label>
+                                            <input class="form-control" id="date2" name="ffinal" placeholder="MM/DD/YYY" type="date" />
+                                        </div>
                                     </div>
-
-                                    <!--combo Tipo de Registro-->
-                                    <div class="form-group ">
-                                        <label for="sorteos">Sorteo:</label>
-                                        <select class="form-control" id="sorteos">
-                                                    <option>Manual</option>
-                                                    <option>Automatico</option>
-                                                </select>
-                                    </div>
-
-                                    <!--lista de placas-->
-                                    
-                                    <!--cantidad de buses-->
-                                    <div class="form-group">
-                                        <label for="nrobuses" class="control-label">Nro Buses:</label>
-                                        <input class="form-control" type="number" value="50" id="nrobuses">
-                                    </div>
-
-                                </form>
+                            <!--lista de placas-->
+                            
+                            <!--cantidad de buses-->
+                            <div class="form-group">
+                                <label for="nrobuses" class="control-label">Nro Buses:</label>
+                                <input class="form-control" type="number" value="50" id="nrobuses">
                             </div>
 
                             <!--modal footer-->
-                            <div class="modal-footer">
-                                
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            
-                                <!--boton guardar y pasar al modal de registro de programacion-->
-                                <span class="text-xs-right">
-                                    <button  type="button" class="btn btn-succes" data-toggle="modal" data-target="#modalbtnregistro">Continuar</button>
-                                </span>
-
-                                <!--modal del boton guardar-->
-                                <div class="modal fade" id="modalbtnregistro" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            
-                                            <!--encabezado-->
-                                            <div class="modal-header">
-                                                <!--boton cerrar-->
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                </button>
-                                                <!--titulo formulario modal-->
-                                                <h5 class="modal-title" id="myModalLabel">Generar Programacion</h5>
-                                            </div>
-
-                                            <!--cuerpo-->
-                                            <div class="modal-body">
-                                                <!--textarea para descripcion de la prograamcion-->
-                                                <div class="form-group">
-                                                    <label for="message-text" class="control-label">Descripcion:</label>
-                                                    <textarea class="form-control" id="message-text"></textarea>
-                                                </div>
-
-                                                <!--combobox tipo de programcion-->
-                                                <div class="form-group ">
-                                                    <label for="sorteos">Tipo: </label>
-                                                    <select class="form-control" id="sorteos">
-                                                                <option>Escala</option>
-                                                                <option>Cocodrilo</option>
-                                                                <option>Escarabajo</option>
-                                                            </select>
-                                                </div>
-
-                                                <!--fechas -->
-                                                <div class="form-group">
-                                                    <label class="control-label" for="date1">De:</label>
-                                                    <input class="form-control" id="date1" name="finicio" placeholder="MM/DD/YYY" type="date" />
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="control-label" for="date2">Hasta:</label>
-                                                    <input class="form-control" id="date2" name="ffinal" placeholder="MM/DD/YYY" type="date" />
-                                                </div>
-
-                                                <!--cantidad de buses-->
-                                                <div class="form-group">
-                                                    <label for="nrobuses" class="control-label">Nro Buses:</label>
-                                                    <input class="form-control" type="number" value="50" id="nrobuses">
-                                                </div>
-
-                                            </div>
-
-                                            <!--pie modal-->
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                                <button type="button" class="btn btn-primary" >Generar</button>
-                                            </div>
-                                        </div>
-                                    </div>
+                             <p-footer>
+                                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                                    <!--
+                                    <button type="text" (click)="showNuevaProgramacion()" pButton  label="Nuevo"></button>
+                                    <button type="text" pButton icon="fa-check" (click)="displayNuevaProgramacion=true" label="Generar"></button>
+                                    -->
+                                    <button type="text" pButton icon="fa-close" (click)="displayNuevaProgramacion=false" label="Cancelar"></button>
+                                    <button type="text" pButton icon="fa-check" (click)="showPlacas()" label="Continuar"></button>
+                                    <button type="text" pButton icon="fa-check" (click)="showNuevaProgramacion()"  label="Generar"></button>
                                 </div>
+                            </p-footer>
+                </p-dialog>
+            
 
-                            </div>
+            
+            <!--modal del boton guardar (TERMINAR GENERANDO LA PROGRAMACION) -->
+            
+             <p-dialog header="Placas" [(visible)]="displayListaPlacas" modal="modal" width="400" responsive="true">           
+                        <!--encabezado-->
+
+                        <!--cuerpo-->
+                        
+
+                        <!--textarea para descripcion de la prograamcion-->
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">Descripcion:</label>
+                            <textarea class="form-control" id="message-text"></textarea>
                         </div>
-                    </div>
-                </div>
 
-            </div>
+                        <!--combobox tipo de programcion-->
+                        <div class="form-group ">
+                            <label for="sorteos">Tipo: </label>
+                            <select class="form-control" id="sorteos">
+                                        <option>Manual</option>
+                                        <option>Automatico</option>
+                                    </select>
+                        </div>
+                        
+                        <!--
+                        <p-multiSelect [options]="Placas" [(ngModel)]="selectedPlacas"></p-multiSelect>
+                        <p>Lista de Placas: {{selectedPlacas}}</p>
+                        -->
+
+                        <!--lista de placas (programacion base)-->
+
+
+                        <!--cantidad de buses-->
+                        <div class="form-group">
+                            <label for="nrobuses" class="control-label">Nro Buses:</label>
+                            <input class="form-control" type="number" value="50" id="nrobuses">
+                        </div>
+
+                        <!--pie modal-->                               
+                        <p-footer>
+                            <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                                <button type="button" pButton icon="fa-close" (click)="display=false" [disabled]="disabledButtonForm()" label="Atras"></button>
+                                <button type="button" pButton icon="fa-check" (click)="display=false" label="Guardar"></button>
+                            </div>
+                        </p-footer>
+            </p-dialog>
+
+            <!--fin boton modal guardar-->
 
             <!--tablas-->
             <div class="card-text">
@@ -199,6 +179,7 @@
                     </div>
             </div>
         </div>
+    </div>
 </div>
 
 

@@ -5,9 +5,11 @@ import {Observable} from 'rxjs';
 @Injectable()
 
 export class RutaService{
-    private baseUrl: string = 'http://controlbus-controlbus.44fs.preview.openshiftapps.com/bus/rest/ruta/';
+    private baseUrl: string = 'http://controlbus-ronaldmam.rhcloud.com/rest/ruta/';
 	private baseUrl2: string = 'http://controlbus-controlbus.44fs.preview.openshiftapps.com/bus/rest/rutadetalle/';
     //private baseUrl: string = 'http://localhost:8081/bus/rest/ruta/';
+	//http://controlbus-ronaldmam.rhcloud.com/rest/ruta
+	//private baseUrl: string = 'http://controlbus-controlbus.44fs.preview.openshiftapps.com/bus/rest/ruta/';	
     constructor(private http: Http) { }
 	getAllRutaByEm(emId: number) {
 		return this.http
@@ -15,6 +17,7 @@ export class RutaService{
 				.map((r: Response) => r.json() )             
 				.catch(this.handleError);
 	}	
+
 	getRutaById(ruId:number){
 		return this.http
 			.get(this.baseUrl+ ruId )
@@ -28,6 +31,7 @@ export class RutaService{
 			.catch((error:any) => Observable.throw(error.json().error || 'Server error'));
 
 	}
+	//guardar ruta
 	saveRuta(ruta:Object){
 		//si en caso se quiere enviar mas de un objeto
 		//let data=JSON.stringify({ Album: tramiteMov, User: tramiteMov, UserToken: tramiteMov })
