@@ -40,30 +40,31 @@ export class PcontrolComponent implements OnInit{
 
 //detalle puntos de control
     pcDetalle={
-        PuCoDeId : 0,
-        PuCoId : 0,
+        PuCoDeId        : 0,
+        PuCoId          : 0,
         PuCoDeLatitud  : 0,
         PuCoDeLongitud : 0,
         PuCoDeDescripcion : "",
-        PuCoDeHora : 0,
-        UsId : 1,
-        UsFechaReg : "",
-        PuCoDeOrden : 0
+        PuCoDeHora      : "",
+        UsId            : 1,
+        UsFechaReg      : "",
+        PuCoDeOrden     : 0
     }
    
     // para mostrar grilla con el FOR
     pcDetalleBD={
-        PuCoDeId : 0,
-        PuCoId : 0,
-        PuCoDeLatitud  : 0,
-        PuCoDeLongitud : 0,
+        PuCoDeId        : 0,
+        PuCoId          : 0,
+        PuCoDeLatitud   : 0,
+        PuCoDeLongitud  : 0,
         PuCoDeDescripcion : "",
-        PuCoDeHora : 0,
-        UsId : 1,
-        UsFechaReg : "",
-        PuCoDeOrden : 0
+        PuCoDeHora      : "",
+        UsId            : 1,
+        UsFechaReg      : "",
+        PuCoDeOrden     : 0
     };
 
+    longpCArrayDetalleBD=0; // longitud del Array P C Detalle para BD rest
     pcDetalleRest:any; // para mardar al servicio Rest
     pcMaestroRest:any; // para mardar al servicio Rest
     pcDetalleGrid: any[]=[];
@@ -116,7 +117,11 @@ export class PcontrolComponent implements OnInit{
             center: new google.maps.LatLng(-18.0065679, -70.2462741),
             zoom:14
         };
+        //MAESTRO
          this.getAllPuntoControlByEmRu(1,0);
+        //DETALLE
+         this.getAllPuntoControlDetalleByPuCo(0);
+         
         //this.infoWindow = new google.maps.InfoWindow();
         //get del restservice
         /*
@@ -146,7 +151,7 @@ export class PcontrolComponent implements OnInit{
         //guardando coordenadas en las variables X y Y 
         this.x=(coords.x).toString();
         this.y=(coords.y).toString();
-        this.newPCDetalle(); // crear un nuevo punto (REST)
+       
         this.addmarker();
         this.displayNuevoPunto=true;
     }
@@ -253,7 +258,7 @@ export class PcontrolComponent implements OnInit{
 
         this.indexMarker++;
        this.displayNuevoPunto = false;
-
+        
         //agregando circulo
         this.overlays.push(new google.maps.Circle({
             strokeColor: '#FF0000',
@@ -271,8 +276,11 @@ export class PcontrolComponent implements OnInit{
     newPuntoControlMaestro(){
         this.displayListaPuntos = true;
         //llamando serv rest nuevo punto Maestro
-        this.pcontrolService.newPuntoControl().subscribe(data => {this.pcMaestroRest=data});
-        console.log("nuevo puntos control");
+        this.pcontrolService.newPuntoControl()
+        .subscribe(data => {this.pcMaestroRest=data});
+        
+        console.log("nuevo puntos control maestro");
+        console.log(this.pcMaestroRest);
     }
 
     //guardar nuevo Maestro puntos de control
@@ -311,45 +319,62 @@ export class PcontrolComponent implements OnInit{
     }
 
 //DETALLE PUNTOS CONTROL 
+ 
     newPCDetalle(){
+
         this.pcontrolService.newPuntoControlDetalle()
         .subscribe(data => {this.pcDetalleRest=data});
+
         console.log("nuevo pt. detalle");
+        console.log(this.pcDetalleRest);
     }
 
-    //guardar nuevo Detalle punto control (del modal)
+
+    //GUARDAR DETALLE PUNTO CONTROL (del modal)
     guardarPunto(){   
-    
+        
+        this.newPCDetalle(); // crear un nuevo punto (REST)
+
+        this.longpCArrayDetalleBD = this.pCArrayDetalleBD.length
+        console.log(this.longpCArrayDetalleBD);
+
         //cargando los puntos control detalle a un array para ser mostrados
-        this.pCArrayDetalleBD.push(
-            this.pcDetalle={
-                PuCoDeId : this.n,
+        this.pCArrayDetalleBD.splice(this.longpCArrayDetalleBD,0,
+            this.pcDetalleRest={
+                PuCoDeId : 0,
                 PuCoId : 7,
                 PuCoDeLatitud : Number(this.x),
                 PuCoDeLongitud : Number(this.y),
                 PuCoDeDescripcion : this.pcDetalle.PuCoDeDescripcion,
-                PuCoDeHora : 0,
+                PuCoDeHora : this.pcDetalle.PuCoDeHora,
                 UsId : 0,
-                UsFechaReg : "",
+                UsFechaReg : "2017-02-29",
                 PuCoDeOrden : this.n
             }
         );
+        this.pcDetalle.PuCoDeDescripcion=null;
+        this.pcDetalle.PuCoDeHora=null;
+
         this.n++;
         this.displayNuevoPunto = false;
         console.log(this.pCArrayDetalleBD);
+    
     }
 
     //mandar al servicio Rest los puntos, es para confirmar que se tiene los correctos
     guardarpuntosDetalleRest(){
-        
+        console.log(this.pCArrayDetalleBD);
+        /*
         let n=0;
         while(n<this.pCArrayDetalleBD.length){
-        
+        */
             this.pcontrolService.savePuntoControlDetalle(this.pCArrayDetalleBD).
+
             subscribe(realizar => {this.mgPuntosControlDetalle();},
                             err => {this.errorMessage=err});
-        n++;
-        }
+
+        //n++;
+        //}
         console.log("guardado en rest");
     }
     //borrar ultimo punto control detalle
@@ -392,7 +417,7 @@ export class PcontrolComponent implements OnInit{
         //puntosControlDetalleBD
         this.pCDetalleMostrar=[];
         
-        for(let puntoDetalle of this.pcDetalleGrid ){
+        for(let puntoDetalle of this.pCArrayDetalleBD ){
 
             this.pCDetalleMostrar.push({
                 PuCoDeId: puntoDetalle.PuCoDeId,

@@ -101,15 +101,23 @@
                     <p-dialog [(visible)]="displayNuevoPunto" modal="modal" width="300" responsive="true"  [closable]="false">
                         <div class="ui-grid ui-grid-pad ui-fluid" *ngIf="selectedPosition">
                                 <!--nombre puntos control (ubicacion)-->
+                                <!--
                                 <div class="form-group col-7">
                                     <label class="control-label" for="namePControl">Nombre: </label>
                                     <input class="form-control"   id="namePControl" name="namePunto" [(ngModel)]="pcDetalle.PuCoDeDescripcion" type="text">
+                                </div>
+                                -->
+                                <div class="ui-grid-row">
+                                    <div class="ui-grid-col-2"><label for="title">Nombre:</label></div>
+                                    <div class="ui-grid-col-10">
+                                        <input type="text" pInputText id="title" [(ngModel)]="pcDetalle.PuCoDeDescripcion">
+                                    </div>
                                 </div>
                                  <!--tiempo -->
                                  
                                 <div class="form-group col-7">
                                     <label class="control-label" for="time">Tiempo:</label>
-                                    <input class="form-control" id="time" name="time"  [(ngModel)]="pcDetalle.PuCoDeHora" type="number" />
+                                    <input class="form-control" type="text" id="time" name="time"  [(ngModel)]="pcDetalle.PuCoDeHora"  />
                                 </div>
                                 <!--
                                 <div class="col-3">
