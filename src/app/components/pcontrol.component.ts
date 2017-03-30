@@ -339,8 +339,7 @@ export class PcontrolComponent implements OnInit{
         console.log(this.longpCArrayDetalleBD);
 
         //cargando los puntos control detalle a un array para ser mostrados
-        this.pCArrayDetalleBD.splice(this.longpCArrayDetalleBD,0,
-            this.pcDetalleRest={
+        this.pCArrayDetalleBD.push({
                 PuCoDeId : 0,
                 PuCoId : 7,
                 PuCoDeLatitud : Number(this.x),

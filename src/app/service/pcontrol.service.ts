@@ -7,6 +7,8 @@ import {Observable} from 'rxjs';
 export class PuntoControlService{
 	private baseUrl:  string = 'http://controlbus-ronaldmam.rhcloud.com/rest/puntocontrol/';
 	private baseUrl2: string = 'http://controlbus-ronaldmam.rhcloud.com/rest/puntocontroldetalle/';
+	//private baseUrl:  string = 'http://localhost:8089/bus/rest/puntocontrol/';
+	//private baseUrl2: string = 'http://localhost:8089/bus/rest/puntocontroldetalle/';
     constructor(private http: Http) { }
 
 
