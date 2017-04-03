@@ -76,7 +76,8 @@ export class PuntoControlService{
 	}
 
     // this could also be a private method of the component class
-	//capturar error
+
+//capturar error
 	handleError (error: any) {
 		// log error
 		// could be something more sofisticated

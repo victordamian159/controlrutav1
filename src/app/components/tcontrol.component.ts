@@ -7,6 +7,8 @@ import {Component, OnInit} from '@angular/core';
 })
 
 export class TcontrolComponent implements OnInit{
+    displayAsignarTarjeta : boolean = false;
+    
     constructor(){
 
     }
@@ -14,4 +16,16 @@ export class TcontrolComponent implements OnInit{
     ngOnInit(){
 
     }
+    showAsignaTarjetaControl(){
+        console.log("nueva tarjeta =D");
+        this.displayAsignarTarjeta = true;
+    }
+    guardarNewAsignarTarjeta(){
+        console.log("se guardo");
+    }
+    cancelarNewAsignarTarjeta(){
+        this.displayAsignarTarjeta = false;
+        console.log("cancelado =()");
+    }
+
 }

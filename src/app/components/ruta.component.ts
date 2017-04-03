@@ -162,7 +162,7 @@ export class RutaComponent implements OnInit{
     }
 
 
-  editar(){
+    editar(){
          this.displayfromEditar = false;
         //ruta no terminada
         if(this.RutaTerminada==0){
@@ -224,6 +224,7 @@ export class RutaComponent implements OnInit{
         }
 
     }
+
 
     //evento arrastrar final 
     handleDragEnd(event){
@@ -386,7 +387,7 @@ export class RutaComponent implements OnInit{
                  this.o = Number(this.overlays[this.indexObjec].title);
                  console.log("index: "+this.o);
                  console.log(this.puntosRuta.length);
-                 console.log("catherine es mia");
+                
                 this.puntosRuta[this.o].Latitud  = this.x;
                  this.puntosRuta[this.o].Longitud = this.y;
                 
@@ -614,6 +615,7 @@ export class RutaComponent implements OnInit{
         }
         //this.puntosRuta=[];
     }
+    
     deshacer(){
         if(this.overlays.length>1 && this.RutaTerminada==0){
             this.k=this.puntosRuta.length;
@@ -713,7 +715,7 @@ export class RutaComponent implements OnInit{
                                       err => { this.errorMessage = err });		
      }
 
-     //capturar toda la ruta por el id 
+     //capturar toda la ruta por el id (para mostrar en la grilla)
     getAllRutaByEm(emId: number){
         this.rutaService.getAllRutaByEm(emId).subscribe(
             data => { this.rutas = data; this.mostrargrillaruta();},

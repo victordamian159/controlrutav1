@@ -8,7 +8,7 @@ import 'rxjs/add/operator/toPromise';
 import {GMapModule,DataTableModule,SharedModule,DataListModule} from 'primeng/primeng';
 import {ButtonModule,DialogModule,OverlayPanelModule,TabViewModule} from 'primeng/primeng';
 import {ConfirmDialogModule,GrowlModule,CodeHighlighterModule} from 'primeng/primeng';
-import {MultiSelectModule, PickListModule} from 'primeng/primeng';
+import {MultiSelectModule, PickListModule, RadioButtonModule} from 'primeng/primeng';
 
 import { AppComponent } from './app.component';
 
@@ -25,8 +25,9 @@ import {AppRoutingModule} from './app-routing.module';
 
 //proveedor ruta service
 import {RutaService} from './service/ruta.service';
-
+import {ProgramacionService} from './service/prog.service';
 import {PuntoControlService} from './service/pcontrol.service';
+import {PlacasService} from './service/placas.service';
 
 //import { InMemoryWebApiModule } from 'angular2-in-memory-web-api';
 //import { InMemoryDataService }  from './in-memory-data.service';
@@ -65,10 +66,16 @@ import {PuntoControlService} from './service/pcontrol.service';
       ConfirmDialogModule,
       GrowlModule,
       MultiSelectModule,
-      PickListModule
+      PickListModule,
+      RadioButtonModule
 
   ],
-  providers: [RutaService, PuntoControlService],
+  providers: [
+      RutaService, 
+      PuntoControlService,
+      ProgramacionService,
+      PlacasService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
