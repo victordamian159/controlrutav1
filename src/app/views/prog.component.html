@@ -14,28 +14,39 @@
                     <p-dialog header="Nueva Programacion" [(visible)]="displayNuevaProgramacion" 
                               modal="modal" width="415" responsive="true" [closable]="false">
                                 
-                                 <!--combobox tipo de programcion-->
+                                 <!--tipo de programcion MANUAL O AUTOMATICO-->
                                 <div class="form-group ">
                                     <label for="sorteos">Tipo:  {{tipoProgramacion||'none'}}</label>
-                                        <div class="ui-g" style=" width:250px; margin-bottom: 10px">
-                                            <div class="ui-g-12">
-                                                <p-radioButton name="tipoprog" value="Automatico" label="Automatico" [(ngModel)]="tipoProgramacion"></p-radioButton>
-                                                <p-radioButton name="tipoprog" value="Manual"     label="Manual" [(ngModel)]="tipoProgramacion"></p-radioButton>
-                                            </div>
+                                    <div class="ui-g" style=" width:250px; margin-bottom: 10px">
+                                        <div class="ui-g-12">
+                                            <p-radioButton name="tipoprog" value="Automatico" label="Automatico" [(ngModel)]="tipoProgramacion"></p-radioButton>
+                                            <p-radioButton name="tipoprog" value="Manual"     label="Manual" [(ngModel)]="tipoProgramacion"></p-radioButton>
                                         </div>
+                                    </div>
+                                </div>
+
+                                <!--forma de programacion por tiempo y cantidad de buses (Escala o Pescadito)-->
+                                <div class="form-group">
+                                    <label>Forma: {{formaProgramacion || 'none'}}</label>
+                                    <div class="ui-g" style="width: 250px; margin-bottom: 10px">
+                                        <div class="ui-g-12">
+                                            <p-radioButton name ="formaprog" value="Escala" label="Escala" [(ngModel)]="formaProgramacion"></p-radioButton>
+                                            <p-radioButton name ="formaprog" value="Pescadito" label="Pescadito" [(ngModel)]="formaProgramacion"></p-radioButton>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <!--fechas -->
-                                        <div class="form-group row">
-                                            <div class="form-group">
-                                                <label class="control-label" for="date1">De:</label>
-                                                <input class="form-control" id="date1" name="finicio" placeholder="MM/DD/YYY" type="date" [(ngModel)]="progMaestro.PrFechaInicio" />
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label" for="date2">Hasta:</label>
-                                                <input class="form-control" id="date2" name="ffinal" placeholder="MM/DD/YYY" type="date"  [(ngModel)]="progMaestro.PrFechaFin"/>
-                                            </div>
-                                        </div>
+                                <div class="form-group row">
+                                    <div class="form-group">
+                                        <label class="control-label" for="date1">De:</label>
+                                        <input class="form-control" id="date1" name="finicio" placeholder="MM/DD/YYY" type="date" [(ngModel)]="progMaestro.PrFechaInicio" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="date2">Hasta:</label>
+                                        <input class="form-control" id="date2" name="ffinal" placeholder="MM/DD/YYY" type="date"  [(ngModel)]="progMaestro.PrFechaFin"/>
+                                    </div>
+                                </div>
                                 <!--cantidad de buses-->
                                 <div class="form-group">
                                     <label for="nrobuses" class="control-label">Nro Buses:</label>
@@ -94,8 +105,8 @@
 
                     <!--TABLA PROGRAMACION MAESTRO-->
                     <div class="card-text">
-                        <p-dataTable [value]="progPresentar" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal"
-                            scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelect($event)">
+                        <p-dataTable [value]="programacionMaestroArrayHTML" [rows]="5" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal"
+                            scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">
                             <!--botones para la PRIMERA COLUMNA -->
                             <p-column styleClass="col-button" [style]="{'width':'6em'}">
                                 <!--encabezado-->
@@ -113,10 +124,12 @@
                             </p-column>
 
                             <!--campos de la datatable-->
-                            <p-column field="PrCantidadBuses" header="Nro Buses" [sortable]="true" [style]="{'width':'4em'}"></p-column>
-                            <p-column field="PrFechaInicio" header="Inicio" [sortable]="true" [style]="{'width':'9em'}"></p-column>
-                            <p-column field="PrFechaFinFin" header="Fin" [sortable]="true" [style]="{'width':'9em'}"></p-column>
-                            <p-column field="PrTipo" header="Tipo" [sortable]="true" [style]="{'width':'6em'}"></p-column>
+                            <p-column field="prId" header="Id" [sortable]="true" [style]="{'width':'4em'}"></p-column>
+                            <p-column field="PrTipo" header="Tipo" [sortable]="true" [style]="{'width':'4em'}"></p-column>
+                            <p-column field="PrCantidadBuses" header="Cant." [sortable]="true" [style]="{'width':'4em'}"></p-column>
+                            <p-column field="PrFechaInicio" header="Desde" [sortable]="true" [style]="{'width':'6em'}"></p-column>
+                            <p-column field="PrFechaFin" header="Hasta" [sortable]="true" [style]="{'width':'6em'}"></p-column>
+                            <p-column field="dias" header="Dias" [sortable]="true" [style]="{'width':'4em'}"></p-column>
                         </p-dataTable>
                     </div><!--fin tabla PROGRAMACION MAESTRO-->
             </div>

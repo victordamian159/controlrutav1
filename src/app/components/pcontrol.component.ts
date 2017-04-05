@@ -138,6 +138,7 @@ export class PcontrolComponent implements OnInit{
                     err => {this.errorMessage = err}, 
                     () =>this.isLoading = false
             );
+        console.log(this.pCArrayMaestroBD);
     }
 
     //click sobre el mapa y abrir modal para add Marker
@@ -325,8 +326,8 @@ export class PcontrolComponent implements OnInit{
         this.pcontrolService.newPuntoControlDetalle()
         .subscribe(data => {this.pcDetalleRest=data});
 
-        console.log("nuevo pt. detalle");
-        console.log(this.pcDetalleRest);
+        //console.log("nuevo pt. detalle");
+        //console.log(this.pcDetalleRest);
     }
 
 
@@ -356,24 +357,17 @@ export class PcontrolComponent implements OnInit{
 
         this.n++;
         this.displayNuevoPunto = false;
-        console.log(this.pCArrayDetalleBD);
+        //console.log(this.pCArrayDetalleBD);
     
     }
 
     //mandar al servicio Rest los puntos, es para confirmar que se tiene los correctos
     guardarpuntosDetalleRest(){
         console.log(this.pCArrayDetalleBD);
-        /*
-        let n=0;
-        while(n<this.pCArrayDetalleBD.length){
-        */
-            this.pcontrolService.savePuntoControlDetalle(this.pCArrayDetalleBD).
 
-            subscribe(realizar => {this.mgPuntosControlDetalle();},
+        this.pcontrolService.savePuntoControlDetalle(this.pCArrayDetalleBD).
+        subscribe(realizar => {this.mgPuntosControlDetalle();},
                             err => {this.errorMessage=err});
-
-        //n++;
-        //}
         console.log("guardado en rest");
     }
     //borrar ultimo punto control detalle
@@ -407,6 +401,7 @@ export class PcontrolComponent implements OnInit{
                 UsId:puntoMaestro.UsId,
                 UsFechaReg:puntoMaestro.UsFechaReg   
             });
+        console.log(this.pCMaestroMostrar);
         }//fin for punto control Maestro
     }// fin funcion
 

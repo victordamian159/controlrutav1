@@ -8,7 +8,7 @@ import 'rxjs/add/operator/toPromise';
 import {GMapModule,DataTableModule,SharedModule,DataListModule} from 'primeng/primeng';
 import {ButtonModule,DialogModule,OverlayPanelModule,TabViewModule} from 'primeng/primeng';
 import {ConfirmDialogModule,GrowlModule,CodeHighlighterModule} from 'primeng/primeng';
-import {MultiSelectModule, PickListModule, RadioButtonModule} from 'primeng/primeng';
+import {MultiSelectModule, PickListModule, RadioButtonModule, DropdownModule} from 'primeng/primeng';
 
 import { AppComponent } from './app.component';
 
@@ -67,7 +67,8 @@ import {PlacasService} from './service/placas.service';
       GrowlModule,
       MultiSelectModule,
       PickListModule,
-      RadioButtonModule
+      RadioButtonModule,
+      DropdownModule
 
   ],
   providers: [

@@ -10,10 +10,10 @@ export class ProgramacionService{
 
     constructor (private http: Http){}
 
-    //consultar por Id Empresa, Ruta Empresa
+    //consultar por Id Empresa, Ruta Empresa (mostrar en la grilla)
     getAllProgramacionByEm( emId: number, anio: number){
         return this.http        
-            .get(this.baseUrl+"getallprogramacionbyem?emId="+emId+"&anio"+anio)
+            .get(this.baseUrl+"getallprogramacionbyem?emId="+emId+"&anio="+anio)
             .map((r:Response) => r.json())
             .catch(this.handleError);
     }
@@ -67,7 +67,7 @@ export class ProgramacionService{
             .catch((error:any) => Observable.throw(error.json().error || 'server error') );
     }
     //guardar programacion detalle
-    saveProgramacionDetalle(programacionDetalle : Object){
+    saveProgramacionDetalle(programacionDetalle : Object[]){
         return this.http.post(this.baseUrl2+"save/", programacionDetalle)
             .map((res:Response) => res.json() )
             .catch((error:any) => Observable.throw(error.json().error || 'server error'));
