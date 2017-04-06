@@ -19,6 +19,7 @@ export class PuntoControlService{
 				.catch(this.handleError);
 	}
 //PUNTO CONTROL MAESTRO
+	//consulta punto control por ID
 	getPuntoControlById(puCoId:number){
 		return this.http
 			.get(this.baseUrl+ puCoId )
@@ -46,7 +47,7 @@ export class PuntoControlService{
 	}
 
 //Objeto PuntoControl Detalle 
-	//para capturar el punto control detalle y mostrarlo en la grilla
+	//para capturar el punto control detalle y mostrarlo en la grilla por ID
 	getAllPuntoControlDetalleByPuCo(puCoId:number){
 		return this.http
 			.get(this.baseUrl2+'pucoid/'+puCoId )

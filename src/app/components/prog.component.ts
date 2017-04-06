@@ -343,4 +343,11 @@ export class ProgComponent implements OnInit{
         console.log(this.idFilaSeleccionada);
         //llamar a una consulta para que al momento de hacer click sobre una fila muestre el detalle de la fila selecciona
     }
+    editarMaestro(){
+        console.log("editar");
+    }
+
+    eliminarMaestro(){
+        console.log("eliminar");
+    }
 }

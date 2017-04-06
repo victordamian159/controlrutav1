@@ -63,6 +63,9 @@ export class PcontrolComponent implements OnInit{
         UsFechaReg      : "",
         PuCoDeOrden     : 0
     };
+    idFilaSeleccionada: number;  
+
+    getPuntoControlMaestro:any; //se almacena lo q se recupero del rest para editar o eliminar (consulta al rest)
 
     longpCArrayDetalleBD=0; // longitud del Array P C Detalle para BD rest
     pcDetalleRest:any; // para mardar al servicio Rest
@@ -121,7 +124,9 @@ export class PcontrolComponent implements OnInit{
          this.getAllPuntoControlByEmRu(1,0);
         //DETALLE
          this.getAllPuntoControlDetalleByPuCo(0);
-         
+         //this.getPuntoCOntrolById(5);
+
+
         //this.infoWindow = new google.maps.InfoWindow();
         //get del restservice
         /*
@@ -131,6 +136,7 @@ export class PcontrolComponent implements OnInit{
         */
     }
 
+    //para mostrar en la grilla de programaciones
     getAllPuntoControlByEmRu(emId: number, ruId: number){
         this.pcontrolService.getAllPuntoControlByEmRu(emId,ruId)
         .subscribe(
@@ -139,6 +145,15 @@ export class PcontrolComponent implements OnInit{
                     () =>this.isLoading = false
             );
         console.log(this.pCArrayMaestroBD);
+    }
+
+    //para recuperar los datos de la tabla maestro punto control y poder editarlos o eliminarlos
+    getPuntoCOntrolById(puCoId : number){
+        this.pcontrolService.getPuntoControlById(puCoId)
+        .subscribe(
+            data => {this.getPuntoControlMaestro = data},
+                    err =>{this.errorMessage = err}, () =>this.isLoading=false
+        );
     }
 
     //click sobre el mapa y abrir modal para add Marker
@@ -273,7 +288,7 @@ export class PcontrolComponent implements OnInit{
         this.j++;
     }
 //PUNTO CONTROL MAESTRO
-    //funcion nueva Maestro de puntos de control
+    //funcion nueva Maestro de puntos de control (BOTON NUEVO)
     newPuntoControlMaestro(){
         this.displayListaPuntos = true;
         //llamando serv rest nuevo punto Maestro
@@ -281,7 +296,9 @@ export class PcontrolComponent implements OnInit{
         .subscribe(data => {this.pcMaestroRest=data});
         
         console.log("nuevo puntos control maestro");
-        console.log(this.pcMaestroRest);
+        //console.log(this.pcMaestroRest);
+        let n = this.onRowSelectMaestro;
+        console.log(n);
     }
 
     //guardar nuevo Maestro puntos de control
@@ -401,7 +418,7 @@ export class PcontrolComponent implements OnInit{
                 UsId:puntoMaestro.UsId,
                 UsFechaReg:puntoMaestro.UsFechaReg   
             });
-        console.log(this.pCMaestroMostrar);
+        //console.log(this.pCMaestroMostrar);
         }//fin for punto control Maestro
     }// fin funcion
 
@@ -432,6 +449,30 @@ export class PcontrolComponent implements OnInit{
             () =>this.isLoading=false
         );
     }
+
+    onRowSelectMaestro(event) {
+        this.idFilaSeleccionada = event.data.PuCoId;
+        //this.idFilaSeleccionada = this.idFilaSeleccionada;
+        console.log(this.idFilaSeleccionada);
+    }
+    
+    editarMaestro(){
+        console.log("editar =D");
+        console.log(this.idFilaSeleccionada); 
+        while(this.getPuntoControlMaestro == undefined){
+            this.getPuntoCOntrolById(this.idFilaSeleccionada);
+        }
+        
+        console.log(this.getPuntoControlMaestro);
+        
+    }
+
+    eliminarMaestro(){
+        console.log("eliminar =D");
+        
+        console.log(this.idFilaSeleccionada);
+    }
+    
 }
 var coords={
     x:0,
