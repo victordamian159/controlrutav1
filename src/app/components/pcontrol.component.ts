@@ -418,7 +418,7 @@ export class PcontrolComponent implements OnInit{
                 UsId:puntoMaestro.UsId,
                 UsFechaReg:puntoMaestro.UsFechaReg   
             });
-        //console.log(this.pCMaestroMostrar);
+        console.log(this.pCMaestroMostrar);
         }//fin for punto control Maestro
     }// fin funcion
 
@@ -456,14 +456,19 @@ export class PcontrolComponent implements OnInit{
         console.log(this.idFilaSeleccionada);
     }
     
-    editarMaestro(){
-        console.log("editar =D");
-        console.log(this.idFilaSeleccionada); 
+    editarMaestro(_puCoId:number){
+        //console.log("editar =D");
+        /*console.log(this.idFilaSeleccionada); 
         while(this.getPuntoControlMaestro == undefined){
             this.getPuntoCOntrolById(this.idFilaSeleccionada);
-        }
+        }*/
         
-        console.log(this.getPuntoControlMaestro);
+         this.pcontrolService.getPuntoControlById(_puCoId)
+        .subscribe(
+            data => {this.getPuntoControlMaestro = data},
+                    err =>{this.errorMessage = err}, () =>this.isLoading=false
+        );
+        console.log(_puCoId);
         
     }
 

@@ -21,11 +21,11 @@
                             <button type="button" pButton icon="fa-refresh">  </button>
                         </template>
 
-                        <template let-col let-envioPresentar="rowData" pTemplate="body">
+                        <template let-col let-pcMostrar="rowData" pTemplate="body">
                            
-                            <button type="button" class="btn" (click)=  "editarMaestro()" > </button>
+                            <button type="button" pButton class="btn" (click)=  "editarMaestro(pcMostrar.PuCoId)" icon="fa-pencil-square-o" > </button>
                             
-                            <button type="button" class="btn" (click)= "eliminarMaestro()">  </button>
+                            <button type="button" pButton class="btn" (click)= "eliminarMaestro()" icon="fa-trash">  </button>
                         </template>
                     </p-column>
                     
