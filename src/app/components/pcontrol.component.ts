@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit ,ElementRef} from '@angular/core';
 import {Message} from 'primeng/primeng';
 import {puntoscontrol, puntosTrazaRuta} from 'app/variables';
 
@@ -23,21 +23,13 @@ export class PcontrolComponent implements OnInit{
      pcMaestro: any ={ 
         PuCoId : 0,
         RuId : 1,
-        PuCoTiempoBus : "15",
-        PuCoClase : "1",
-        UsId : 0,
-        UsFechaReg : ""
-    }
-    // para mostrar grilla con el FOR
-    pcMaestroBD={
-        PuCoId : 0,
-        RuId : 0,
         PuCoTiempoBus : "",
         PuCoClase : "",
         UsId : 0,
         UsFechaReg : ""
     }
-
+    // para mostrar grilla con el FOR
+    pcMaestroBD : any;
 //detalle puntos de control
     pcDetalle={
         PuCoDeId        : 0,
@@ -65,7 +57,10 @@ export class PcontrolComponent implements OnInit{
     };
     idFilaSeleccionada: number;  
 
+    _pcRecuperado :any; // objeto recuperado de la consulta getPuntoCOntrolById
     getPuntoControlMaestro:any; //se almacena lo q se recupero del rest para editar o eliminar (consulta al rest)
+
+    headertitle:string; // titulo del modal
 
     longpCArrayDetalleBD=0; // longitud del Array P C Detalle para BD rest
     pcDetalleRest:any; // para mardar al servicio Rest
@@ -97,7 +92,7 @@ export class PcontrolComponent implements OnInit{
     k=0;
     l=0;
     m=0; //reducir en 1 los title de los marker
-    n=0; //nro de puntos de control (guardar puntos en rest)
+    n=0; //nro de puntos de control (guardar puntos en rest DETALLE) 
     indexMarkerTitle:string; //index marker para title (string)
     indexMarker=0; //indice de marker
     //markertitle:string;
@@ -112,31 +107,28 @@ export class PcontrolComponent implements OnInit{
     //infoWindow: any;
     // msgs: Message[] = [];
 
-    constructor( private pcontrolService: PuntoControlService ){}
+    constructor( private pcontrolService: PuntoControlService,
+                 public el: ElementRef ){}
 
     //iniciar 
     ngOnInit(){
+
+        this.mapa= document.getElementById('Ag');
+        //maps.Map(this.el.nativeElement.children[0], this.options);
+        //this.mapa = new google.maps.Map(this.el.nativeElement.children[0], this.options);
+        console.log(this.mapa);
         this.options={
             center: new google.maps.LatLng(-18.0065679, -70.2462741),
             zoom:14
         };
+
         //MAESTRO
          this.getAllPuntoControlByEmRu(1,0);
         //DETALLE
          this.getAllPuntoControlDetalleByPuCo(0);
-         //this.getPuntoCOntrolById(5);
-
-
-        //this.infoWindow = new google.maps.InfoWindow();
-        //get del restservice
-        /*
-        this.pcontrolService.getpControlConectar().then(
-            pControlDetalleServGrid => this.pControlDetalleServGrid=pControlDetalleServGrid
-        ); 
-        */
     }
 
-    //para mostrar en la grilla de programaciones
+    //para mostrar en la grilla de programaciones  (MOSTRAR EN GRILLA)
     getAllPuntoControlByEmRu(emId: number, ruId: number){
         this.pcontrolService.getAllPuntoControlByEmRu(emId,ruId)
         .subscribe(
@@ -144,16 +136,7 @@ export class PcontrolComponent implements OnInit{
                     err => {this.errorMessage = err}, 
                     () =>this.isLoading = false
             );
-        console.log(this.pCArrayMaestroBD);
-    }
-
-    //para recuperar los datos de la tabla maestro punto control y poder editarlos o eliminarlos
-    getPuntoCOntrolById(puCoId : number){
-        this.pcontrolService.getPuntoControlById(puCoId)
-        .subscribe(
-            data => {this.getPuntoControlMaestro = data},
-                    err =>{this.errorMessage = err}, () =>this.isLoading=false
-        );
+        //console.log(this.pCArrayMaestroBD);
     }
 
     //click sobre el mapa y abrir modal para add Marker
@@ -173,7 +156,7 @@ export class PcontrolComponent implements OnInit{
     }
 
     //arrastrar 
-     handleOverlayClick(event) {
+    handleOverlayClick(event) {
         console.log("click click");
     }
 
@@ -214,30 +197,6 @@ export class PcontrolComponent implements OnInit{
             }
         }
         console.log(this.overlays);
-        
-
-        //console.log(this.overlays[1]);
-        //console.log(this.overlays[0]);
-        /* 
-        this.msgs = [];
-        let isMarker = event.overlay.getTitle != undefined;
-        
-        if(isMarker) {
-            let title = event.overlay.getTitle();
-            //this.infoWindow.setContent('' + title + '');
-            this.infoWindow.setContent('<div>' + title + '</div>');
-            this.infoWindow.open(event.map, event.overlay);
-            event.map.setCenter(event.overlay.getPosition());
-            
-            this.msgs.push({severity:'info', summary:'Marker', detail: title});
-        }
-        else {
-            this.msgs.push({severity:'info', summary:'Linea', detail: ''});
-            //this.selectedPosition = event.latLng;
-            //this.addmarker();
-        } 
-        */ 
-        //this.handleOverlayClick(event)
     }
 
     // se agrega la ruta con un boton :S cambiar a seleccionar uno de data-table
@@ -270,6 +229,7 @@ export class PcontrolComponent implements OnInit{
                 position: {lat: this.coordenadas[this.j].x, lng: this.coordenadas[this.j].y},
                 title:this.indexMarkerTitle,
                 draggable: this.draggable
+               
         }));
 
         this.indexMarker++;
@@ -290,37 +250,87 @@ export class PcontrolComponent implements OnInit{
 //PUNTO CONTROL MAESTRO
     //funcion nueva Maestro de puntos de control (BOTON NUEVO)
     newPuntoControlMaestro(){
+        this.headertitle = "Nueva Lista";
         this.displayListaPuntos = true;
-        //llamando serv rest nuevo punto Maestro
-        this.pcontrolService.newPuntoControl()
-        .subscribe(data => {this.pcMaestroRest=data});
+        this.pcontrolService.newPuntoControl().subscribe(data => {this.pcMaestroBD=data});
+    }
+
+    //click sobre la fila y mostrar los puntos de control (detalle)
+    onRowSelectMaestro(event) {
+        //limpiar el mapa para ponerle los nuevos marcadores
+        //this.overlays = [];
+
+        //buscando en el rest deacuerdo al id de la row
+        this.idFilaSeleccionada = event.data.PuCoId;
+        console.log(this.idFilaSeleccionada);
+        this.pcontrolService.getAllPuntoControlDetalleByPuCo(this.idFilaSeleccionada)
+        .subscribe(
+            data => {this.pCArrayDetalleBD=data; this.mgPuntosControlDetalle(); this.cargarmarker();},
+            err => {this.errorMessage = err},
+            () => this.isLoading = false
+        );
+         //cargarlos en el array de objetos
+         this.overlays=[];//ver si se puede eliminar esta cosa 
+
+    }//fin funcion onRowSelectMaestro
+    cargarmarker(){
+          console.log(this.pCArrayDetalleBD);
+        console.log(this.overlays);
+         for(let marker of this.pCArrayDetalleBD){
+            this.overlays.push(
+                new google.maps.Marker({
+                    position:{lat:marker.PuCoDeLatitud , lng:marker.PuCoDeLongitud},
+                    title:marker.PuCoDeDescripcion,
+                    draggable:false
+                })
+            );
+            console.log(marker);
+        }
+    }
+   
+    //para editar la tabla maestro (grilla)
+    editarMaestro(_puCoId:number){
+        console.log("editar =D");
+        console.log(_puCoId);
+        this.headertitle="Editar Lista"
+        this.displayListaPuntos=true;
+
+        //haciendo la consulta en el rest
+         this.pcontrolService.getPuntoControlById(_puCoId)
+        .subscribe(
+            data => {this.pcMaestro = data},
+                    err =>{this.errorMessage = err}, () =>this.isLoading=false
+        );
+        console.log(this.pcMaestro);
+    }
+   
+    eliminarMaestro(){
+       
+        console.log("eliminar =D");
         
-        console.log("nuevo puntos control maestro");
-        //console.log(this.pcMaestroRest);
-        let n = this.onRowSelectMaestro;
-        console.log(n);
+        //console.log(this.idFilaSeleccionada);
     }
 
     //guardar nuevo Maestro puntos de control
     guardarPCMaestro(){
-        //console.log("guardado");
+        console.log("guardado");
         //fecha
         this.date = new Date();
-        
         this.dia = this.date.getDate();
         this.mes = this.date.getMonth();
         this.anio= this.date.getFullYear();
 
         //almacenado para los datos
+        
         this.pcMaestroBD.PuCoId = this.pcMaestro.PuCoId,
         this.pcMaestroBD.RuId = this.pcMaestro.RuId,
         this.pcMaestroBD.PuCoTiempoBus = this.pcMaestro.PuCoTiempoBus,
         this.pcMaestroBD.PuCoClase = this.pcMaestro.PuCoClase,
         this.pcMaestroBD.UsId = this.pcMaestro.UsId,
         this.pcMaestroBD.UsFechaReg = this.anio + "-" + this.mes+"-"+ this.dia
-
-        //cargando en array
-        this.pCArrayMaestroBD.push(this.pcMaestroBD);
+        
+      console.log(this.pcMaestroBD);
+      
         //mandando al rest
         this.pcontrolService.savePuntoControl(this.pcMaestroBD)
         .subscribe(realizar => {this.mgPuntoControlMaestro();},
@@ -347,19 +357,25 @@ export class PcontrolComponent implements OnInit{
         //console.log(this.pcDetalleRest);
     }
 
+    editarDetalle(_PuCoDeId : number){
+        console.log(_PuCoDeId);
+    }
 
+    eliminarDetalle(_PuCoDeId : number){
+        console.log(_PuCoDeId);
+    }
     //GUARDAR DETALLE PUNTO CONTROL (del modal)
     guardarPunto(){   
         
         this.newPCDetalle(); // crear un nuevo punto (REST)
 
-        this.longpCArrayDetalleBD = this.pCArrayDetalleBD.length
-        console.log(this.longpCArrayDetalleBD);
+        //this.longpCArrayDetalleBD = this.pCArrayDetalleBD.length 
+        //console.log(this.longpCArrayDetalleBD);
 
-        //cargando los puntos control detalle a un array para ser mostrados
+        //cargando los puntos control detalle a un array para ser mostrados y poder mandarlos al servidor REST
         this.pCArrayDetalleBD.push({
                 PuCoDeId : 0,
-                PuCoId : 7,
+                PuCoId : this.idFilaSeleccionada,
                 PuCoDeLatitud : Number(this.x),
                 PuCoDeLongitud : Number(this.y),
                 PuCoDeDescripcion : this.pcDetalle.PuCoDeDescripcion,
@@ -403,27 +419,28 @@ export class PcontrolComponent implements OnInit{
         this.displayNuevoPunto = false;
     }
 
-    // mostrar los puntos de control en la grilla
+    // mostrar los puntos de control en la grilla (1era grilla)
     mgPuntoControlMaestro(){
         this.pCMaestroMostrar=[];// para mostrarlo en la grilla
-        let fechaActual:Date;
+        //let fechaActual:Date;
 
         for(let puntoMaestro of this.pCArrayMaestroBD){
-            fechaActual = new Date(puntoMaestro.fechareg)
+            //fechaActual = new Date(puntoMaestro.fechareg)
             this.pCMaestroMostrar.push({
-                PuCoId: puntoMaestro.PuCoId,
-                RuId: puntoMaestro.RuId,
-                PuCoTiempoBus: puntoMaestro.PuCoTiempoBus,
+                EmId:puntoMaestro.EmId,
                 PuCoClase:puntoMaestro.PuCoClase,
-                UsId:puntoMaestro.UsId,
-                UsFechaReg:puntoMaestro.UsFechaReg   
+                PuCoId: puntoMaestro.PuCoId,
+                PuCoTiempoBus: puntoMaestro.PuCoTiempoBus,
+                RuDescripcion:puntoMaestro.RuDescripcion,
+                RuId: puntoMaestro.RuId,    
             });
-        console.log(this.pCMaestroMostrar);
+        //onsole.log(this.pCArrayMaestroBD); //recuperado del rest
+        //console.log(this.pCMaestroMostrar); //almacenado para mostrar en la grilla
         }//fin for punto control Maestro
     }// fin funcion
 
 
-    //mostrar puntos de control Detalle en al grilla
+    //mostrar puntos de control Detalle en al grilla (2da grilla)
     mgPuntosControlDetalle (){
         //puntosControlDetalleBD
         this.pCDetalleMostrar=[];
@@ -441,7 +458,10 @@ export class PcontrolComponent implements OnInit{
 
         }//fin for
     }//fin funcion
-    
+
+    //recuperar puntos de controldetalle por pucoID (por el ID)
+    //de esta forma no se necesita actualizar la pagina para ver el resultado
+    //de agregar un nuevo elemento a la lista
     getAllPuntoControlDetalleByPuCo(puCoId:number){
         this.pcontrolService.getAllPuntoControlDetalleByPuCo(puCoId).subscribe(
             data => {this.pcDetalleGrid=data; this.mgPuntosControlDetalle},
@@ -450,33 +470,7 @@ export class PcontrolComponent implements OnInit{
         );
     }
 
-    onRowSelectMaestro(event) {
-        this.idFilaSeleccionada = event.data.PuCoId;
-        //this.idFilaSeleccionada = this.idFilaSeleccionada;
-        console.log(this.idFilaSeleccionada);
-    }
     
-    editarMaestro(_puCoId:number){
-        //console.log("editar =D");
-        /*console.log(this.idFilaSeleccionada); 
-        while(this.getPuntoControlMaestro == undefined){
-            this.getPuntoCOntrolById(this.idFilaSeleccionada);
-        }*/
-        
-         this.pcontrolService.getPuntoControlById(_puCoId)
-        .subscribe(
-            data => {this.getPuntoControlMaestro = data},
-                    err =>{this.errorMessage = err}, () =>this.isLoading=false
-        );
-        console.log(_puCoId);
-        
-    }
-
-    eliminarMaestro(){
-        console.log("eliminar =D");
-        
-        console.log(this.idFilaSeleccionada);
-    }
     
 }
 var coords={

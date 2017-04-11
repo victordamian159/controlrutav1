@@ -10,7 +10,7 @@
                 </span>
             </div>
 
-            <!--tablas-->
+            <!--tablas punto control maestro-->
            
                 <p-dataTable [value]="pCMaestroMostrar" [rows]="5" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal"
                     scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">
@@ -18,24 +18,22 @@
                     <p-column styleClass="col-button" [style]="{'width':'3em'}">
                         
                         <template pTempalte="header">
-                            <button type="button" pButton icon="fa-refresh">  </button>
+                            <button type="button" pButton icon="fa-refresh"> re </button>
                         </template>
 
                         <template let-col let-pcMostrar="rowData" pTemplate="body">
-                           
-                            <button type="button" pButton class="btn" (click)=  "editarMaestro(pcMostrar.PuCoId)" icon="fa-pencil-square-o" > </button>
-                            
+                            <button type="button" pButton class="btn" (click)=  "editarMaestro(pcMostrar.PuCoId)" icon="fa-pencil-square-o" > </button>                  
                             <button type="button" pButton class="btn" (click)= "eliminarMaestro()" icon="fa-trash">  </button>
                         </template>
                     </p-column>
                     
                     <!--campos de la datatable-->
                     <p-column field="PuCoId"    header="Id" [sortable]="true" [style]="{'width':'3em'}" ></p-column>
-                    <p-column field="RuId"      header="Ruta" [sortable]="true" [style]="{'width':'9em'}" hidden="true"></p-column>
-                    <p-column field="PuCoTiempoBus" header="T. Vuelta" [sortable]="true" [style]="{'width':'9em'}" hidden="true"></p-column>
-                    <p-column field="PuCoClase"     header="Tipo" [sortable]="true" [style]="{'width':'6em'}"></p-column>
-                    <p-column field="UsId"      header="Usuario" [sortable]="true" [style]="{'width':'9em'}" hidden="true"></p-column>
-                    <p-column field="UsFechaReg" header="Fecha" [sortable]="true" [style]="{'width':'6em'}" ></p-column>
+                    <p-column field="RuId"      header="RuId" [sortable]="true" [style]="{'width':'9em'}" hidden="true"></p-column>
+                    <p-column field="PuCoTiempoBus" header="Tiempo" [sortable]="true" [style]="{'width':'9em'}" ></p-column>
+                    <p-column field="PuCoClase"     header="Clase" [sortable]="true" [style]="{'width':'6em'}"></p-column>
+                    <p-column field="RuDescripcion"  header="Descripcion" [sortable]="true" [style]="{'width':'9em'}" hidden="true"></p-column>
+                    <p-column field="EmId" header="EmId" [sortable]="true" [style]="{'width':'6em'}" hidden="true"></p-column>
                 </p-dataTable>
             
 
@@ -55,15 +53,11 @@
                                             </template>
 
                                             <!--botones de las filas-->
-
-                                            <template let-col let-envioPresentar="rowData" pTemplate="body">
-                                                <!--Boton editar-->
-                                                <button type="button" class="btn"> </button>
-                                                <!--Boton eliminar-->
-                                                <button type="button" class="btn"> </button>
+                                            <template let-col let-pcDetalle="rowData" pTemplate="body">                                        
+                                                <button type="button" pButton class="btn" (click)="editarDetalle(pcDetalle.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
+                                                <button type="button" pButton class="btn" (click)="eliminarDetalle(pcDetalle.PuCoDeId)" icon="fa-trash"> </button>
                                             </template>
                                         </p-column>
-
                                         <!--campos de la datatable-->
                                         <p-column field="PuCoDeId"      header="N°"         [style]="{'width':'2em'}" ></p-column>
                                         <p-column field="PuCoId"        header="PuCoId"    [style]="{'width':'3em'}" hidden="true"></p-column>
@@ -84,6 +78,7 @@
                     <p-growl [value]="msgs"></p-growl>
                     <p-gmap 
                         #gmap
+                        id = "Ag"
                         [options]="options" 
                         [overlays]="overlays"
                         [style]="{'width':'100%','height':'450px'}" 
@@ -140,8 +135,9 @@
             
             
             <!--modal boton nuevo punto control maestro-->
-            <p-dialog header="Nuevo Lista Puntos de control" [(visible)]="displayListaPuntos" 
+            <p-dialog  [(visible)]="displayListaPuntos" 
                       modal="modal" width="350" responsive="true">
+                <p-header>{{headertitle}} : {{pcMaestro.PuCoId}}</p-header>
                 <!--tipo tarjeta-->
                 <div class="form-group ">
                     <label class="control-label" for="tipetarj">Tipo de Tarjeta:</label>
