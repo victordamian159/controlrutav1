@@ -34,7 +34,9 @@ export class RutaComponent implements OnInit{
         RuDeOrden:0,
         RuId:0,
         UsFechaReg:"",
-        UsId:0
+        UsId:0,
+        RuDeId:0
+
     }
     //variables
     puntosRuta:any[]=[];
@@ -855,7 +857,8 @@ export class RutaComponent implements OnInit{
                     RuDeOrden:n,
                     RuId:this.indiceRowTabla,
                     UsFechaReg:this.anio+"-"+this.mes+"-"+this.dia,
-                    UsId:0 
+                    UsId:0,
+                    RuDeId:0 
             });
             //this.puntosRutaDetalle[n]=this.puntosRuta;
         }
