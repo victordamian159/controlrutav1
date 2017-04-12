@@ -18,12 +18,12 @@
                     <p-column styleClass="col-button" [style]="{'width':'3em'}">
                         
                         <template pTempalte="header">
-                            <button type="button" pButton icon="fa-refresh"> re </button>
+                            <button type="button" pButton icon="fa-refresh"></button>
                         </template>
 
                         <template let-col let-pcMostrar="rowData" pTemplate="body">
                             <button type="button" pButton class="btn" (click)=  "editarMaestro(pcMostrar.PuCoId)" icon="fa-pencil-square-o" > </button>                  
-                            <button type="button" pButton class="btn" (click)= "eliminarMaestro()" icon="fa-trash">  </button>
+                            <button type="button" pButton class="btn" (click)= "eliminarMaestro(pcMostrar.PuCoId)" icon="fa-trash">  </button>
                         </template>
                     </p-column>
                     
@@ -41,7 +41,7 @@
             <div class="card-block" style="padding:3">
                 <div class="card">
                     <div class="card-block" style="padding:3">
-                                    <p-dataTable [value]="pCDetalleMostrar" [rows]="10"  [globalFilter]="filtroGlobal"
+                                    <p-dataTable [value]="pCDetalleMostrar" [rows]="10"  emptyMessage="No Hay Puntos de Control" [globalFilter]="filtroGlobal"
                                         scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" 
                                         (onRowSelect)="onRowSelect($event)">
 

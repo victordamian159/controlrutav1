@@ -6,7 +6,8 @@ import {Observable} from 'rxjs';
 
 export class RutaService{
     private baseUrl: string = 'http://controlbus-ronaldmam.rhcloud.com/rest/ruta/';
-	private baseUrl2: string = 'http://controlbus-controlbus.44fs.preview.openshiftapps.com/bus/rest/rutadetalle/';
+	private baseUrl2: string = 'http://controlbus-ronaldmam.rhcloud.com/rest/rutadetalle/';
+	//private baseUrl2: string = 'http://controlbus-controlbus.44fs.preview.openshiftapps.com/bus/rest/rutadetalle/';
     //private baseUrl: string = 'http://localhost:8081/bus/rest/ruta/';
 	//http://controlbus-ronaldmam.rhcloud.com/rest/ruta
 	//private baseUrl: string = 'http://controlbus-controlbus.44fs.preview.openshiftapps.com/bus/rest/ruta/';	
@@ -17,7 +18,7 @@ export class RutaService{
 				.map((r: Response) => r.json() )             
 				.catch(this.handleError);
 	}	
-
+//Maestro
 	getRutaById(ruId:number){
 		return this.http
 			.get(this.baseUrl+ ruId )
@@ -40,11 +41,13 @@ export class RutaService{
                          .catch((error:any) => Observable.throw(error.json().error || 'Server error')); //...errors if any
 	}
 	deleteRuta(id:number){
-		return this.http.delete(this.baseUrl+ "delete/"+id) // ...using post request
+		//return this.http.delete(this.baseUrl+ "delete/"+id)
+		return this.http.delete(this.baseUrl+id) // ...using post request
                          .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
                          .catch((error:any) => Observable.throw(error.json().error || 'Server error')); //...errors if any
 	}
-	//Objeto RutaDetalle 
+
+//Objeto RutaDetalle 
 	getAllRutaDetalleByRu(ruId:number){
 		return this.http
 			.get(this.baseUrl2+'ruid/'+ruId )
@@ -54,7 +57,7 @@ export class RutaService{
 	
 	newRutaDetalle(){
 		return this.http
-			.get(this.baseUrl2+ 'new')
+			.get(this.baseUrl2+'new')
 			.map((r: Response) => r.json() )
 			.catch((error:any) => Observable.throw(error.json().error || 'Server error'));
 
@@ -67,7 +70,7 @@ export class RutaService{
 	saveRutaDetalle(rutaDetalle:Object[]){
 		//si en caso se quiere enviar mas de un objeto
 		//let data=JSON.stringify({ Album: tramiteMov, User: tramiteMov, UserToken: tramiteMov })
-		return this.http.post(this.baseUrl2+ "save", rutaDetalle) // ...using post request
+		return this.http.post(this.baseUrl2+ "save/", rutaDetalle) // ...using post request
                          .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
                          .catch((error:any) => Observable.throw(error.json().error || 'Server error')); //...errors if any
 	}

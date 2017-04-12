@@ -29,21 +29,30 @@ export class RutaComponent implements OnInit{
         UsFechaReg: '0-0-0'
     }
     RutaDetalle = {
-        RuId:"",
-        RuDeIndex:"",
-        RuDeDescripcion:"",
-        Latitud:"",
-        Longitud:"",
-        UsId:""
+        RuDeLatitud:0,
+        RuDeLongitud:0,
+        RuDeOrden:0,
+        RuId:0,
+        UsFechaReg:"",
+        UsId:0
     }
     //variables
     puntosRuta:any[]=[];
+    puntosRutaDetalleArray:any[]=[];
+    puntosRutaDetalle:any;
+
+    //capturando fecha actual 
+    date:any;
+    anio:string;
+    mes:string;
+    dia:string;
+
     private rutas:any=[];
     private isLoading: boolean = false;  
     private errorMessage:string='';
     private rutasPresentar:any = [];
-
-
+    private headertitle:string; // titulo del modal boton nuevo ruta-Maestro
+    displayNuevaRutaModal: boolean = false; 
     options: any; //cargar el mapa de google
     
     overlays:any[]=[]; //array de coordenadas de los marcadores (no se que es)
@@ -51,7 +60,7 @@ export class RutaComponent implements OnInit{
 
     listcoordenadas:any;
     buscarcoordenadas:any;
-
+    indiceRowTabla:number;
     //puntosRuta:any[]=[];
     i=0;
     j=0;
@@ -161,12 +170,29 @@ export class RutaComponent implements OnInit{
         }              
     }
 
+    editarRutaMaestro(_RuId : number){
+        console.log(_RuId)
+        this.rutaService.getRutaById(_RuId).subscribe(
+            data => {this.Ruta=data},
+            err => {this.errorMessage = err}
+        );
+
+        console.log(this.Ruta);
+    }
+
+    eliminarRutaMaestro(_RuId : number){
+        console.log(_RuId)
+        this.rutaService.deleteRuta(_RuId).subscribe(
+            realizar => {this.getAllRutaByEm(1);},
+            err => {console.log(err);}
+        );
+    }
 
     editar(){
          this.displayfromEditar = false;
         //ruta no terminada
         if(this.RutaTerminada==0){
-            console.log("catherine");
+            
             this.edit_RutaNoTerminada = 1;//si ruta ya se termino y se quiere editar
             //draggable de marker todos a true (para ser arrastrados)  del overlays
             
@@ -556,22 +582,37 @@ export class RutaComponent implements OnInit{
 
         //this.markerTitle = null;
         this.dialogVisible = false;
+        /*
         this.puntosRuta.push( 
                             this.RutaDetalle = {
-                                RuId:"11",
-                                RuDeIndex:"7",
+                                RuId:"0",
+                                RuDeOrden:"7",
                                 RuDeDescripcion:"punto",
                                 Latitud:this.coordenadas[this.i].x,
                                 Longitud:this.coordenadas[this.i].y,
                                 UsId:"2"});   
-        
+        */
+        /*
+        this.puntosRuta.push({
+            RuDeLatitud:this.coordenadas[this.i].x,
+            RuDeLongitud:this.coordenadas[this.i].y,
+            RuDeOrden:0,
+            RuId:0,
+            UsFechaReg:"2017-04-11",
+            UsId:0
+        });
+        */
+        this.puntosRuta.push({
+            RuDeLatitud:this.coordenadas[this.i].x,
+            RuDeLongitud:this.coordenadas[this.i].y,
+        });
         //unir puntos si hay mas de 1 marcador
         if(this.i>0){
             this.overlays.push(
                 new google.maps.Polyline({
                             path:[
-                                  {lat: this.puntosRuta[this.i-1].Latitud, lng:this.puntosRuta[this.i-1].Longitud},
-                                  {lat: this.puntosRuta[this.i].Latitud, lng:this.puntosRuta[this.i].Longitud}
+                                  {lat: this.puntosRuta[this.i-1].RuDeLatitud, lng:this.puntosRuta[this.i-1].RuDeLongitud},
+                                  {lat: this.puntosRuta[this.i].RuDeLatitud, lng:this.puntosRuta[this.i].RuDeLongitud}
                                   ],
                             geodesic: true,  strokeColor: '#FF0000',  strokeOpacity: 0.5,  strokeWeight: 2,   editable: false,  draggable: false,
                             //title : 1
@@ -586,15 +627,15 @@ export class RutaComponent implements OnInit{
         this.i++;
     }
 
-    //terminar ruta unir primer y ultimo marker con linea
+    //terminar ruta unir primer y ultimo marker con linea Y Crea el nuevo registro rutadetalle
     ultimalinea(){
         if(this.overlays.length>3){
             this.end=this.puntosRuta.length - 1;
             this.overlays.push(
                 new google.maps.Polyline({
                                 path:[
-                                    {lat: this.puntosRuta[0].Latitud, lng:this.puntosRuta[0].Longitud},
-                                    {lat: this.puntosRuta[this.end].Latitud, lng:this.puntosRuta[this.end].Longitud}
+                                    {lat: this.puntosRuta[0].RuDeLatitud, lng:this.puntosRuta[0].RuDeLongitud},
+                                    {lat: this.puntosRuta[this.end].RuDeLatitud, lng:this.puntosRuta[this.end].RuDeLongitud}
                                     ],
                                 geodesic: true, 
                                 strokeColor: '#FF0000', 
@@ -607,15 +648,25 @@ export class RutaComponent implements OnInit{
         }else{
             console.log("Termine Bien la Ruta :S");
         }
-        
         this.RutaTerminada=1; //ruta esta terminada
-        console.log(this.puntosRuta);
+        //console.log(this.puntosRuta);
+        //mandandolo a la variable global para ser mostrado en el modulo Puntos de Control
         for(this.n=0; this.n<this.puntosRuta.length; this.n++){
             puntosTrazaRuta[this.n]=  this.puntosRuta[this.n];
         }
         //this.puntosRuta=[];
+        console.log(this.puntosRuta);
     }
-    
+
+    //crea una nueva ruta detalle para agregar marcadores al mapa
+    nuevaRutaDetalle(){
+           //crear la nueva rutadetalle
+        console.log("trazar nueva ruta");
+        this.rutaService.newRutaDetalle().subscribe(data=>{this.puntosRutaDetalle=data});
+        
+    }
+
+    //borrar el ultimo marcador al trazar la ruta o la ultima linea que cierra la ruta 
     deshacer(){
         if(this.overlays.length>1 && this.RutaTerminada==0){
             this.k=this.puntosRuta.length;
@@ -642,15 +693,22 @@ export class RutaComponent implements OnInit{
             this.RutaTerminada=0;
         }
     }
+
     //activar draggable de todos los marcadores
     showmodalEditar(){
         this.displayfromEditar = true;
     }
 
-    
+    //click sobre una fila de la grilla
+    onRowSelect(event){
+        this.indiceRowTabla = event.data.RuId;
+        console.log(this.indiceRowTabla);
+        //console.log(this.puntosRutaDetalle);
+    }
 
     //agregar marcador sobre la linea
 
+    //borrar el marcador 
     eliminarmarcador(){
         console.log("marcador eliminado");
         if(this.RutaTerminada==0){
@@ -661,12 +719,14 @@ export class RutaComponent implements OnInit{
     }
 
     //zoom para el mapa
-        zoomIn(map){
-            map.setZoom(map.getZoom()+1);
-        }
-        zoomOut(map){
-            map.setZoom(map.getZoom()-1);
-        }
+    zoomIn(map){
+        map.setZoom(map.getZoom()+1);
+    }
+    zoomOut(map){
+        map.setZoom(map.getZoom()-1);
+    }
+
+    //vaciar todos los puntos
     clear(){
         this.overlays=[];
         this.coordenadas=[];
@@ -687,16 +747,25 @@ export class RutaComponent implements OnInit{
 
     constructor(private rutaService: RutaService){}
 
-
-     newRuta(){
+    //Nuevo Registro Maestro
+     nuevaRutaMaestro(){
+        this.displayNuevaRutaModal = true;
+        this.headertitle ="Nuevo";
        this.rutaService.newRuta()
        .subscribe(
             data => {this.Ruta2 = data}
         );
      }
   
+     //guardar en el rest la cabecera de la ruta (MAESTRO)
+     saveRutaMaestro(){
+         //capturando fecha
+            this.date = new Date();
+            this.dia = this.date.getDate();
+            this.mes = this.date.getMonth();
+            this.anio = this.date.getFullYear();
+            this.Ruta.UsFechaReg = this.anio+"-"+this.mes+"-"+this.dia;
 
-     saveRuta(){
             this.Ruta2.RuId = this.Ruta.RuId,
             this.Ruta2.EmId = this.Ruta.EmId,
             this.Ruta2.RuDescripcion = this.Ruta.RuDescripcion,
@@ -707,12 +776,28 @@ export class RutaComponent implements OnInit{
             this.Ruta2.UsId = this.Ruta.UsId,
             this.Ruta2.UsFechaReg = this.Ruta.UsFechaReg
         
-         //this.rutas.Id
          console.log(this.Ruta2);
          //this.rutaService.saveRuta(objRuta).then((response)=>{console.info(response);}).catch()
          this.rutaService.saveRuta
          (this.Ruta2).subscribe( realizar => { this.mostrargrillaruta();} ,
                                       err => { this.errorMessage = err });		
+     }
+    
+     //cancelar una nueva ruta maestro (cabecera)
+     cancelRutaMaestro(){
+        this.displayNuevaRutaModal=false;
+        /*
+        this.Ruta ={
+            RuId : 0,
+            EmId : 1,
+            RuDescripcion : "",
+            RuFechaCreacion:  '0-0-0',
+            RuRegMunicipal : "",
+            RuKilometro : 0,
+            RuActivo : true,
+            UsId: 0,
+            UsFechaReg: '0-0-0'
+        }*/
      }
 
      //capturar toda la ruta por el id (para mostrar en la grilla)
@@ -747,6 +832,44 @@ export class RutaComponent implements OnInit{
             });
         }
     }//fin mostrargrillaruta
+
+    mgRutaDetalle(){
+        //usar puntosRutaDetalle
+        console.log("mostrar detalle ruta");
+    }
+
+    //guardar RutaDEtalle en la BD
+    guardarPuntosRutaDetalle(){
+         this.date = new Date();
+            this.dia = this.date.getDate();
+            this.mes = this.date.getMonth();
+            this.anio = this.date.getFullYear();
+            //this.Ruta.UsFechaReg = this.anio+"-"+this.mes+"-"+this.dia;
+
+        console.log(this.puntosRuta);
+        for(let n=0 ; n<this.puntosRuta.length; n++){
+
+            this.puntosRutaDetalleArray.push({
+                    RuDeLatitud:this.puntosRuta[n].RuDeLatitud,
+                    RuDeLongitud:this.puntosRuta[n].RuDeLongitud,
+                    RuDeOrden:n,
+                    RuId:this.indiceRowTabla,
+                    UsFechaReg:this.anio+"-"+this.mes+"-"+this.dia,
+                    UsId:0 
+            });
+            //this.puntosRutaDetalle[n]=this.puntosRuta;
+        }
+        
+        console.log(this.puntosRutaDetalleArray);
+
+        this.rutaService.saveRutaDetalle(this.puntosRutaDetalleArray)
+        .subscribe(
+                realizar => {this.mgRutaDetalle();},
+                err => {this.errorMessage=err}
+        );
+
+        console.log("guardado en rest");
+    }
 
 }
 

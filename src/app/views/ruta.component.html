@@ -15,9 +15,12 @@
 		<div class="card-title ">
             <!--caja de texto para buscar-->
 			<input placeholder="Buscar..." type="text"  id="gb1" #filtroGlobal />
-            <!--para la busquedar-->
+            <!--para la busqueda BOTON NUEVO REGISTRO RUTA MAESTRO -->
 			<span class="text-xs-right" >
+                <button type="button" pButton icon="fa-2x" (click)="nuevaRutaMaestro()" label="Nuevo"></button>
+                <!--
                 <button (click)="newRuta()" type="button" class="btn btn-succes" data-toggle="modal" data-target="#mydata">Nuevo</button>
+                -->
 			</span>
 		</div>
 
@@ -43,39 +46,34 @@
                         </template>
                         
                         <!--Botones de cada fila-->
-                        <template let-col let-envioPresentar="rowData" pTemplate="body" >
+                        <template let-col let-Ruta="rowData" pTemplate="body" >
                             <!--Boton editar-->
-                            <button type="button" pButton (click)="editEmitido(envioPresentar.Id)" icon="fa-pencil-square-o" class="btn"></button>
+                            <button type="button" pButton (click)="editarRutaMaestro(Ruta.RuId)" icon="fa-pencil-square-o" class="btn"></button>
                             <!--Boton eliminar-->
-                            <button type="button" pButton (click)="confirmaDeleteEmitido(envioPresentar.Id,envioPresentar.TramNumero)" icon="fa-trash" class="btn"></button>					
-                            <!--Boton mapa-->
-                           <!-- <button type="button" pButton (click)="mapa" class="btn"></button>-->
+                            <button type="button" pButton (click)="eliminarRutaMaestro(Ruta.RuId)" icon="fa-trash" class="btn"></button>					
                         </template>          
 
                     </p-column>
                     <!--Nombre de las columnas de datatable-->
+                    <p-column field="RuId" header="Id" [sortable]="true" [style]="{'width':'4em'}"></p-column>
+                    <p-column field="RuDescripcion" header="Descripcion" [sortable]="true" [style]="{'width':'10em'}" ></p-column>
+                    <p-column field="RuKilometro" header="Kilometro" [sortable]="true" [style]="{'width':'4em'}" ></p-column>
                     <p-column field="RuFechaCreacion" header="Creacion" [sortable]="true" [style]="{'width':'10em'}" ></p-column>
-                     <p-column field="RuKilometro" header="Kilometro" [sortable]="true" [style]="{'width':'5em'}" ></p-column>
-                     <p-column field="RuDescripcion" header="Descripcion" [sortable]="true" [style]="{'width':'10em'}" ></p-column>                   
+                     
+                     <!--                   
                     <p-column field="EmTipo" header="Tipo" [sortable]="true" [style]="{'width':'5em'}"  ></p-column>
-                     <p-column field="RuId" header="Ruta Id" [sortable]="true" [style]="{'width':'8em'}"></p-column>
+                     -->
+                     
 			</p-dataTable>
 		</div><!--fin tabla ruta-->
 
          <!--Modal boton nuevo ruta-Maestro-->
-           <div class="modal fade" id="mydata" tabindex="-1" role="dialog" aria-labelledby="mymodaltitle">
-               <div class="modal-dialog" role="document">
-                   <div class="modal-content">
+         <p-dialog [(visible)]="displayNuevaRutaModal" modal="modal" width="450" responsive="true" [closable]=false>
 
-                       <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <h5 class="modal-title" id="mymodaltitle">Registro Ruta</h5>
-                       </div>
+                        <p-header>
+                            {{headertitle}} Punto Control
+                        </p-header>
 
-                       <div class="modal-body">
-                           <form>
                                <div class="form-group row">
                                    <label for="descripcion" class="col-4 col-form-label">Descripcion: </label>
                                    <div class="col-8">
@@ -100,29 +98,33 @@
                                         <input type="number" class="form-control" id="kilometro" [(ngModel)]="Ruta.RuKilometro" name="kilometro">
                                    </div>
                                </div>
+                               <!--
                                <div class="form-group row">
                                    <label for="iduser" class="col-4 col-form-label">Usuario: </label>
                                    <div class="col-8">
                                         <input type="input" class="form-control" id="iduser" [(ngModel)]="Ruta.UsId" name="userid">
                                    </div>
                                </div>
+                               -->
+                               <!--
                                <div class="form-group row">
                                    <label for="fecharegruta" class="col-4 col-form-label">Fecha Registro: </label>
                                    <div class="col-8">
                                         <input type="date" class="form-control" id="fecharegruta"  [(ngModel)]="Ruta.UsFechaReg" name="fregistro">
                                    </div>
                                </div>
-                           </form>
-                       </div>
+                               -->
+                
 
-                       <div class="modal-footer">
-                           <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                           <button type="button" (click)="saveRuta()" class="btn btn-primary" data-dismiss="modal" >Guardar</button>
-                       </div>
+                       <p-footer>
+                           <div class="ui-dialog-buttonpane ui-widget-content">
+                                <button type="button" pButton icon="fa-spin"  (click)="saveRutaMaestro()"  label="Guardar"></button>
+                                <button type="button" pButton icon="fa-close" (click)="cancelRutaMaestro()" label="Cancelar"></button>
+                           </div>
+                       </p-footer>
+            </p-dialog>
                        
-                   </div>
-               </div>
-           </div>
+         
 
           <!--mapa-->
             <div class="container">
@@ -149,8 +151,9 @@
                     <button type="button" pButton label="Zoom +" (click)="zoomIn(gmap.getMap())" ></button>
                     <button type="button" pButton label="Zoom -" (click)="zoomOut(gmap.getMap())" ></button>
                     <button type="button" pButton label="Terminar Ruta" (click)="ultimalinea()" ></button>
-                    <button type="button" pButton label="Guardar" (click)="guardar()" ></button>
+                    <button type="button" pButton label="Subir Ruta" (click)="guardarPuntosRutaDetalle()" ></button>
                     <button type="button" pButton label="Deshacer" (click)="deshacer()" ></button>
+                    <button type="button" pButton label="Nueva Ruta" (click)="nuevaRutaDetalle()" ></button>
                 </div>
             </div>
          <!--end mapa-->

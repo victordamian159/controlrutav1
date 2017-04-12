@@ -29,6 +29,7 @@ export class PcontrolComponent implements OnInit{
         UsFechaReg : ""
     }
     // para mostrar grilla con el FOR
+    pcMaestroEditar:any;
     pcMaestroBD : any;
 //detalle puntos de control
     pcDetalle={
@@ -93,6 +94,7 @@ export class PcontrolComponent implements OnInit{
     l=0;
     m=0; //reducir en 1 los title de los marker
     n=0; //nro de puntos de control (guardar puntos en rest DETALLE) 
+    editar=0; //si editar = 0 (nuevo registro) si editar = 1 (funcion editar) 
     indexMarkerTitle:string; //index marker para title (string)
     indexMarker=0; //indice de marker
     //markertitle:string;
@@ -251,6 +253,7 @@ export class PcontrolComponent implements OnInit{
     //funcion nueva Maestro de puntos de control (BOTON NUEVO)
     newPuntoControlMaestro(){
         this.headertitle = "Nueva Lista";
+        this.editar = 0; // si editar es cero es nuevo registro
         this.displayListaPuntos = true;
         this.pcontrolService.newPuntoControl().subscribe(data => {this.pcMaestroBD=data});
     }
@@ -291,6 +294,7 @@ export class PcontrolComponent implements OnInit{
     //para editar la tabla maestro (grilla)
     editarMaestro(_puCoId:number){
         console.log("editar =D");
+        this.editar = 1; //si editar es igual a uno entonces se editar el registro
         console.log(_puCoId);
         this.headertitle="Editar Lista"
         this.displayListaPuntos=true;
@@ -304,40 +308,49 @@ export class PcontrolComponent implements OnInit{
         console.log(this.pcMaestro);
     }
    
-    eliminarMaestro(){
-       
-        console.log("eliminar =D");
+    eliminarMaestro(_PuCoId : number){
         
-        //console.log(this.idFilaSeleccionada);
+        console.log("eliminar =D"+ _PuCoId);
+        this.pcontrolService.deletePuntoControl(_PuCoId).subscribe(
+            realizar => {this.getAllPuntoControlByEmRu(1,0)}, 
+            err => {console.log(err);}
+        );
     }
 
     //guardar nuevo Maestro puntos de control
     guardarPCMaestro(){
-        console.log("guardado");
-        //fecha
-        this.date = new Date();
-        this.dia = this.date.getDate();
-        this.mes = this.date.getMonth();
-        this.anio= this.date.getFullYear();
-
-        //almacenado para los datos
         
-        this.pcMaestroBD.PuCoId = this.pcMaestro.PuCoId,
-        this.pcMaestroBD.RuId = this.pcMaestro.RuId,
-        this.pcMaestroBD.PuCoTiempoBus = this.pcMaestro.PuCoTiempoBus,
-        this.pcMaestroBD.PuCoClase = this.pcMaestro.PuCoClase,
-        this.pcMaestroBD.UsId = this.pcMaestro.UsId,
-        this.pcMaestroBD.UsFechaReg = this.anio + "-" + this.mes+"-"+ this.dia
+       
         
       console.log(this.pcMaestroBD);
-      
+        if(this.editar == 1){
+            //el registro se editar
+            console.log("registro editado y guardado");
+        }else if(this.editar == 0){
+            //el registro es nuevo
+            console.log("guardado nuevo");
+             //fecha
+            this.date = new Date();
+            this.dia = this.date.getDate();
+            this.mes = this.date.getMonth();
+            this.anio= this.date.getFullYear();
+
+            //almacenado para los datos
+            
+            this.pcMaestroBD.PuCoId = this.pcMaestro.PuCoId,
+            this.pcMaestroBD.RuId = this.pcMaestro.RuId,
+            this.pcMaestroBD.PuCoTiempoBus = this.pcMaestro.PuCoTiempoBus,
+            this.pcMaestroBD.PuCoClase = this.pcMaestro.PuCoClase,
+            this.pcMaestroBD.UsId = this.pcMaestro.UsId,
+            this.pcMaestroBD.UsFechaReg = this.anio + "-" + this.mes+"-"+ this.dia
+        }
+
         //mandando al rest
         this.pcontrolService.savePuntoControl(this.pcMaestroBD)
         .subscribe(realizar => {this.mgPuntoControlMaestro();},
                         err => {this.errorMessage=err});
 
         this.displayListaPuntos = false;
-        //console.log(this.pCArrayMaestroBD);
     }
     
     //cancelar la agregacion de un Maestro punto de control
@@ -349,13 +362,10 @@ export class PcontrolComponent implements OnInit{
 //DETALLE PUNTOS CONTROL 
  
     newPCDetalle(){
-
         this.pcontrolService.newPuntoControlDetalle()
         .subscribe(data => {this.pcDetalleRest=data});
-
-        //console.log("nuevo pt. detalle");
-        //console.log(this.pcDetalleRest);
     }
+
 
     editarDetalle(_PuCoDeId : number){
         console.log(_PuCoDeId);
