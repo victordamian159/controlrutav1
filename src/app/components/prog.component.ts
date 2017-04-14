@@ -21,7 +21,7 @@ export class ProgComponent implements OnInit{
 
     //para seleccionar una fila de la tabla
     idFilaSeleccionada: number;
-
+    titleNuevoProgPrimerModal:string; 
     formaProgramacion:string = 'Escala'; //almacena el string del item seleccionado
     tipoProgramacion: string='Manual'; //tipo manual o automatico
 
@@ -107,6 +107,7 @@ export class ProgComponent implements OnInit{
         this.nuevaProgramacionMaestroRest();
         this.displayNuevaProgramacion=true;
         //console.log(this.placas);
+        this.titleNuevoProgPrimerModal = 'Nueva';
         this.extrayendoPlacasBus();
 
         //this.extrayendoDatosTablaMaestroRest();
@@ -218,8 +219,8 @@ export class ProgComponent implements OnInit{
             console.log(this.programacionArrayDetalleBD);
 
             //mandandolo a rest
-            //guardando en el rest Programacion detalle 
-            this.programacionService.saveProgramacionDetalle(this.programacionArrayDetalleBD)
+            //guardando en el rest Programacion detalle   ( corregir los parametros)
+            this.programacionService.saveProgramacionDetalle(this.programacionArrayDetalleBD,this.progMaestro.emId,this.progMaestro.prId,this.progMaestro.PrAleatorio)
                 .subscribe( 
                     realizar => {this.mostrargrillaProgramacionDetalle();}, 
                     err => {this.errorMessage = err}
@@ -266,7 +267,7 @@ export class ProgComponent implements OnInit{
 
             this.programacionMaestroArrayHTML.push({
                 EmConsorcio : programacionMaestro.EmConsorcio,
-                PrAleatorio : programacionMaestro.PrAleatorio,
+                PrAleatorio : programacionMaestro.PrAleatorio, 
                 PrCantidadBuses : programacionMaestro.PrCantidadBuses,
                 PrFecha : programacionMaestro.PrFecha,
                 PrFechaInicio : programacionMaestro.PrFechaInicio,
@@ -343,11 +344,24 @@ export class ProgComponent implements OnInit{
         console.log(this.idFilaSeleccionada);
         //llamar a una consulta para que al momento de hacer click sobre una fila muestre el detalle de la fila selecciona
     }
-    editarMaestro(){
-        console.log("editar");
+    editarMaestro(_PrId : number){
+        console.log("editar "+_PrId);
+        this.titleNuevoProgPrimerModal = 'Editar';
+        this.displayNuevaProgramacion=true; //abrir la 1era ventana modal para poder editar la programacion
+        this.programacionService.getProgramacionById(_PrId).subscribe(
+            data => {
+                     this.progMaestro=data; 
+                     console.log(this.progMaestro);
+                    },
+            err => {console.log(err);}
+        );
     }
 
-    eliminarMaestro(){
-        console.log("eliminar");
+    eliminarMaestro(_PrId : number){
+        console.log("eliminar "+_PrId);
+        this.programacionService.deleteProgramacionByid(_PrId).subscribe(
+            realizar => {this.getAllProgramacionByEm(1,0)},
+            err => {console.log(err);}
+        );
     }
 }

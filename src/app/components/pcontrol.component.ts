@@ -1,9 +1,11 @@
 import {Component, OnInit ,ElementRef} from '@angular/core';
 import {Message} from 'primeng/primeng';
-import {puntoscontrol, puntosTrazaRuta} from 'app/variables';
+//import {puntoscontrol, puntosTrazaRuta} from 'app/variables';
+
 
 //para rest 
 import {PuntoControlService} from '../service/pcontrol.service';
+import {RutaService} from '../service/ruta.service';
 
 declare var google: any;
 
@@ -19,10 +21,13 @@ export class PcontrolComponent implements OnInit{
     anio:string;
     mes:string;
     dia:string;
+
+    //trazar la ruta
+    puntosRuta : any[]=[];
 //maestro
      pcMaestro: any ={ 
         PuCoId : 0,
-        RuId : 1,
+        RuId : 12,
         PuCoTiempoBus : "",
         PuCoClase : "",
         UsId : 0,
@@ -57,7 +62,7 @@ export class PcontrolComponent implements OnInit{
         PuCoDeOrden     : 0
     };
     idFilaSeleccionada: number;  
-
+    idRutaFilaSeleccionada : number;
     _pcRecuperado :any; // objeto recuperado de la consulta getPuntoCOntrolById
     getPuntoControlMaestro:any; //se almacena lo q se recupero del rest para editar o eliminar (consulta al rest)
 
@@ -109,25 +114,28 @@ export class PcontrolComponent implements OnInit{
     //infoWindow: any;
     // msgs: Message[] = [];
 
-    constructor( private pcontrolService: PuntoControlService,
-                 public el: ElementRef ){}
+    constructor( 
+        private pcontrolService: PuntoControlService,
+        //public el: ElementRef 
+        private rutaService: RutaService
+    ){}
 
     //iniciar 
     ngOnInit(){
 
-        this.mapa= document.getElementById('Ag');
+        //this.mapa= document.getElementById('Ag');
         //maps.Map(this.el.nativeElement.children[0], this.options);
         //this.mapa = new google.maps.Map(this.el.nativeElement.children[0], this.options);
-        console.log(this.mapa);
+        //console.log(this.mapa);
         this.options={
             center: new google.maps.LatLng(-18.0065679, -70.2462741),
             zoom:14
         };
 
         //MAESTRO
-         this.getAllPuntoControlByEmRu(1,0);
+         this.getAllPuntoControlByEmRu(1,12); //consulta para la grilla 
         //DETALLE
-         this.getAllPuntoControlDetalleByPuCo(0);
+        // this.getAllPuntoControlDetalleByPuCo(0);
     }
 
     //para mostrar en la grilla de programaciones  (MOSTRAR EN GRILLA)
@@ -144,11 +152,13 @@ export class PcontrolComponent implements OnInit{
     //click sobre el mapa y abrir modal para add Marker
     handleMapClick(event){
         //mostrar modal addmarker
-        
         this.selectedPosition = event.latLng;
+
+        //agregando las coordenadas de los markers para mandarlos a la BD
         this.coordenadas.push(
             coords = {x:this.selectedPosition.lat(), y:this.selectedPosition.lng()}
         );
+
         //guardando coordenadas en las variables X y Y 
         this.x=(coords.x).toString();
         this.y=(coords.y).toString();
@@ -201,37 +211,13 @@ export class PcontrolComponent implements OnInit{
         console.log(this.overlays);
     }
 
-    // se agrega la ruta con un boton :S cambiar a seleccionar uno de data-table
-    cargarRuta(){
-        //cargando las coordenadas al array local coor
-        for(this.i=0; this.i<puntosTrazaRuta.length; this.i++){
-            this.coor.push( pos={ 
-                    lat:puntosTrazaRuta[this.i].Latitud, 
-                    lng:puntosTrazaRuta[this.i].Longitud}
-                );
-        }
-            //cargando la ruta almacenada en la variable y mostrando
-            //this.lineaRuta=[puntosRuta[0].Latitud]
-            //console.log(this.coor);
-        this.overlays.push(
-            new google.maps.Polyline({
-            path: this.coor,
-            strokeColor: '#FF0000',
-            strokeOpacity : 0.5,
-            strokeWeight :8 
-        }));
-        //agregando linea para completar la ruta
-    }
-
-
     addmarker(){
         this.draggable=false;
         this.indexMarkerTitle=this.indexMarker.toString();
         this.overlays.push(new google.maps.Marker({
                 position: {lat: this.coordenadas[this.j].x, lng: this.coordenadas[this.j].y},
                 title:this.indexMarkerTitle,
-                draggable: this.draggable
-               
+                draggable: this.draggable              
         }));
 
         this.indexMarker++;
@@ -261,11 +247,19 @@ export class PcontrolComponent implements OnInit{
     //click sobre la fila y mostrar los puntos de control (detalle)
     onRowSelectMaestro(event) {
         //limpiar el mapa para ponerle los nuevos marcadores
-        //this.overlays = [];
+        this.overlays = [];
+        this.puntosRuta=[];
+        this.pCArrayDetalleBD=[];
+        this.coordenadas =[];
 
         //buscando en el rest deacuerdo al id de la row
-        this.idFilaSeleccionada = event.data.PuCoId;
-        console.log(this.idFilaSeleccionada);
+        this.idFilaSeleccionada = event.data.PuCoId;  //recupera la PuCoId de la fila seleccionada (para recuperar los puntos de control con la consulta)
+        this.idRutaFilaSeleccionada = event.data.RuId; //recupera el RuId para poder sacar la ruta de la BD
+
+        //console.log(this.idFilaSeleccionada);
+        console.log(event.data.RuId);
+
+        //recuperadno putnos de control por el PuCoId 
         this.pcontrolService.getAllPuntoControlDetalleByPuCo(this.idFilaSeleccionada)
         .subscribe(
             data => {this.pCArrayDetalleBD=data; this.mgPuntosControlDetalle(); this.cargarmarker();},
@@ -273,9 +267,40 @@ export class PcontrolComponent implements OnInit{
             () => this.isLoading = false
         );
          //cargarlos en el array de objetos
-         this.overlays=[];//ver si se puede eliminar esta cosa 
+         //this.overlays=[];//ver si se puede eliminar esta cosa 
+
+         //recuperar la ruta desde la tabla ruta(DETALLE)
+         this.rutaService.getAllRutaDetalleByRu(this.idRutaFilaSeleccionada).subscribe(
+             data => {this.puntosRuta=data; this.cargarRuta();},
+             err => {this.errorMessage=err},
+             () => this.isLoading = false
+         );
 
     }//fin funcion onRowSelectMaestro
+
+    //CARGAR LA RUTA AL MAPA
+    cargarRuta(){
+        for(let n=0; n<this.puntosRuta.length; n++){
+            this.coordenadas.push({
+                    lat:this.puntosRuta[n].RuDeLatitud,
+                    lng:this.puntosRuta[n].RuDeLongitud
+            });
+        }
+
+        this.overlays.push(
+            new google.maps.Polyline({
+            path: this.coordenadas,
+            strokeColor: '#FF0000',
+            strokeOpacity : 0.5,
+            strokeWeight :8 
+        }));
+
+        //borrando las coordenadas para poder ingresar las coordenadas de los marcadores
+        this.coordenadas=[];
+        console.log(this.overlays.length);
+    }
+
+    //CARGAR LOS MARCADORES EL MAPA 
     cargarmarker(){
           console.log(this.pCArrayDetalleBD);
         console.log(this.overlays);
@@ -318,10 +343,7 @@ export class PcontrolComponent implements OnInit{
     }
 
     //guardar nuevo Maestro puntos de control
-    guardarPCMaestro(){
-        
-       
-        
+    guardarPCMaestro(){      
       console.log(this.pcMaestroBD);
         if(this.editar == 1){
             //el registro se editar
@@ -374,9 +396,9 @@ export class PcontrolComponent implements OnInit{
     eliminarDetalle(_PuCoDeId : number){
         console.log(_PuCoDeId);
     }
+
     //GUARDAR DETALLE PUNTO CONTROL (del modal)
     guardarPunto(){   
-        
         this.newPCDetalle(); // crear un nuevo punto (REST)
 
         //this.longpCArrayDetalleBD = this.pCArrayDetalleBD.length 
@@ -400,8 +422,8 @@ export class PcontrolComponent implements OnInit{
 
         this.n++;
         this.displayNuevoPunto = false;
-        //console.log(this.pCArrayDetalleBD);
-    
+        
+        console.log(this.pCArrayDetalleBD);
     }
 
     //mandar al servicio Rest los puntos, es para confirmar que se tiene los correctos
@@ -412,6 +434,11 @@ export class PcontrolComponent implements OnInit{
         subscribe(realizar => {this.mgPuntosControlDetalle();},
                             err => {this.errorMessage=err});
         console.log("guardado en rest");
+
+        //al terminar de guardar se tiene que borrar las coordenadas y l¿overlays para poder tenerlo libre al elegir otros puntos de control
+        //this.overlays = [];
+        //this.puntosRuta=[];
+        this.pCArrayDetalleBD=[];
     }
     //borrar ultimo punto control detalle
     deshacerPunto(){

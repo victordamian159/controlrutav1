@@ -11,9 +11,11 @@
                     </span>
 
                     <!--modal boton nuevo (PROGRAMACION 1ERA VENTANA)-->
-                    <p-dialog header="Nueva Programacion" [(visible)]="displayNuevaProgramacion" 
+                    <p-dialog  [(visible)]="displayNuevaProgramacion" 
                               modal="modal" width="415" responsive="true" [closable]="false">
-                                
+                                <p-header>
+                                    {{titleNuevoProgPrimerModal }} Programacion
+                                </p-header>
                                  <!--tipo de programcion MANUAL O AUTOMATICO-->
                                 <div class="form-group ">
                                     <label for="sorteos">Tipo:  {{tipoProgramacion||'none'}}</label>
@@ -115,11 +117,9 @@
                                 </template>
 
                                 <!--botones de las filas-->
-                                <template let-col let-envioPresentar="rowData" pTemplate="body">
-                                    <!--Boton editar-->
-                                    <button type="button" class="btn" (click)="editar()"></button>
-                                    <!--Boton eliminar-->
-                                    <button type="button" class="btn" (click)="eliminar()"></button>
+                                <template let-col let-progrRowMaestro="rowData" pTemplate="body">
+                                    <button type="button" pButton class="btn" (click)="editarMaestro(progrRowMaestro.prId)" icon="fa-pencil-square-o" ></button>
+                                    <button type="button" pButton class="btn" (click)="eliminarMaestro(progrRowMaestro.prId)" icon="fa-trash" ></button>
                                 </template>
                             </p-column>
 

@@ -34,9 +34,7 @@ export class RutaComponent implements OnInit{
         RuDeOrden:0,
         RuId:0,
         UsFechaReg:"",
-        UsId:0,
-        RuDeId:0
-
+        UsId:0
     }
     //variables
     puntosRuta:any[]=[];
@@ -172,24 +170,62 @@ export class RutaComponent implements OnInit{
         }              
     }
 
+    //recuperar registro de la fila seleccionada y mostrarlo en un modal los datos recuperados 
+    //editar y luego llamar a l procedimiento para guardar en la BD 
     editarRutaMaestro(_RuId : number){
         console.log(_RuId)
+        this.headertitle = "Editar";
+
         this.rutaService.getRutaById(_RuId).subscribe(
-            data => {this.Ruta=data},
+            data => {
+                        this.Ruta=data; 
+                        this.convertNumberToString();
+                        console.log(this.Ruta);
+                    },
             err => {this.errorMessage = err}
         );
 
-        console.log(this.Ruta);
+          this.displayNuevaRutaModal = true;
+        
+    }   
+
+    //convertir numero a fecha 
+    convertNumberToString(){
+        /*
+        var myObj = $.parseJSON('{"date_created":"1273185387"}'),
+            myDate = new Date(1000*myObj.date_created);
+        console.log(myDate.toString());
+        console.log(myDate.toLocaleString());
+        console.log(myDate.toUTCString());
+        alert(new Date(1273185387).toUTCString());
+
+        var data = {"date_created":"1273185387"};
+        var date = new Date(parseInt(data.date_created, 10) * 1000);
+        // example representations
+        alert(date);
+        alert(date.toLocaleString());
+
+        */
+        console.log(this.Ruta.RuFechaCreacion);
+        //let mydate = new Date(1000*this.Ruta.RuFechaCreacion.date_created);
+        let mydate = new Date(this.Ruta.RuFechaCreacion);
+        this.Ruta.RuFechaCreacion = mydate.getFullYear()+"-"+ mydate.getMonth() +"-"+ mydate.getDate();
+        
     }
 
+    //eliminar los registros de la tabla Ruta (MAESTRO)
     eliminarRutaMaestro(_RuId : number){
+        //revisar la parte de consulta this.getAllRutaByEm(1) (buscar una variable en vez del numero 1)
         console.log(_RuId)
         this.rutaService.deleteRuta(_RuId).subscribe(
-            realizar => {this.getAllRutaByEm(1);},
+            realizar => {
+                this.getAllRutaByEm(1);
+            },
             err => {console.log(err);}
         );
     }
 
+    //para editar la traza de la ruta
     editar(){
          this.displayfromEditar = false;
         //ruta no terminada
@@ -703,11 +739,48 @@ export class RutaComponent implements OnInit{
 
     //click sobre una fila de la grilla
     onRowSelect(event){
+        //obtener le ID de la fila seleccionada
         this.indiceRowTabla = event.data.RuId;
         console.log(this.indiceRowTabla);
         //console.log(this.puntosRutaDetalle);
+
+        //limpiar el mapa
+        this.overlays=[];
+        this.coordenadas=[];
+        this.RutaTerminada=0;
+        this.puntosRuta=[];
+
+        //CONSULTAR PUNTOS RUTADETALLE AL rest
+        this.rutaService.getAllRutaDetalleByRu(this.indiceRowTabla).subscribe(
+            data => {this.puntosRuta=data; this.cargarRuta();},
+            err => {this.errorMessage=err},
+            () => this.isLoading =false
+        );
     }
 
+    //cargar la ruta recuperada del rest haciendo el mapa
+    cargarRuta(){
+        /*
+        this.overlays=[];
+        this.coordenadas=[];
+        this.RutaTerminada=0;
+        this.puntosRuta=[];
+        */
+        for(let n=0; n<this.puntosRuta.length; n++){
+            this.coordenadas.push({
+                    lat:this.puntosRuta[n].RuDeLatitud,
+                    lng:this.puntosRuta[n].RuDeLongitud
+            });
+        }
+
+        this.overlays.push(
+            new google.maps.Polyline({
+            path: this.coordenadas,
+            strokeColor: '#FF0000',
+            strokeOpacity : 0.5,
+            strokeWeight :8 
+        }));
+    }
     //agregar marcador sobre la linea
 
     //borrar el marcador 
@@ -762,7 +835,9 @@ export class RutaComponent implements OnInit{
      //guardar en el rest la cabecera de la ruta (MAESTRO)
      saveRutaMaestro(){
          //capturando fecha
-            this.date = new Date();
+         if(this.Ruta.RuId == 0){
+             console.log("nuevo");
+             this.date = new Date();
             this.dia = this.date.getDate();
             this.mes = this.date.getMonth();
             this.anio = this.date.getFullYear();
@@ -777,6 +852,14 @@ export class RutaComponent implements OnInit{
             this.Ruta2.RuActivo = this.Ruta.RuActivo,
             this.Ruta2.UsId = this.Ruta.UsId,
             this.Ruta2.UsFechaReg = this.Ruta.UsFechaReg
+         }else if(this.Ruta.RuId > 0){
+             //en caso de editar
+
+            this.nuevaRutaMaestro()
+            console.log("editado");
+            
+         }
+            
         
          console.log(this.Ruta2);
          //this.rutaService.saveRuta(objRuta).then((response)=>{console.info(response);}).catch()
@@ -802,7 +885,7 @@ export class RutaComponent implements OnInit{
         }*/
      }
 
-     //capturar toda la ruta por el id (para mostrar en la grilla)
+     //capturar toda la ruta por el id (para mostrar en la grilla MAESTRO) 
     getAllRutaByEm(emId: number){
         this.rutaService.getAllRutaByEm(emId).subscribe(
             data => { this.rutas = data; this.mostrargrillaruta();},
@@ -857,8 +940,8 @@ export class RutaComponent implements OnInit{
                     RuDeOrden:n,
                     RuId:this.indiceRowTabla,
                     UsFechaReg:this.anio+"-"+this.mes+"-"+this.dia,
-                    UsId:0,
-                    RuDeId:0 
+                    UsId:0, 
+                    RuDeId:0
             });
             //this.puntosRutaDetalle[n]=this.puntosRuta;
         }
