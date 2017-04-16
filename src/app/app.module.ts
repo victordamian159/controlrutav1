@@ -9,6 +9,7 @@ import {GMapModule,DataTableModule,SharedModule,DataListModule} from 'primeng/pr
 import {ButtonModule,DialogModule,OverlayPanelModule,TabViewModule} from 'primeng/primeng';
 import {ConfirmDialogModule,GrowlModule,CodeHighlighterModule} from 'primeng/primeng';
 import {MultiSelectModule, PickListModule, RadioButtonModule, DropdownModule} from 'primeng/primeng';
+import {InputTextModule} from 'primeng/primeng';
 
 import { AppComponent } from './app.component';
 
@@ -68,7 +69,8 @@ import {PlacasService} from './service/placas.service';
       MultiSelectModule,
       PickListModule,
       RadioButtonModule,
-      DropdownModule
+      DropdownModule,
+      InputTextModule
 
   ],
   providers: [

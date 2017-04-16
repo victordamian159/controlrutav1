@@ -62,6 +62,7 @@ export class RutaComponent implements OnInit{
     buscarcoordenadas:any;
     indiceRowTabla:number;
     //puntosRuta:any[]=[];
+    _RuId:number;
     i=0;
     j=0;
     k=0;
@@ -108,7 +109,6 @@ export class RutaComponent implements OnInit{
         };
         this.getAllRutaByEm(1);
         this.infoWindow = new google.maps.InfoWindow();
-        //console.log(ruta);
     }
 
     //click sobre objeto
@@ -174,6 +174,7 @@ export class RutaComponent implements OnInit{
     //editar y luego llamar a l procedimiento para guardar en la BD 
     editarRutaMaestro(_RuId : number){
         console.log(_RuId)
+        this._RuId = _RuId;
         this.headertitle = "Editar";
 
         this.rutaService.getRutaById(_RuId).subscribe(
@@ -186,30 +187,58 @@ export class RutaComponent implements OnInit{
         );
 
           this.displayNuevaRutaModal = true;
-        
+           //borrando los campos de la vairable puntosRUta para que al momento de crear uno nuevo los campos estes vacios para ser llenados
+        //this.Ruta={};
     }   
 
-    //convertir numero a fecha 
+    //convertir numero a string (FECHAS) 
     convertNumberToString(){
-        /*
-        var myObj = $.parseJSON('{"date_created":"1273185387"}'),
-            myDate = new Date(1000*myObj.date_created);
-        console.log(myDate.toString());
-        console.log(myDate.toLocaleString());
-        console.log(myDate.toUTCString());
-        alert(new Date(1273185387).toUTCString());
-
-        var data = {"date_created":"1273185387"};
-        var date = new Date(parseInt(data.date_created, 10) * 1000);
-        // example representations
-        alert(date);
-        alert(date.toLocaleString());
-
-        */
+       
         console.log(this.Ruta.RuFechaCreacion);
         //let mydate = new Date(1000*this.Ruta.RuFechaCreacion.date_created);
         let mydate = new Date(this.Ruta.RuFechaCreacion);
-        this.Ruta.RuFechaCreacion = mydate.getFullYear()+"-"+ mydate.getMonth() +"-"+ mydate.getDate();
+        let userCreateDate = new Date(this.Ruta.UsFechaReg);
+
+        console.log(userCreateDate);
+        let userDia = userCreateDate.getDate();
+        let userMes = userCreateDate.getMonth();
+        let userAnio = userCreateDate.getFullYear();
+        console.log(userDia, userMes, userAnio);
+
+        /*
+        console.log(typeof(mydate));
+        console.log(typeof(mydate.getMonth));
+        this.Ruta.RuFechaCreacion = mydate.getFullYear()+"-0"+mydate.getMonth()+"-"+mydate.getDate();
+        */
+        console.log(typeof(this.Ruta.RuFechaCreacion));
+        let dia= Number(mydate.getDate());
+        let mes= Number(mydate.getMonth());
+        let anio=mydate.getFullYear().toString();
+
+        console.log(dia);
+        console.log(mes);
+        console.log(anio);
+        //aumentando el dia y mes en un numero
+        let _dia = dia;
+        let _mes = mes +1
+        //convirtiendo a cadena
+        let s_dia = _dia.toString();
+        let s_mes = _mes.toString();
+
+        //adecuar la fecha para q tenga el dia y mes 2 digitos 1 => 01 (PARA EL MES Y EL DIA)
+        if( ( 10<=_mes )  &&  ( 10<=_dia ) ){
+            this.Ruta.RuFechaCreacion = anio+"-"+s_mes+"-"+s_dia;
+
+            }else if(( 0<=_mes && _mes<10 )  &&  ( 10<=_dia )){
+                this.Ruta.RuFechaCreacion = anio+"-0"+ s_mes +"-"+s_dia;
+
+            }else if(( 10<=_mes )  &&  ( 0<=_dia && _dia<10 )){
+                this.Ruta.RuFechaCreacion = anio+"-"+ s_mes +"-0"+ s_dia;
+
+            }else if(( 0<=_dia && _dia<10 ) && ( 0<=_mes && _mes<10 )){
+                this.Ruta.RuFechaCreacion = anio+"-0"+ s_mes +"-0"+s_dia;
+        }
+        
         
     }
 
@@ -744,6 +773,9 @@ export class RutaComponent implements OnInit{
         console.log(this.indiceRowTabla);
         //console.log(this.puntosRutaDetalle);
 
+        //actualizando para poder saber si es un nuevo registro o si se va editar el seleccionado
+        this.Ruta.RuId = this.indiceRowTabla;
+
         //limpiar el mapa
         this.overlays=[];
         this.coordenadas=[];
@@ -756,6 +788,7 @@ export class RutaComponent implements OnInit{
             err => {this.errorMessage=err},
             () => this.isLoading =false
         );
+       
     }
 
     //cargar la ruta recuperada del rest haciendo el mapa
@@ -822,26 +855,47 @@ export class RutaComponent implements OnInit{
 
     constructor(private rutaService: RutaService){}
 
-    //Nuevo Registro Maestro
+    //Nuevo Registro Maestro (BOTON NUEVO - CABECERA)
      nuevaRutaMaestro(){
         this.displayNuevaRutaModal = true;
         this.headertitle ="Nuevo";
        this.rutaService.newRuta()
        .subscribe(
-            data => {this.Ruta2 = data}
+            data => {
+                 
+                this.Ruta2 = data;
+                //this.Ruta.RuId =0;
+                 this.Ruta ={
+                    RuId : 0,
+                    EmId : 1,
+                    RuDescripcion : "",
+                    //RuFechaCreacion:  'yyyy-MM-dd',
+                    RuRegMunicipal : "",
+                    RuKilometro : 0,
+                    RuActivo : true,
+                    UsId: 0,
+                    //UsFechaReg: 'yyyy-MM-dd'
+                }
+            }
         );
      }
   
      //guardar en el rest la cabecera de la ruta (MAESTRO)
      saveRutaMaestro(){
          //capturando fecha
-         if(this.Ruta.RuId == 0){
+         if(this._RuId == 0){
              console.log("nuevo");
-             this.date = new Date();
+            //capturando la fecha actual
+            this.date = new Date();
             this.dia = this.date.getDate();
             this.mes = this.date.getMonth();
             this.anio = this.date.getFullYear();
             this.Ruta.UsFechaReg = this.anio+"-"+this.mes+"-"+this.dia;
+
+            //capturando la fecha de creacion
+            console.log(this.Ruta.RuFechaCreacion);
+            //let anio = this.Ruta.RuFechaCreacion.getFullYear();
+            //console.log(anio);
 
             this.Ruta2.RuId = this.Ruta.RuId,
             this.Ruta2.EmId = this.Ruta.EmId,
@@ -852,11 +906,39 @@ export class RutaComponent implements OnInit{
             this.Ruta2.RuActivo = this.Ruta.RuActivo,
             this.Ruta2.UsId = this.Ruta.UsId,
             this.Ruta2.UsFechaReg = this.Ruta.UsFechaReg
-         }else if(this.Ruta.RuId > 0){
+
+            this.displayNuevaRutaModal=false;
+            console.log(this.Ruta);
+         }else if(this._RuId != 0){
              //en caso de editar
 
-            this.nuevaRutaMaestro()
+            //NO FUNCIONA ESTA PARTE
             console.log("editado");
+
+            //capturando la fecha actual
+            this.date = new Date();
+            this.dia = this.date.getDate();
+            this.mes = this.date.getMonth();
+            this.anio = this.date.getFullYear();
+            this.Ruta.UsFechaReg = this.anio+"-"+this.mes+"-"+this.dia;
+            let ID = this._RuId;
+            console.log(ID);
+                this.Ruta2 ={
+                    RuId : ID,
+                    EmId : this.Ruta.EmId,
+                    RuDescripcion : this.Ruta.RuDescripcion,
+                    RuFechaCreacion:  this.Ruta.RuFechaCreacion,
+                    RuRegMunicipal : this.Ruta.RuRegMunicipal,
+                    RuKilometro : this.Ruta.RuKilometro,
+                    RuActivo : this.Ruta.RuActivo,
+                    UsId: this.Ruta.UsId,
+                    UsFechaReg: this.Ruta.RuFechaCreacion
+                }	
+            console.log(this.Ruta);
+          
+            this.displayNuevaRutaModal=false;
+            console.log(this.Ruta2);
+            
             
          }
             

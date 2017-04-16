@@ -74,23 +74,39 @@
                             {{headertitle}} Punto Control
                         </p-header>
 
+                                <div class="form-group row">
+                                   <label for="ruID" class="col-4 col-form-label">ruID: </label>
+                                   <div class="col-8">
+                                        <input type="input" class="form-control" id="ruID" [(ngModel)]="Ruta.RuId" name="userid">
+                                   </div>
+                               </div>
                                <div class="form-group row">
+                                   
                                    <label for="descripcion" class="col-4 col-form-label">Descripcion: </label>
                                    <div class="col-8">
                                         <textarea class="form-control" id="descripcion" row="4" [(ngModel)]="Ruta.RuDescripcion" name="descripcion" ></textarea>
                                    </div>
+                                   <!--
+                                   <h3 class="first">Descripcion: </h3>
+                                    <input id="in" type="text" size="30" pInputText [(ngModel)]="Ruta.RuDescripcion" />
+                                    -->
                                </div>
                                <div class="form-group row">
                                    <label for="fechacreacion" class="col-4 col-form-label">Fecha Creacion:</label>
                                    <div class="col-8">
-                                        <input type="date" class="form-control" id="fechacreacion" [(ngModel)]="Ruta.RuFechaCreacion" name="fcreacion">
+                                        <input type="date" class="form-control" id="fechacreacion"  [(ngModel)]="Ruta.RuFechaCreacion" name="fcreacion">
                                    </div>
                                </div>
                                <div class="form-group row">
+                                   
                                    <label for="regmunicipal" class="col-4 col-form-label">Nro. Registro:</label>
                                    <div class="col-8">
                                         <input type="text" class="form-control" id="regmunicipal" [(ngModel)]="Ruta.RuRegMunicipal" name="regmunicipal">
                                    </div>
+                                   <!--
+                                    <h3 class="first">Nro. Registro: </h3>
+                                    <input id="in" type="text" size="30" pInputText [(ngModel)]="Ruta.RuRegMunicipal" />
+                                    -->
                                </div>
                                <div class="form-group row">
                                    <label for="kilometro" class="col-4 col-form-label">Kilometro: </label>
@@ -98,22 +114,22 @@
                                         <input type="number" class="form-control" id="kilometro" [(ngModel)]="Ruta.RuKilometro" name="kilometro">
                                    </div>
                                </div>
-                               <!--
+                               
                                <div class="form-group row">
                                    <label for="iduser" class="col-4 col-form-label">Usuario: </label>
                                    <div class="col-8">
                                         <input type="input" class="form-control" id="iduser" [(ngModel)]="Ruta.UsId" name="userid">
                                    </div>
                                </div>
-                               -->
-                               <!--
+                               
+                               
                                <div class="form-group row">
                                    <label for="fecharegruta" class="col-4 col-form-label">Fecha Registro: </label>
                                    <div class="col-8">
                                         <input type="date" class="form-control" id="fecharegruta"  [(ngModel)]="Ruta.UsFechaReg" name="fregistro">
                                    </div>
                                </div>
-                               -->
+                               
                 
 
                        <p-footer>

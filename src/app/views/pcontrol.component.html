@@ -16,7 +16,6 @@
                     scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">
                     
                     <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                        
                         <template pTempalte="header">
                             <button type="button" pButton icon="fa-refresh"></button>
                         </template>
@@ -41,9 +40,17 @@
             <div class="card-block" style="padding:3">
                 <div class="card">
                     <div class="card-block" style="padding:3">
-                                    <p-dataTable [value]="pCDetalleMostrar" [rows]="10"  emptyMessage="No Hay Puntos de Control" [globalFilter]="filtroGlobal"
-                                        scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" 
-                                        (onRowSelect)="onRowSelect($event)">
+                            <!--
+                             <p-dataTable [value]="pCMaestroMostrar" [rows]="5" [paginator]="true" 
+                                [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal"
+                                 scrollable="true" scrollWidth="100%" selectionMode="single" 
+                                 [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">
+                    
+                            -->
+                                    <p-dataTable [value]="pCDetalleMostrar" [rows]="5" [paginator]="true" [pageLinks]="3"
+                                    emptyMessage="Seleccione Una Lista de Punto de Control" [rowsPerPageOptions]="[5,10,20]"
+                                    [globalFilter]="filtroGlobal"  scrollable="true" scrollWidth="100%" selectionMode="single" 
+                                    [(selection)]="selectedProgPresentar"  (onRowSelect)="onRowSelect($event)">
 
                                         <p-column styleClass="col-button" [style]="{'width':'3em'}">
                                             <!--botones para la columna-->
@@ -59,7 +66,8 @@
                                             </template>
                                         </p-column>
                                         <!--campos de la datatable-->
-                                        <p-column field="PuCoDeId"      header="N°"         [style]="{'width':'2em'}" ></p-column>
+                                        <p-column field="PuCoDeOrden"      header="N°"   [style]="{'width':'2em'}"  ></p-column>
+                                        <p-column field="PuCoDeId"      header="PuCoDeId"   [style]="{'width':'2em'}"  hidden="true"></p-column>
                                         <p-column field="PuCoId"        header="PuCoId"    [style]="{'width':'3em'}" hidden="true"></p-column>
                                         <p-column field="PuCoDeLatitud" header="Latitud"     [style]="{'width':'6em'}" hidden="true"></p-column>
                                         <p-column field="PuCoDeLongitud" header="Longitud"  [style]="{'width':'6em'}" hidden="true"></p-column>
@@ -74,7 +82,7 @@
 
             <!--mapa-->
             <div class="container">
-                     
+                <!--MAPA-->
                     <p-growl [value]="msgs"></p-growl>
                     <p-gmap 
                         #gmap
@@ -92,32 +100,46 @@
                     <!--cuadro modal nuevo punto de control detalle-->
                     <p-dialog [(visible)]="displayNuevoPunto" modal="modal" width="300" responsive="true"  [closable]="false">
                         <div class="ui-grid ui-grid-pad ui-fluid" *ngIf="selectedPosition">
-                                <!--nombre puntos control (ubicacion)-->
-                                <!--
-                                <div class="form-group col-7">
-                                    <label class="control-label" for="namePControl">Nombre: </label>
-                                    <input class="form-control"   id="namePControl" name="namePunto" [(ngModel)]="pcDetalle.PuCoDeDescripcion" type="text">
-                                </div>
-                                -->
+                                 
+                                <!--posicion en la lista de puntos-->
                                 <div class="ui-grid-row">
-                                    <div class="ui-grid-col-2"><label for="title">Nombre:</label></div>
-                                    <div class="ui-grid-col-10">
+                                    <div class="ui-grid-col-3">
+                                        <label for="positionTitle">N°Pos:</label>
+                                    </div>
+                                    <!--
+                                    <div class="ui-grid-col-9 ui-grid-row">
+                                        <input type="text" pInputText id="posicionTitle" [disabled]="disabledInputPos"/>
+                                        <button type="button" size="30" (click)="activarInputPos()" pButton label="Auto"></button>
+                                    </div>
+                                    -->
+                                    
+                                    <div class="ui-grid-col-6">
+                                        <input type="text" pInputText id="posicionTitle" [disabled]="disabledInputPos" [(ngModel)]=pcDetalle.PuCoDeOrden/>
+                                    </div>
+                                    <!--activar el input de orden de los puntos de control-->
+                                    <div class="ui-grid-col-3">
+                                        <button type="button" (click)="activarInputPos()" pButton label="#"></button>
+                                    </div>
+                                    
+                                </div>
+                                <!--nombre punto control-->
+                                <div class="ui-grid-row">
+                                    <div class="ui-grid-col-3">
+                                        <label for="title">Nombre:</label>
+                                    </div>
+                                    <div class="ui-grid-col-9">
                                         <input type="text" pInputText id="title" [(ngModel)]="pcDetalle.PuCoDeDescripcion">
                                     </div>
                                 </div>
-                                 <!--tiempo -->
-                                 
-                                <div class="form-group col-7">
-                                    <label class="control-label" for="time">Tiempo:</label>
-                                    <input class="form-control" type="text" id="time" name="time"  [(ngModel)]="pcDetalle.PuCoDeHora"  />
+                                 <!--tiempo -->                               
+                                <div class="ui-grid-row">
+                                    <div class="ui-grid-col-3">
+                                        <label class="control-label" for="time">Tiempo:</label>
+                                    </div>
+                                    <div class="ui-grid-col-9">
+                                        <input type="text" pInputText id="time" [(ngModel)]="pcDetalle.PuCoDeHora"  />
+                                    </div>
                                 </div>
-                                <!--
-                                <div class="col-3">
-                                    <label class="control-label" for="timeSeg">Seg:</label>
-                                    <input class="form-control" id="timeSeg" name="timeSegundos" placeholder="00" type="number" />
-                                </div>
-                                -->
-                                 
                         </div>
                         <p-footer>
                             <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
@@ -126,15 +148,15 @@
                             </div>
                         </p-footer>
                     </p-dialog>
-                    
+                <!--BOTONES DEL MAPA-->
                 <div class="container">
-                    <button type="button" pButton label="Cargar Ruta" (click)="cargarRuta()" ></button>
                     <button type="button" pButton label="Guardar Puntos" (click)="guardarpuntosDetalleRest()" ></button>
                 </div>
             </div>
             
+      
             
-            <!--modal boton nuevo punto control maestro-->
+        <!--modal boton nuevo punto control maestro-->
             <p-dialog  [(visible)]="displayListaPuntos" 
                       modal="modal" width="350" responsive="true">
                 <p-header>{{headertitle}} : {{pcMaestro.PuCoId}}</p-header>
@@ -157,8 +179,10 @@
                         <button type="button" pButton  (click)="cancelarPCMaestro()" label="Close"></button>
                     </div>
                 </p-footer>
-            </p-dialog>    
-                <!--final boton nuevo modal-->
+            </p-dialog>  <!--final boton nuevo modal-->  
+                
+     
+            
 </div>
 
 
