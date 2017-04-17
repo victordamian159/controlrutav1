@@ -73,13 +73,14 @@
                         <p-header>
                             {{headertitle}} Punto Control
                         </p-header>
-
+                                <!--
                                 <div class="form-group row">
                                    <label for="ruID" class="col-4 col-form-label">ruID: </label>
                                    <div class="col-8">
                                         <input type="input" class="form-control" id="ruID" [(ngModel)]="Ruta.RuId" name="userid">
                                    </div>
                                </div>
+                               -->
                                <div class="form-group row">
                                    
                                    <label for="descripcion" class="col-4 col-form-label">Descripcion: </label>
@@ -114,7 +115,7 @@
                                         <input type="number" class="form-control" id="kilometro" [(ngModel)]="Ruta.RuKilometro" name="kilometro">
                                    </div>
                                </div>
-                               
+                               <!--
                                <div class="form-group row">
                                    <label for="iduser" class="col-4 col-form-label">Usuario: </label>
                                    <div class="col-8">
@@ -129,9 +130,7 @@
                                         <input type="date" class="form-control" id="fecharegruta"  [(ngModel)]="Ruta.UsFechaReg" name="fregistro">
                                    </div>
                                </div>
-                               
-                
-
+                               -->
                        <p-footer>
                            <div class="ui-dialog-buttonpane ui-widget-content">
                                 <button type="button" pButton icon="fa-spin"  (click)="saveRutaMaestro()"  label="Guardar"></button>
@@ -161,21 +160,22 @@
                 </div>
                 <div class="container">
                     <!--(click)="funcione en el app.component.ts"-->
-                    <button type="button" pButton label="Borrar" (click)="clear()" ></button>
                     <!--boton de modal editar ruta-->
-                    <button type="button" pButton label="Editar" (click)="showmodalEditar()" ></button>
-                    <button type="button" pButton label="Zoom +" (click)="zoomIn(gmap.getMap())" ></button>
-                    <button type="button" pButton label="Zoom -" (click)="zoomOut(gmap.getMap())" ></button>
-                    <button type="button" pButton label="Terminar Ruta" (click)="ultimalinea()" ></button>
-                    <button type="button" pButton label="Subir Ruta" (click)="guardarPuntosRutaDetalle()" ></button>
-                    <button type="button" pButton label="Deshacer" (click)="deshacer()" ></button>
-                    <button type="button" pButton label="Nueva Ruta" (click)="nuevaRutaDetalle()" ></button>
+                    <button type="button" pButton label="Borrar"        (click)="clear()"                   [disabled]="disButBorrar"></button>
+                    <button type="button" pButton label="Editar"        (click)="showmodalEditar()"         [disabled]="disButEditar"></button>
+                    <button type="button" pButton label="Zoom +"        (click)="zoomIn(gmap.getMap())"     ></button>
+                    <button type="button" pButton label="Zoom -"        (click)="zoomOut(gmap.getMap())"     ></button>
+                    <button type="button" pButton label="Terminar Ruta" (click)="ultimalinea()"             [disabled]="disButTerminarRuta" ></button>
+                    <button type="button" pButton label="Subir Ruta"    (click)="guardarPuntosRutaDetalle()"[disabled]="disButSubirRuta"></button>
+                    <button type="button" pButton label="Deshacer"      (click)="deshacer()"                [disabled]="disButDeshacer"></button>
+                    <button type="button" pButton label="Nueva Ruta"    (click)="nuevaRutaDetalle()"        [disabled]="disButNuevaRuta"></button>
                 </div>
             </div>
+        
          <!--end mapa-->
-         <!--modal boton editar-->
+         <!--modal boton editar (PARA DECIDIR SI SE EDITA O NO)-->
          <p-dialog  [(visible)]="displayfromEditar" modal="modal" width="250" responsive="true">
-            <p>¿Desea editar el mapa?</p>
+            <p>¿Desea editar la Ruta?</p>
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
                     <button type="button" pButton icon="fa-close" (click)="displayfromEditar=false" label="No"></button>
