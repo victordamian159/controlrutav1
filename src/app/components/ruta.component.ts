@@ -939,8 +939,8 @@ export class RutaComponent implements OnInit{
             this.anio = this.date.getFullYear();
             this.Ruta.UsFechaReg = this.anio+"-"+this.mes+"-"+this.dia;
             let ID = this._RuId;
-            console.log(ID);
-                this.Ruta2 ={
+            //console.log(ID);
+               /* this.Ruta2 ={
                     RuId : ID,
                     EmId : this.Ruta.EmId,
                     RuDescripcion : this.Ruta.RuDescripcion,
@@ -950,7 +950,11 @@ export class RutaComponent implements OnInit{
                     RuActivo : this.Ruta.RuActivo,
                     UsId: this.Ruta.UsId,
                     UsFechaReg: this.Ruta.RuFechaCreacion
-                }	
+                }
+               */
+           
+                this.Ruta2=this.Ruta;
+               
             console.log(this.Ruta);
             this.displayNuevaRutaModal=false;
             console.log(this.Ruta2);
