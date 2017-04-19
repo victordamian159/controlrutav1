@@ -71,7 +71,7 @@
          <p-dialog [(visible)]="displayNuevaRutaModal" modal="modal" width="450" responsive="true" [closable]=false>
 
                         <p-header>
-                            {{headertitle}} Punto Control
+                            {{headertitle}} Ruta
                         </p-header>
                                 <!--
                                 <div class="form-group row">
@@ -137,7 +137,7 @@
                                 <button type="button" pButton icon="fa-close" (click)="cancelRutaMaestro()" label="Cancelar"></button>
                            </div>
                        </p-footer>
-            </p-dialog>
+        </p-dialog>
                        
          
 
@@ -169,6 +169,7 @@
                     <button type="button" pButton label="Subir Ruta"    (click)="guardarPuntosRutaDetalle()"[disabled]="disButSubirRuta"></button>
                     <button type="button" pButton label="Deshacer"      (click)="deshacer()"                [disabled]="disButDeshacer"></button>
                     <button type="button" pButton label="Nueva Ruta"    (click)="nuevaRutaDetalle()"        [disabled]="disButNuevaRuta"></button>
+                    <button type="button" pButton label="Cancelar"    (click)="cancelarRuta()"             [disabled]="disButCancelar"></button>
                 </div>
             </div>
         

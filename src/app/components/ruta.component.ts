@@ -75,6 +75,7 @@ export class RutaComponent implements OnInit{
     x0=0;
     y0=0;
     end=0;
+    editando=1; //editado = 1 (se esta editando)  editando = 0 (no se esta editando)
     new_x:number; //para funcion editar, crear nuevos marker
     new_y:number; //para funcion editar, crear nuevos marker
     new_index:number; //indice para nuevo marcador draggable true
@@ -98,7 +99,6 @@ export class RutaComponent implements OnInit{
     y=0;
     draggable: boolean;
     msgs: Message[] = [];
-
     mapa : any;
 
     //HABILITAR O DESAHILITAR BOTONES
@@ -116,7 +116,9 @@ export class RutaComponent implements OnInit{
     
     //PARA ACTIVAR O DESACTIVAR EL AGREGAR MARCADORES AL MAPA
     activarAddMarker:number =0; // 1 : ADDMARKER ACTIVADO   0 : ADDMARKER  DESACTIVADO
+    modRegistro=0; // 1: registro terminado     0: registro no terminado
 
+//FUNCIONES
     ngOnInit(){
          //configuracion mapa google
         this.options = {
@@ -125,7 +127,11 @@ export class RutaComponent implements OnInit{
         };
         this.getAllRutaByEm(1);
         this.infoWindow = new google.maps.InfoWindow();
-        this.activarAddMarker = 0;
+        this.activarAddMarker = 0; //addmarker desactivado
+        
+         
+        //CONTROLAR LA SELECCION DE FILAS EN LA GRILLA, DESACTIVAR HASTA Q SE TERMINE DE GUARDAR LA MODIFICACION O NUEVO REGISTRO
+        this.modRegistro=1; //ACTIVANDO LA SELECCION DE REGISTRO MAESTRO --seleccionar regisrtos activado
     }
 
     //click sobre objeto
@@ -279,23 +285,26 @@ export class RutaComponent implements OnInit{
         this.displayfromEditar = false;
         this.disButDeshacer=false; //HABILITANDO BOTON PARA DESHACER RUTA 
         this.disButEditar=false; //HABILITANDO BOTON PARA EDITAR LA RUTA (RUTA RECUPERADA)
+       this.disButBorrar=false;
+       this.editando = 1; // se esta editando
        
-       
-       console.log(this.overlays);
+        console.log("tamaño overlays: "+this.overlays.length);
+        console.log("buscando error: ");
+        console.log(this.overlays);
+        console.log("separador");
          //CUATRO CASOS PARA EDITAR 
 
         //SI EXISTEN PUNTOS EN EL ARRAY PUNTOSRUTA -> SE PUEDE EDITAR 
         // rutaRecuperada = 0 -> la ruta no esta en la BD ( NUEVA TRAZA)
+        //ESTA ES PARA UNA RUTA RECIEN CREADA (NO ESTA EN LA BD)
         if(this.rutaRecuperada == 0  ){
-            //ESTA ES PARA UNA RUTA RECIEN CREADA (NO ESTA EN LA BD)
+            //caso de ruta no terminada que no esta en la BD
             if(this.RutaTerminada==0){
                 //caso de ruta no terminada
                 this.edit_RutaNoTerminada = 1;//si ruta ya se termino y se quiere editar
                 //draggable de marker todos a true (para ser arrastrados)  del overlays
-                
-            
             }else if(this.RutaTerminada==1){
-            //caso de ruta terminada    
+            //caso de ruta terminada    que no esta en la BD 
                 this.q=0; // q son los indices de los marcadores
                 this.new_index=0;//title del marker comienza por 0 
                 this.edit_RutaTerminada=1;
@@ -304,8 +313,11 @@ export class RutaComponent implements OnInit{
                 //draggable de marker todos a true (para ser arrastrados) del overlays
                 while( this.q<this.overlays.length-1){
                     console.log("el valor de q es :"+this.q)
-                    console.log(this.overlays[this.q]);
+                    //console.log(this.overlays[this.q]);
+                    console.log("tamaño overlays: "+this.overlays.length);
+                    console.log("buscando error: ");
                     console.log(this.overlays);
+                    console.log("separador");
 
                     // si q = 0 (es el primer marcador)
                     if(this.q == 0 || this.q ==1){
@@ -342,36 +354,129 @@ export class RutaComponent implements OnInit{
                 }//cierra while
                 console.log(this.overlays); // mostrar el marcador en consola
             }
-        //LA TRAZA DE LA RUTA ESTA EN LA BD Y SOLO SE MUESTRA UNA LINEA(TRAZA DE LA RUTA)
+
+        //LA RUTA ESTA EN LA BD Y SOLO SE MUESTRA UNA LINEA(TRAZA DE LA RUTA) 
+        //FALTA TERMINAR SU PROGRAMACION 
+        //AGREGANDO MARCADORES Y LINEAS COMO CORRESPONDE 0,1,3,5...(IMPARES-- PARA MARKER) 2,4,6,8...(PARES--LINEAS) EN EL OVERLAYS
         }else if(this.rutaRecuperada == 1){
-            
+            this.i= this.puntosRuta.length -1;
+            console.log("i: "+this.i);
             console.log("editar una ruta que esta en la bd");
             this.disButEditar=true;
             this.disButBorrar=false;
             console.log(this.puntosRuta);
             
+            //LIMPIANDO OBJETOS
+            //this.overlays=[];
+            this.coordenadas=[];
+            //this.RutaTerminada=0;
+            //this.puntosRuta=[];
+            this.i=0;
+            this.RutaTerminada=0;
+            this.j=0;
+            this.k=0;
+            this.l=0;
+            this.m=1;
+            this.n=0;
+            this.x0=0;
+            this.y0=0;
+            this.end=0;
+            this.cen=0;
 
-            this.overlays[0].setMap(null);
-            this.overlays=[];
-
-            for(let n=0; n< this.puntosRuta.length; n++){
-                //poner indice a los marcadores y lineas
-                this.overlays.push(new google.maps.Marker({
-                                position:{lat: this.puntosRuta[n].RuDeLatitud,  lng: this.puntosRuta[n].RuDeLongitud}, 
-                                title:n.toString(), 
-                                draggable: false,}));
-            }
-
-           
+            this.overlays[0].setMap(null);//BORRANDO LINEA RUTA, FALTA ELIMINAR LA LINEA DE CIERRE DE RUTA
+            this.overlays=[]; //VACIANDO LOS OBJETOS
+            
+            //PARA MONITOREAR A VER SI NO OCURRE ERRORES
+            console.log("antes OVERLAYS");
             console.log(this.overlays.length);
-            //this.cargarRuta();
+            console.log(this.overlays);
+            console.log("&&&&&&&&&&&&&&&&&&&&&&&&&");
+            
+            //AGREGANDO MARCADORES, OBTENIENDO COORDENADAS DE LOS PUNTOS RECUPERADOS (PUNTOSRUTA) DE LA BD
+            let n:number=0;
+
+            //1ero LOS MARCADORES
+            while(n<this.puntosRuta.length){
+                if(n==0 || n==1){ //primeros marcadores
+                     this.overlays.push(new google.maps.Marker({
+                                position:{lat: this.puntosRuta[n].RuDeLatitud,  lng: this.puntosRuta[n].RuDeLongitud}, 
+                                title:n.toString(), // el n no puede ser titulo
+                                draggable: true,}));
+
+                    if(n==1){ //si esta el segundo marcador se crea su linea
+                        this.overlays.push(new google.maps.Polyline({
+                                path:[{lat: this.puntosRuta[n-1].RuDeLatitud,   lng:this.puntosRuta[n-1].RuDeLongitud},
+                                      {lat: this.puntosRuta[n].RuDeLatitud,     lng:this.puntosRuta[n].RuDeLongitud}],
+                                geodesic: true,  strokeColor: '#FF0000',  strokeOpacity: 0.5,  strokeWeight: 2,   editable: false,  draggable: false
+                        }));
+                    }            
+                    n++;
+
+                     
+                }else if(this.overlays.length%2==0){ //tamaño overlays:  par --->  lineas
+                    //TRAZANDO LINEAS
+                    
+                    this.overlays.push(new google.maps.Polyline({
+                                path:[{lat: this.puntosRuta[n-1].RuDeLatitud,   lng:this.puntosRuta[n-1].RuDeLongitud},
+                                      {lat: this.puntosRuta[n].RuDeLatitud,     lng:this.puntosRuta[n].RuDeLongitud}],
+                                geodesic: true,  strokeColor: '#FF0000',  strokeOpacity: 0.5,  strokeWeight: 2,   editable: false,  draggable: false
+                    }));
+
+                    //console.log("n = "+n);
+                    console.log("tamaño overlay (lineas): "+this.overlays.length);
+                    n++;
+
+                }else if(this.overlays.length%2==1 ){ //n impar --->  markers
+                    //marcadores posicion impar
+                    //poner indice a los marcadores y lineas
+                    
+                    this.overlays.push(new google.maps.Marker({
+                                    position:{lat: this.puntosRuta[n].RuDeLatitud,  lng: this.puntosRuta[n].RuDeLongitud}, 
+                                    title:n.toString(), 
+                                    draggable: true,}));
+                    //console.log("n = "+n);
+                    console.log("tamaño overlay (marker): "+this.overlays.length);
+                    //n++;
+                }
+
+            }//FIN WHILE
+
+           this.ultimalinea();
+
+            console.log("DESPUES");
+            console.log(this.overlays.length);
+            console.log(this.overlays);
+            console.log("&&&&&&&&&&&&&&&&&&&&&&&&&");
+
         }
         this.disButEditar=true; //DESACTIVANDO EL BOTON EDITAR PARA QUE NO ESTE ACTIVO AL MODIFICAR LA RUTA
-    }
+
+        this.activarAddMarker = 0;//addmarker desactivado
+        this.modRegistro=0;    //select row grilla desactivado
+
+        //condicionales para activar el arrastre de markers
+        this.edit_RutaTerminada = 1;
+        this.RutaTerminada = 1;
+
+        console.log("valor this.edit_RutaNoTerminada = "+this.edit_RutaNoTerminada);
+        console.log("valor this.overlays.length = "+this.overlays.length);
+        console.log("valor this.RutaTerminada = "+this.RutaTerminada);
+        //ENCONTRARDO EL ERRORES
+          //if(this.edit_RutaNoTerminada == 1  && 
+          //this.overlays.length > 1 && 
+          //this.RutaTerminada == 0){
+
+            //if(this.edit_RutaTerminada == 1  
+            //&& this.overlays.length > 1 && 
+            //this.RutaTerminada == 1){
+ 
+}
 
 
     //evento arrastrar final  -- ARRASTRAR LOS MARCADORES
     handleDragEnd(event){
+        console.log("arrastrando marker =D");
+        console.log("longitud overlays: "+this.overlays.length);
         this.indexmovil = Number(event.overlay.getTitle());//CONVIRTIENDO TITLE MARKER A NUMERICO
 
             //EXTRAYENDO LATITUD Y LOGITUD DE MARCADOR ARRASTRADO
@@ -428,7 +533,7 @@ export class RutaComponent implements OnInit{
                 // 0 polyline
         //CASOS SI RUTA ESTA TERMINADA
          }else if(this.edit_RutaTerminada == 1  && this.overlays.length > 1 && this.RutaTerminada == 1){
-            
+            console.log("CASSARETO");
             //1er marker si terminada ruta
             if(this.indexObjec == 0){
                 //se guardan la nuev aposicion en los puntos para trazar la ruta
@@ -569,18 +674,24 @@ export class RutaComponent implements OnInit{
 
     //CLICK SOBRE EL MAPA -- EN ESTE CASO PARA AGREGAR MARCADORES SOBRE EL MAPA
     handleMapClick(event) {
-        this.selectedPosition = event.latLng;
-        this.coordenadas.push(  
-            Coords = {x:this.selectedPosition.lat(), 
-                      y:this.selectedPosition.lng()  })
-        this.addMarker();         
-        this.disButSubirRuta=true;//desactivar boton subirRuta, se activara cuando se pulse el boton terminarRuta 
-    }
+        if(this.activarAddMarker == 1){//addmarker activado
+            this.selectedPosition = event.latLng;
+            this.coordenadas.push(  
+                Coords = {x:this.selectedPosition.lat(), 
+                        y:this.selectedPosition.lng()  })
+            this.addMarker();         
+            this.disButSubirRuta=true;//desactivar boton subirRuta, se activara cuando se pulse el boton terminarRuta 
+
+        }else if(this.activarAddMarker == 0){//addmarker desactivado
+            console.log("no se puede hacer click sobre el mapa, addmarker desactivado");
+        }
+    }//fin funcion handleMapClick CLICK SOBRE EL MAPA
 
     //agregar marcador en el mapa
-
     addMarker(){
-        if(this.activarAddMarker == 1){
+        if(this.activarAddMarker == 1){//addMarker esta activada
+                console.log("i: "+this.i); //indice del marcador agregado
+            
                 this.draggable=false;
                 //decidiendo el titulo(index) para marker
                 if(this.i == 0 || this.i==1 ){
@@ -592,10 +703,18 @@ export class RutaComponent implements OnInit{
                 console.log("marcador: "+this.markerTitle);
 
                 //poner indice a los marcadores y lineas
-                this.overlays.push(new google.maps.Marker({
+                if(this.editando == 1){ //en estado de editar
+                    this.overlays.push(new google.maps.Marker({
+                                position:{lat: this.coordenadas[this.i].x,  lng: this.coordenadas[this.i].y}, 
+                                title:this.markerTitle, 
+                                draggable: true,}));
+                }else if(this.editando == 0){ //no en estado de editar 
+                    this.overlays.push(new google.maps.Marker({
                                 position:{lat: this.coordenadas[this.i].x,  lng: this.coordenadas[this.i].y}, 
                                 title:this.markerTitle, 
                                 draggable: this.draggable,}));
+                }
+                
                 
                 //listando posiciones de los marcadores
                 //this.dialogVisible = false;
@@ -610,10 +729,8 @@ export class RutaComponent implements OnInit{
                 if(this.i>0){
                     this.overlays.push(
                         new google.maps.Polyline({
-                                    path:[
-                                        {lat: this.puntosRuta[this.i-1].RuDeLatitud, lng:this.puntosRuta[this.i-1].RuDeLongitud},
-                                        {lat: this.puntosRuta[this.i].RuDeLatitud, lng:this.puntosRuta[this.i].RuDeLongitud}
-                                        ],
+                                    path:[{lat: this.puntosRuta[this.i-1].RuDeLatitud, lng:this.puntosRuta[this.i-1].RuDeLongitud},
+                                        {lat: this.puntosRuta[this.i].RuDeLatitud, lng:this.puntosRuta[this.i].RuDeLongitud}],
                                     geodesic: true,  strokeColor: '#FF0000',  strokeOpacity: 0.5,  strokeWeight: 2,   editable: false,  draggable: false,
                                     //title : 1
                                     }),
@@ -627,12 +744,10 @@ export class RutaComponent implements OnInit{
                 this.disButSubirRuta=false;
                 this.disButTerminarRuta=false;
 
-        }else if(this.activarAddMarker == 0){
+        }else if(this.activarAddMarker == 0){//addmarker esta desactivado
             //ABRIR UNA VENTA QUE DIGA QUE NO SE PUEDE AGREGAR MARCADORES
             console.log("no se puede agregar marcadores");
-            
-            
-              this.overlays=[];
+                this.overlays=[];
                 this.coordenadas=[];
                 this.RutaTerminada=0;
                 this.puntosRuta=[];
@@ -648,40 +763,26 @@ export class RutaComponent implements OnInit{
                 this.end=0;
                 this.cen=0;
         }
-        console.log("tamaño overlays: "+this.overlays.length);
     }
 
     //terminar ruta unir primer y ultimo marker con linea Y Crea el nuevo registro rutadetalle
     ultimalinea(){
         if(this.overlays.length>3){
             this.end=this.puntosRuta.length - 1;
-            this.overlays.push(
-                new google.maps.Polyline({
-                                path:[
-                                    {lat: this.puntosRuta[0].RuDeLatitud, lng:this.puntosRuta[0].RuDeLongitud},
-                                    {lat: this.puntosRuta[this.end].RuDeLatitud, lng:this.puntosRuta[this.end].RuDeLongitud}
-                                    ],
-                                geodesic: true, 
-                                strokeColor: '#FF0000', 
-                                strokeOpacity: 0.5, 
-                                strokeWeight: 2, 
-                                editable: false, 
-                                draggable: false
-                                }),
-            );
+            this.overlays.push( new google.maps.Polyline({
+                                path:[{lat: this.puntosRuta[0].RuDeLatitud, lng:this.puntosRuta[0].RuDeLongitud},
+                                    {lat: this.puntosRuta[this.end].RuDeLatitud, lng:this.puntosRuta[this.end].RuDeLongitud}],
+                                geodesic: true, strokeColor: '#FF0000', strokeOpacity: 0.5, strokeWeight: 2, editable: false, draggable: false}),);
         }else{
             console.log("Termine Bien la Ruta :S");
         }
         this.RutaTerminada=1; //ruta esta terminada
-        //console.log(this.puntosRuta);
-        //mandandolo a la variable global para ser mostrado en el modulo Puntos de Control
-        /*
-        for(this.n=0; this.n<this.puntosRuta.length; this.n++){
-            puntosTrazaRuta[this.n]=  this.puntosRuta[this.n];
-        }*/
-        //this.puntosRuta=[];
-        console.log(this.puntosRuta);
         
+        console.log(this.puntosRuta);
+        console.log("tamaño overlays: "+this.overlays.length);
+        console.log("buscando error: ");
+        console.log(this.overlays);
+        console.log("separador de resultados");
         //DESAHILITAR BOTONES EN CASO DE HABER TERMINADO LA RUTA
         this.disButEditar=false;    //  B H
         this.disButDeshacer=true;   //  B DH
@@ -689,9 +790,11 @@ export class RutaComponent implements OnInit{
         this.disButSubirRuta=false; //  B H
         this.disButTerminarRuta=true;//  B DH
         this.disButBorrar=true;     //  B DH
-        //this.disButSubirRuta=true;
+        
         //DESACTIVAR ADDMARKER
         this.activarAddMarker = 0;
+
+        this.editando = 0; //no se esta editando ,  ruta terminada
     }
 
   
@@ -750,72 +853,83 @@ export class RutaComponent implements OnInit{
 
     //CLICK SOBRE UNA FILA DE LA GRILLA
     onRowSelect(event){
-        //obtener le ID de la fila seleccionada
-        this.indiceRowTabla = event.data.RuId;
-        console.log(this.indiceRowTabla);
-        //console.log(this.puntosRutaDetalle);
-
-       
-
         
-        
+        if(this.modRegistro==1){ //MOD TERMINADO
+                //obtener le ID de la fila seleccionada
+                this.indiceRowTabla = event.data.RuId;
+                
+                //actualizando para poder saber si es un nuevo registro o si se va editar el seleccionado
+                //this.Ruta.RuId esta iniciado a cero
+                this.Ruta.RuId = this.indiceRowTabla;
 
-        //actualizando para poder saber si es un nuevo registro o si se va editar el seleccionado
-        //this.Ruta.RuId esta iniciado a cero
-        this.Ruta.RuId = this.indiceRowTabla;
+                //limpiar el mapa
+                this.overlays=[];
+                this.coordenadas=[];
+                this.RutaTerminada=0; //0: ruta terminada   1:ruta no terminada
+                this.puntosRuta=[];
+                console.log("antes: "+this.overlays.length);
 
-        //limpiar el mapa
-        this.overlays=[];
-        this.coordenadas=[];
-        this.RutaTerminada=0;
-        this.puntosRuta=[];
+                //CONSULTAR PUNTOS RUTADETALLE AL rest
+                this.rutaService.getAllRutaDetalleByRu(this.indiceRowTabla).subscribe(
+                    data => {   this.puntosRuta=data; 
+                                this.cargarRuta();
+                                if(this.puntosRuta.length>0){
+                                    this.disButEditar=false; //boton habilitado
+                                    this.disButBorrar=true;
+                                    this.disButNuevaRuta=true;
+                                    this.disButSubirRuta=true;
+                                    this.disButDeshacer=true;
+                                    this.disButTerminarRuta=true;
+                                }else if(this.puntosRuta.length==0){
+                                    //HABILITANDO BOTONES EN EL FORMULARIO
+                                    //this.disButEditar=false; //boton habilitado
+                                    this.disButBorrar=true;  //boton deshabilitado
+                                    this.disButEditar=true; //boton deshabilitado
+                                    this.disButNuevaRuta=false; //boton habilitado 
+                                    this.disButSubirRuta=true;
+                                    this.disButDeshacer=true;
+                                    this.disButTerminarRuta=true;
+                                }
+                                //this.iniciar=1;
+                            },
+                    err => {this.errorMessage=err},
+                    () => this.isLoading =false
+                );
+                console.log("despues: "+this.overlays.length);
+        }else if(this.modRegistro==0){ //MOD NO TERMINADO
+            console.log("GUARDAR LA GRAFICA DE LA NUEVA RUTA");
+        }
 
-        //CONSULTAR PUNTOS RUTADETALLE AL rest
-        this.rutaService.getAllRutaDetalleByRu(this.indiceRowTabla).subscribe(
-            data => {   this.puntosRuta=data; 
-                        this.cargarRuta();
-                        if(this.puntosRuta.length>0){
-                            this.disButEditar=false; //boton habilitado
-                            this.disButBorrar=true;
-                            this.disButNuevaRuta=true;
-                            this.disButSubirRuta=true;
-                            this.disButDeshacer=true;
-                            this.disButTerminarRuta=true;
-                        }else if(this.puntosRuta.length==0){
-                             //HABILITANDO BOTONES EN EL FORMULARIO
-                            //this.disButEditar=false; //boton habilitado
-                            this.disButBorrar=true;  //boton deshabilitado
-                            this.disButEditar=true; //boton deshabilitado
-                            this.disButNuevaRuta=false; //boton habilitado 
-                            this.disButSubirRuta=true;
-                            this.disButDeshacer=true;
-                            this.disButTerminarRuta=true;
-                        }
-                    },
-            err => {this.errorMessage=err},
-            () => this.isLoading =false
-        );
-       
+      
     }
 
     //cargar la ruta recuperada del rest haciendo el mapa
     cargarRuta(){
         //cargar las coordenadas de los puntos al array para trazar la linea
-        for(let n=0; n<this.puntosRuta.length; n++){
+        if(this.puntosRuta.length>2){
+            for(let n=0; n<this.puntosRuta.length; n++){
             this.coordenadas.push({
                     lat:this.puntosRuta[n].RuDeLatitud,
                     lng:this.puntosRuta[n].RuDeLongitud
-            });
-            console.log(n);
+                });
+                console.log(n);
+            }
+            //dibujar la linea
+            this.overlays.push(
+                new google.maps.Polyline({
+                path: this.coordenadas,
+                //strokeColor: '#FF0000',
+                strokerColor: '#0101DF',
+                strokeOpacity : 0.5,
+                strokeWeight :8 
+            }));
+        }else if(this.puntosRuta.length<2 || this.puntosRuta.length==0){
+            console.log("ruta no valida");
+            this.puntosRuta=[]; //LIMPIANDO PUNTOSRUTA
         }
-        //dibujar la linea
-        this.overlays.push(
-            new google.maps.Polyline({
-            path: this.coordenadas,
-            strokeColor: '#FF0000',
-            strokeOpacity : 0.5,
-            strokeWeight :8 
-        }));
+
+        this.editando = 0; //no se esta editando ,  ruta terminada
+
         //AGREGAR AL ULTIMA LINEA QUE FALTA PARA PODER CERRAR LA RUTA
 
         //RECUPERANDO LOS PUNTOS DE LA RUTA PARA EL CASO DE PODER EDITAR LA traza
@@ -861,12 +975,25 @@ export class RutaComponent implements OnInit{
         this.end=0;
         this.cen=0;
 
-        //DESHABILITADO Y HABILITANDO BOTONES
-        this.disButBorrar=true;
-        this.disButTerminarRuta=true;
-        this.disButSubirRuta=true;
-        this.disButDeshacer=true;
-        this.disButNuevaRuta=false;
+        if(this.editando==0){//no se esta editando 
+            //DESHABILITADO Y HABILITANDO BOTONES
+            this.disButBorrar=true;
+            this.disButTerminarRuta=true;
+            this.disButSubirRuta=true;
+            this.disButDeshacer=true;
+            this.disButNuevaRuta=false;
+
+        }else if(this.editando==1){//se esta editando 
+            //DESHABILITADO Y HABILITANDO BOTONES
+            this.disButBorrar=false;
+            this.disButTerminarRuta=false;
+            this.disButSubirRuta=false;
+            this.disButDeshacer=false;
+            this.disButNuevaRuta=true;
+
+            this.activarAddMarker=1; //addmarker activado 
+        }
+       
     }
 
     //LLAMAR A RUTA SERVICE PARA USAR LOS PROCEDIMIENTOS ALMACENADOS
@@ -875,7 +1002,7 @@ export class RutaComponent implements OnInit{
     //Nuevo Registro Maestro (BOTON NUEVO - CABECERA)
      nuevaRutaMaestro(){
         this.displayNuevaRutaModal = true;
-        this.headertitle ="Nuevo";
+        this.headertitle ="Nueva";
         this.rutaService.newRuta().subscribe(
             data => {
                 this.Ruta2 = data;
@@ -928,8 +1055,6 @@ export class RutaComponent implements OnInit{
             console.log(this.Ruta);
          }else if(this._RuId != 0){
              //EL CASO DE EDITAR UN REGISTRO RUID != 0
-
-            //NO FUNCIONA ESTA PARTE
             console.log("editado");
 
             //capturando la fecha actual
@@ -939,31 +1064,21 @@ export class RutaComponent implements OnInit{
             this.anio = this.date.getFullYear();
             this.Ruta.UsFechaReg = this.anio+"-"+this.mes+"-"+this.dia;
             let ID = this._RuId;
-            //console.log(ID);
-               /* this.Ruta2 ={
-                    RuId : ID,
-                    EmId : this.Ruta.EmId,
-                    RuDescripcion : this.Ruta.RuDescripcion,
-                    RuFechaCreacion:  this.Ruta.RuFechaCreacion,
-                    RuRegMunicipal : this.Ruta.RuRegMunicipal,
-                    RuKilometro : this.Ruta.RuKilometro,
-                    RuActivo : this.Ruta.RuActivo,
-                    UsId: this.Ruta.UsId,
-                    UsFechaReg: this.Ruta.RuFechaCreacion
-                }
-               */
-           
-                this.Ruta2=this.Ruta;
-               
+
+            
+            this.Ruta2=this.Ruta; //PASANDO DATOS AL OBJETO PARA SER SUBIDO A LA BD
+
             console.log(this.Ruta);
             this.displayNuevaRutaModal=false;
             console.log(this.Ruta2);
          }
          console.log(this.Ruta2);
          this.rutaService.saveRuta
-         (this.Ruta2).subscribe( realizar => { this.mostrargrillaruta();} ,
+         (this.Ruta2).subscribe( realizar => { this.mostrargrillaruta(); 
+                                               this.getAllRutaByEm(1);} ,
                                       err => { this.errorMessage = err });		
-     }
+     
+    }
     
      //cancelar una nueva ruta maestro (cabecera)
      cancelRutaMaestro(){
@@ -1016,16 +1131,20 @@ export class RutaComponent implements OnInit{
     }//fin mostrargrillaruta
     
     //BORRAR LOS NODOS DEL MAPA Y LOS ARRAYS Y CARGAR LA LINEA QUE REPRESENTA LA RUTA TRAZADA
+    //(FALTA PROGRAMAR ESTA FUNCION)
     mgRutaDetalle(){
         //usar puntosRutaDetalle
         console.log("mostrar detalle ruta");
         this.clear();
         this.cargarRuta();
+        console.log(this.puntosRuta);
     }
 
     //crea una nueva ruta detalle para SUBIRLO AL SERVIDOR agregar marcadores al mapa
     nuevaRutaDetalle(){
-           //crear la nueva rutadetalle
+        this.modRegistro=0; //DESACTIVANDO LA SELECCION DE REGISTROS MAESTRO
+        
+        //crear la nueva rutadetalle
         console.log("trazar nueva ruta");
         this.rutaService.newRutaDetalle().subscribe(data=>{this.puntosRutaDetalle=data});
         this.disButNuevaRuta=true; //cuando se crea un nuevo rutadetalle se deshabilita el boton
@@ -1033,11 +1152,13 @@ export class RutaComponent implements OnInit{
         //this.nuevaRuta=1; // 1 : se creo una nueva ruta
         this.rutaRecuperada=0; //la ruta no se encuentra en ela BD
         this.activarAddMarker=1; //1 : permite agregar marcadores 
+        this.i=0; //se reinicia o inicia el i para ponerlo como indice de los marcadores
     }
 
 
     //guardar RutaDEtalle en la BD
     guardarPuntosRutaDetalle(){
+        
          this.date = new Date();
             this.dia = this.date.getDate();
             this.mes = this.date.getMonth();
@@ -1064,11 +1185,15 @@ export class RutaComponent implements OnInit{
 
         this.rutaService.saveRutaDetalle(this.puntosRutaDetalleArray)
         .subscribe(
-                realizar => {this.mgRutaDetalle();},
+                realizar => {this.mgRutaDetalle();
+                             //ACTIVANDO SELECCION DE ROWS GRILLA modRegistro=1
+                            this.modRegistro=1 ;    
+                        },
                 err => {this.errorMessage=err}
         );
 
         console.log("guardado en rest");
+        //this.modRegistro==1 //ACTIVANDO LA SELECCION DEL FILAS GRILLA MAESTRO (RUTA TRAZA GUARDADA EN LA BD)
     }
 
 }
