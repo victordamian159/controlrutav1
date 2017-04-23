@@ -203,6 +203,7 @@ export class RutaComponent implements OnInit{
         this._RuId = _RuId;
         this.headertitle = "Editar";
 
+        //consulta para recuperar datos deacuerdo a la _RuId
         this.rutaService.getRutaById(_RuId).subscribe(
             data => {
                         this.Ruta=data; 
