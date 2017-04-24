@@ -177,7 +177,8 @@ export class ProgComponent implements OnInit{
         //guardando en el rest Programacion Maestro (pasarlo  a la 2da VEntana modal)
         this.programacionService.saveProgramacion(this.objProgVentanaUno)
             .subscribe( 
-                realizar => {this.mostrargrillaProgramacionMaestro();}, 
+                 data => {this.progMaestro=data; 
+                     this.mostrargrillaProgramacionMaestro();}, 
                 err => {this.errorMessage = err}
             );
         console.log("se agrego programacion maestro");
@@ -206,7 +207,7 @@ export class ProgComponent implements OnInit{
             //console.log(this.ordenSorteo);
             for(let i=1; i<=this.ordenSorteo.length ; i++){
                 this.programacionArrayDetalleBD.push({
-                    PrId : this.progDetalle.PrId,
+                    PrId : this.progMaestro.PrId,
                     BuId : this.ordenSorteo[i-1].BuId,
                     PrDeFecha: this.progDetalle.PrDeFecha,
                     PrDeBase: this.progDetalle.PrDeBase,
@@ -220,7 +221,7 @@ export class ProgComponent implements OnInit{
 
             //mandandolo a rest
             //guardando en el rest Programacion detalle   ( corregir los parametros)
-            this.programacionService.saveProgramacionDetalle(this.programacionArrayDetalleBD,this.progMaestro.emId,this.progMaestro.prId,this.progMaestro.PrAleatorio)
+            this.programacionService.saveProgramacionDetalle(this.programacionArrayDetalleBD,this.progMaestro.EmId,this.progMaestro.PrId,this.progMaestro.PrAleatorio)
                 .subscribe( 
                     realizar => {this.mostrargrillaProgramacionDetalle();}, 
                     err => {this.errorMessage = err}

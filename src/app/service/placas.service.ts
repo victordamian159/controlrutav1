@@ -6,6 +6,7 @@ import {Observable} from 'rxjs';
 
 export class PlacasService{
     private baseUrl: string = 'http://controlbus-ronaldmam.rhcloud.com/rest/bus/'
+    // private baseUrl: string = 'http://localhost:8089/controlbus/rest/bus/'
     //http://controlbus-ronaldmam.rhcloud.com/rest/bus/getallbusesbyemsuem?emId=1&suEmId=0
     
     constructor(private http: Http){}
