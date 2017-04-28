@@ -71,26 +71,31 @@ export class ProgramacionService{
     }
 
     //guardar programacion detalle PROGRAMACION BASE  (CORREGIR LOS PARAMETROS)
-    //.get(this.baseUrl+"getallprogramacionbyem?emId="+emId+"&anio="+anio)
+  
     saveProgramacionDetalle(programacionDetalle : Object[],_emId : Number,_prId : Number, _aleatorio:Boolean){
-        //let parametros = 'emId=_emId&prId=_prId&aleatorio=_aleatorio';
-        //let parametros = JSON.stringify(_emId,_prId,_aleatorio);
-
-        /*let parametros = new URLSearchParams;
-        parametros.append('emId',_emId);
-        parametros.append('prId',_prId);
-        parametros.append('aleatorio', _aleatorio);*/
-
         return this.http.post(this.baseUrl+"programacionbase/"+_emId+"/"+_prId+"/"+_aleatorio+"/", programacionDetalle)
             .map((res:Response) => res.json() )
             .catch((error:any) => Observable.throw(error.json().error || 'server error'));
     }
+
+    
     /*
-    saveProgramacionDetalle(programacionDetalle : Object[]){
-        return this.http.post(this.baseUrl2+"save/", programacionDetalle)
-            .map((res:Response) => res.json() )
-            .catch((error:any) => Observable.throw(error.json().error || 'server error'));
-    }
+        //.get(this.baseUrl+"getallprogramacionbyem?emId="+emId+"&anio="+anio)
+
+      saveProgramacionDetalle(programacionDetalle : Object[],_emId : Number,_prId : Number, _aleatorio:Boolean){
+        //let parametros = 'emId=_emId&prId=_prId&aleatorio=_aleatorio';
+        //let parametros = JSON.stringify(_emId,_prId,_aleatorio);
+
+        let parametros = new URLSearchParams;
+        parametros.append('emId',_emId);
+        parametros.append('prId',_prId);
+        parametros.append('aleatorio', _aleatorio);
+
+        saveProgramacionDetalle(programacionDetalle : Object[]){
+            return this.http.post(this.baseUrl2+"save/", programacionDetalle)
+                .map((res:Response) => res.json() )
+                .catch((error:any) => Observable.throw(error.json().error || 'server error'));
+        }
     */
 
 //ERROR

@@ -107,7 +107,7 @@
 
                     <!--TABLA PROGRAMACION MAESTRO-->
                     <div class="card-text">
-                        <p-dataTable [value]="programacionMaestroArrayHTML" [rows]="5" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal"
+                        <p-dataTable [value]="programacionMaestroArrayHTML" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,15,20]" [globalFilter]="filtroGlobal"
                             scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">
                             <!--botones para la PRIMERA COLUMNA -->
                             <p-column styleClass="col-button" [style]="{'width':'4em'}">
@@ -134,45 +134,77 @@
                     </div><!--fin tabla PROGRAMACION MAESTRO-->
             </div>
         </div>
-
-        <!--TABLA PROGRAMACION DETALLE-->
-        <div class="card-block" style="padding:3">
-            <div class="card-title">
-                <div class="card">
-                    <div><h4>Detalle de Programacion</h4></div>
-                    <div class="card-block" style="padding:3">
-                            <div class="card-text">
-                                <p-dataTable [value]="progPresentar" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal"
-                                    scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelect($event)">
-
-                                    <p-column styleClass="col-button" [style]="{'width':'6em'}">
-                                        <!--botones para la columna-->
-                                        <!--encabezado-->
-                                        <template pTempalte="header">
-                                            <button type="button" pButton icon="fa-refresh">  </button>
-                                        </template>
-
-                                        <!--botones de las filas-->
-
-                                        <template let-col let-envioPresentar="rowData" pTemplate="body">
-                                            <!--Boton editar-->
-                                            <button type="button" class="btn"> </button>
-                                            <!--Boton eliminar-->
-                                            <button type="button" class="btn"> </button>
-                                        </template>
-                                    </p-column>
-
-                                    <!--campos de la datatable-->
-                                    <p-column field="PrDeOrden" header="Orden" [sortable]="true" [style]="{'width':'4em'}"></p-column>
-                                    <p-column field="PrDePrid" header="Bus" [sortable]="true" [style]="{'width':'9em'}"></p-column>
-                                    <p-column field="PrDeFecha" header="Fecha" [sortable]="true" [style]="{'width':'9em'}"></p-column>
-                                    <p-column field="PrDeTipo" header="Tipo" [sortable]="true" [style]="{'width':'6em'}"></p-column>
-                                </p-dataTable>
-                            </div>
+        
+        <!--MODAL TABLA PROGRAMACION-->
+        <p-dialog header="Programacion" [(visible)]="displayProgramacion" modal="modal" width="320" responsive="true" [closable]="false">
+            <body>
+                <!--TABLA-->
+                <!--
+                <div style="overflow-x:auto;">
+                    <table class="table table-bordered" style="font-size: 12px; font-family: Times New Roman, Times, serif;">-->
+                
+                    <div class="table-container" >     
+                        <table *ngIf="nroColumn>30" width="2500px">
+                            <!--COLUMNAS-->
+                            <thead>
+                                <tr><th *ngFor="let dia of this.nroDias;">{{dia}}</th></tr>
+                            </thead>
+                            <!--REGISTRO-->
+                            <tbody>
+                                <tr *ngFor="let c of _detalle">
+                                    <td *ngFor="let placa of c">{{placa}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table *ngIf="30>nroColumn && nroColumn>20" width="1500px">
+                            <!--COLUMNAS-->
+                            <thead>
+                                <tr><th *ngFor="let dia of this.nroDias;">{{dia}}</th></tr>
+                            </thead>
+                            <!--REGISTRO-->
+                            <tbody>
+                                <tr *ngFor="let c of _detalle">
+                                    <td *ngFor="let placa of c">{{placa}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table *ngIf="10>nroColumn && nroColumn>0" width="500px">
+                            <!--COLUMNAS-->
+                            <thead>
+                                <tr><th *ngFor="let dia of this.nroDias;">{{dia}}</th></tr>
+                            </thead>
+                            <!--REGISTRO-->
+                            <tbody>
+                                <tr *ngFor="let c of _detalle">
+                                    <td *ngFor="let placa of c">{{placa}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                </div> <!--FIN TABLA PROGRAMACION DETALLE-->
-            </div>
-        </div>
+                
+            </body>
+            <footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton (click)="cerrarProg()"   label="Cerrar"></button>
+                    <button type="button" pButton (click)="imprimirProg()" label="Imprimir"></button>
+                </div>
+            </footer>
+        </p-dialog>
+        
+        <!--
+          <tr>
+                <th>Month</th>
+                <th>Savings</th>
+            </tr>
+            <tr>
+                <td>January</td>
+                <td>$100</td>
+            </tr>
+            <tr>
+                <td>February</td>
+                <td>$50</td>
+            </tr>
+        -->
 </div>
 
 

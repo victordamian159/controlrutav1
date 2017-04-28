@@ -284,9 +284,14 @@ export class RutaComponent implements OnInit{
     //para editar la traza de la ruta
     editar(){
         this.displayfromEditar = false;
+
+        /*
+        //ACTIVANDO DESACTIVANDO BOTONES
         this.disButDeshacer=false; //HABILITANDO BOTON PARA DESHACER RUTA 
         this.disButEditar=false; //HABILITANDO BOTON PARA EDITAR LA RUTA (RUTA RECUPERADA)
        this.disButBorrar=false;
+       */
+
        this.editando = 1; // se esta editando
        
         console.log("tamaño overlays: "+this.overlays.length);
@@ -450,14 +455,23 @@ export class RutaComponent implements OnInit{
             console.log("&&&&&&&&&&&&&&&&&&&&&&&&&");
 
         }
-        this.disButEditar=true; //DESACTIVANDO EL BOTON EDITAR PARA QUE NO ESTE ACTIVO AL MODIFICAR LA RUTA
+        
+        
+        //DESACTIVANDO EL BOTON EDITAR PARA QUE NO ESTE ACTIVO AL MODIFICAR LA RUTA
+        //ACTIVANDO & DESACTIVANDO
+        this.disButBorrar = false;
+        this.disButDeshacer = false;
+        this.disButNuevaRuta = true;
+        this.disButSubirRuta = false;
+        this.disButTerminarRuta = true;
+        this.disButEditar = true; 
 
         this.activarAddMarker = 0;//addmarker desactivado
         this.modRegistro=0;    //select row grilla desactivado
 
         //condicionales para activar el arrastre de markers
-        this.edit_RutaTerminada = 1;
-        this.RutaTerminada = 1;
+        this.edit_RutaTerminada = 1; 
+        this.RutaTerminada = 1; //LA RUTA ESTA TERMINADA
 
         console.log("valor this.edit_RutaNoTerminada = "+this.edit_RutaNoTerminada);
         console.log("valor this.overlays.length = "+this.overlays.length);
@@ -488,6 +502,7 @@ export class RutaComponent implements OnInit{
             console.log("indice marcador: "+this.indexObjec);
 
          //eliminando lineas de los marcadores arrastrados 12 casos (6 TERMINADA RUTA & 6 NO TERMINADA RUTA)
+         //CASO EDITAR RUTA NO TERMINADA
          if(this.edit_RutaNoTerminada == 1  && this.overlays.length > 1 && this.RutaTerminada == 0){
              //1er marker sin terminar ruta CASO SI RUTA NO ESTA TERMINADA
                 //nueva posicion del marcador
@@ -938,9 +953,9 @@ export class RutaComponent implements OnInit{
     }
     //agregar marcador sobre la linea
 
-    //borrar el marcador 
-    //NO ESTA EN USO
+   
     /*
+    //FALTA PROGRAMAR ESTE MODULO
     eliminarmarcador(){
         console.log("marcador eliminado");
         if(this.RutaTerminada==0){
@@ -976,7 +991,9 @@ export class RutaComponent implements OnInit{
         this.end=0;
         this.cen=0;
 
-        if(this.editando==0){//no se esta editando 
+        //CONDICIONAL PARA RUTATERMINADA O EN EDICION 8 CASOS DIFERENTES
+        //PARA CASO DE RUTATERMINADA=1
+        if(this.editando==0 && this.RutaTerminada==1){//no se esta editando 
             //DESHABILITADO Y HABILITANDO BOTONES
             this.disButBorrar=true;
             this.disButTerminarRuta=true;
@@ -984,7 +1001,7 @@ export class RutaComponent implements OnInit{
             this.disButDeshacer=true;
             this.disButNuevaRuta=false;
 
-        }else if(this.editando==1){//se esta editando 
+        }else if(this.editando==1 && this.RutaTerminada==1){//se esta editando 
             //DESHABILITADO Y HABILITANDO BOTONES
             this.disButBorrar=false;
             this.disButTerminarRuta=false;
@@ -993,6 +1010,10 @@ export class RutaComponent implements OnInit{
             this.disButNuevaRuta=true;
 
             this.activarAddMarker=1; //addmarker activado 
+        }else if(this.editando==0 && this.RutaTerminada==0){
+            console.log("NO PROGRAMADO");
+        }else if(this.editando==1 && this.RutaTerminada==0){
+            console.log("NO PROGRAMADO");
         }
        
     }

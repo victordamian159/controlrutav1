@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-//import {SelectItem} from 'primeng/primeng';
+import {SelectItem} from 'primeng/primeng';
 import {ProgramacionService} from '../service/prog.service'
 import {PlacasService} from '../service/placas.service'
 
@@ -21,12 +21,16 @@ export class ProgComponent implements OnInit{
 
     //para seleccionar una fila de la tabla
     idFilaSeleccionada: number;
+    nroBusesFilaSelect: number;
+    nroDiasFilaSelect: number;
     titleNuevoProgPrimerModal:string; 
     formaProgramacion:string = 'Escala'; //almacena el string del item seleccionado
     tipoProgramacion: string='Manual'; //tipo manual o automatico
 
     displayNuevaProgramacion: boolean = false;
     displayProgramacionBase: boolean = false;
+    displayProgramacion: boolean = false;
+
     selectedPlacas: string[] = [];
     disabledbutton: boolean = false;
     private errorMessage:string='';  //mensaje error del rest
@@ -68,6 +72,16 @@ export class ProgComponent implements OnInit{
     progRest:any[]=[];
     progRestMaestro:any[]=[];
 
+    progBDDetalle:any[]=[]; // para recoger resultado de la BD
+    _progBDDetalle:any[]=[]; //NO SE ESTA USANDO
+
+    //COLUMNAS DEL DATATABLE PRIMENG
+    columnas:any[]=[];
+    _columnas : SelectItem[];
+
+    _detalle:any[]=[];
+    nroDias:any[]=[];
+    nroColumn:number;
 //OBJETO DETALLE
     progDetalle: any={
         PrId:23,     //oculto
@@ -79,6 +93,7 @@ export class ProgComponent implements OnInit{
         UsFechaReg:"",//oculto
     }
     programacionArrayDetalleBD:any[]=[]; //array objetos detalle para mandar al rest
+
     constructor(
             private programacionService: ProgramacionService,
             private placasservice: PlacasService,
@@ -100,9 +115,19 @@ export class ProgComponent implements OnInit{
             .subscribe(data => {this.objProgVentanaDos = data});
     }
     
-    
+    //CONSULTA PROGRAMACION DETALLE -->     NO SE ESTA USANDO
+    getallprogramaciondetallebyprid(_prid:number){
+        this.programacionService.getAllProgramacionDetalleByPrId(_prid).subscribe(
+            data => {
+                this.progBDDetalle = data; 
+                console.log(this.progBDDetalle);
+            },
+            err => {this.errorMessage=err},
+            () => this.isLoading=false
+        );
+    }
 
-    //abrir 1era ventana (boton nuevo)
+    //1era ventana MODAL(boton nuevo)
     showNuevaProgramacionModalMaestro(){
         this.nuevaProgramacionMaestroRest();
         this.displayNuevaProgramacion=true;
@@ -114,9 +139,7 @@ export class ProgComponent implements OnInit{
         //borrar solo es para prueba
     }
 
-
-    //abrir 2da ventana (boton continuar)
-    //aqui recien se guarda la tabla MAESTRO en el REST
+    //aqui recien se guarda la tabla MAESTRO en el REST  2da ventana MODAL(boton continuar)
     showProgBase(){
         this.displayNuevaProgramacion=false; //cerrar 1era ventana
         this.displayProgramacionBase=true; //abrir 2da ventana
@@ -124,40 +147,42 @@ export class ProgComponent implements OnInit{
         //tipo programacion Manual o Aleatorio (Binario)
         if(this.tipoProgramacion == 'Manual'){
             this.progMaestro.PrAleatorio = false;
-        }else if(this.tipoProgramacion == 'Aleatorio'){
+            }else if(this.tipoProgramacion == 'Aleatorio'){
             this.progMaestro.PrAleatorio = true;
         }
         
         //forma programacion escala o pescadito
         if(this.formaProgramacion == 'Escala'){
             this.progMaestro.PrTipo="01";
-        }else if(this.formaProgramacion == 'Pescadito'){
+            }else if(this.formaProgramacion == 'Pescadito'){
             this.progMaestro.PrTipo="02";
         }
         
         //capturando fecha actual
-        this.date = new Date();
-        this.dia = this.date.getDate();
-        this.mes = this.date.getMonth();
-        this.anio = this.date.getFullYear();
-        this.progMaestro.PrFecha = this.anio+"-"+this.mes+"-"+this.dia;
+        {
+            this.date = new Date();
+            this.dia = this.date.getDate();
+            this.mes = this.date.getMonth();
+            this.anio = this.date.getFullYear();
+            this.progMaestro.PrFecha = this.anio+"-"+this.mes+"-"+this.dia;
+        }
 
-        //cargando lo ingresado en una variable
-        //PrFecha y UsFechaReg, ¿Cual es la diferencia?
-        this.objProgVentanaUno.PrId = this.progMaestro.PrId, //number
-        this.objProgVentanaUno.EmId = this.progMaestro.EmId, //number
-        this.objProgVentanaUno.PrCantidadBuses = this.progMaestro.PrCantidadBuses, //number
-        this.objProgVentanaUno.PrDescripcion = this.progMaestro.PrDescripcion, //string
-        this.objProgVentanaUno.PrFecha = this.progMaestro.PrFecha, //string
-        this.objProgVentanaUno.PrFechaInicio = this.progMaestro.PrFechaInicio, //string
-        this.objProgVentanaUno.PrFechaFin = this.progMaestro.PrFechaFin, //string
-        this.objProgVentanaUno.PrTipo = this.progMaestro.PrTipo, //string escala pescadito
-        this.objProgVentanaUno.PrAleatorio = this.progMaestro.PrAleatorio, //string manual automatico(aleatorio)
-        this.objProgVentanaUno.UsId = this.progMaestro.UsId, //number
-        this.objProgVentanaUno.UsFechaReg = this.progMaestro.PrFecha //string
-
-        //objeto listo para mandar al rest
-        //console.log(this.objProgVentanaUno);
+        //cargando lo ingresado en una variable //PrFecha y UsFechaReg, ¿Cual es la diferencia?
+        {
+            this.objProgVentanaUno.PrId = this.progMaestro.PrId, //number
+            this.objProgVentanaUno.EmId = this.progMaestro.EmId, //number
+            this.objProgVentanaUno.PrCantidadBuses = this.progMaestro.PrCantidadBuses, //number
+            this.objProgVentanaUno.PrDescripcion = this.progMaestro.PrDescripcion, //string
+            this.objProgVentanaUno.PrFecha = this.progMaestro.PrFecha, //string
+            this.objProgVentanaUno.PrFechaInicio = this.progMaestro.PrFechaInicio, //string
+            this.objProgVentanaUno.PrFechaFin = this.progMaestro.PrFechaFin, //string
+            this.objProgVentanaUno.PrTipo = this.progMaestro.PrTipo, //string escala pescadito
+            this.objProgVentanaUno.PrAleatorio = this.progMaestro.PrAleatorio, //string manual automatico(aleatorio)
+            this.objProgVentanaUno.UsId = this.progMaestro.UsId, //number
+            this.objProgVentanaUno.UsFechaReg = this.progMaestro.PrFecha //string
+        }//objeto listo para mandar al rest
+        
+    
         
         //guardando en array para poder mostrarlo en la grilla HTML maestro Programacion
         this.programacionMaestroArrayMemoria.push({
@@ -178,7 +203,9 @@ export class ProgComponent implements OnInit{
         this.programacionService.saveProgramacion(this.objProgVentanaUno)
             .subscribe( 
                  data => {this.progMaestro=data; 
-                     this.mostrargrillaProgramacionMaestro();}, 
+                     this.mostrargrillaProgramacionMaestro() ;
+                     this.getAllProgramacionByEm(1,0);
+                }, 
                 err => {this.errorMessage = err}
             );
         console.log("se agrego programacion maestro");
@@ -197,14 +224,16 @@ export class ProgComponent implements OnInit{
             this.progMaestro.PrCantidadBuses=0;
 
             //fecha
-            this.date = new Date();
-            this.dia = this.date.getDate();
-            this.mes = this.date.getMonth();
-            this.anio = this.date.getFullYear();
-            this.progDetalle.PrDeFecha = this.anio+"-"+this.mes+"-"+this.dia;
+            {
+                this.date = new Date();
+                this.dia = this.date.getDate();
+                this.mes = this.date.getMonth();
+                this.anio = this.date.getFullYear();
+                this.progDetalle.PrDeFecha = this.anio+"-"+this.mes+"-"+this.dia;
+            }
 
-            //cargando detalle a un array de objetos (mandar al rest)
-            //console.log(this.ordenSorteo);
+            
+            //CARGAR EN ARRAY DE OBJETOS PARA MANDAR A LA BD
             for(let i=1; i<=this.ordenSorteo.length ; i++){
                 this.programacionArrayDetalleBD.push({
                     PrId : this.progMaestro.PrId,
@@ -214,57 +243,53 @@ export class ProgComponent implements OnInit{
                     PrDeOrden: i,
                     UsId: this.progDetalle.UsId,
                     UsFechaReg: this.progDetalle.PrDeFecha
-                });
-            }
+                });  
+            } //console.log(this.ordenSorteo);
 
-            console.log(this.programacionArrayDetalleBD);
-
-            //mandandolo a rest
-            //guardando en el rest Programacion detalle   ( corregir los parametros)
+            //guardando en el rest Programacion detalle   MANDANDO A LA BD
             this.programacionService.saveProgramacionDetalle(this.programacionArrayDetalleBD,this.progMaestro.EmId,this.progMaestro.PrId,this.progMaestro.PrAleatorio)
                 .subscribe( 
-                    realizar => {this.mostrargrillaProgramacionDetalle();}, 
+                    realizar => {
+                            //this.mgprogDetalle();
+                            //PONER UNA VENTANA MODAL CON EL MENSAJE 
+                            console.log("SE GENERO LA PROGRAMACION =D");
+                        }, 
                     err => {this.errorMessage = err}
             );
-            console.log("se agrego programacion detalle");
+            console.log("se agrego programacion detalle --> SE GENERO LA PROGRAMACION =D");
     
-        }//final condicional 
+        }//final condicional IF
     }//final funcion generarProgramacionSegundoModal
     
-/*
-    saveProgramacionMaestro(){
-
-    }
-    
-    saveProgramacionDetalle(){
-        
-    }
-*/
-
     //deshabilitando botones
     disabledButtonForm(){
         this.disabledbutton = false;
         return this.disabledbutton;
     }
     
-    //cerrar prog (1era ventana)
+    //CERRAR PROG 1ER MODAL
     cancelNewProgramacion(){
          this.displayNuevaProgramacion=false;
-         //BORRAR LOS DATOS INGRESADOS 
     }
 
-    //cerrar ventanas new programacion (2do Modal)
+    //CERRAR 2 MODALES (1ER Y 2DO MODAL ) cerrar ventanas new programacion (2do Modal)
     cancelarProgBaseSegundoModal(){
-        this.displayProgramacionBase = false; //1era ventana
-        this.displayNuevaProgramacion=false;  //2da ventana
+        this.displayProgramacionBase = false; //1era MODAL
+        this.displayNuevaProgramacion=false;  //2da MODAL
+        //BORRAR LOS DATOS INGRESADOS 
+
+        //ELIMINAR LA PROGRAMACION (CABECERA) QUE NO TIENE PROGDETALLE, CONSULTAR A this.getAllProgramacionByEm(1,0)
+        console.log(this.progRest[this.progRest.length-1].prId);
+        this.eliminarMaestro(this.progRest[this.progRest.length-1].prId)
+        
     }
 
     //datos para grilla HTML Maestro (consulta especialmente hecha para mostrar en el res)
     mostrargrillaProgramacionMaestro(){
-        this.extrayendoDatosTablaMaestroRest(); //extraer los campos de la nueva consulta para la grilla
+        //this.extrayendoDatosTablaMaestroRest(); //extraer los campos de la nueva consulta para la grilla
         this.programacionMaestroArrayHTML=[];
         //progRest es la variable q almacena las programaciones recuperadas desde el Rest de internet
-        for(let programacionMaestro of this.progRestMaestro){
+        for(let programacionMaestro of this.progRest){
 
             this.programacionMaestroArrayHTML.push({
                 EmConsorcio : programacionMaestro.EmConsorcio,
@@ -280,13 +305,11 @@ export class ProgComponent implements OnInit{
             });
         }// fin funcion for
     }//fin funcion mostrargrillaProgramacionMaestro
-    
-    //datos para grilla HTML DETALLE
-    mostrargrillaProgramacionDetalle(){
-        console.log("grilla detalle");
-    }
 
-    //recuperando todos los buses (para sacar las placas)
+    //CARGAR COLUMNAS Y ARRAY DE PROGRAMACION
+
+
+    //recuperando todos los buses (para sacar las placas)  empId(id de empresa)  suemId(subempresa id)
     getAllPlacasBusByEmSuEm(empId: number, suemId : number){
         this.placasservice.getAllPlacasBusByEmSuEm(empId, suemId)
             .subscribe(
@@ -301,7 +324,10 @@ export class ProgComponent implements OnInit{
     getAllProgramacionByEm( empId: number, anio: number){
         this.programacionService.getAllProgramacionByEm(empId, anio)
             .subscribe(
-                datos => {this.progRest = datos ; this.mostrargrillaProgramacionMaestro();},
+                datos => {
+                    this.progRest = datos ; 
+                    this.mostrargrillaProgramacionMaestro();
+                },
                 err => {this.errorMessage = err}, 
                 () =>this.isLoading = false
             );
@@ -321,30 +347,139 @@ export class ProgComponent implements OnInit{
         }
     }
 
-    extrayendoDatosTablaMaestroRest(){
-        for(let i=0; i<this.progRest.length; i++){
-            this.progRestMaestro.push({
-                EmConsorcio:this.progRest[i].EmConsorcio,
-                PrAleatorio: this.progRest[i].PrAleatorio,
-                PrCantidadBuses: this.progRest[i].PrCantidadBuses,
-                PrFecha: this.progRest[i].PrFecha,
-                PrFechaFin: this.progRest[i].PrFechaFin,
-                PrFechaInicio: this.progRest[i].PrFechaInicio,
-                PrTipo: this.progRest[i].PrTipo,
-                dias: this.progRest[i].dias,
-                prDescripcion: this.progRest[i].prDescripcion,
-                prId: this.progRest[i].prId
-            });
-        }
-        //console.log(this.progRestMaestro);
-    }
     //seleccionar fila de la tabla
     onRowSelectMaestro(event){
-        console.log("fila seleccionada =D");
-        this.idFilaSeleccionada = event.data.prId;
-        console.log(this.idFilaSeleccionada);
+        this.idFilaSeleccionada = event.data.prId; //ID DE LA FILA 
+        this.nroBusesFilaSelect = event.data.PrCantidadBuses; // CANT BUSES
+        this.nroDiasFilaSelect  = event.data.dias; //CANT DIAS
+        this.displayProgramacion = true;
+
+        this.nroDias=[];
+
+        //console.log(this.idFilaSeleccionada);
+        //console.log(this.nroBusesFilaSelect);
+        //console.log(this.nroDiasFilaSelect);
+
         //llamar a una consulta para que al momento de hacer click sobre una fila muestre el detalle de la fila selecciona
+        //this.getallprogramaciondetallebyprid(this.idFilaSeleccionada);
+
+        //DETALLE
+        //this.progBDDetalle
+        //LIMPIANDO VARIABLES
+        this.columnas=[]; //COLUMNAS
+        this._columnas=[]; //ITEMS COLUMNAS DATATABLE
+
+        
+            //CONSULTA PROGRAMACION DETALLE
+            //getallprogramaciondetallebyprid(_prid:number){
+                this.programacionService.getAllProgramacionDetalleByPrId(this.idFilaSeleccionada).subscribe(
+                    data => {
+                                this.progBDDetalle = data; 
+                                //console.log(this.progBDDetalle)
+                                this.tablaProgramaciones();
+                            },
+                    err => {this.errorMessage=err},
+                    () => this.isLoading=false
+                );
+            
+        
     }
+
+    //TABLA PROGRAMACIONES
+    tablaProgramaciones(){
+        //ALGORITMO PARA PASAR LOS ID DE BUSES DE LOS PRIMEROS 
+        //1ERA MATRIZ
+        let a1 :any[]=[]; let a2 :any[]=[]; let a3 :any[]=[]; 
+        let i=0; let j=0; let k=0;                              
+
+        //PARA COLUMNAS
+        while(i<this.nroDiasFilaSelect){
+            //console.log(i);
+            //PARA FILAS
+            while(j<(this.nroBusesFilaSelect*this.nroDiasFilaSelect) && k<this.nroBusesFilaSelect){
+                a2.push(this.progBDDetalle[j].BuId);
+                a1[i]={field:i, header:i}; //COLUMNAS                                   
+                j++; k++;
+            }
+            a3[i]=a2; k=0; i++; a2=[];
+        }
+
+        //2DA MATRIZ (TRANSPUESTA DE LA 1ERA)
+        let a4: any[]=[]; let a5: any[]=[];
+        let l=0; let m=0; let n=0; let aux=0;
+
+        //TRANSPUESTA 
+        //INICIANDO MATRIZ
+        while(l<this.nroBusesFilaSelect){
+            while(m<this.nroDiasFilaSelect){
+                a4.push(0); 
+                m++;
+            }
+            a5[l]=a4; m=0; l++; a4=[];
+        }
+
+        l=0; m=0;
+        //MOVIENDO 
+        while(l<this.nroBusesFilaSelect){
+            while(m<this.nroDiasFilaSelect){
+            //console.log(a3[m][l]);
+                a5[l][m]=a3[m][l];
+                //console.log(a5[l][m]);
+                m++; 
+            }
+            l++; m=0;
+        }
+
+        
+        
+
+        //CAPTURANDO LAS PLACAS POR BUID
+        this.getAllPlacasBusByEmSuEm(1, 0);
+        this.extrayendoPlacasBus();
+        //console.log(this.arrayPlacas);
+
+        //ACTUALIZANDO EL ARRAY a5, cambiando BUID por su respectiva PLACA---BUSQUEDA
+        //console.log(a5);
+        i=0; let cen=0; j=0; k=0; //0: EXISTE  1:NO EXISTE
+        while(i<a5.length){//SOBRE EL ARRAY RAIZ
+            while(j<a5[i].length){ //SOBRE LOS ARRAY INTERIOR 
+                //UBICAR EL POR IGUAL BUID
+                while(k<this.arrayPlacas.length  && cen==0){
+                    if(a5[i][j]!=this.arrayPlacas[k].BuId){
+                        //console.log(a5[i][j]+" no iguales =c: "+this.arrayPlacas[k].BuId);
+                        k++; 
+                    }else if(a5[i][j]==this.arrayPlacas[k].BuId){
+                        //console.log(a5[i][j]+" son iguales =D: "+this.arrayPlacas[k].BuId);
+                        cen=1;
+                    }
+                }
+                //SI SE EENCONTRO
+                if(cen==1){
+                    //console.log("pasando");
+                    a5[i][j]=this.arrayPlacas[k].nroPlaca;
+                    k=0;
+                    j++;
+                    cen=0;
+                }else if(cen==0){
+                    //console.log("no existe");
+                }
+                
+            }
+            j=0;
+            i++;
+        }//FIN WHILE BUSQUEDA
+
+        this._detalle = a5;
+        //CALCULANDO EL NRO DE COLUMNAS (NRODIAS PROGRAMACION)
+        
+        for(l=1; l<=this.nroDiasFilaSelect; l++){
+            this.nroDias.push(l);
+        } 
+        console.log(this.nroDias);
+        //PARA ELEGIR TAMAÑO DE TABLA 2000PX O 500PX
+        this.nroColumn=this.nroDias.length;
+    }
+
     editarMaestro(_PrId : number){
         console.log("editar "+_PrId);
         this.titleNuevoProgPrimerModal = 'Editar';
@@ -364,5 +499,15 @@ export class ProgComponent implements OnInit{
             realizar => {this.getAllProgramacionByEm(1,0)},
             err => {console.log(err);}
         );
+    }
+
+    //CERRAR PROGRAMACION
+    cerrarProg(){
+        this.displayProgramacion=false;
+    }
+
+    //IMPRIMIR PROGRAMACION
+    imprimirProg(){
+        console.log("falta programar");
     }
 }
