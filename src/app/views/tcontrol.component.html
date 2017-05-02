@@ -1,64 +1,115 @@
 <div class="card w-120">
     <div class="card-block">
-        <h4 class="card-title">Tarjetas Asignadas</h4>
+        <h4 class="card-title">Tarjetas De Control </h4>
         
         <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
         
         <!--boton nuevo-->
-        <button type="text" (click)="showAsignaTarjetaControl()" pButton label="Nuevo" data-toggle="modal" ></button>
+        <button type="text" (click)="nuevaAsignaTarjeta()" pButton label="Nuevo" data-toggle="modal" ></button>
         
         <!--modal boton nuevo-->
-        <p-dialog header="Asignar Tarjeta de Control" [(visible)]="displayAsignarTarjeta" 
-                    modal="modal" width="400" [closable]= false>
+        <p-dialog [(visible)]="displayAsignarTarjeta" 
+                    modal="modal" width="350" [closable]= false>
                     <!--modal body -->
-                            <!--fecha -->
+                             <!--PUNTOS DE CONTROL EXISTENTES-->
+                             <div class="form-group row">
+                                 <label class="col-2 col-form-label">Puntos:</label>
+                                 <div class="col-10">
+                                    <p-dataTable [value]="_puntosControl" scrollable="true" scrollHeight="100px" 
+                                        selectionMode="single" (onRowSelect)="onRowPuntosControl($event)" >
+                                        <!--<p-header>Puntos de Control</p-header>-->
+                                        <p-column field="PuCoId" [style]="{'width':'3em'}" ></p-column>
+                                        <p-column field="RuDescripcion" [style]="{'width':'6em'}" ></p-column>
+                                    </p-dataTable>
+                                 </div>
+                             </div>
+
+                            
+                            <!--LISTA PROGRAMACION EN LA BD-->
+                            <div class="form-group row">
+                                 <label class="col-2 col-form-label">Prog.:</label>
+                                 <div class="col-10">
+                                    <p-dataTable [value]="_programacion" scrollable="true" scrollHeight="100px" selectionMode="single" (onRowSelect)="onRowProgramacion($event)">
+                                        <!--<p-header>Placas</p-header>-->
+                                        <p-column field="prId" [style]="{'width':'1em'}" ></p-column>
+                                        <p-column field="prDescripcion" [style]="{'width':'2em'}" ></p-column>
+                                        <p-column field="dias" [style]="{'width':'1em'}" ></p-column>
+                                    </p-dataTable>
+                                </div>
+                             </div>
+
+                             <!--fecha programacion-->
                             <div class="form-group row ">
                                 <label class="col-2 col-form-label" for="date1">Fecha:</label>
-                                <div class="col-10">
-                                    <input class="form-control" id="date1" name="fecha" placeholder="MM/DD/YYY" type="date" />
+                                <div class="col-8">
+                                    <input class="form-control" id="date1" name="fecha" placeholder="MM/DD/YYY" type="date" [(ngModel)]="tarjeta._TaCoFecha" />
+                                </div>
+                                <div class="col-2">
+                                    <button type="button" (click)="buscarxFecha()" pButton label="B"></button>
                                 </div>
                             </div>
-                        
-                            <!--programacion (AQUI UN DATATABLE)-->
-                            
 
-                            <!--hora salida-->
+                            <!--programacion (AQUI UN DATATABLE)-->
                             <div class="form-group row">
-                                <label for="hora" class="col-2 col-form-label">Salida:</label>
-                                <div class="col-10">
-                                    <input class="form-control" type="time" value="05:00:00" id="hora">
+                                 <label class="col-2 col-form-label">Placas:</label>
+                                 <div class="col-10">
+                                    <p-dataTable [value]="_progDetalle" scrollable="true" scrollHeight="100px" selectionMode="single" (onRowSelect)="onRowPlaca($event)">
+                                        <!--<p-header>Placas</p-header>-->
+                                        <p-column field="PrId" [style]="{'width':'3em'}" ></p-column>
+                                        <p-column field="BuId" [style]="{'width':'6em'}" ></p-column>
+                                    </p-dataTable>
                                 </div>
+                             </div>
+
+                            <!--ESTADO PROGRAMACION-->
+                            <!--<div class="ui-g" style="width:250px; margin-bottom:10px">
+                                <div class="ui-g-12"><p-radioButton  value="0" label="No Asig" [(ngModel)]="val"></p-radioButton></div>
+                                <div class="ui-g-12"><p-radioButton  value="1" label="Asig"    [(ngModel)]="val"></p-radioButton></div>
+                                <div class="ui-g-12"><p-radioButton  value="2" label="Ausente" [(ngModel)]="val"></p-radioButton></div>
+                            </div>-->
+                            <div>
+                                <label class="radio-inline"><p-radioButton  value="0" label="No Asig" [(ngModel)]="val"></p-radioButton></label>
+                                <label class="radio-inline"><p-radioButton  value="1" label=" Asig"   [(ngModel)]="val"></p-radioButton></label>
+                                <label class="radio-inline"><p-radioButton  value="2" label="Ausente" [(ngModel)]="val"></p-radioButton></label>
                             </div>
+
+                            <!--hora salida <div class="form-group row"></div>-->
+                            
 
                             <!--nro vuelta-->
                             <div class="form-group row ">
-                                <label for="nrobuses" class="col-2 col-form-label">Vueltas:</label>
-                                <div class="col-10">
-                                    <input class="form-control" type="number" value="50" id="nrobuses">
+                                
+                                <div class="col-4">
+                                    <label for="hora" class="col-1 col-form-label">S:</label>
+                                    <input class="form-control" type="text" value="0" id="hora" [(ngModel)]="tarjeta._TaCoHoraSalida">
+                                </div>
+
+                               
+                                <div class="col-4">
+                                     <label for="nrovueltas" class="col-1 col-form-label">V:</label>
+                                    <input class="form-control" type="number" value="50" id="nrovueltas" [(ngModel)]="tarjeta._TaCoNroVuelta">
                                 </div>
                                 
-                            </div>
-                            <!--monto cuota-->       
-                            <div class="form-group row ">
-                                <label for="cuota" class="col-2 col-form-label">Cuota:</label>
-                                <div class="col-10">
-                                    <input class="form-control" type="text"  value="0" id="cuota">
+                                
+                                <div class="col-4">
+                                    <label for="cuota" class="col-1 col-form-label">Cu:</label>
+                                    <input class="form-control" type="text"  value="0"   id="cuota"    [(ngModel)]="tarjeta._TaCoCuota">
                                 </div>
                             </div>     
 
                     <!--modal footer-->
                     <p-footer>
                         <div class="ui-dialog-buttonpane ui-helper-clearfix" >    
-                            <button type="button" pButton  (click)="guardarNewAsignarTarjeta()" label="Guardar"></button>
-                            <button type="button" pButton  (click)="cancelarNewAsignarTarjeta()" label="Cancelar"></button>
+                            <button type="button" pButton  (click)="guardarTarjeta()" label="Guardar"></button>
+                            <button type="button" pButton  (click)="cancelarTarjeta()" label="Cancelar"></button>
                         </div>
                     </p-footer>
         </p-dialog>
 
         <!--Tabla Maestro-->
         
-            <p-dataTable [value]="progPresentar" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal"
-                scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelect($event)">
+            <p-dataTable [value]="_allTarjControl" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal"
+                scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectCabecera($event)">
 
                 <p-column styleClass="col-button" [style]="{'width':'6em'}">
                     <!--botones para la columna-->
@@ -69,19 +120,19 @@
 
                     <!--botones de las filas-->
 
-                    <template let-col let-envioPresentar="rowData" pTemplate="body">
+                    <template let-col let-row="rowData" pTemplate="body">
                         <!--Boton editar-->
-                        <button type="button" class="btn"> </button>
+                        <button type="button" pButton class="btn" (click)="editarC(row.TaCoId)" icon="fa-pencil-square-o" > </button>
                         <!--Boton eliminar-->
-                        <button type="button" class="btn"> </button>
+                        <button type="button" pButton class="btn" (click)="eliminarC(row.TaCoId)" icon="fa-trash" > </button>
                     </template>
                 </p-column>
 
                 <!--campos de la datatable-->
-                <p-column field="PrCantidadBuses" header="N°" [sortable]="true" [style]="{'width':'4em'}"></p-column>
-                <p-column field="PrFechaInicio" header="Inicio" [sortable]="true" [style]="{'width':'9em'}"></p-column>
-                <p-column field="PrFechaFinFin" header="Fin" [sortable]="true" [style]="{'width':'9em'}"></p-column>
-                <p-column field="PrTipo" header="Tipo" [sortable]="true" [style]="{'width':'6em'}"></p-column>
+                <p-column field="TaCoFecha" header="N°"  [style]="{'width':'4em'}"></p-column>
+                <p-column field="BuId" header="Inicio"  [style]="{'width':'9em'}"></p-column>
+                <p-column field="TaCoId" header="Fin"  [style]="{'width':'9em'}"></p-column>
+                <p-column field="RuId" header="Tipo"  [style]="{'width':'6em'}"></p-column>
             </p-dataTable>
         
     </div>
@@ -89,10 +140,10 @@
 
 
 <!--Detalle tarjeta control-->
-<!--
+
 <div class="card">
     <div>
-        <h4>Detalle de Programacion</h4>
+        <h4>Tarjetas Iniciadas</h4>
     </div>
     <div class="card-block" style="padding:3">
         <div class="card-text">
@@ -114,13 +165,12 @@
                 </p-column>
 
                 
-                <p-column field="PrDeOrden" header="Orden" [sortable]="true" [style]="{'width':'4em'}"></p-column>
-                <p-column field="PrDePrid" header="Bus" [sortable]="true" [style]="{'width':'9em'}"></p-column>
-                <p-column field="PrDeFecha" header="Fecha" [sortable]="true" [style]="{'width':'9em'}"></p-column>
-                <p-column field="PrDeTipo" header="Tipo" [sortable]="true" [style]="{'width':'6em'}"></p-column>
+                <p-column field="PrDeOrden" header="Orden"  [style]="{'width':'4em'}"></p-column>
+                <p-column field="PrDePrid" header="Bus"  [style]="{'width':'9em'}"></p-column>
+                <p-column field="PrDeFecha" header="Fecha"  [style]="{'width':'9em'}"></p-column>
+                <p-column field="PrDeTipo" header="Tipo"  [style]="{'width':'6em'}"></p-column>
             </p-dataTable>
         </div>
 
     </div>
 </div>
--->

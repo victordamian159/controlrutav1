@@ -29,6 +29,7 @@ import {RutaService} from './service/ruta.service';
 import {ProgramacionService} from './service/prog.service';
 import {PuntoControlService} from './service/pcontrol.service';
 import {PlacasService} from './service/placas.service';
+import {TControlService}  from './service/tcontrol.service';
 
 //import { InMemoryWebApiModule } from 'angular2-in-memory-web-api';
 //import { InMemoryDataService }  from './in-memory-data.service';
@@ -78,7 +79,8 @@ import {PlacasService} from './service/placas.service';
       RutaService, 
       PuntoControlService,
       ProgramacionService,
-      PlacasService
+      PlacasService,
+      TControlService
   ],
   bootstrap: [AppComponent]
 })
