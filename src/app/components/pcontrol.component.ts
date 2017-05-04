@@ -128,9 +128,9 @@ export class PcontrolComponent implements OnInit{
     //activar y desactivar funciones
     activeAddMarker = 0; // 0 : desactivado     1 : activado
     selectRowGrilla = 0; // 0 : desactivado     1 : activado
-    //PARA SABER SI SE ESTA EDITANDO UN REGISTRO O NO USARLO PARA ALGUN FORMULARIO
+    //PARA SABER SI SE ESTA EDITANDO UN REGISTRO O NO, USARLO PARA ALGUN FORMULARIO
     editando    =   0;   // 0: nuevo registro    1: se esta editando un registro         
-    
+    dragPunto  =   0;    // 0: no arrastrar      1: arrastrar 
     //ACTIVANDO Y DESACTIVANDO BOTONES DEL MAPA
     desGuardarPCD_BD:boolean;
     desBorrarPCDet:boolean;
@@ -213,14 +213,68 @@ export class PcontrolComponent implements OnInit{
       
     }
 
-    //arrastrar 
+    //CLICK SOBRE EL OBJETO --- ESTA FUNCION PARECE Q NO FUNCIONA :/
     handleOverlayClick(event) {
-        console.log("click click");
+        console.log("CLICK SOBRE EL OBJETO: handleOverlayClick");
+    }
+
+    //FUNCION DRAG OBJETO
+    handleDragEnd(event){
+        console.log("arrastrando =D");
+        let x; let y; let j = 0; let cen = 0;
+        let indexInOverlays: number;
+        let indexArrayParaBD : number;
+
+        x = event.overlay.getPosition().lat();
+        y = event.overlay.getPosition().lng();
+        console.log(x + "---" +y);
+
+        indexInOverlays  = this.overlays.indexOf(event.overlay); // INDICE EN ARRAY OBJETOS
+        
+        console.log(this.overlays[indexInOverlays].title);
+
+        while(j<this.pCArrayDetalleBD.length && cen == 0){
+            if(       this.overlays[indexInOverlays].title==this.pCArrayDetalleBD[j].PuCoDeDescripcion){
+                cen=1;
+            }else if((this.overlays[indexInOverlays].title!=this.pCArrayDetalleBD[j].PuCoDeDescripcion)){
+                j++;
+            }
+        }
+        //indexArrayParaBD = j;
+        //indexArrayParaBD = this.pCArrayDetalleBD.indexOf(this.overlays[indexInOverlays].title);
+
+        console.log("index: "+indexInOverlays);
+        console.log("index: "+j);
+
+        //console.log(this.pCArrayDetalleBD);
+        //ACTUALIZANDO EL ARRAY DE PUNTOS, LAS NUEVAS COORDENADAS Q SE CAMBIARON DE CADA PUNTO
+        this.pCArrayDetalleBD[j].PuCoDeLatitud  = x;
+        this.pCArrayDetalleBD[j].PuCoDeLongitud = y;
+
+        //BORRANDO CIRCULO PARA ACTUALIZA RPOSICION
+        this.overlays[indexInOverlays+1].setMap(null);
+        this.overlays.splice(indexInOverlays+1, 1,
+            new google.maps.Circle({ strokeColor: '#FF0000', strokeOpacity: 0.8, strokeWeight: 2, fillColor: '#FF0000', fillOpacity: 0.35,
+                center: {lat:x , lng:y},
+                radius:10
+            })
+        );
+
+        console.log(this.overlays);
+    }
+
+    //ACTUALIZANDO LOS PUNTOS DE CONTROL AL GUARDAR LA BD
+    actualizarOrdenPC(){
+        let i=0; let j;
+        while(i<this.pCArrayDetalleBD.length){
+                this.pCArrayDetalleBD[i].PuCoDeOrden=i+1;
+            i++;
+        }
     }
 
     //click sobre una forma (marcador, lineas u otras) //borrando puntos con click sobre ellos
     handleOverClick(event){
-        console.log("click click");
+        console.log("CLICK SOBRE EL OBJETO: handleOverClick  ");
         //marcador : impar,  circle : par 
         //primer marker es index 0
         //primer circle es index 1
@@ -272,15 +326,16 @@ export class PcontrolComponent implements OnInit{
             this.desNuevosPuntos= true;
         }
 
+        //CONDICIONAL AGREGAR MARCADORES
         if(this.activeAddMarker == 1){ //addmarker activado
             this.disabledInputPos=true; //DESACTIVAR EL DESACTIVAR LA POSICION AUTOMATICA 
             this.draggable=false;
             this.indexMarkerTitle=this.indexMarker.toString();
   
 
-            console.log("coordenadas addmarker: ");
-            console.log("j: "+this.j);
-            console.log("lat: "+this.coordenadas[this.j].x+"-----"+"lng: "+this.coordenadas[this.j].y);
+            //console.log("coordenadas addmarker: ");
+            //console.log("j: "+this.j);
+            //console.log("lat: "+this.coordenadas[this.j].x+"-----"+"lng: "+this.coordenadas[this.j].y);
             
             //console.log(this.indexMarkerTitle);
             
@@ -329,6 +384,10 @@ export class PcontrolComponent implements OnInit{
         //this.desDeshacerPCDet=true;
         this.desEditarPCDetMarker=false;
 
+        //DESACTIVANDO EDITAR Y NO ARRASTRAR MARCADORES
+        this.editando = 0;  // NO EDITAR 
+        this.dragPunto = 0; // NO ARRASTRAR
+
         this.j=0; //PONER CLEAR PARA REINICIAR LAS VARIABLES -> BORRAR ESTA LINEA
 
         //buscando en el rest deacuerdo al id de la row
@@ -354,14 +413,18 @@ export class PcontrolComponent implements OnInit{
         this.pcontrolService.getAllPuntoControlDetalleByPuCo(this.idFilaSeleccionada)
         .subscribe(
             data => {
-                        this.pCArrayDetalleBD=data; 
+                        this.pCArrayDetalleBD=data; //ARRAY COORDENADAS PUNTOS DE CONTROL
+
+                        //CASOS SI EXISTEN PUNTOS DE CONTROL
                         if(this.pCArrayDetalleBD.length != 0){
-                            this.mgPuntosControlDetalle(); 
-                            this.cargarmarker();
+                            this.mgPuntosControlDetalle(); //CARGANDO GRILLA PUNTOSDETALLE
+                            this.cargarmarker(); //CARGAR LOS MARCADORES
                             //DESACTIVANDO BOTON 
                             this.desNuevosPuntos=true;
                             this.desDeshacerPCDet=true;
                             //this.editando = 1; //se esta editando el array de puntos (existen puntos en la BD) 
+
+                        //CASO NO HAY PUNTOS DE CONTROL EN LA BD
                         }else if(this.pCArrayDetalleBD.length == 0){
                             //HACER UNA VENTANA MODAL PARA ESTE MENSAJE
                             console.log("NO HAY PUNTOS DE CONTROL");
@@ -398,27 +461,61 @@ export class PcontrolComponent implements OnInit{
         //console.log(this.overlays.length);
     }
 
-    //CARGAR LOS MARCADORES EL MAPA 
+    //CARGAR LOS MARCADORES SOBRE EL MAPA 
     cargarmarker(){
-          console.log(this.pCArrayDetalleBD);
+        console.log(this.pCArrayDetalleBD);
         console.log(this.overlays);
-         for(let marker of this.pCArrayDetalleBD){
-            this.overlays.push(
-                //agregando marker
-                new google.maps.Marker({
-                    position:{lat:marker.PuCoDeLatitud , lng:marker.PuCoDeLongitud},
-                    title:marker.PuCoDeDescripcion,
-                    draggable:false
-                })
-            );
+
+        //CONDICIONAL PARA PODER EDITAR MARCADORES (DRAGGABLE=TRUE) ----- 
+        //REVISAR LA VARIABLE THIS.EDITANDO SI SE PUEDE INTEGRAR, 
+        //TAMBIEN AL AGREGAR MARCADORES ARRASTRABLES O NO EN ADDMARKER
+        if(this.dragPunto == 0  && this.editando == 0){ //NO ARRASTRAR Y EDITANDO ACTIVADO
+            for(let marker of this.pCArrayDetalleBD){
+                this.overlays.push(
+                    //agregando marker
+                    new google.maps.Marker({
+                        position:{lat:marker.PuCoDeLatitud , lng:marker.PuCoDeLongitud},
+                        title:marker.PuCoDeDescripcion,
+                        draggable:false
+                    })
+                );
+                
+                this.overlays.push(
+                    //agregando circulo 
+                    new google.maps.Circle({ strokeColor: '#FF0000', strokeOpacity: 0.8, strokeWeight: 2, fillColor: '#FF0000', fillOpacity: 0.35,
+                        center: {lat:marker.PuCoDeLatitud , lng:marker.PuCoDeLongitud},
+                        radius:10
+                    }));
+            }//FIN FOR
+        }else if(this.dragPunto == 1 && this.editando == 1){ // SI ARRASTRAR Y EDITANDO ACTIVADO
+            //REINICIAR VARIABLES, LIMPIAR ARRAY OBJETOS(overlay=[] ESTA DENTRO DE reiniciarVariables() ) 
+            //this.reiniciarVariables();
             
-            this.overlays.push(
-                //agregando circulo 
-                new google.maps.Circle({ strokeColor: '#FF0000', strokeOpacity: 0.8, strokeWeight: 2, fillColor: '#FF0000', fillOpacity: 0.35,
-                    center: {lat:marker.PuCoDeLatitud , lng:marker.PuCoDeLongitud},
-                    radius:10
-                }));
+            //RECARGAR RUTA
+            //this.cargarRuta();
+
+            //CARGAR NUEVOS MARCADORES CON DRAGGABLE = TRUE
+            for(let marker of this.pCArrayDetalleBD){
+                this.overlays.push(
+                    //AGREGANDO MARKER
+                    new google.maps.Marker({
+                        position:{lat:marker.PuCoDeLatitud , lng:marker.PuCoDeLongitud},
+                        title:marker.PuCoDeDescripcion,
+                        draggable:true
+                    })
+                );
+
+                this.overlays.push(
+                    //AGREGANDO CIRCULO
+                    new google.maps.Circle({ strokeColor: '#FF0000', strokeOpacity: 0.8, strokeWeight: 2, fillColor: '#FF0000', fillOpacity: 0.35,
+                        center: {lat:marker.PuCoDeLatitud , lng:marker.PuCoDeLongitud},
+                        radius:10
+                    })
+                );
+
+            }//FIN FOR
         }
+
     }
     
     //para editar la tabla maestro (grilla)BOTON DE LAS FILAS EDITAR
@@ -503,6 +600,9 @@ export class PcontrolComponent implements OnInit{
         .subscribe(data => {this.pcDetalleRest=data});
     }
 
+
+    //BOTON EN LA FILA DATATABLE DE CADA PUNTO DE CONTROL
+    //VENTANA MODAL EDITAR SOLO EL NOMBRE Y TIEMPO MAS NO LA POSICION
     //EDITAR PUNTOS CONTROL-> LLAMAR A LA FUNCIONA ELIMINAR PARA PODER BORRAR TODOS 
     //LOS PUNTOS DE CONTROL EXISTENTES Y PODER MANDAR LA NUEVA LISTA MODIFICADA
     editarDetalle(_PuCoDeId : number){
@@ -526,6 +626,7 @@ export class PcontrolComponent implements OnInit{
             //BUSCANDO EL OBJETO EN EL ARRAY
             let j=0;
             let cen=1; // 1: encontrado    0: no encontrada
+            //BUSCANDO REGISTRO A ELIMINAR DEL ARRAY Q VA A LA BD
             while(j<this.pCArrayDetalleBD.length && cen == 1){
                 if(this.pCArrayDetalleBD[j].PuCoDeId != _PuCoDeId){
                     j++;
@@ -534,8 +635,8 @@ export class PcontrolComponent implements OnInit{
                     console.log("encontrado =D: "+ j);
                 }
             }
-            this.pCArrayDetalleBD.splice(j,1);
-            this.mgPuntosControlDetalle();
+            this.pCArrayDetalleBD.splice(j,1); //ELIMINANDO UN SOLO ELEMENTO DESDE LA POSICION J
+            this.mgPuntosControlDetalle(); //CARGANDO LA GRILLA PUNTOS DETALLE
             console.log(this.pCArrayDetalleBD);
         }else if(this.editando == 0){
             //MOSTRARLO EN UNA VENTANA MODAL
@@ -665,9 +766,11 @@ export class PcontrolComponent implements OnInit{
 
     //mandar al servicio Rest los puntos, es para confirmar que se tiene los correctos
     guardarpuntosDetalleRest(){
+       this.actualizarOrdenPC();
 
-         console.log("editando: "+this.editando);
+       console.log("editando: "+this.editando);
        console.log("tamaño: "+this.pCArrayDetalleBD.length);
+
        //GUARDANDO NUEVA LISTA DE PUNTOS, Y LONG ES DIFERENTE DE CERO
         if(this.editando == 0 && this.pCArrayDetalleBD.length!=0){ //0 : nuevo registro
             console.log(this.pCArrayDetalleBD);
@@ -685,7 +788,7 @@ export class PcontrolComponent implements OnInit{
             this.desNuevosPuntos = true;
 
             //DESACTIVANDO EVENTOS
-            this.activeAddMarker = 0 //addmarker DESactivado
+            //this.activeAddMarker = 0 //addmarker DESactivado
 
         //SE ESTA EDITANDO LISTADO EXISTENTE, LONG ES DIFERENTE DE CERO
         }else if(this.editando == 1 && this.pCArrayDetalleBD.length!=0){ //1 : editando registro existente
@@ -713,6 +816,14 @@ export class PcontrolComponent implements OnInit{
                                 err => {this.errorMessage=err});
             console.log("guardado editado en rest");
             
+            //DESACTIVANDO ACTIVANDO BOTONES MAPA
+            this.desBorrarPCDet = true;
+            this.desDeshacerPCDet= true;
+            this.desEditarPCDetMarker = true;
+            this.desGuardarPCD_BD = true;
+            this.desNuevosPuntos = true;
+
+
         //SE BORRO TODOS LOS PUNTOS DE UN LISTADO EXISTENTE
         }else if(this.pCArrayDetalleBD.length == 0 && this.editando == 1){ //GUARDANDO ARRAY VACIO & 1 : editando registro existente
             console.log(this.pCArrayDetalleBD);
@@ -727,11 +838,23 @@ export class PcontrolComponent implements OnInit{
                                 },  
                     err => {console.log(err);}
             );
+
+            //DESACTIVANDO ACTIVANDO BOTONES MAPA
+            this.desBorrarPCDet = true;
+            this.desDeshacerPCDet= true;
+            this.desEditarPCDetMarker = true;
+            this.desGuardarPCD_BD = true;
+            this.desNuevosPuntos = true;
+
         }
 
-    //REINICIANDO LA VARIABLES
-    this.editando=0;//0: NUEVO REGISTRO (UNO NO EXISTENTE)      1: EDITANDO REGISTRO EXISTENTE
-    //this.reiniciarVariables();
+        
+        this.reiniciarVariables();//REINICIANDO LA VARIABLES
+        this.cargarRuta();
+        this.cargarmarker();
+        this.editando=0;//0: NUEVO REGISTRO (UNO NO EXISTENTE)      1: EDITANDO REGISTRO EXISTENTE
+        this.dragPunto=0 //MARKER NO DRAGGABLE
+        this.activeAddMarker = 0; //0: desactivado,   1: activado //DESACTIVANDO ADDMARKER
     }
    
     // mostrar los puntos de control en la grilla (1era grilla)
@@ -753,7 +876,6 @@ export class PcontrolComponent implements OnInit{
         //console.log(this.pCMaestroMostrar); //almacenado para mostrar en la grilla
         }//fin for punto control Maestro
     }// fin funcion
-
 
     //mostrar puntos de control Detalle en al grilla (2da grilla)
     mgPuntosControlDetalle (){
@@ -790,11 +912,11 @@ export class PcontrolComponent implements OnInit{
     BorrarPuntosDetalle(){
         //borrando array de puntos de control en el datatable y hacer consulta para mostrar resultado
         //borrando puntos de control del mapa (overlayrs de index 1 hacia adelante , index 0 es el mapa)
-        
-        this.reiniciarVariables();
+
         this.editando=1;
+        this.dragPunto = 0;        
+        this.reiniciarVariables();
         this.cargarRuta();
-        
     }
 
     //BOTON NUEVOS PUNTOS DE CONTROL (DETALLE)
@@ -843,9 +965,17 @@ export class PcontrolComponent implements OnInit{
     editarPuntosDetalleMapa(){
         this.editando = 1;  //activando editar puntonControl
         this.activeAddMarker = 1; //activando  el addmarker 
+        this.dragPunto = 1;     //DRAGGABLE TODOS PUNTOS CONTROL
 
+        //REINICIANDO VARIABLES
+        this.reiniciarVariables();
 
-         console.log("ingresar marcadores despues de: "+this.ordenMayor);
+        //RECARGAR LOS MARCADORES Y RUTA EN EL MAPA
+        this.cargarRuta();
+        this.cargarmarker();
+
+        //EVALUAR SI SE MANDA A UNA VENTANA MODAL AVISO
+        console.log("ingresar marcadores despues de: "+this.ordenMayor);
 
         //DESACTIVANDO Y ACTIVANDO BOTONES
         this.desGuardarPCD_BD=false;
@@ -854,19 +984,36 @@ export class PcontrolComponent implements OnInit{
         this.desEditarPCDetMarker=true;
 
         //TODOS LOS objetos
-        //console.log(this.overlays);
-
+        console.log(this.overlays);
         //EDITAR EL ARRAY DE PUNTOS QUE SON SUBIDOS A LA BD Y EL overlays
-
+        //ACTIVAR DRAGGABLE DE MARKERS (REEMPLAZANDO EXISTENTES)
     }
 
     //REINICIAR VARIABLES Y ARRAYS DE OBJETOS
         //TERMINAR DE PROGRAMAR
     reiniciarVariables(){
+        //CONDICIONAL DRAGGABLE ACTIVADO O NO, CASO SI SE ESTA EDITANDO O NO editando 1 | 0, dragPunto 1 | 0
 
-        
+        if(this.editando == 1 && this.dragPunto ==1){ // EDITANDO SI, DRAGPUNTO SI
             this.pCEditados =[]; // array editado PUNTOSCONTROL, PARA MANDAR A LA BD
-            this.overlays=[];
+            this.overlays=[];   //BORRANDO TODOS ELEMENTOS DEL ARRAY OBJETOS DEL MAPA
+            this.coordenadas=[];
+            //this.pCArrayDetalleBD=[]; //borrando puntos del array que va a la BD
+            this.i=0;
+            this.j=0;//para pasar entre las coordenadas en el array COORDENADAS 
+            this.k=0;
+            this.l=0;
+            this.m=0; //reducir en 1 los title de los marker
+            this.n=1; //nro de puntos de control (guardar puntos en rest DETALLE) 
+            this.editar=0; //si editar = 0 (nuevo registro) si editar = 1 (funcion editar) 
+            this.ordenMayor=0; //nro mayor del array de puntos recuperados para el caso de editar
+
+            //indexMarkerTitle:string; //index marker para title (string)
+            this.indexMarker=0; //indice de marker
+
+        }else if(this.editando == 0 && this.dragPunto == 0){ // EDITANDO NO, DRAGPUNTO NO
+            this.pCEditados =[]; // array editado PUNTOSCONTROL, PARA MANDAR A LA BD
+            this.overlays=[];   //BORRANDO TODOS ELEMENTOS DEL ARRAY OBJETOS DEL MAPA
             this.coordenadas=[];
             this.pCArrayDetalleBD=[]; //borrando puntos del array que va a la BD
             this.i=0;
@@ -880,21 +1027,36 @@ export class PcontrolComponent implements OnInit{
 
             //indexMarkerTitle:string; //index marker para title (string)
             this.indexMarker=0; //indice de marker
- 
 
-           /*
-            //activar y desactivar funciones
-            activeAddMarker = 0; // 0 : desactivado     1 : activado
-            selectRowGrilla = 0; // 0 : desactivado     1 : activado
-            //PARA SABER SI SE ESTA EDITANDO UN REGISTRO O NO USARLO PARA ALGUN FORMULARIO
-            editando    =   0;   // 0: nuevo registro    1: se esta editando un registro         
-            
-            //ACTIVANDO Y DESACTIVANDO BOTONES DEL MAPA
-            desGuardarPCD_BD:boolean;
-            desBorrarPCDet:boolean;
-            desDeshacerPCDet:boolean;
-            desEditarPCDetMarker:boolean;
-            desNuevosPuntos : boolean;*/
+        //USADO CASO SE BORRA TODOS LOS PUNTOS
+        }else if(this.editando == 1 && this.dragPunto == 0){
+            this.overlays=[];   //BORRANDO TODOS ELEMENTOS DEL ARRAY OBJETOS DEL MAPA
+            this.coordenadas=[];
+            this.pCArrayDetalleBD=[]; //borrando puntos del array que va a la BD
+            this.i=0;
+            this.j=0;//para pasar entre las coordenadas en el array COORDENADAS 
+            this.k=0;
+            this.l=0;
+            this.m=0; //reducir en 1 los title de los marker
+            this.n=1; //nro de puntos de control (guardar puntos en rest DETALLE) 
+            this.editar=0; //si editar = 0 (nuevo registro) si editar = 1 (funcion editar) 
+            this.ordenMayor=0; //nro mayor del array de puntos recuperados para el caso de editar
+        } 
+            {
+                /*
+                //activar y desactivar funciones
+                activeAddMarker = 0; // 0 : desactivado     1 : activado
+                selectRowGrilla = 0; // 0 : desactivado     1 : activado
+                //PARA SABER SI SE ESTA EDITANDO UN REGISTRO O NO USARLO PARA ALGUN FORMULARIO
+                editando    =   0;   // 0: nuevo registro    1: se esta editando un registro         
+                
+                //ACTIVANDO Y DESACTIVANDO BOTONES DEL MAPA
+                desGuardarPCD_BD:boolean;
+                desBorrarPCDet:boolean;
+                desDeshacerPCDet:boolean;
+                desEditarPCDetMarker:boolean;
+                desNuevosPuntos : boolean;*/
+            }
     }
 
     //SELECCION DE PUNTOS DE CONTROL DE LA GRILLA DETALLE
