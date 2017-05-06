@@ -91,6 +91,9 @@ export class TcontrolComponent implements OnInit{
     _programacion:any[]=[];
     progDetalle:any[]=[];
     _progDetalle:any[]=[];
+    progD_BD:any[]=[];  //PROGRAMACION RECUPERADA DE LA BD
+    _progD_BD:any[]=[]; //PROGRAMACION PARA PASAR A LA GRILLA
+    _array:any[]=[];  //ARRAY COMO PARAMETRO A PROCEDIMIENTO SAVE TARJETA DETALLE 
 
     constructor(
                     private tcontrolservice: TControlService,
@@ -125,7 +128,7 @@ export class TcontrolComponent implements OnInit{
             data => {
                         this.progDetalle=data;
                         console.log(this.progDetalle);
-                        this.mgprogDetalle();
+                        this.mgprogDetalle(); //GRILLA PROG POR FECHA
                     }
         );
     }
@@ -151,7 +154,7 @@ export class TcontrolComponent implements OnInit{
         //console.log(this._programacion);
     }
 
-    //GRILLA PROGRAMACION DETALLE 
+    //GRILLA PROGRAMACION DETALLE  -  POR LA FECHA
     mgprogDetalle(){ 
         this._progDetalle=[];
         
@@ -370,6 +373,14 @@ export class TcontrolComponent implements OnInit{
         this.tarjeta._TaCoId=0; 
         this.tarjeta._TaCoId = event.data.TaCoId;
         console.log(this.tarjeta._TaCoId);
+
+        this.tcontrolservice.getAllTarjetaControlDetalleByPuCo(this.tarjeta._TaCoId).subscribe(
+              data => {
+                        this.progD_BD=data;
+                        console.log(this.progD_BD);
+                        //this.mgprogDetalle();
+                    }
+        );
     }
 
 
@@ -383,12 +394,15 @@ export class TcontrolComponent implements OnInit{
             if(this.tarjeta._TaCoId == 0){
                 console.log("nuevo reg");
                 console.log("guardar");
-                //SUBIENDO DATOS AL OBJETO TARJETA
+                //let array = [];
+
+                //SUBIENDO DATOS AL OBJETO TARJETA this.tarjeta._prId = id;
                     this._tarjeta ={
                         TaCoId : this.tarjeta._TaCoId,
                         PuCoId : this.tarjeta._PuCoId,
                         RuId : this.tarjeta._RuId,
                         BuId :this.tarjeta._BuId,
+                        PrId : this.tarjeta._prId,
                         TaCoFecha :this.tarjeta._TaCoFecha,
                         TaCoHoraSalida :this.tarjeta._TaCoHoraSalida,
                         TaCoCuota :this.tarjeta._TaCoCuota,
@@ -399,35 +413,47 @@ export class TcontrolComponent implements OnInit{
                     console.log(this._tarjeta);
                     //return;
                 //1ERO GUARDANDO LA CABECERA PARA OBTENER SU ID
+                                   
                     this.tcontrolservice.saveTarjetaControl(this._tarjeta).subscribe(
                         data => {
                                     //RECUPERAR DE TCONTROL EL TACOID
                                     this.tarjeta=data;  //VER SI TCONTROL PUEDA SER LOCAL          
-                                    console.log(this.tarjeta);                                                   
+                                    console.log(this.tarjeta);      
+                                    
+                                    //2DO GUARDANDO DETALLE DE TARJETA (INICIAR DE CERO)
+                                    //EL NUMERO DE PUNTOSCONTROLDETALLE TIENE Q SER IGUAL AL NUMERO DE OBJETOS EN EL ARRAY PARA LA BD
+                                    
+                                    for(let obj of this.puntosControlDet){
+                                        this._array.push({
+                                            UsFechaReg :  new Date(),
+                                            TaCoId : this.tarjeta.TaCoId,
+                                            PuCoDeId : obj.PuCoDeId,
+                                            TaCoDeFecha : new Date(),     
+                                            TaCoDeHora : 0, 
+                                            TaCoDeLatitud : 12.0,
+                                            TaCoDeLongitud : 13.0,
+                                            TaCoDeTiempo : 0,
+                                            TaCoDeDescripcion : obj.PuCoDeDescripcion,
+                                            UsId : 1,
+                                            TaCoDeId : 0
+                                        });
+                                    }
+                                    console.log(this._array);
+
+                                   
                                 },
                         err => {this.errorMessage=err}
                     );
 
-                //2DO GUARDANDO DETALLE DE TARJETA (INICIAR DE CERO)
-                    //EL NUMERO DE PUNTOSCONTROLDETALLE TIENE Q SER IGUAL AL NUMERO DE OBJETOS EN EL ARRAY PARA LA BD
-                    let array = [];
-                    for(let obj of this.puntosControlDet){
-                        array.push({
-                            UsFechaReg : "2017-05-01",
-                            TaCoId : this.tarjeta.TaCoId,
-                            PuCoDeId : obj.PuCoDeId,
-                            TaCoDeFecha : "",     
-                            TaCoDeHora : 0, 
-                            TaCoDeLatitud : 0.0,
-                            TaCoDeLongitud : 0.0,
-                            TaCoDeTiempo : 0,
-                            TaCoDeDescripcion : obj.PuCoDeDescripcion,
-                            UsId : 1,
-                            TaCoDeId : 0
-                        });
-                    }
-                    //this.puntosControlDet
-                    console.log(array);
+                     //LLAMANDO GUARDAR EN LA BD
+                    this.tcontrolservice.saveTarjetaControlDetalle(this._array).subscribe(
+                        realizar => {
+                                        this.getalltarjetacontrol();
+                                        console.log("se guardo detalle =D");
+                                    },
+                        err =>{this.errorMessage=err}
+                    );
+                
                 //3ERO EDITAR LAS PLACAS EN PROGRAMACIONDETALLE,CAMPO ASIG NO ASIG AUSENTE
                     //this.progDetalle
                     //this.tcontrolservice.    FALTA UN PROCEDIMIENTO PARA HACER LA ACTUALIZACION

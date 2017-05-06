@@ -297,6 +297,7 @@ export class RutaComponent implements OnInit{
         console.log("tamaño overlays: "+this.overlays.length);
         console.log("buscando error: ");
         console.log(this.overlays);
+        console.log("this.rutaRecuperada ="+this.rutaRecuperada);
         console.log("separador");
          //CUATRO CASOS PARA EDITAR 
 
@@ -886,7 +887,8 @@ export class RutaComponent implements OnInit{
                 console.log("antes: "+this.overlays.length);
 
                 //CONSULTAR PUNTOS RUTADETALLE AL rest
-                this.rutaService.getAllRutaDetalleByRu(this.indiceRowTabla).subscribe(
+                this.consultaRuta(this.indiceRowTabla);
+               /* this.rutaService.getAllRutaDetalleByRu(this.indiceRowTabla).subscribe(
                     data => {   this.puntosRuta=data; 
                                 this.cargarRuta();
                                 if(this.puntosRuta.length>0){
@@ -896,6 +898,9 @@ export class RutaComponent implements OnInit{
                                     this.disButSubirRuta=true;
                                     this.disButDeshacer=true;
                                     this.disButTerminarRuta=true;
+
+                                    //RUTA RECUPERADA (SI)
+                                    this.rutaRecuperada=1;
                                 }else if(this.puntosRuta.length==0){
                                     //HABILITANDO BOTONES EN EL FORMULARIO
                                     //this.disButEditar=false; //boton habilitado
@@ -905,19 +910,61 @@ export class RutaComponent implements OnInit{
                                     this.disButSubirRuta=true;
                                     this.disButDeshacer=true;
                                     this.disButTerminarRuta=true;
+
+                                    //RUTA RECUPERADA (NO)
+                                    this.rutaRecuperada=0;
                                 }
                                 //this.iniciar=1;
                             },
                     err => {this.errorMessage=err},
                     () => this.isLoading =false
-                );
+                    );
+                */
+
                 console.log("despues: "+this.overlays.length);
+                console.log("ruta recuperada 1: si, 0: no  => "+ this.rutaRecuperada);
         }else if(this.modRegistro==0){ //MOD NO TERMINADO
             console.log("GUARDAR LA GRAFICA DE LA NUEVA RUTA");
         }
 
       
     }
+
+    //CONSULTAR PUNTOS RUTADETALLE A LA BD
+    consultaRuta(idRuta : number){
+         this.rutaService.getAllRutaDetalleByRu(idRuta).subscribe(
+                    data => {   this.puntosRuta=data; 
+                                this.cargarRuta();
+                                if(this.puntosRuta.length>0){
+                                    this.disButEditar=false; //boton habilitado
+                                    this.disButBorrar=true;
+                                    this.disButNuevaRuta=true;
+                                    this.disButSubirRuta=true;
+                                    this.disButDeshacer=true;
+                                    this.disButTerminarRuta=true;
+
+                                    //RUTA RECUPERADA (SI)
+                                    this.rutaRecuperada=1;
+                                }else if(this.puntosRuta.length==0){
+                                    //HABILITANDO BOTONES EN EL FORMULARIO
+                                    //this.disButEditar=false; //boton habilitado
+                                    this.disButBorrar=true;  //boton deshabilitado
+                                    this.disButEditar=true; //boton deshabilitado
+                                    this.disButNuevaRuta=false; //boton habilitado 
+                                    this.disButSubirRuta=true;
+                                    this.disButDeshacer=true;
+                                    this.disButTerminarRuta=true;
+
+                                    //RUTA RECUPERADA (NO)
+                                    this.rutaRecuperada=0;
+                                }
+                                //this.iniciar=1;
+                            },
+                    err => {this.errorMessage=err},
+                    () => this.isLoading =false
+                );
+    }
+
 
     //cargar la ruta recuperada del rest haciendo el mapa
     cargarRuta(){
@@ -990,7 +1037,8 @@ export class RutaComponent implements OnInit{
         this.y0=0;
         this.end=0;
         this.cen=0;
-
+        this.activarAddMarker = 1; //ADDMARKER ACTIVADO
+        
         //CONDICIONAL PARA RUTATERMINADA O EN EDICION 8 CASOS DIFERENTES
         //PARA CASO DE RUTATERMINADA=1
         if(this.editando==0 && this.RutaTerminada==1){//no se esta editando 
@@ -1180,44 +1228,72 @@ export class RutaComponent implements OnInit{
 
     //guardar RutaDEtalle en la BD
     guardarPuntosRutaDetalle(){
-        
-         this.date = new Date();
+        this.puntosRutaDetalleArray = [];
+        //  CONDICIONAL SABER SI EXISTEN OBJETOS EN EL ARRAY OVERLAYS
+        // SABER SI SE GUARDA UNA RUTA VACIA O NO
+        if(this.overlays.length==0){ //NO HAY OBJETOS, SE GUARDA RUTA VACIA
+            this.puntosRuta = [];
+            this.rutaService.deleteRutaDetalleByRu(this.indiceRowTabla).subscribe(
+                realizar => {console.log("RUTA VACIA");
+                             //ACTIVANDO SELECCION DE ROWS GRILLA modRegistro=1
+                             this.modRegistro=1
+                            },
+                err => {console.log(err);}
+            );
+
+        }else if(this.overlays.length!=0  && this.overlays.length>6){ //POR LO MENOS UN TRIANGULO
+            this.date = new Date();
             this.dia = this.date.getDate();
             this.mes = this.date.getMonth();
             this.anio = this.date.getFullYear();
             //this.Ruta.UsFechaReg = this.anio+"-"+this.mes+"-"+this.dia;
 
-        console.log(this.puntosRuta);
-        for(let n=0 ; n<this.puntosRuta.length; n++){
+            console.log(this.puntosRuta);
+            for(let n=0 ; n<this.puntosRuta.length; n++){
 
-            this.puntosRutaDetalleArray.push({
-                    RuDeLatitud:this.puntosRuta[n].RuDeLatitud,
-                    RuDeLongitud:this.puntosRuta[n].RuDeLongitud,
-                    RuDeOrden:n,
-                    RuId:this.indiceRowTabla,
-                    UsFechaReg:this.anio+"-"+this.mes+"-"+this.dia,
-                    UsId:0, 
-                    RuDeId:0
-            });
-            console.log(n);
-            //this.puntosRutaDetalle[n]=this.puntosRuta;
+                this.puntosRutaDetalleArray.push({
+                        RuDeLatitud:this.puntosRuta[n].RuDeLatitud,
+                        RuDeLongitud:this.puntosRuta[n].RuDeLongitud,
+                        RuDeOrden:n,
+                        RuId:this.indiceRowTabla,
+                        UsFechaReg:this.anio+"-"+this.mes+"-"+this.dia,
+                        UsId:0, 
+                        RuDeId:0
+                });
+                console.log(n);
+                //this.puntosRutaDetalle[n]=this.puntosRuta;
+            }
+            
+            console.log(this.puntosRutaDetalleArray);
+
+            //BORRANDO RUTA ANTERIOR PARA PONER LA NUEVA
+            this.rutaService.deleteRutaDetalleByRu(this.indiceRowTabla).subscribe(
+                realizar =>{console.log("SE BORRO RECTA DE RUTA");},
+                err => {console.log(err);}
+            );
+
+            this.rutaService.saveRutaDetalle(this.puntosRutaDetalleArray)
+            .subscribe(
+                    realizar => {this.mgRutaDetalle();
+                                //ACTIVANDO SELECCION DE ROWS GRILLA modRegistro=1
+                                this.modRegistro=1 ;    
+                            },
+                    err => {this.errorMessage=err}
+            );
+
+            console.log("guardado en rest");
+            //this.modRegistro==1 //ACTIVANDO LA SELECCION DEL FILAS GRILLA MAESTRO (RUTA TRAZA GUARDADA EN LA BD)
         }
-        
-        console.log(this.puntosRutaDetalleArray);
 
-        this.rutaService.saveRutaDetalle(this.puntosRutaDetalleArray)
-        .subscribe(
-                realizar => {this.mgRutaDetalle();
-                             //ACTIVANDO SELECCION DE ROWS GRILLA modRegistro=1
-                            this.modRegistro=1 ;    
-                        },
-                err => {this.errorMessage=err}
-        );
-
-        console.log("guardado en rest");
-        //this.modRegistro==1 //ACTIVANDO LA SELECCION DEL FILAS GRILLA MAESTRO (RUTA TRAZA GUARDADA EN LA BD)
+        //ACTIVAR Y DESACTIVAR BOTONES AL GUARDAR EL DETALLE
+        this.disButBorrar = true;
+        this.disButEditar  = true;
+        this.disButTerminarRuta = true;
+        this.disButSubirRuta = true;
+        this.disButDeshacer = true;
+        this.disButNuevaRuta = true;
+        //this.disButCancelar FALTA PROGRAMACION, NO TIENE USO
     }
-
 }
 
 var Coords ={
