@@ -311,7 +311,7 @@ export class TcontrolComponent implements OnInit{
         this.displayAsignarTarjeta = true;
         this.tcontrolservice.newTarjetaControl() //CABECERA
             .subscribe(
-                data =>{this._tarjeta=data; 
+                data =>{this._tarjeta=data;                      
                         //console.log(this._tarjeta);
                 }
             );
@@ -397,6 +397,14 @@ export class TcontrolComponent implements OnInit{
                 //let array = [];
 
                 //SUBIENDO DATOS AL OBJETO TARJETA this.tarjeta._prId = id;
+                  let thoy:Date, otra:Date,horaTarjeta:string;
+                        thoy=new Date();
+                        horaTarjeta=this.tarjeta._TaCoHoraSalida;
+                        let resultado=horaTarjeta.split(':');
+                        
+                        otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));    
+                        this.tarjeta._TaCoHoraSalida=otra;
+                        
                     this._tarjeta ={
                         TaCoId : this.tarjeta._TaCoId,
                         PuCoId : this.tarjeta._PuCoId,
@@ -414,7 +422,7 @@ export class TcontrolComponent implements OnInit{
                     //return;
                 //1ERO GUARDANDO LA CABECERA PARA OBTENER SU ID
                                    
-                    this.tcontrolservice.saveTarjetaControl(this._tarjeta).subscribe(
+                  /*  this.tcontrolservice.saveTarjetaControl(this._tarjeta).subscribe(
                         data => {
                                     //RECUPERAR DE TCONTROL EL TACOID
                                     this.tarjeta=data;  //VER SI TCONTROL PUEDA SER LOCAL          
@@ -443,16 +451,19 @@ export class TcontrolComponent implements OnInit{
                                    
                                 },
                         err => {this.errorMessage=err}
-                    );
-
+                    );*/
+                     this.tcontrolservice.asignarTarjetaControl(this._tarjeta).subscribe(
+                        data => {},
+                         err => {this.errorMessage=err}
+                     );
                      //LLAMANDO GUARDAR EN LA BD
-                    this.tcontrolservice.saveTarjetaControlDetalle(this._array).subscribe(
+                 /*   this.tcontrolservice.saveTarjetaControlDetalle(this._array).subscribe(
                         realizar => {
                                         this.getalltarjetacontrol();
                                         console.log("se guardo detalle =D");
                                     },
                         err =>{this.errorMessage=err}
-                    );
+                    );*/
                 
                 //3ERO EDITAR LAS PLACAS EN PROGRAMACIONDETALLE,CAMPO ASIG NO ASIG AUSENTE
                     //this.progDetalle

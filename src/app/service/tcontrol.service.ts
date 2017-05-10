@@ -6,8 +6,10 @@ import {Observable} from 'rxjs';
 
 export class TControlService{
 	//TARJETA CONTROL
-    private baseUrl: string ='http://controlbus-ronaldmam.rhcloud.com/rest/tarjetacontrol/';
+    //private baseUrl: string ='http://controlbus-ronaldmam.rhcloud.com/rest/tarjetacontrol/';
+	private baseUrl: string ='http://localhost:8089/controlbus/rest/tarjetacontrol/';
     private baseUrl2:string ='http://controlbus-ronaldmam.rhcloud.com/rest/tarjetacontroldetalle/';
+	
 
 	//PUNTOS DE CONTROL
 	private baseUrl3:  string = 'http://controlbus-ronaldmam.rhcloud.com/rest/puntocontrol/';
@@ -141,6 +143,11 @@ export class TControlService{
 		return this.http.post(this.baseUrl2+ "save/", tControlDetalle) // ...using post request
                          .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
                          .catch((error:any) => Observable.throw(error.json().error || 'Server error')); //...errors if any
+	}
+	asignarTarjetaControl(tarjetaControl:Object[]){
+		return this.http.post(this.baseUrl+ "asignartarjeta/", tarjetaControl) // ...using post request
+						.map((res:Response) => res.json()) // ...and calling .json() on the response to return data
+						.catch((error:any) => Observable.throw(error.json().error || 'Server error')); //...errors if any
 	}
 
 //capturar error
