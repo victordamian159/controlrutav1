@@ -6,8 +6,8 @@ import {Observable} from 'rxjs';
 
 export class TControlService{
 	//TARJETA CONTROL
-    //private baseUrl: string ='http://controlbus-ronaldmam.rhcloud.com/rest/tarjetacontrol/';
-	private baseUrl: string ='http://localhost:8089/controlbus/rest/tarjetacontrol/';
+    private baseUrl: string ='http://controlbus-ronaldmam.rhcloud.com/rest/tarjetacontrol/';
+	//private baseUrl: string ='http://localhost:8089/controlbus/rest/tarjetacontrol/';
     private baseUrl2:string ='http://controlbus-ronaldmam.rhcloud.com/rest/tarjetacontroldetalle/';
 	
 
@@ -150,6 +150,12 @@ export class TControlService{
 						.catch((error:any) => Observable.throw(error.json().error || 'Server error')); //...errors if any
 	}
 
+	//CHOFER AUSENTE ACTUALIZAR PROGRAMACION DETALLE
+	actualizarProgDetalleAusente(obj : Object[]){
+		return this.http.post(this.baseUrl6+ "update/", obj) // ...using post request
+						.map((res:Response) => res.json()) // ...and calling .json() on the response to return data
+						.catch((error:any) => Observable.throw(error.json().error || 'Server error')); 
+	}
 //capturar error
 	handleError (error: any) {
 		// log error
@@ -161,3 +167,5 @@ export class TControlService{
 	}
 
 }
+
+

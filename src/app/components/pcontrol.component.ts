@@ -395,26 +395,24 @@ export class PcontrolComponent implements OnInit{
         this.idRutaFilaSeleccionada = event.data.RuId; //recupera el RuId para poder sacar la ruta de la BD
 
         //console.log(this.idFilaSeleccionada);
-        console.log(event.data.RuId);
+        //console.log(event.data.RuId);
 
-         this.mayorOrdenPuntos();
+         this.mayorOrdenPuntos();//PARA EL CASO DE EDITAR UNA LISTA EXISTENTE
 
          this.idDetalle = this.idFilaSeleccionada; //recupera el id cabecera para poder actualizar el detalle, funcion guardar if editado=1
-        console.log("este ID es par eliminar todo: "+this.idDetalle);
+        //console.log("este ID es par eliminar todo: "+this.idDetalle);
         
-         //recuperar la ruta desde la tabla ruta(DETALLE)
+         //RECUPERA RUTA DETALLE (TRAZA GRAFICA)
          this.rutaService.getAllRutaDetalleByRu(this.idRutaFilaSeleccionada).subscribe(
              data => {this.puntosRuta=data; this.cargarRuta();},
              err => {this.errorMessage=err},
              () => this.isLoading = false
          );
 
-        //recuperadno putnos de control por el PuCoId 
-        this.pcontrolService.getAllPuntoControlDetalleByPuCo(this.idFilaSeleccionada)
-        .subscribe(
+        //RECUPERA PUNTOS DE CONTROL POR EL PuCoId 
+        this.pcontrolService.getAllPuntoControlDetalleByPuCo(this.idFilaSeleccionada).subscribe(
             data => {
                         this.pCArrayDetalleBD=data; //ARRAY COORDENADAS PUNTOS DE CONTROL
-
                         //CASOS SI EXISTEN PUNTOS DE CONTROL
                         if(this.pCArrayDetalleBD.length != 0){
                             this.mgPuntosControlDetalle(); //CARGANDO GRILLA PUNTOSDETALLE
@@ -434,7 +432,6 @@ export class PcontrolComponent implements OnInit{
                             this.mgPuntosControlDetalle(); 
                             this.editando = 0; //NUEVO REGISTRO, NO EXISTEN PUTNOS EN LA BD
                         }
-                        
                     },
             err => {this.errorMessage = err},
             () => this.isLoading = false
@@ -445,6 +442,7 @@ export class PcontrolComponent implements OnInit{
          //cargarlos en el array de objetos
          //this.overlays=[];//ver si se puede eliminar esta cosa 
     }//fin funcion onRowSelectMaestro
+
 
     //CARGAR LA RUTA AL MAPA
     cargarRuta(){
@@ -469,13 +467,14 @@ export class PcontrolComponent implements OnInit{
         //CONDICIONAL PARA PODER EDITAR MARCADORES (DRAGGABLE=TRUE) ----- 
         //REVISAR LA VARIABLE THIS.EDITANDO SI SE PUEDE INTEGRAR, 
         //TAMBIEN AL AGREGAR MARCADORES ARRASTRABLES O NO EN ADDMARKER
-        if(this.dragPunto == 0  && this.editando == 0){ //NO ARRASTRAR Y EDITANDO ACTIVADO
+        if(this.dragPunto == 0  && this.editando == 0){ //NO ARRASTRAR Y EDITANDO DESACTIVADO
             for(let marker of this.pCArrayDetalleBD){
                 this.overlays.push(
                     //agregando marker
                     new google.maps.Marker({
                         position:{lat:marker.PuCoDeLatitud , lng:marker.PuCoDeLongitud},
                         title:marker.PuCoDeDescripcion,
+                        label:(this.pCArrayDetalleBD.indexOf(marker)+1).toString(), //array.indexOf(2);   this.pCArrayDetalleBD.indexOf(marker).toString();
                         draggable:false
                     })
                 );
@@ -488,25 +487,21 @@ export class PcontrolComponent implements OnInit{
                     }));
             }//FIN FOR
         }else if(this.dragPunto == 1 && this.editando == 1){ // SI ARRASTRAR Y EDITANDO ACTIVADO
-            //REINICIAR VARIABLES, LIMPIAR ARRAY OBJETOS(overlay=[] ESTA DENTRO DE reiniciarVariables() ) 
-            //this.reiniciarVariables();
-            
-            //RECARGAR RUTA
-            //this.cargarRuta();
 
-            //CARGAR NUEVOS MARCADORES CON DRAGGABLE = TRUE
+            //REINICIAR VARIABLES, LIMPIAR ARRAY OBJETOS(overlay=[] ESTA DENTRO DE reiniciarVariables() ) 
+            //this.reiniciarVariables();//RECARGAR RUTA//this.cargarRuta();
+
             for(let marker of this.pCArrayDetalleBD){
                 this.overlays.push(
-                    //AGREGANDO MARKER
                     new google.maps.Marker({
                         position:{lat:marker.PuCoDeLatitud , lng:marker.PuCoDeLongitud},
                         title:marker.PuCoDeDescripcion,
+                        label:(this.pCArrayDetalleBD.indexOf(marker)+1).toString(),
                         draggable:true
                     })
                 );
 
                 this.overlays.push(
-                    //AGREGANDO CIRCULO
                     new google.maps.Circle({ strokeColor: '#FF0000', strokeOpacity: 0.8, strokeWeight: 2, fillColor: '#FF0000', fillOpacity: 0.35,
                         center: {lat:marker.PuCoDeLatitud , lng:marker.PuCoDeLongitud},
                         radius:10
@@ -654,9 +649,10 @@ export class PcontrolComponent implements OnInit{
     //BOTON GUARDAR PUNTOS (CUADRO MODAL AGREGAR PUNTO CONTROL)
     guardarPuntoControlDetalle(){   
         this.newPCDetalle(); // crear un nuevo punto (REST)
-       console.log("antes");
-       console.log("editando: "+this.editando);
-       console.log("tamaño: "+this.pCArrayDetalleBD.length);
+       //console.log("antes");
+       //console.log("editando: "+this.editando);
+       //console.log("tamaño: "+this.pCArrayDetalleBD.length);
+       
        //CASO NUEVOS PUNTOS DE CONTROL DE CERO O CUANDO SE PRESIONA EL BOTON BORRAR (TODO LOS PUNTOS)
        //NUEVO REGISTRO Y EL ARRAY PARA LA BD ESTA VACIO                   EXISTE AL MENOS UN NUEVO PUNTO
        //if(this.editando == 0 && this.pCArrayDetalleBD.length ==0){
@@ -669,7 +665,7 @@ export class PcontrolComponent implements OnInit{
                         PuCoDeLatitud : Number(this.x),
                         PuCoDeLongitud : Number(this.y),
                         PuCoDeDescripcion : this.pcDetalle.PuCoDeDescripcion,
-                        PuCoDeHora : this.pcDetalle.PuCoDeHora,
+                        PuCoDeHora : this.fecha(this.pcDetalle.PuCoDeHora),
                         UsId : 0,
                         UsFechaReg : "2017-02-29",
                         PuCoDeOrden : this.n //segun se vaya agregando al final
@@ -681,7 +677,7 @@ export class PcontrolComponent implements OnInit{
                         PuCoDeLatitud : Number(this.x),
                         PuCoDeLongitud : Number(this.y),
                         PuCoDeDescripcion : this.pcDetalle.PuCoDeDescripcion,
-                        PuCoDeHora : this.pcDetalle.PuCoDeHora,
+                        PuCoDeHora : this.fecha(this.pcDetalle.PuCoDeHora),
                         UsId : 0,
                         UsFechaReg : "2017-02-29",
                         PuCoDeOrden : this.pcDetalle.PuCoDeOrden-- 
@@ -696,6 +692,7 @@ export class PcontrolComponent implements OnInit{
             }
             
        //CASO PUNTOS EXISTENTES Y SE NECESITA AGREGAR NUEVOS PUNTOS, SI SE PRESIONA EL BOTON BORRAR NO SE TIENE QUE PASAR POR ACA
+       
        //SE ESTA EDITANDO Y ARRAY EXISTEN AL MENOS UN PUNTO EN EL ARRAY 
        //}else if(this.editando == 1 && this.pCArrayDetalleBD.length!=0){
         }else if(this.editando == 1){
@@ -709,7 +706,7 @@ export class PcontrolComponent implements OnInit{
                         PuCoDeLatitud : Number(this.x),
                         PuCoDeLongitud : Number(this.y),
                         PuCoDeDescripcion : this.pcDetalle.PuCoDeDescripcion,
-                        PuCoDeHora : this.pcDetalle.PuCoDeHora,
+                        PuCoDeHora : this.fecha(this.pcDetalle.PuCoDeHora),
                         UsId : 0,
                         UsFechaReg : "2017-02-29",
                         PuCoDeOrden : (this.ordenMayor+1) //segun se vaya agregando al final
@@ -721,7 +718,7 @@ export class PcontrolComponent implements OnInit{
                         PuCoDeLatitud : Number(this.x),
                         PuCoDeLongitud : Number(this.y),
                         PuCoDeDescripcion : this.pcDetalle.PuCoDeDescripcion,
-                        PuCoDeHora : this.pcDetalle.PuCoDeHora,
+                        PuCoDeHora : this.fecha(this.pcDetalle.PuCoDeHora),
                         UsId : 0,
                         UsFechaReg : "2017-02-29",
                         PuCoDeOrden : this.pcDetalle.PuCoDeOrden-- 
@@ -735,14 +732,42 @@ export class PcontrolComponent implements OnInit{
            //REINICIANDO VARIABLES 
            console.log("se guardo una ruta vacia");
        }
+        
         this.mgPuntosControlDetalle();  //RECARGAR LA LISTA DE PUNTOS DE CONTROL EN LA GRILLA CORRESPONDIENTE
         this.pcDetalle.PuCoDeDescripcion=null;
         this.pcDetalle.PuCoDeHora=null;
         this.n++;
         this.displayNuevoPunto = false; //CERRANDO MODAL 
-        console.log("despues");
-        console.log("editando: "+this.editando);
-        console.log("tamaño: "+this.pCArrayDetalleBD.length);
+        //console.log("despues");
+        //console.log("editando: "+this.editando);
+        //console.log("tamaño: "+this.pCArrayDetalleBD.length);
+    }
+
+    //CONVERTIR STRING A DATE FORMULARIO A BD
+    fecha(fecha : string) : Date{
+        //FECHA               
+        let thoy:Date,  otra:Date, horaTarjeta:string;
+        thoy=new Date();
+        if(fecha.length<=5){ fecha = fecha+":00"; }
+        horaTarjeta=fecha;
+        let resultado=horaTarjeta.split(':');
+        otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));    
+        console.log(otra);
+        return otra; 
+        
+    }
+
+    //CONVERTIR DATE A STRING DE BD A FORMULARIO
+    _fecha(fecha : Date) :string{
+        let hora : string; let _hora : string; let _fecha = new Date(fecha);
+            //hora = "00:00:00";
+            console.log(_fecha);
+            //console.log(_fecha.getHours());
+            //console.log(_fecha.getMinutes());
+            //console.log(_fecha.getSeconds());
+            hora = _fecha.getHours() + ":"+_fecha.getMinutes()+":"+_fecha.getSeconds();
+            console.log(hora);
+        return hora;
     }
 
     mayorOrdenPuntos(){
@@ -768,17 +793,19 @@ export class PcontrolComponent implements OnInit{
     guardarpuntosDetalleRest(){
        this.actualizarOrdenPC();
 
-       console.log("editando: "+this.editando);
-       console.log("tamaño: "+this.pCArrayDetalleBD.length);
+       //console.log("editando: "+this.editando);
+       //console.log("tamaño: "+this.pCArrayDetalleBD.length);
 
        //GUARDANDO NUEVA LISTA DE PUNTOS, Y LONG ES DIFERENTE DE CERO
         if(this.editando == 0 && this.pCArrayDetalleBD.length!=0){ //0 : nuevo registro
-            console.log(this.pCArrayDetalleBD);
+            //console.log(this.pCArrayDetalleBD);
 
             this.pcontrolService.savePuntoControlDetalle(this.pCArrayDetalleBD).
             subscribe(realizar => {this.mgPuntosControlDetalle();},
                                 err => {this.errorMessage=err});
-            console.log("guardado en rest");
+            
+            
+            //console.log("guardado en rest");  
 
             //DESACTIVANDO ACTIVANDO BOTONES MAPA
             this.desBorrarPCDet = true;
@@ -882,6 +909,8 @@ export class PcontrolComponent implements OnInit{
         //puntosControlDetalleBD
         this.pCDetalleMostrar=[];//array para mostrarlo en el datatable 
         
+        //CONVERTIR DATE A STRING
+
         for(let puntoDetalle of this.pCArrayDetalleBD ){
 
             this.pCDetalleMostrar.push({
@@ -890,7 +919,7 @@ export class PcontrolComponent implements OnInit{
                 PuCoDeLatitud: puntoDetalle.PuCoDeLatitud,
                 PuCoDeLongitud: puntoDetalle.PuCoDeLongitud,
                 PuCoDeDescripcion: puntoDetalle.PuCoDeDescripcion,
-                PuCoDeHora: puntoDetalle.PuCoDeHora,
+                PuCoDeHora:  this._fecha(puntoDetalle.PuCoDeHora), // CONVERTIR ESTO puntoDetalle.PuCoDeHora,
                 PuCoDeOrden: puntoDetalle.PuCoDeOrden 
             });
 

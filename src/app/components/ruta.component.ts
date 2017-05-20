@@ -85,7 +85,12 @@ export class RutaComponent implements OnInit{
     RutaTerminada=0;
     infoWindow: any;
     //dialogVisible: boolean;
+    
     displayfromEditar : boolean = false;
+    displayConfirmar  : boolean = false;
+    Mensaje           : string; // mensaje para modal confirmar
+    aceptar           : boolean ; //TRUE: ACEPTAR    FALSE: CANCELAR
+
     markerTitle: string;
     index : string;
     indexmovil:number;
@@ -123,7 +128,9 @@ export class RutaComponent implements OnInit{
          //configuracion mapa google
         this.options = {
             center: new google.maps.LatLng(-18.0065679, -70.2462741), //center: {lat: -18.0065679, lng: -70.2462741},
-            zoom: 14
+            zoom: 14,
+            gestureHandling: 'greedy'
+            //rotateControl: true,
         };
         this.getAllRutaByEm(1);
         this.infoWindow = new google.maps.InfoWindow();
@@ -199,7 +206,6 @@ export class RutaComponent implements OnInit{
     //recuperar registro de la fila seleccionada y mostrarlo en un modal los datos recuperados 
     //editar y luego llamar a l procedimiento para guardar en la BD 
     editarRutaMaestro(_RuId : number){
-        console.log(_RuId)
         this._RuId = _RuId;
         this.headertitle = "Editar";
 
@@ -207,7 +213,7 @@ export class RutaComponent implements OnInit{
         this.rutaService.getRutaById(_RuId).subscribe(
             data => {
                         this.Ruta=data; 
-                        this.convertNumberToString();
+                        this.Ruta.RuFechaCreacion=this._fecha(this.Ruta.RuFechaCreacion);
                         console.log(this.Ruta);
                     },
             err => {this.errorMessage = err}
@@ -218,87 +224,36 @@ export class RutaComponent implements OnInit{
         //this.Ruta={};
     }   
 
-    //convertir numero a string (FECHAS) 
-    convertNumberToString(){
-       
-        console.log(this.Ruta.RuFechaCreacion);
-        //let mydate = new Date(1000*this.Ruta.RuFechaCreacion.date_created);
-        let mydate = new Date(this.Ruta.RuFechaCreacion);
-        let userCreateDate = new Date(this.Ruta.UsFechaReg);
-
-        console.log(userCreateDate);
-        let userDia = userCreateDate.getDate();
-        let userMes = userCreateDate.getMonth();
-        let userAnio = userCreateDate.getFullYear();
-        console.log(userDia, userMes, userAnio);
-
-        /*
-        console.log(typeof(mydate));
-        console.log(typeof(mydate.getMonth));
-        this.Ruta.RuFechaCreacion = mydate.getFullYear()+"-0"+mydate.getMonth()+"-"+mydate.getDate();
-        */
-        console.log(typeof(this.Ruta.RuFechaCreacion));
-        let dia= Number(mydate.getDate());
-        let mes= Number(mydate.getMonth());
-        let anio=mydate.getFullYear().toString();
-
-        console.log(dia);
-        console.log(mes);
-        console.log(anio);
-        //aumentando el dia y mes en un numero
-        let _dia = dia;
-        let _mes = mes +1
-        //convirtiendo a cadena
-        let s_dia = _dia.toString();
-        let s_mes = _mes.toString();
-
-        //adecuar la fecha para q tenga el dia y mes 2 digitos 1 => 01 (PARA EL MES Y EL DIA)
-        if( ( 10<=_mes )  &&  ( 10<=_dia ) ){
-            this.Ruta.RuFechaCreacion = anio+"-"+s_mes+"-"+s_dia;
-
-            }else if(( 0<=_mes && _mes<10 )  &&  ( 10<=_dia )){
-                this.Ruta.RuFechaCreacion = anio+"-0"+ s_mes +"-"+s_dia;
-
-            }else if(( 10<=_mes )  &&  ( 0<=_dia && _dia<10 )){
-                this.Ruta.RuFechaCreacion = anio+"-"+ s_mes +"-0"+ s_dia;
-
-            }else if(( 0<=_dia && _dia<10 ) && ( 0<=_mes && _mes<10 )){
-                this.Ruta.RuFechaCreacion = anio+"-0"+ s_mes +"-0"+s_dia;
-        }
-        
-        
-    }
-
     //eliminar los registros de la tabla Ruta (MAESTRO)
     eliminarRutaMaestro(_RuId : number){
         //revisar la parte de consulta this.getAllRutaByEm(1) (buscar una variable en vez del numero 1)
-        console.log(_RuId)
-        this.rutaService.deleteRuta(_RuId).subscribe(
-            realizar => {
-                this.getAllRutaByEm(1);
-            },
-            err => {console.log(err);}
-        );
+        this._RuId = _RuId;
+        this.displayConfirmar = true;
+        this.Mensaje = "¿Desea Eliminar el Registro de la Base de Datos =c?";
+    }
+
+    //FUNCION PARA EL BOTON ELEIMINAR ROW CABECERA
+    eliminarRuta(){
+        this.rutaService.deleteRuta(this._RuId).subscribe(
+                realizar => {
+                    this.getAllRutaByEm(1);
+                    this.displayConfirmar = false;
+                },
+                err => {console.log(err);}
+
+            );
     }
 
     //para editar la traza de la ruta
     editar(){
         this.displayfromEditar = false;
-
-        /*
-        //ACTIVANDO DESACTIVANDO BOTONES
-        this.disButDeshacer=false; //HABILITANDO BOTON PARA DESHACER RUTA 
-        this.disButEditar=false; //HABILITANDO BOTON PARA EDITAR LA RUTA (RUTA RECUPERADA)
-       this.disButBorrar=false;
-       */
-
-       this.editando = 1; // se esta editando
+        this.editando = 1; // se esta editando
        
-        console.log("tamaño overlays: "+this.overlays.length);
+        /*console.log("tamaño overlays: "+this.overlays.length);
         console.log("buscando error: ");
         console.log(this.overlays);
         console.log("this.rutaRecuperada ="+this.rutaRecuperada);
-        console.log("separador");
+        console.log("separador");*/
          //CUATRO CASOS PARA EDITAR 
 
         //SI EXISTEN PUNTOS EN EL ARRAY PUNTOSRUTA -> SE PUEDE EDITAR 
@@ -487,7 +442,6 @@ export class RutaComponent implements OnInit{
             //this.RutaTerminada == 1){
  
 }
-
 
     //evento arrastrar final  -- ARRASTRAR LOS MARCADORES
     handleDragEnd(event){
@@ -884,45 +838,10 @@ export class RutaComponent implements OnInit{
                 this.coordenadas=[];
                 this.RutaTerminada=0; //0: ruta terminada   1:ruta no terminada
                 this.puntosRuta=[];
-                console.log("antes: "+this.overlays.length);
-
+                
                 //CONSULTAR PUNTOS RUTADETALLE AL rest
                 this.consultaRuta(this.indiceRowTabla);
-               /* this.rutaService.getAllRutaDetalleByRu(this.indiceRowTabla).subscribe(
-                    data => {   this.puntosRuta=data; 
-                                this.cargarRuta();
-                                if(this.puntosRuta.length>0){
-                                    this.disButEditar=false; //boton habilitado
-                                    this.disButBorrar=true;
-                                    this.disButNuevaRuta=true;
-                                    this.disButSubirRuta=true;
-                                    this.disButDeshacer=true;
-                                    this.disButTerminarRuta=true;
-
-                                    //RUTA RECUPERADA (SI)
-                                    this.rutaRecuperada=1;
-                                }else if(this.puntosRuta.length==0){
-                                    //HABILITANDO BOTONES EN EL FORMULARIO
-                                    //this.disButEditar=false; //boton habilitado
-                                    this.disButBorrar=true;  //boton deshabilitado
-                                    this.disButEditar=true; //boton deshabilitado
-                                    this.disButNuevaRuta=false; //boton habilitado 
-                                    this.disButSubirRuta=true;
-                                    this.disButDeshacer=true;
-                                    this.disButTerminarRuta=true;
-
-                                    //RUTA RECUPERADA (NO)
-                                    this.rutaRecuperada=0;
-                                }
-                                //this.iniciar=1;
-                            },
-                    err => {this.errorMessage=err},
-                    () => this.isLoading =false
-                    );
-                */
-
-                console.log("despues: "+this.overlays.length);
-                console.log("ruta recuperada 1: si, 0: no  => "+ this.rutaRecuperada);
+               
         }else if(this.modRegistro==0){ //MOD NO TERMINADO
             console.log("GUARDAR LA GRAFICA DE LA NUEVA RUTA");
         }
@@ -998,27 +917,6 @@ export class RutaComponent implements OnInit{
         //RECUPERANDO LOS PUNTOS DE LA RUTA PARA EL CASO DE PODER EDITAR LA traza
         //console.log(this.puntosRuta);
     }
-    //agregar marcador sobre la linea
-
-   
-    /*
-    //FALTA PROGRAMAR ESTE MODULO
-    eliminarmarcador(){
-        console.log("marcador eliminado");
-        if(this.RutaTerminada==0){
-            console.log("se va editar :3");
-        }else if(this.RutaTerminada==1){
-            console.log("se va editar :3");
-        }
-    }*/
-
-    //zoom para el mapa
-    zoomIn(map){
-        map.setZoom(map.getZoom()+1);
-    }
-    zoomOut(map){
-        map.setZoom(map.getZoom()-1);
-    }
 
     //VACIAR TODOS LOS PUNTOS DEL MAPA PARA REINIAR TODO 
     clear(){
@@ -1073,21 +971,21 @@ export class RutaComponent implements OnInit{
      nuevaRutaMaestro(){
         this.displayNuevaRutaModal = true;
         this.headertitle ="Nueva";
+        this._RuId = 0;
         this.rutaService.newRuta().subscribe(
             data => {
                 this.Ruta2 = data;
-                //this.Ruta.RuId =0;
                 //LIMPIANDO LOS OBJETOS EN EL FORMULARIO PARA PODER INGRESAR NUEVOS DATOS
                  this.Ruta ={
                     RuId : 0,
                     EmId : 1,
                     RuDescripcion : "",
-                    //RuFechaCreacion:  'yyyy-MM-dd',
+                    RuFechaCreacion: '',
                     RuRegMunicipal : "",
                     RuKilometro : 0,
                     RuActivo : true,
                     UsId: 0,
-                    //UsFechaReg: 'yyyy-MM-dd'
+                    UsFechaReg: ''
                 }
             }
         );
@@ -1095,26 +993,22 @@ export class RutaComponent implements OnInit{
   
      //guardar en el rest la cabecera de la ruta (MAESTRO)
      saveRutaMaestro(){
-         //capturando fecha
          //EL CASO DE GUARDAR UN NUEVO REGISTRO RUID = 0
          if(this._RuId == 0){
-             console.log("nuevo");
             //capturando la fecha actual
-            this.date = new Date();
-            this.dia = this.date.getDate();
-            this.mes = this.date.getMonth();
-            this.anio = this.date.getFullYear();
-            this.Ruta.UsFechaReg = this.anio+"-"+this.mes+"-"+this.dia;
-
-            //capturando la fecha de creacion
+            {
+                this.date = new Date();
+                this.dia = this.date.getDate();
+                this.mes = this.date.getMonth();
+                this.anio = this.date.getFullYear();
+                this.Ruta.UsFechaReg = this.anio+"-"+this.mes+"-"+this.dia;
+            }
             console.log(this.Ruta.RuFechaCreacion);
-            //let anio = this.Ruta.RuFechaCreacion.getFullYear();
-            //console.log(anio);
 
             this.Ruta2.RuId = this.Ruta.RuId,
             this.Ruta2.EmId = this.Ruta.EmId,
             this.Ruta2.RuDescripcion = this.Ruta.RuDescripcion,
-            this.Ruta2.RuFechaCreacion =  this.Ruta.RuFechaCreacion,
+            this.Ruta2.RuFechaCreacion =  this.fecha(this.Ruta.RuFechaCreacion), //STRING A DATE
             this.Ruta2.RuRegMunicipal = this.Ruta.RuRegMunicipal,
             this.Ruta2.RuKilometro = this.Ruta.RuKilometro,
             this.Ruta2.RuActivo = this.Ruta.RuActivo,
@@ -1122,10 +1016,10 @@ export class RutaComponent implements OnInit{
             this.Ruta2.UsFechaReg = this.Ruta.UsFechaReg
 
             this.displayNuevaRutaModal=false;
-            console.log(this.Ruta);
+            console.log(this.Ruta2);
          }else if(this._RuId != 0){
              //EL CASO DE EDITAR UN REGISTRO RUID != 0
-            console.log("editado");
+            console.log("editado _RuId: "+this._RuId);
 
             //capturando la fecha actual
             this.date = new Date();
@@ -1133,16 +1027,18 @@ export class RutaComponent implements OnInit{
             this.mes = this.date.getMonth();
             this.anio = this.date.getFullYear();
             this.Ruta.UsFechaReg = this.anio+"-"+this.mes+"-"+this.dia;
-            let ID = this._RuId;
+            this.Ruta.RuFechaCreacion = this.fecha(this.Ruta.RuFechaCreacion);
+            //let ID = this._RuId;
 
             
             this.Ruta2=this.Ruta; //PASANDO DATOS AL OBJETO PARA SER SUBIDO A LA BD
 
             console.log(this.Ruta);
+            console.log(this.Ruta.RuFechaCreacion);
+
             this.displayNuevaRutaModal=false;
-            console.log(this.Ruta2);
+            //console.log(this.Ruta2);
          }
-         console.log(this.Ruta2);
          this.rutaService.saveRuta
          (this.Ruta2).subscribe( realizar => { this.mostrargrillaruta(); 
                                                this.getAllRutaByEm(1);} ,
@@ -1175,21 +1071,25 @@ export class RutaComponent implements OnInit{
                     () =>this.isLoading = false
             );
     }
+   
     //MOSTRAR RESULTADO EN LA GRILLA PRINCIPAL (LISTADO DE RUTAS TRAZADAS POR EMPRESA)
     mostrargrillaruta(){
-        this.rutasPresentar=[];
+        this.rutasPresentar=[]; // ARRAY DE RUTAS EXISTENTE
         let _valorTipo: string = "";
-        let valueDate:Date;
+        let valueDate:string;
         
         for(let ruta of this.rutas){
-            //condicional
+            //CONDICIONAL EMPRESA O CONSORCIO
             if (ruta.EmTipo==0)
             _valorTipo="EMPRESA";
             else
             _valorTipo="CONSORCIO";
-            valueDate = new Date(ruta.RuFechaCreacion)
-            //array para mostrar
+
+            //FECHA
+            valueDate = this._fecha(ruta.RuFechaCreacion);
+            //ARRAY PARA LA GRILLA
             this.rutasPresentar.push({
+                nro:0, 
                 RuId : ruta.RuId,
                 RuDescripcion: ruta.RuDescripcion,
                 RuFechaCreacion:valueDate,
@@ -1197,7 +1097,13 @@ export class RutaComponent implements OnInit{
                 EmConsorcio: ruta.EmConsorcio,
                 EmTipo:_valorTipo
             });
+
+            //PONIENDO NRO A CADA FILA
+            for(let i=0; i<this.rutasPresentar.length; i++){
+                this.rutasPresentar[i].nro = i+1;
+            }
         }
+        console.log(this.rutasPresentar);
     }//fin mostrargrillaruta
     
     //BORRAR LOS NODOS DEL MAPA Y LOS ARRAYS Y CARGAR LA LINEA QUE REPRESENTA LA RUTA TRAZADA
@@ -1293,6 +1199,115 @@ export class RutaComponent implements OnInit{
         this.disButDeshacer = true;
         this.disButNuevaRuta = true;
         //this.disButCancelar FALTA PROGRAMACION, NO TIENE USO
+    }
+
+    //zoom para el mapa
+    zoomIn(map){
+   
+       map.setZoom(map.getZoom()+1);
+    }
+    zoomOut(map){
+        map.setZoom(map.getZoom()-1);
+    }
+
+
+    //CONVERTIR STRING A DATE FORMULARIO A BD  HORAS
+    hora(fecha : string) : Date{
+        //FECHA               
+        let thoy:Date,  otra:Date, horaTarjeta:string;
+        thoy=new Date();
+        if(fecha.length<=5){ fecha = fecha+":00"; }
+        horaTarjeta=fecha;
+        let resultado=horaTarjeta.split(':');
+        otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));    
+        //console.log(otra);
+        return otra; 
+        
+    }
+
+    //CONVERTIR DATE A STRING DE BD A FORMULARIO HORAS
+    _hora(fecha : Date) :string{
+        let hora : string; let _hora : string; let _fecha = new Date(fecha);
+        _hora =  (_fecha.getHours() - 1).toString();// restando 1 hora (CORREGIR EN EL BACKEND)
+            hora = _hora + ":"+_fecha.getMinutes()+":"+_fecha.getSeconds();
+
+            hora = this.cCeroHora(hora);
+        return hora;
+    }
+
+
+    //COMPLETANDO CEROS EN CASO DE NECESITAR PARA HORAS Y FECHAS   2017/
+    cCeroHora(h:string) :string{
+            //DIVIDIRLO EN PARTES Y COMPLETAR LOS CEROS PARA QUE LOS ELEMENTOS SEAN TODOS PARES
+            let hora : string, _hora :string, resultado, i=0;
+            resultado = h.split(':');
+            while(i<resultado.length){
+                if(resultado[i].length%2!=0){
+                    resultado[i]="0"+resultado[i];
+                }
+                i++;
+            }
+            //CONCATENANDO
+            _hora=resultado[0]+":"+resultado[1]+":"+resultado[2];
+        return _hora;
+    }
+
+    cCeroFecha(f : string) :string{
+        let fecha:string, _fecha:string, resultado, i=0;
+        resultado = f.split('/');
+            while(i<resultado.length){
+                resultado[i]=resultado[i].trim(); //BORRANDO ESPACIOS EN BLANCO
+                if(resultado[i].length%2!=0){
+                    resultado[i]="0"+resultado[i];
+                }
+                i++;
+            }
+            //CONCATENANDO
+            _fecha=resultado[0]+"/"+resultado[1]+"/"+resultado[2];
+        
+        return _fecha
+    }
+
+    cCeroFechaForEditar(f : string) :string{
+        let fecha:string, _fecha:string, resultado, i=0;
+        resultado = f.split('/');
+            while(i<resultado.length){
+                resultado[i]=resultado[i].trim(); //BORRANDO ESPACIOS EN BLANCO
+                if(resultado[i].length%2!=0){
+                    resultado[i]="0"+resultado[i];
+                }
+                i++;
+            }
+            //CONCATENANDO
+            _fecha=resultado[0]+"-"+resultado[1]+"-"+resultado[2];
+        
+        return _fecha
+    }
+    //CONVERTIR STRING A DATE PARA FECHA   ----   FORMULARIO A BD   2017/03/31  2017-03-31
+    fecha(fecha: string) : Date{
+        let thoy:Date , _thoy:Date, _fecha:string;
+        thoy = new Date();
+        _fecha = fecha;
+        console.log("antes :"+_fecha);
+        let resultado=_fecha.split('-');
+        _thoy = new Date(  Number(resultado[0]),  Number(resultado[1]) -1 ,  Number(resultado[2]) , 12, 0,0 );
+        console.log("despues :"+_thoy);
+
+        return _thoy;
+    }
+
+
+    //CONVERTIR DATE A STRING PARA FECHA  - ---   BD A GRILLA
+    _fecha(fecha: Date) :string{
+        let fechaProg : string; let _fechaProg : string; let _fecha = new Date(fecha);  
+        console.log("antes: "+_fecha);
+        
+        _fechaProg=(_fecha.getFullYear()).toString() +" / "+ (_fecha.getMonth() +1 ).toString() +" / "+(_fecha.getDate()+1).toString() ;
+        
+        console.log("despues: "+_fechaProg);
+        _fechaProg=this.cCeroFecha(_fechaProg);
+        
+        return  _fechaProg;
     }
 }
 
