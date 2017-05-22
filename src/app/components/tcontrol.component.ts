@@ -131,7 +131,6 @@ export class TcontrolComponent implements OnInit{
         
       
         this.tarjeta._UsId = 1; //ARREGLAR ESOT PARA Q SEA GLOBAL, USUARIO
-        this.tarjeta._UsFechaReg = "2017-05-01"; // CAPTURAR LA FECHA ACTUAL, CORREGIR ESTO
     }
     
     //CONSULTAR PROGRAMACION CABECERA, PARA OBTENER EL PRID NECESARIO PARA SACAR EL DETALLE
@@ -430,6 +429,7 @@ export class TcontrolComponent implements OnInit{
         this._allTarjDetalle = [];
         for(let tDetalle of this._tarjetaDetalle){
         this._allTarjDetalle.push({
+                nro:0,
                 PuCoDeId:tDetalle.PuCoDeId, 
                 TaCoDeDescripcion:tDetalle.TaCoDeDescripcion, 
                 TaCoDeFecha:tDetalle.TaCoDeFecha, 
@@ -442,6 +442,11 @@ export class TcontrolComponent implements OnInit{
                 UsFechaReg:tDetalle.UsFechaReg, 
                 UsId:tDetalle.UsId
             });
+        }
+
+        //ASIGNADO SU NUMERACION
+        for(let i=0; i<this._allTarjDetalle.length; i++){
+            this._allTarjDetalle[i].nro = i+1;
         }
         console.log(this._allTarjDetalle);
     }
@@ -552,7 +557,19 @@ export class TcontrolComponent implements OnInit{
 
   //AQUI SE GUARDA TANTO CABECERA COMO DETALLE Y SE EDITA LA TABLA PROGRAMACIONDETALLE EL CAMPO ASIGNADO
     guardarTarjeta(){
-        if(this.idPunto!=0){
+
+        //VALIDANDO DATOS INGRESADOS
+        let error=[
+            {nomb:"Puntos De Control", val:0},
+            {nomb:"Programacion", val:0},
+            {nomb:"Fecha de la Programacion", val:0},
+            {nomb:"Lista de Placas", val:0},
+            {nomb:"Estado", val:0},
+            {nomb:"Hora de Salida", val:0},
+            {nomb:"Cuota", val:0}
+        ];
+
+        
             //NUEVO REGISTRO
             if(this.tarjeta._TaCoId == 0){
                 //SUBIENDO DATOS AL OBJETO TARJETA this.tarjeta._prId = id;
@@ -581,7 +598,7 @@ export class TcontrolComponent implements OnInit{
                         TaCoHoraSalida :this.tarjeta._TaCoHoraSalida,
                         TaCoCuota :this.tarjeta._TaCoCuota,
                         UsId :this.tarjeta._UsId,
-                        UsFechaReg :this.tarjeta._UsFechaReg,
+                        UsFechaReg :new Date(),
                         TaCoNroVuelta : this.tarjeta._TaCoNroVuelta
                     }
                     console.log(this._tarjeta.TaCoFecha);
@@ -601,11 +618,63 @@ export class TcontrolComponent implements OnInit{
 
             }
 
-        }else if(this.idPunto ==0){
-            //HACER UNA VENTANA MODAL CON ESTE MENSAJE
-            console.log("NO SELECCIONO LISTA PUNTOS DE CONTROL");
 
-        }
+        /*
+            if(this.idPunto!=0){
+                //NUEVO REGISTRO
+                if(this.tarjeta._TaCoId == 0){
+                    //SUBIENDO DATOS AL OBJETO TARJETA this.tarjeta._prId = id;
+                        //HORA SALIDA               
+                        {
+                            let thoy:Date,  otra:Date, horaTarjeta:string;
+                            thoy=new Date();          
+                            //COMPLETANDO LOS SEGUNDOS SI ES NECESARIO
+                            if(this.tarjeta._TaCoHoraSalida.length<=5){
+                                this.tarjeta._TaCoHoraSalida = this.tarjeta._TaCoHoraSalida+":00"; }
+                            horaTarjeta=this.tarjeta._TaCoHoraSalida;
+                            let resultado=horaTarjeta.split(':');
+                            otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));    
+                            this.tarjeta._TaCoHoraSalida=otra;
+                        }
+                            
+                        this._tarjeta ={
+                            TaCoId : this.tarjeta._TaCoId,
+                            PuCoId : this.tarjeta._PuCoId,
+                            RuId : this.tarjeta._RuId,
+                            BuId :this.tarjeta._BuId,
+                            PrId : this.tarjeta._prId,
+
+                            TaCoFecha :this.fecha(this.tarjeta._TaCoFecha),
+                            
+                            TaCoHoraSalida :this.tarjeta._TaCoHoraSalida,
+                            TaCoCuota :this.tarjeta._TaCoCuota,
+                            UsId :this.tarjeta._UsId,
+                            UsFechaReg :new Date(),
+                            TaCoNroVuelta : this.tarjeta._TaCoNroVuelta
+                        }
+                        console.log(this._tarjeta.TaCoFecha);
+
+                        if(this.val==1 || this.val==0){
+                            this.tcontrolservice.asignarTarjetaControl(this._tarjeta).subscribe(data => {},err => {this.errorMessage=err});
+                        }else if(this.val==2){
+                            //ACTUALIZAR PROGRAAMCION DETALLE EN EL CAMPO ASIGNADO, SALE COMO ausente
+                            console.log("ausente");
+                            this._tarjeta ={PrDeId : this._prDeId,PrDeAsignadoTarjeta : this.val}
+                            this.tcontrolservice.actualizarProgDetalleAusente(this._tarjeta).subscribe(data => {}, err => {this.errorMessage=err});
+                        }        
+        
+                //EDITANDO REGISTRO
+                }else if(this.tarjeta._TaCoId != 0){
+                    console.log("editando reg");
+
+                }
+
+            }else if(this.idPunto ==0){
+                //HACER UNA VENTANA MODAL CON ESTE MENSAJE
+                console.log("NO SELECCIONO LISTA PUNTOS DE CONTROL");
+
+            }
+        */
     }
    
 

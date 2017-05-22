@@ -28,6 +28,7 @@ export class PcontrolComponent implements OnInit{
      pcMaestro: any ={ 
         PuCoId : 0,
         RuId : 51,
+        PuCoDescripcion:"",
         PuCoTiempoBus : "",
         PuCoClase : "",
         UsId : 0,
@@ -108,15 +109,17 @@ export class PcontrolComponent implements OnInit{
 
     indexMarkerTitle:string; //index marker para title (string)
     indexMarker=0; //indice de marker
+    indexPunto=0; //INDICE DE REGISTRO EN SU ARRAY DE PUNTOS DE CONTROL DETALLE
     //markertitle:string;
     selectedPosition:any;
     draggable:boolean;
 
     displayNuevoPunto:boolean =false;
-    displayEditarReordenar=false;
+    //displayEditarReordenar=false;
+    displayEditarPunto = false;
     displayListaPuntos: boolean = false; 
-    displayPCDetalle: boolean = false;
-    displayReordenar: boolean = false;
+    //displayPCDetalle: boolean = false;
+    //displayReordenar: boolean = false;
     
 
     mapa:any;
@@ -137,6 +140,13 @@ export class PcontrolComponent implements OnInit{
     desDeshacerPCDet:boolean;
     desEditarPCDetMarker:boolean;
     desNuevosPuntos : boolean;
+
+    tipoTarjeta:{nomb:"", val:""};
+    _tipoTarjeta = [
+        {nomb:"Hora Punta", val:'01'},
+        {nomb:"Dias Feriados", val:'02'},
+        {nomb:"Dias Normal", val:'03'}
+    ];
 
     constructor( 
         private pcontrolService: PuntoControlService,
@@ -370,7 +380,7 @@ export class PcontrolComponent implements OnInit{
         
     }
 
-    //click sobre la fila y mostrar los puntos de control (detalle)
+    //SELECCION REGISTRO CABECERA (Y MUESTRA SU CONTENIDO DETALLE)
     onRowSelectMaestro(event) {
         //limpiar el mapa para ponerle los nuevos marcadores
         this.overlays = [];
@@ -394,13 +404,9 @@ export class PcontrolComponent implements OnInit{
         this.idFilaSeleccionada = event.data.PuCoId;  //recupera la PuCoId de la fila seleccionada (para recuperar los puntos de control con la consulta)
         this.idRutaFilaSeleccionada = event.data.RuId; //recupera el RuId para poder sacar la ruta de la BD
 
-        //console.log(this.idFilaSeleccionada);
-        //console.log(event.data.RuId);
-
          this.mayorOrdenPuntos();//PARA EL CASO DE EDITAR UNA LISTA EXISTENTE
 
          this.idDetalle = this.idFilaSeleccionada; //recupera el id cabecera para poder actualizar el detalle, funcion guardar if editado=1
-        //console.log("este ID es par eliminar todo: "+this.idDetalle);
         
          //RECUPERA RUTA DETALLE (TRAZA GRAFICA)
          this.rutaService.getAllRutaDetalleByRu(this.idRutaFilaSeleccionada).subscribe(
@@ -443,6 +449,12 @@ export class PcontrolComponent implements OnInit{
          //this.overlays=[];//ver si se puede eliminar esta cosa 
     }//fin funcion onRowSelectMaestro
 
+    //SELECCION DE PUNTOS DE CONTROL DE LA GRILLA DETALLE
+    onRowSelectDetalle(event){
+        console.log("seleccionando detalle =D");
+        //CENTRAR EL MAPA EN EL PUNTO DE CONTROL
+    }
+
 
     //CARGAR LA RUTA AL MAPA
     cargarRuta(){
@@ -461,8 +473,8 @@ export class PcontrolComponent implements OnInit{
 
     //CARGAR LOS MARCADORES SOBRE EL MAPA 
     cargarmarker(){
-        console.log(this.pCArrayDetalleBD);
-        console.log(this.overlays);
+        //console.log(this.pCArrayDetalleBD);
+        //console.log(this.overlays);
 
         //CONDICIONAL PARA PODER EDITAR MARCADORES (DRAGGABLE=TRUE) ----- 
         //REVISAR LA VARIABLE THIS.EDITANDO SI SE PUEDE INTEGRAR, 
@@ -542,39 +554,56 @@ export class PcontrolComponent implements OnInit{
 
     //guardar nuevo Maestro puntos de control
     guardarPCMaestro(){      
-      //console.log(this.pcMaestroBD);
-        if(this._PuCoId == 0){ //NUEVO REGISTRO
-            //fecha
-            /*
-            this.date = new Date();
-            this.dia = this.date.getDate();
-            this.mes = this.date.getMonth();
-            this.anio= this.date.getFullYear();
-             this.pcMaestroBD.UsFechaReg = this.anio + "-" + this.mes+"-"+ this.dia
-            */
-
-
-            //almacenado para los datos
-            this.pcMaestroBD.PuCoId = this.pcMaestro.PuCoId,
-            this.pcMaestroBD.RuId = this.pcMaestro.RuId,
-            this.pcMaestroBD.PuCoTiempoBus = this.pcMaestro.PuCoTiempoBus,
-            this.pcMaestroBD.PuCoClase = this.pcMaestro.PuCoClase,
-            this.pcMaestroBD.UsId = this.pcMaestro.UsId,
-            this.pcMaestroBD.UsFechaReg = new Date()
-            
-            console.log(this.pcMaestroBD);
-
-            //return;
-        }else if(this._PuCoId != 0){ //SE ESTA EDITANDO REGISTRO EXISTENTE
-            this.pcMaestroBD = this.pcMaestro;//PASANDO LOS VALORES DEL MODAL AL OBJETO Q SERA MANDANDO A LA BD
-            console.log(this.pcMaestroBD);
-            console.log(this._PuCoId);
+        let cen=0, i=0;
+        /*let error = [
+            //{nomb:"Descripcion", val:0},
+            {nomb:"Clase", val:0},
+            {nomb:"Tiempo De Recorrido", val:0}
+        ];
+        //VALIDACION DE DATOS
+        if(this.pcMaestro.PuCoDescripcion != ''){
+            error[0].val = 1;
+        } 
+        if(this.pcMaestro.PuCoTiempoBus != ''){
+            error[1].val = 1;
         }
-        //mandando al rest
-        this.pcontrolService.savePuntoControl(this.pcMaestroBD)
-        .subscribe(realizar => {this.mgPuntoControlMaestro();}, err => {this.errorMessage=err});
+        if(this.pcMaestro.PuCoClase != ''){
+            error[2].val = 1;
+        }
 
-        this.displayListaPuntos = false;
+        //RECORRIENDO ARRAY EN BUSCA DE ERRORES
+        while( (i<this.errorMessage.length)  && cen == 0){
+            if(error[i].val == 0){
+                cen = 1;
+            }
+        }*/
+        console.log(this.pcMaestro.PuCoTiempoBus);
+        if(cen == 0){
+            if(this._PuCoId == 0){ //NUEVO REGISTRO
+                    //almacenado para los datos
+                    this.pcMaestroBD.PuCoId = this.pcMaestro.PuCoId,
+                    this.pcMaestroBD.PuCoDescripcion = this.pcMaestro.PuCoDescripcion, 
+                    this.pcMaestroBD.RuId = this.pcMaestro.RuId,
+
+                    this.pcMaestroBD.PuCoTiempoBus =  this.hora(this.pcMaestro.PuCoTiempoBus),        //TIME
+                    this.pcMaestroBD.PuCoClase = this.pcMaestro.PuCoClase, //COMBO
+
+                    this.pcMaestroBD.UsId = this.pcMaestro.UsId,
+                    this.pcMaestroBD.UsFechaReg = new Date()
+                }else if(this._PuCoId != 0){ //SE ESTA EDITANDO REGISTRO EXISTENTE
+                    this.pcMaestroBD = this.pcMaestro;//PASANDO LOS VALORES DEL MODAL AL OBJETO Q SERA MANDANDO A LA BD
+            }
+
+            //mandando al rest
+            console.log(this.pcMaestroBD);
+            this.pcontrolService.savePuntoControl(this.pcMaestroBD)
+            .subscribe(realizar => {this.mgPuntoControlMaestro();}, err => {this.errorMessage=err});
+            this.displayListaPuntos = false;
+        }else if(cen == 1){
+            //MENSAJE EN PANTALLA
+            console.log("Error al Ingresar los Datos, Vuelva a Ingresarlos");
+        }
+        
     }
     
     //cancelar la agregacion de un Maestro punto de control
@@ -596,18 +625,31 @@ export class PcontrolComponent implements OnInit{
     }
 
 
-    //BOTON EN LA FILA DATATABLE DE CADA PUNTO DE CONTROL
+  
     //VENTANA MODAL EDITAR SOLO EL NOMBRE Y TIEMPO MAS NO LA POSICION
     //EDITAR PUNTOS CONTROL-> LLAMAR A LA FUNCIONA ELIMINAR PARA PODER BORRAR TODOS 
     //LOS PUNTOS DE CONTROL EXISTENTES Y PODER MANDAR LA NUEVA LISTA MODIFICADA
     editarDetalle(_PuCoDeId : number){
-        //BUSCANDO EL ID DEL REGISTRO A ELIMINAR
-        //console.log(this.pCArrayDetalleBD);
-        console.log("id detalle: "+_PuCoDeId);
+        let i=0,cen=0;
+        let puntos = this.pCDetalleMostrar;
 
-        if(this.editando==1){
-            console.log("editando");
-        }else if(this.editando==0){
+        if(this.editando==1){   //SE PULSO EL BOTON EDITAR
+            console.log("editando: "+_PuCoDeId);
+            //BUSCANDO OBJETO X _PUCODEID EN EL ARRAY DEVUELTO
+           while(i<puntos.length && cen==0){
+               if(puntos[i].PuCoDeId != _PuCoDeId){
+                   i++;
+               }else if(puntos[i].PuCoDeId == _PuCoDeId){
+                   cen=1;
+               }
+           } 
+           console.log("indice: "+i);
+           this.pcDetalle = puntos[i];
+           console.log(puntos);
+           this.indexPunto = i;
+           this.displayEditarPunto = true;
+        }else if(this.editando==0){ //NO SE PULSO EL BOTON EDITAR
+            //MENSAJE EN LA PANTALLA
             console.log("NO SE PUEDE EDITAR");
         }
     }
@@ -649,10 +691,6 @@ export class PcontrolComponent implements OnInit{
     //BOTON GUARDAR PUNTOS (CUADRO MODAL AGREGAR PUNTO CONTROL)
     guardarPuntoControlDetalle(){   
         this.newPCDetalle(); // crear un nuevo punto (REST)
-       //console.log("antes");
-       //console.log("editando: "+this.editando);
-       //console.log("tamaño: "+this.pCArrayDetalleBD.length);
-       
        //CASO NUEVOS PUNTOS DE CONTROL DE CERO O CUANDO SE PRESIONA EL BOTON BORRAR (TODO LOS PUNTOS)
        //NUEVO REGISTRO Y EL ARRAY PARA LA BD ESTA VACIO                   EXISTE AL MENOS UN NUEVO PUNTO
        //if(this.editando == 0 && this.pCArrayDetalleBD.length ==0){
@@ -667,7 +705,7 @@ export class PcontrolComponent implements OnInit{
                         PuCoDeDescripcion : this.pcDetalle.PuCoDeDescripcion,
                         PuCoDeHora : this.fecha(this.pcDetalle.PuCoDeHora),
                         UsId : 0,
-                        UsFechaReg : "2017-02-29",
+                        UsFechaReg : new Date(),
                         PuCoDeOrden : this.n //segun se vaya agregando al final
                     });
             }else if(this.disabledInputPos==false){//desactivado el  textbox (no se puede ingresar una posicion manualmente)
@@ -679,7 +717,7 @@ export class PcontrolComponent implements OnInit{
                         PuCoDeDescripcion : this.pcDetalle.PuCoDeDescripcion,
                         PuCoDeHora : this.fecha(this.pcDetalle.PuCoDeHora),
                         UsId : 0,
-                        UsFechaReg : "2017-02-29",
+                        UsFechaReg : new Date(),
                         PuCoDeOrden : this.pcDetalle.PuCoDeOrden-- 
                 });
                 //this.n++;
@@ -700,7 +738,7 @@ export class PcontrolComponent implements OnInit{
             console.log("ingresar marcadores despues de: "+this.ordenMayor);
             if(this.disabledInputPos == true){ //activado el  textbox (se puede ingresar una posicion manualmente)
                 //cargando los puntos control detalle a un array para ser mostrados y poder mandarlos al servidor REST
-                this.pCArrayDetalleBD.push({
+                this.pCArrayDetalleBD.push({ //INGRESANDO EN EL FINAL DEL ARRAY
                         PuCoDeId : 0,
                         PuCoId : this.idFilaSeleccionada,
                         PuCoDeLatitud : Number(this.x),
@@ -708,11 +746,11 @@ export class PcontrolComponent implements OnInit{
                         PuCoDeDescripcion : this.pcDetalle.PuCoDeDescripcion,
                         PuCoDeHora : this.fecha(this.pcDetalle.PuCoDeHora),
                         UsId : 0,
-                        UsFechaReg : "2017-02-29",
+                        UsFechaReg : new Date(),
                         PuCoDeOrden : (this.ordenMayor+1) //segun se vaya agregando al final
                     });
             }else if(this.disabledInputPos==false){//desactivado el  textbox (no se puede ingresar una posicion manualmente)
-                this.pCArrayDetalleBD.splice(this.pcDetalle.PuCoDeOrden-1,0,{
+                this.pCArrayDetalleBD.splice(this.pcDetalle.PuCoDeOrden-1,0,{ //INGRESANDO SEGUN POSICION
                         PuCoDeId : 0,
                         PuCoId : this.idFilaSeleccionada,
                         PuCoDeLatitud : Number(this.x),
@@ -720,7 +758,7 @@ export class PcontrolComponent implements OnInit{
                         PuCoDeDescripcion : this.pcDetalle.PuCoDeDescripcion,
                         PuCoDeHora : this.fecha(this.pcDetalle.PuCoDeHora),
                         UsId : 0,
-                        UsFechaReg : "2017-02-29",
+                        UsFechaReg : new Date(),
                         PuCoDeOrden : this.pcDetalle.PuCoDeOrden-- 
                 });
             }   
@@ -738,9 +776,44 @@ export class PcontrolComponent implements OnInit{
         this.pcDetalle.PuCoDeHora=null;
         this.n++;
         this.displayNuevoPunto = false; //CERRANDO MODAL 
-        //console.log("despues");
-        //console.log("editando: "+this.editando);
-        //console.log("tamaño: "+this.pCArrayDetalleBD.length);
+    }
+
+    editandoRegistroDetalle(){
+        let pos;
+        pos = this.pCArrayDetalleBD[this.indexPunto].PuCoDeOrden; //POSICION ORIGINAL
+        //BUSCNADO EL INDICE EN EL ARRAY EN LA CUAL TIENE Q GUARDARSE   pCArrayDetalleBD
+        this.pCArrayDetalleBD[this.indexPunto].PuCoDeHora = this.fecha(this.pcDetalle.PuCoDeHora);
+        this.pCArrayDetalleBD[this.indexPunto].PuCoDeDescripcion = this.pcDetalle.PuCoDeDescripcion;
+        this.pCArrayDetalleBD[this.indexPunto].PuCoDeOrden = this.pcDetalle.PuCoDeOrden;//NUEVA POSICION
+
+        if(pos != this.pcDetalle.PuCoDeOrden){
+                    //              nueva posicion          objeto                                    indice objeto   
+            this.reOrdenarPosicion(this.pcDetalle.PuCoDeOrden, this.pCArrayDetalleBD[this.indexPunto],this.indexPunto);
+        }
+        this.actualizarOrdenPC(); 
+        this.mgPuntosControlDetalle();
+        this.displayEditarPunto = false;
+    }
+    //                NUEVA POS       OBJETO      INDICE OBJ      
+    reOrdenarPosicion(nro : number, obj: Object, index1 : number){
+        let i = nro - 1, _obj;//INDICE DE LA NUEVA POSICION DEL OBJETO
+        //NUEVA POSICION(NEW INDEX) > INDICE OBJ
+        console.log("i : "+i + "____"+"index1 : "+index1);
+        if(i > index1){
+            this.pCArrayDetalleBD.splice(i+1,0,obj); //MUEVO EL OBJETO EN LA POSICION REQUERIDA
+            this.pCArrayDetalleBD.splice(index1,1);
+        //NUEVA POSICION < POSICION ACTUAL
+        }else if(i < index1){ 
+            this.pCArrayDetalleBD.splice(i,0,obj); //MUEVO EL OBJETO EN LA POSICION REQUERIDA
+            this.pCArrayDetalleBD.splice(index1 + 1,1); //ELIMINA EL ELEMENTO ORIGINAL EN SU POSICION ACTUAL
+        }
+
+    }
+    cancelarEditandoRegistroDetalle(){
+        this.displayEditarPunto = false;
+        this.pcDetalle.PuCoDeHora = "";
+        this.pcDetalle.PuCoDeDescripcion = "";
+        //this.pcDetalle.PuCoDeHora = "";
     }
 
     //CONVERTIR STRING A DATE FORMULARIO A BD
@@ -760,13 +833,7 @@ export class PcontrolComponent implements OnInit{
     //CONVERTIR DATE A STRING DE BD A FORMULARIO
     _fecha(fecha : Date) :string{
         let hora : string; let _hora : string; let _fecha = new Date(fecha);
-            //hora = "00:00:00";
-            console.log(_fecha);
-            //console.log(_fecha.getHours());
-            //console.log(_fecha.getMinutes());
-            //console.log(_fecha.getSeconds());
             hora = _fecha.getHours() + ":"+_fecha.getMinutes()+":"+_fecha.getSeconds();
-            console.log(hora);
         return hora;
     }
 
@@ -793,9 +860,6 @@ export class PcontrolComponent implements OnInit{
     guardarpuntosDetalleRest(){
        this.actualizarOrdenPC();
 
-       //console.log("editando: "+this.editando);
-       //console.log("tamaño: "+this.pCArrayDetalleBD.length);
-
        //GUARDANDO NUEVA LISTA DE PUNTOS, Y LONG ES DIFERENTE DE CERO
         if(this.editando == 0 && this.pCArrayDetalleBD.length!=0){ //0 : nuevo registro
             //console.log(this.pCArrayDetalleBD);
@@ -803,9 +867,6 @@ export class PcontrolComponent implements OnInit{
             this.pcontrolService.savePuntoControlDetalle(this.pCArrayDetalleBD).
             subscribe(realizar => {this.mgPuntosControlDetalle();},
                                 err => {this.errorMessage=err});
-            
-            
-            //console.log("guardado en rest");  
 
             //DESACTIVANDO ACTIVANDO BOTONES MAPA
             this.desBorrarPCDet = true;
@@ -887,21 +948,33 @@ export class PcontrolComponent implements OnInit{
     // mostrar los puntos de control en la grilla (1era grilla)
     mgPuntoControlMaestro(){
         this.pCMaestroMostrar=[];// para mostrarlo en la grilla
-        //let fechaActual:Date;
+        let i:number;
 
         for(let puntoMaestro of this.pCArrayMaestroBD){
             //fechaActual = new Date(puntoMaestro.fechareg)
             this.pCMaestroMostrar.push({
+                nro:0,
                 EmId:puntoMaestro.EmId,
+                PuCoDescripcion: puntoMaestro.PuCoDescripcion,
                 PuCoClase:puntoMaestro.PuCoClase,
                 PuCoId: puntoMaestro.PuCoId,
-                PuCoTiempoBus: puntoMaestro.PuCoTiempoBus,
+                PuCoTiempoBus: this._hora(puntoMaestro.PuCoTiempoBus),
                 RuDescripcion:puntoMaestro.RuDescripcion,
                 RuId: puntoMaestro.RuId,    
             });
-        //onsole.log(this.pCArrayMaestroBD); //recuperado del rest
-        //console.log(this.pCMaestroMostrar); //almacenado para mostrar en la grilla
+      
         }//fin for punto control Maestro
+
+        for(i=0; i<this.pCMaestroMostrar.length; i++){
+            this.pCMaestroMostrar[i].nro = i+1;
+            if(this.pCMaestroMostrar[i].PuCoClase=='01' ){
+                this.pCMaestroMostrar[i].PuCoClase = 'Hora Punta';
+            }else if(this.pCMaestroMostrar[i].PuCoClase=='02' ){
+                this.pCMaestroMostrar[i].PuCoClase = 'Dias Feriados';
+            }else if(this.pCMaestroMostrar[i].PuCoClase=='03' ){
+                this.pCMaestroMostrar[i].PuCoClase = 'Dias Normal';
+            }
+        }
     }// fin funcion
 
     //mostrar puntos de control Detalle en al grilla (2da grilla)
@@ -919,7 +992,7 @@ export class PcontrolComponent implements OnInit{
                 PuCoDeLatitud: puntoDetalle.PuCoDeLatitud,
                 PuCoDeLongitud: puntoDetalle.PuCoDeLongitud,
                 PuCoDeDescripcion: puntoDetalle.PuCoDeDescripcion,
-                PuCoDeHora:  this._fecha(puntoDetalle.PuCoDeHora), // CONVERTIR ESTO puntoDetalle.PuCoDeHora,
+                PuCoDeHora:  this.cCeroHora(this._fecha(puntoDetalle.PuCoDeHora)), // CONVERTIR ESTO puntoDetalle.PuCoDeHora,
                 PuCoDeOrden: puntoDetalle.PuCoDeOrden 
             });
 
@@ -1088,9 +1161,53 @@ export class PcontrolComponent implements OnInit{
             }
     }
 
-    //SELECCION DE PUNTOS DE CONTROL DE LA GRILLA DETALLE
-    onRowSelectDetalle(event){
-        console.log("seleccionando detalle =D");
+    
+
+    //FUNCION COMBOBOX TIPO TARJETA
+    ftipoTarjeta(event){
+        console.log(this.tipoTarjeta.nomb);
+        console.log(this.tipoTarjeta.val);
+        this.pcMaestro.PuCoClase = this.tipoTarjeta.val;
+    }
+
+      //CONVERTIR STRING A DATE FORMULARIO A BD  HORAS
+    hora(fecha : string) : Date{
+        //FECHA               
+        let thoy:Date,  otra:Date, horaTarjeta:string;
+        thoy=new Date();
+        if(fecha.length<=5){ fecha = fecha+":00"; }
+        horaTarjeta=fecha;
+        let resultado=horaTarjeta.split(':');
+        otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));    
+        //console.log(otra);
+        return otra; 
+        
+    }
+
+    //CONVERTIR DATE A STRING DE BD A FORMULARIO HORAS
+    _hora(fecha : Date) :string{
+        let hora : string; let _hora : string; let _fecha = new Date(fecha);
+        _hora =  (_fecha.getHours()).toString();// restando 1 hora (CORREGIR EN EL BACKEND)
+            hora = _hora + ":"+_fecha.getMinutes()+":"+_fecha.getSeconds();
+
+            hora = this.cCeroHora(hora);
+        return hora;
+    }
+
+     //COMPLETANDO CEROS EN CASO DE NECESITAR PARA HORAS Y FECHAS   2017/
+    cCeroHora(h:string) :string{
+            //DIVIDIRLO EN PARTES Y COMPLETAR LOS CEROS PARA QUE LOS ELEMENTOS SEAN TODOS PARES
+            let hora : string, _hora :string, resultado, i=0; // VARIABLES
+            resultado = h.split(':'); //DIVIDIENDO EN PARTES
+            while(i<resultado.length){ //COMPLETANDO CEROS
+                if(resultado[i].length%2!=0){
+                    resultado[i]="0"+resultado[i];
+                }
+                i++;
+            }
+            //CONCATENANDO
+            _hora=resultado[0]+":"+resultado[1]+":"+resultado[2];
+        return _hora;
     }
 }
 var coords={
