@@ -613,7 +613,9 @@ export class TcontrolComponent implements OnInit{
 
     _eliminarC(){
          this.tcontrolservice.deleteTarjetaControl(this._PuCoId).subscribe(
-            realizar =>{this.getalltarjetacontrol();},
+            realizar =>{this.getalltarjetacontrol();
+                        this.displayConfirmarEliminar = false;    
+                    },
             err => {console.log(err);}
         );
     }
