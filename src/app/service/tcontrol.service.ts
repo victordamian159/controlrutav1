@@ -114,7 +114,7 @@ export class TControlService{
 
 //DETALLE
     //CAPTURAR TODOS LAS TARJETAS DE CONTROL
-    getAllTarjetaControlDetalleByPuCo(taCoId:number){
+    getAllTarjetaControlDetalleBytaCoId(taCoId:number){
 		return this.http
 			.get(this.baseUrl2+'tacoid/'+taCoId )
 			.map((r: Response) => r.json() )

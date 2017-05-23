@@ -110,21 +110,24 @@ export class PcontrolComponent implements OnInit{
     indexMarkerTitle:string; //index marker para title (string)
     indexMarker=0; //indice de marker
     indexPunto=0; //INDICE DE REGISTRO EN SU ARRAY DE PUNTOS DE CONTROL DETALLE
-    //markertitle:string;
+    mensaje:string;
     selectedPosition:any;
     draggable:boolean;
 
     displayNuevoPunto:boolean =false;
-    //displayEditarReordenar=false;
+    displayValidarDatoCabecera=false;
     displayEditarPunto = false;
     displayListaPuntos: boolean = false; 
-    //displayPCDetalle: boolean = false;
-    //displayReordenar: boolean = false;
-    
-
+    displayElimRegCabecera: boolean = false;
+    displayElimRegDetalle: boolean = false;
+    displayOnObjec : boolean =false;
+    displayMapaClick : boolean = false;
+    displayErrorEditarPuntos : boolean = false;
     mapa:any;
 
-    _PuCoId:number; //almacena el PuCoId para poder usarlo en editar
+    _PuCoId:number; //almacena el PuCoId para poder usarlo en editar Y ELIMINAR
+    _PuCoDeId:number    //PUCODEID PARA ELIMINAR REGISTRO
+    //displayEliminarRegistro:boolean=false;
     //infoWindow: any;
     // msgs: Message[] = [];
 
@@ -163,10 +166,6 @@ export class PcontrolComponent implements OnInit{
 
         //MAESTRO
          this.getAllPuntoControlByEmRu(1,51); //consulta para la grilla 
-        //DETALLE
-        // this.getAllPuntoControlDetalleByPuCo(0);
-
-        //desactivar el agregado de Marker hasta seleccion una fila de la grilla PRINCIPAL
         this.activeAddMarker = 0; //addmarker desactivado
         //tambien cuando ya se a guardado los puntos en la BD
 
@@ -182,7 +181,7 @@ export class PcontrolComponent implements OnInit{
     getAllPuntoControlByEmRu(emId: number, ruId: number){
         this.pcontrolService.getAllPuntoControlByEmRu(emId,ruId)
         .subscribe(
-            data => { this.pCArrayMaestroBD = data; this.mgPuntoControlMaestro(); console.log(this.pCArrayMaestroBD);},
+            data => { this.pCArrayMaestroBD = data; this.mgPuntoControlMaestro();},
                     err => {this.errorMessage = err}, 
                     () =>this.isLoading = false
             );
@@ -191,14 +190,6 @@ export class PcontrolComponent implements OnInit{
 
     //click sobre el mapa y abrir modal para add Marker
     handleMapClick(event){
-
-        console.log("click sobre el mapa");
-        /*
-         this.selectedPosition = event.latLng;
-        console.log(this.selectedPosition.lat());
-        console.log(this.selectedPosition.lng());
-        */
-
         //condicional para hacer click sobre el mapa y addmarker
         if(this.activeAddMarker == 1){ //addmarker activado
             //mostrar modal addmarker
@@ -208,21 +199,24 @@ export class PcontrolComponent implements OnInit{
             this.coordenadas.push(
                 coords = {x:this.selectedPosition.lat(), y:this.selectedPosition.lng()}
             );
-            console.log(this.coordenadas);
             //guardando coordenadas en las variables X y Y 
             this.x=(coords.x).toString();
             this.y=(coords.y).toString();
         
-            console.log("coordenadas: x:"+this.x+"----"+"y:"+this.y);
-
             this.addmarker();
             this.displayNuevoPunto=true;
         }else if(this.activeAddMarker == 0){ //addmarker desactivado
-            console.log("No Puede Agregar Marcadores");
+            this.mensaje ="Error, No Puede Agregar Punto de Control Sobre la Ruta";
+            this.displayMapaClick=true;
+            //console.log("No Puede Agregar Marcadores");
         }
       
     }
 
+    aceptarModalAgregarMarker(){
+        this.mensaje="";
+        this.displayMapaClick=false;
+    }
     //CLICK SOBRE EL OBJETO --- ESTA FUNCION PARECE Q NO FUNCIONA :/
     handleOverlayClick(event) {
         console.log("CLICK SOBRE EL OBJETO: handleOverlayClick");
@@ -284,46 +278,15 @@ export class PcontrolComponent implements OnInit{
 
     //click sobre una forma (marcador, lineas u otras) //borrando puntos con click sobre ellos
     handleOverClick(event){
-        console.log("CLICK SOBRE EL OBJETO: handleOverClick  ");
-        //marcador : impar,  circle : par 
-        //primer marker es index 0
-        //primer circle es index 1
-        /*
-        this.indexPCDetalle= this.overlays.indexOf(event.overlay);
-        console.log("indice objeto"+this.indexPCDetalle);
-        
-        if(this.indexPCDetalle==0 ){
-            console.log("titulo marker: "+this.overlays[this.indexPCDetalle].title);    
-            this.overlays[this.indexPCDetalle].setMap(null);
-            this.overlays[this.indexPCDetalle+1].setMap(null);
-            this.overlays.splice(this.indexPCDetalle,2);
-        }else if(this.indexPCDetalle%2==0 && this.indexPCDetalle>1){
-            //console.log("marcador");
-            console.log("titulo marker: "+this.overlays[this.indexPCDetalle].title);    
-            this.overlays[this.indexPCDetalle].setMap(null);
-            this.overlays[this.indexPCDetalle+1].setMap(null);
-            this.overlays.splice(this.indexPCDetalle,2);
-            this.pCArrayDetalleBD.splice( Number(this.overlays[this.indexPCDetalle].title) , 1);
-           
-        }
-        console.log("tamaño: "+this.overlays.length);
-
-        //actualizando la matriz de objetos puntosControlDetalleBD
-        if(this.indexPCDetalle>1){
-            let n = 0;
-            
-            this.m=this.indexPCDetalle
-            while(this.m<this.overlays.length){
-                n = Number(this.overlays[this.m].title);//title marker = nro marker
-                
-                this.overlays[this.m].title = (n -1).toString(); 
-                this.m=this.m+2;
-            }
-        }
-        console.log(this.overlays);
-        */
+        this.mensaje = "Acaba de Seleccionar Un Objeto sobre Mapa"
+        this.displayOnObjec = true;
     }
 
+     //ACEPTAR CLICK SOBRE OBJETO
+    aceptarClickObjeto(){
+        this.mensaje="";
+        this.displayOnObjec=false;
+    }
     //AGREGAR MARCADOR AL MAPA (PUNTOS DE CONTROL)
     addmarker(){
       
@@ -545,18 +508,76 @@ export class PcontrolComponent implements OnInit{
 
     //ELIMINAR UN REGISTRO DE LA TABLA MAESTRO PUNTOCONTROL
     eliminarMaestro(_PuCoId : number){   
-        console.log("eliminar =D"+ _PuCoId);
-        this.pcontrolService.deletePuntoControl(_PuCoId).subscribe(
-            realizar => {this.getAllPuntoControlByEmRu(1,0)}, 
+        //console.log("eliminar =D"+ _PuCoId);
+        this._PuCoId = _PuCoId;
+        this.mensaje = "¿Esta Seguro de Eliminar el Registro?";
+        this.displayElimRegCabecera=true;
+    }
+    _eliminarMaestro(){
+        this.pcontrolService.deletePuntoControl(this._PuCoId).subscribe(
+            realizar => {this.getAllPuntoControlByEmRu(1,51);
+                        this.mgPuntoControlMaestro();
+                        this.displayElimRegCabecera=false;
+                        this.mensaje ="";}, 
             err => {console.log(err);}
         );
     }
+    cancel_eliminarMaestro(){
+        this._PuCoId = 0;
+        this.mensaje ="";
+        this.displayElimRegCabecera = false;
+        console.log("aqui");
+    }
 
+    //ELIMINAR EL DETALLE DE LOS PUNTOS CONTROL
+    eliminarDetalle(_PuCoDeId : number){
+        //BUSCANDO EL ID DEL REGISTRO A EDITAR
+        if(this.editando == 1){ // 0: nuevo registro    1: se esta editando un registro
+           this._PuCoDeId = _PuCoDeId;
+           this.displayElimRegDetalle=true;
+           this.mensaje = "¿Esta Seguro de Eliminar El Punto de Control?";
+        }else if(this.editando == 0){
+            //MOSTRARLO EN UNA VENTANA MODAL
+            this.mensaje="Error, No se puede Editar la Tabla de Puntos";
+            this.displayErrorEditarPuntos=true;
+            //console.log("no se puede editar el registro");
+        }
+       
+    }
+
+    //ACEPTAR, NO PUEDE EDITAR EL REGISTRO DE PUNTOS DE CONTROL DETALLE
+    aceptarEditarPuntos(){
+        this.mensaje="";
+        this.displayErrorEditarPuntos=false;
+    }
+
+    _eliminarDetalle(){
+         //BUSCANDO EL OBJETO EN EL ARRAY
+            let j=0;
+            let cen=1; // 1: encontrado    0: no encontrada
+            //BUSCANDO REGISTRO A ELIMINAR DEL ARRAY Q VA A LA BD
+            while(j<this.pCArrayDetalleBD.length && cen == 1){
+                if(this.pCArrayDetalleBD[j].PuCoDeId != this._PuCoDeId){
+                    j++;
+                }else if(this.pCArrayDetalleBD[j].PuCoDeId ==  this._PuCoDeId){
+                    cen = 0;
+                    console.log("encontrado =D: "+ j);
+                }
+            }
+            this.pCArrayDetalleBD.splice(j,1); //ELIMINANDO UN SOLO ELEMENTO DESDE LA POSICION J
+            this.mgPuntosControlDetalle(); //CARGANDO LA GRILLA PUNTOS DETALLE
+    }
+
+    cancel_eliminarDetalle(){
+        this._PuCoDeId = 0;
+        this.mensaje="";
+        this.displayElimRegDetalle=false;
+    }
     //guardar nuevo Maestro puntos de control
     guardarPCMaestro(){      
         let cen=0, i=0;
-        /*let error = [
-            //{nomb:"Descripcion", val:0},
+        let error = [
+            {nomb:"Descripcion", val:0},
             {nomb:"Clase", val:0},
             {nomb:"Tiempo De Recorrido", val:0}
         ];
@@ -566,17 +587,21 @@ export class PcontrolComponent implements OnInit{
         } 
         if(this.pcMaestro.PuCoTiempoBus != ''){
             error[1].val = 1;
+           
         }
         if(this.pcMaestro.PuCoClase != ''){
             error[2].val = 1;
         }
 
         //RECORRIENDO ARRAY EN BUSCA DE ERRORES
-        while( (i<this.errorMessage.length)  && cen == 0){
+        while( (i<error.length)  && cen == 0){
             if(error[i].val == 0){
                 cen = 1;
             }
-        }*/
+            i++;
+            console.log("tania");
+        }
+
         console.log(this.pcMaestro.PuCoTiempoBus);
         if(cen == 0){
             if(this._PuCoId == 0){ //NUEVO REGISTRO
@@ -597,15 +622,22 @@ export class PcontrolComponent implements OnInit{
             //mandando al rest
             console.log(this.pcMaestroBD);
             this.pcontrolService.savePuntoControl(this.pcMaestroBD)
-            .subscribe(realizar => {this.mgPuntoControlMaestro();}, err => {this.errorMessage=err});
+            .subscribe(realizar => {
+                    this.getAllPuntoControlByEmRu(1,51); //RECARGANDO LA GRILLA
+                    this.mgPuntoControlMaestro(); // MOSTRANDO EN LA GRILLA
+                }, err => {this.errorMessage=err});
             this.displayListaPuntos = false;
         }else if(cen == 1){
             //MENSAJE EN PANTALLA
-            console.log("Error al Ingresar los Datos, Vuelva a Ingresarlos");
+            this.mensaje ="Error al Ingresar los Datos, Vuelva a Ingresarlos";
+            this.displayValidarDatoCabecera=true;
         }
         
     }
-    
+    aceptarErrorValidacionCabecera(){
+        this.mensaje="";
+        this.displayValidarDatoCabecera=false;
+    }
     //cancelar la agregacion de un Maestro punto de control
     cancelarPCMaestro(){
         console.log("lista cancelada");
@@ -654,38 +686,7 @@ export class PcontrolComponent implements OnInit{
         }
     }
 
-    //ELIMINAR EL DETALLE DE LOS PUNTOS CONTROL
-    eliminarDetalle(_PuCoDeId : number){
-        //BUSCANDO EL ID DEL REGISTRO A EDITAR
-        console.log("id detalle: "+_PuCoDeId);
 
-        if(this.editando == 1){ // 0: nuevo registro    1: se esta editando un registro
-            //BUSCANDO EL OBJETO EN EL ARRAY
-            let j=0;
-            let cen=1; // 1: encontrado    0: no encontrada
-            //BUSCANDO REGISTRO A ELIMINAR DEL ARRAY Q VA A LA BD
-            while(j<this.pCArrayDetalleBD.length && cen == 1){
-                if(this.pCArrayDetalleBD[j].PuCoDeId != _PuCoDeId){
-                    j++;
-                }else if(this.pCArrayDetalleBD[j].PuCoDeId == _PuCoDeId){
-                    cen = 0;
-                    console.log("encontrado =D: "+ j);
-                }
-            }
-            this.pCArrayDetalleBD.splice(j,1); //ELIMINANDO UN SOLO ELEMENTO DESDE LA POSICION J
-            this.mgPuntosControlDetalle(); //CARGANDO LA GRILLA PUNTOS DETALLE
-            console.log(this.pCArrayDetalleBD);
-        }else if(this.editando == 0){
-            //MOSTRARLO EN UNA VENTANA MODAL
-            console.log("no se puede editar el registro");
-        }
-        //PONER CONDICIONAL PARA HABILITAR LA ELIMINACION, CONFIRMAR LA ELIMINACION
-        
-          //BUSCANDO INDICE DEL OBJETO
-            /*for(let i=0; i<this.pCArrayDetalleBD.length; i++){
-                console.log("indice: "+this.pCArrayDetalleBD.indexOf(this.pCArrayDetalleBD[i].PuCoDeId))
-            }*/
-    }
 
     //GUARDAR DETALLE PUNTO CONTROL EN ARRAY PERO NO ES SUBIDO A LA BD HASTA PRESIONAR EL BOTON GUARDAR PUNTOS
     //BOTON GUARDAR PUNTOS (CUADRO MODAL AGREGAR PUNTO CONTROL)
@@ -1219,3 +1220,48 @@ var coords={
         lat : 0,
         lng : 0 
 }
+
+ //PONER CONDICIONAL PARA HABILITAR LA ELIMINACION, CONFIRMAR LA ELIMINACION
+        
+          //BUSCANDO INDICE DEL OBJETO
+            /*for(let i=0; i<this.pCArrayDetalleBD.length; i++){
+                console.log("indice: "+this.pCArrayDetalleBD.indexOf(this.pCArrayDetalleBD[i].PuCoDeId))
+            }*/
+
+            //marcador : impar,  circle : par 
+        //primer marker es index 0
+        //primer circle es index 1
+        /*
+        this.indexPCDetalle= this.overlays.indexOf(event.overlay);
+        console.log("indice objeto"+this.indexPCDetalle);
+        
+        if(this.indexPCDetalle==0 ){
+            console.log("titulo marker: "+this.overlays[this.indexPCDetalle].title);    
+            this.overlays[this.indexPCDetalle].setMap(null);
+            this.overlays[this.indexPCDetalle+1].setMap(null);
+            this.overlays.splice(this.indexPCDetalle,2);
+        }else if(this.indexPCDetalle%2==0 && this.indexPCDetalle>1){
+            //console.log("marcador");
+            console.log("titulo marker: "+this.overlays[this.indexPCDetalle].title);    
+            this.overlays[this.indexPCDetalle].setMap(null);
+            this.overlays[this.indexPCDetalle+1].setMap(null);
+            this.overlays.splice(this.indexPCDetalle,2);
+            this.pCArrayDetalleBD.splice( Number(this.overlays[this.indexPCDetalle].title) , 1);
+           
+        }
+        console.log("tamaño: "+this.overlays.length);
+
+        //actualizando la matriz de objetos puntosControlDetalleBD
+        if(this.indexPCDetalle>1){
+            let n = 0;
+            
+            this.m=this.indexPCDetalle
+            while(this.m<this.overlays.length){
+                n = Number(this.overlays[this.m].title);//title marker = nro marker
+                
+                this.overlays[this.m].title = (n -1).toString(); 
+                this.m=this.m+2;
+            }
+        }
+        console.log(this.overlays);
+        */

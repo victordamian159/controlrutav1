@@ -12,9 +12,6 @@
         <p-dataTable [value]="_allTarjControl" [rows]="3" [paginator]="true"  [globalFilter]="filtroGlobal"
             scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectCabecera($event)">
                 <p-column styleClass="col-button" [style]="{'width':'6em'}">
-                    <template pTempalte="header">
-                        <button type="button" pButton icon="fa-refresh">  </button>
-                    </template>
                     <template let-col let-row="rowData" pTemplate="body">
                         <button type="button" pButton class="btn" (click)="editarC(row.TaCoId)" icon="fa-pencil-square-o" > </button>
                         <button type="button" pButton class="btn" (click)="eliminarC(row.TaCoId)" icon="fa-trash" > </button>
@@ -64,103 +61,148 @@
     </div>
 </div>
 
-<!--modal boton nuevo-->
-        <p-dialog [(visible)]="displayAsignarTarjeta" modal="modal" width="100%" [closable]= false>
-                             <!--PUNTOS DE CONTROL EXISTENTES-->
-                             <div class="form-group row">
-                                 <div class="col-3">
-                                    <label class="col-2 col-form-label">Puntos:</label>
-                                 </div>
-                                 <div class="col-9">
-                                    <select [(ngModel)]="puntoControl" (change)="puntosControlId($event)">
-                                        <option *ngFor="let punto of _puntosControl" [ngValue]="punto">
-                                            {{punto.RuDescripcion}}
-                                        </option>
-                                    </select>
-                                 </div>
-                             </div>
+    <!--modal boton nuevo-->
+    <p-dialog [(visible)]="displayAsignarTarjeta" modal="modal" width="100%" [closable]= false>
+            <!--PUNTOS DE CONTROL EXISTENTES-->
+            <div class="form-group row">
+                <div class="col-3">
+                <label class="col-2 col-form-label">Puntos:</label>
+                </div>
+                <div class="col-9">
+                <select [(ngModel)]="puntoControl" (change)="puntosControlId($event)">
+                    <option *ngFor="let punto of _puntosControl" [ngValue]="punto" selected="selected">
+                        {{punto.RuDescripcion}}
+                    </option>
+                </select>
+                </div>
+            </div>
 
-                            
-                            <!--LISTA PROGRAMACION EN LA BD-->
-                             <div class="form-group row">
-                                 <div class="col-4">
-                                    <label class="col-3 col-form-label">Programas:</label>
-                                 </div>
-                                <div class="col-8">
-                                    <select [(ngModel)]="_prId" (change)="programacionId($event)">
-                                        <option *ngFor="let prog of _programacion" [ngValue]="prog.prId">
-                                            {{prog.prDescripcion}}
-                                        </option>
-                                    </select>
-                                 </div>
-                             </div>
+        
+        <!--LISTA PROGRAMACION EN LA BD-->
+            <div class="form-group row">
+                <div class="col-4">
+                <label class="col-3 col-form-label">Programas:</label>
+                </div>
+            <div class="col-8">
+                <select [(ngModel)]="_prId" (change)="programacionId($event)">
+                    <option *ngFor="let prog of _programacion" [ngValue]="prog.prId">
+                        {{prog.prDescripcion}}
+                    </option>
+                </select>
+                </div>
+            </div>
 
-                             <!--fecha programacion-->
-                            <div class="form-group row ">
-                                <div class="col-4">
-                                    <label class="col-2 col-form-label" >Fecha:</label>
-                                </div>
-                                <div class="col-7 row">
-                                    <input class="form-control" name="fecha" placeholder="MM/DD/YYY" type="date" [(ngModel)]="tarjeta._TaCoFecha" />
-                                </div>
-                                <div class="col-1 row">    
-                                    <button type="button" (click)="buscarxFecha()" pButton label=" "></button>
-                                </div>
-                            </div>
+            <!--fecha programacion-->
+            <div class="form-group row ">
+                <div class="col-4">
+                    <label class="col-2 col-form-label" >Fecha:</label>
+                </div>
+                <div class="col-7 row">
+                    <input class="form-control" name="fecha" placeholder="MM/DD/YYY" type="date" [(ngModel)]="tarjeta._TaCoFecha" />
+                </div>
+                <div class="col-1 row">    
+                    <button type="button" (click)="buscarxFecha()" pButton label=" "></button>
+                </div>
+            </div>
 
-                            <!--programacion (AQUI UN DATATABLE     OPCIONAL)-->
-                            <div class="form-group row">
-                                <div class="col-3">
-                                    <label class="col-2 col-form-label">Placas:</label>
-                                </div>
-                                <div class="col-9">
-                                    <select [(ngModel)]="placa" (change)="placaObj($event)">
-                                        <option *ngFor="let progde of _progDetalle" [ngValue]="progde">
-                                            {{progde.nroPlaca}}
-                                        </option>
-                                    </select>
-                                 </div>
-                            </div>
+            <!--programacion (AQUI UN DATATABLE     OPCIONAL)-->
+            <div class="container form-group row">
+                <div class="col-3">
+                    <label class="col-2 col-form-label">Placas:</label>
+                </div>
+                <div class="col-10">
+                    <p-dataTable [value]="_progDetalle" scrollable="true" scrollHeight="100px" selectionMode="single" (onRowSelect)="onRowPlaca($event)">
+                            <p-column field="BuId" [style]="{'width':'3em'}" ></p-column>
+                            <p-column field="nroPlaca" [style]="{'width':'6em'}" ></p-column>
+                    </p-dataTable>
+                </div>
+                
+            </div>
 
-                            <!--ESTADO-->
-                            <div class="form-group row">
-                                <div class="col-3">
-                                        <label for="cuota" class="col-1 col-form-label">Estado:</label>
-                                </div>
-                                <div class="col-9">
-                                    <label class="radio-inline"><p-radioButton  value="0" label="No Asig" [(ngModel)]="val"></p-radioButton></label>
-                                    <label class="radio-inline"><p-radioButton  value="1" label="Asig"   [(ngModel)]="val"></p-radioButton></label>
-                                    <label class="radio-inline"><p-radioButton  value="2" label="Ausente" [(ngModel)]="val"></p-radioButton></label>
-                                </div>
-                            </div>
+            <!--ESTADO-->
+            <div class="form-group row">
+                <div class="col-3">
+                        <label for="cuota" class="col-1 col-form-label">Estado:</label>
+                </div>
+                <div class="col-9">
+                    <label class="radio-inline"><p-radioButton  value="0" label="No Asig" [(ngModel)]="val"></p-radioButton></label>
+                    <label class="radio-inline"><p-radioButton  value="1" label="Asig"   [(ngModel)]="val"></p-radioButton></label>
+                    <label class="radio-inline"><p-radioButton  value="2" label="Ausente" [(ngModel)]="val"></p-radioButton></label>
+                </div>
+            </div>
 
-                            <!--hora salida <div class="form-group row"></div>--><!--nro vuelta-->  
-                            <div class="form-group row">
-                                <div class="form-group">
-                                    <!--<label for="hora" class="col-1 col-form-label">Salida:</label>-->
-                                    <label class="control-label" for="hora">Salida:</label>
-                                    <input class="form-control" type="time" value="00:00:00" id="hora" [(ngModel)]="tarjeta._TaCoHoraSalida"  step="1" >   
-                                </div>
-                                <div class="form-group">    
-                                    <!--<label for="cuota" class="col-1 col-form-label">Cuota:</label>-->
-                                    <label class="control-label" for="cuota">Cuota:</label>
-                                    <div class="col-6">
-                                        <input class="form-control" type="number"  value="0"   id="cuota"    [(ngModel)]="tarjeta._TaCoCuota">
-                                    </div>
-                                </div>     
-                            </div>
-                            
+            <!--hora salida <div class="form-group row"></div>--><!--nro vuelta-->  
+            <div class="form-group row">
+                <div class="form-group">
+                    <!--<label for="hora" class="col-1 col-form-label">Salida:</label>-->
+                    <label class="control-label" for="hora">Salida:</label>
+                    <input class="form-control" type="time" value="00:00:00" id="hora" [(ngModel)]="tarjeta._TaCoHoraSalida"  step="1" >   
+                </div>
+                <div class="form-group">    
+                    <!--<label for="cuota" class="col-1 col-form-label">Cuota:</label>-->
+                    <label class="control-label" for="cuota">Cuota:</label>
+                    <div class="col-6">
+                        <input class="form-control" type="number"  value="0"   id="cuota"    [(ngModel)]="tarjeta._TaCoCuota">
+                    </div>
+                </div>     
+            </div>
+        
+            <!--modal footer-->
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-helper-clearfix" >    
+                    <button type="button" pButton  (click)="guardarTarjeta()" label="Guardar"></button>
+                    <button type="button" pButton  (click)="cancelarTarjeta()" label="Cancelar"></button>
+                </div>
+            </p-footer>
+    </p-dialog>
 
-                    <!--modal footer-->
-                    <p-footer>
-                        <div class="ui-dialog-buttonpane ui-helper-clearfix" >    
-                            <button type="button" pButton  (click)="guardarTarjeta()" label="Guardar"></button>
-                            <button type="button" pButton  (click)="cancelarTarjeta()" label="Cancelar"></button>
-                        </div>
-                    </p-footer>
-        </p-dialog>
+     <p-dialog [(visible)]="displayEditarTarjeta" modal="modal" width="100%" [closable]= false>
+         <!--PUNTOS DE CONTROL EXISTENTES-->
+            <div class="form-group row">
+                <div class="col-3">
+                <label class="col-2 col-form-label">Puntos:</label>
+                </div>
+                <div class="col-9">
+                <select [(ngModel)]="puntoControl" (change)="puntosControlId($event)">
+                    <option *ngFor="let punto of _puntosControl" [ngValue]="punto" selected="selected">
+                        {{punto.RuDescripcion}}
+                    </option>
+                </select>
+                </div>
+            </div>
 
+             <!--hora salida <div class="form-group row"></div>--><!--nro vuelta-->  
+            <div class="form-group row">
+                <div class="form-group">
+                    <!--<label for="hora" class="col-1 col-form-label">Salida:</label>-->
+                    <label class="control-label" for="hora">Salida:</label>
+                    <input class="form-control" type="text"  id="hora" [(ngModel)]="tarjeta._TaCoHoraSalida"  step="1" >   
+                </div>
+            </div>
+             <div class="form-group row">
+                <div class="form-group">    
+                    <!--<label for="cuota" class="col-1 col-form-label">Cuota:</label>-->
+                    <label class="control-label" for="cuota">Cuota:</label>
+                    <input class="form-control" type="number"  id="cuota"  [(ngModel)]="tarjeta._TaCoCuota">
+                </div>     
+            </div>
+            <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix" >    
+                <button type="button" pButton  (click)="guardarTarjeta()" label="Guardar"></button>
+                <button type="button" pButton  (click)="cancelarEditarTarjeta()" label="Cancelar"></button>
+            </div>
+        </p-footer>
+     </p-dialog>  
 
+     <p-dialog [(visible)] = "displayConfirmarEliminar" modal="modal" width="100%" [closable]=false>
+            {{mensaje}}
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-helper-clearfix" > 
+                    <button type="button" pButton (click)="cancelar_eliminarC()" label="Cancelar"></button>
+                    <button type="button" pButton (click)="_eliminarC()" label = "Eliminar"></button>
+                </div>
+            </p-footer>
+     </p-dialog>  
 <!--<div class="col-6">-->
                                     <!--</div>
                                     <div class="col-6">-->
@@ -174,3 +216,13 @@
                                     <input class="form-control" type="number" value="50" id="Repeat" [(ngModel)]="TaCoNroRepeat">
                                </div>
                             -->
+
+                            <!--    
+                                    <div class="col-9">
+                                        <select [(ngModel)]="placa" (change)="placaObj($event)">
+                                            <option *ngFor="let progde of _progDetalle" [ngValue]="progde">
+                                                {{progde.nroPlaca}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                 -->

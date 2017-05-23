@@ -258,15 +258,17 @@
         </p-dialog>
         
         <!--MODAL CONFIRMAR ELIMINAR REGISTRO-->
-        <p-dialog [(visible)]="displayConfirmar" modal="modal" width="100%" responsive="true">
+        <p-dialog [(visible)]="displayConfirmar" modal="modal" width="100%" responsive="true" [closable]="false">
                 <p>{{mensaje}}</p>
                 <p-footer class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                     <button type="button" pButton (click)="displayConfirmar=false"   label="No"></button>
-                     <button type="button" pButton (click)="borrarRegistro()" label="Si"></button>
+                     <button type="button" pButton (click)="displayConfirmar=false"   label="Cancelar"></button>
+                     <button type="button" pButton (click)="borrarRegistro()" label="Aceptar"></button>
                 </p-footer>
         </p-dialog>
 
-        <!--MODAL VALIDAR DATOS-->
+      
+</div>
+  <!--MODAL VALIDAR DATOS-->
         <!--
             <p-dialog [(visible)]="displayConfirmar" modal="modal" width="100%" responsive="true">
                     <p>{{mensaje}}</p>
@@ -290,7 +292,6 @@
                 <td>$50</td>
             </tr>
         -->
-</div>
 
 
 

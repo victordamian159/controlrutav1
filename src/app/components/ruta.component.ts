@@ -1302,7 +1302,7 @@ export class RutaComponent implements OnInit{
         let fechaProg : string; let _fechaProg : string; let _fecha = new Date(fecha);  
         console.log("antes: "+_fecha);
         
-        _fechaProg=(_fecha.getFullYear()).toString() +" / "+ (_fecha.getMonth() +1 ).toString() +" / "+(_fecha.getDate()+1).toString() ;
+        _fechaProg=(_fecha.getFullYear()).toString() +" / "+ (_fecha.getMonth() +1 ).toString() +" / "+(_fecha.getDate()).toString() ;
         
         console.log("despues: "+_fechaProg);
         _fechaProg=this.cCeroFecha(_fechaProg);

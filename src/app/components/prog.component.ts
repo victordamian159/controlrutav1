@@ -477,8 +477,8 @@ export class ProgComponent implements OnInit{
                 PrAleatorio : programacionMaestro.PrAleatorio, 
                 PrCantidadBuses : programacionMaestro.PrCantidadBuses,
                 PrFecha : programacionMaestro.PrFecha,
-                PrFechaInicio : programacionMaestro.PrFechaInicio,
-                PrFechaFin : programacionMaestro.PrFechaFin,
+                PrFechaInicio : this._fecha(programacionMaestro.PrFechaInicio),
+                PrFechaFin : this._fecha(programacionMaestro.PrFechaFin),
                 PrTipo : programacionMaestro.PrTipo,
                 dias : programacionMaestro.dias,
                 prDescripcion : programacionMaestro.prDescripcion,
@@ -668,7 +668,7 @@ export class ProgComponent implements OnInit{
     //BOTON ELIMINAR REGISTRO 
     eliminarRegistroGrilla(_PrId : number){
         //console.log("eliminar "+_PrId);
-        this.mensaje = "¿Esta Seguro de Eliminar Este Registro?";
+        this.mensaje = "¿Esta Seguro de Eliminar Este Registro de la Tabla?";
         this.displayConfirmar = true
         this.iDReg = _PrId;
     }
@@ -693,5 +693,88 @@ export class ProgComponent implements OnInit{
     //IMPRIMIR PROGRAMACION
     imprimirProg(){
         console.log("falta programar");
+    }
+
+     //CONVERTIR STRING A DATE FORMULARIO A BD  HORAS
+    hora(fecha : string) : Date{
+        //FECHA               
+        let thoy:Date,  otra:Date, horaTarjeta:string;
+        thoy=new Date();
+        if(fecha.length<=5){ fecha = fecha+":00"; }
+        horaTarjeta=fecha;
+        let resultado=horaTarjeta.split(':');
+        otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));    
+        //console.log(otra);
+        return otra; 
+        
+    }
+
+    //CONVERTIR DATE A STRING DE BD A FORMULARIO HORAS
+    _hora(fecha : Date) :string{
+        let hora : string; let _hora : string; let _fecha = new Date(fecha);
+        _hora =  (_fecha.getHours() - 1).toString();// restando 1 hora (CORREGIR EN EL BACKEND)
+            hora = _hora + ":"+_fecha.getMinutes()+":"+_fecha.getSeconds();
+
+            hora = this.cCeroHora(hora);
+        return hora;
+    }
+
+
+    //COMPLETANDO CEROS EN CASO DE NECESITAR PARA HORAS Y FECHAS   2017/
+    cCeroHora(h:string) :string{
+            //DIVIDIRLO EN PARTES Y COMPLETAR LOS CEROS PARA QUE LOS ELEMENTOS SEAN TODOS PARES
+            let hora : string, _hora :string, resultado, i=0;
+            resultado = h.split(':');
+            while(i<resultado.length){
+                if(resultado[i].length%2!=0){
+                    resultado[i]="0"+resultado[i];
+                }
+                i++;
+            }
+            //CONCATENANDO
+            _hora=resultado[0]+":"+resultado[1]+":"+resultado[2];
+        return _hora;
+    }
+
+    cCeroFecha(f : string) :string{
+        let fecha:string, _fecha:string, resultado, i=0;
+        resultado = f.split('/');
+            while(i<resultado.length){
+                resultado[i]=resultado[i].trim(); //BORRANDO ESPACIOS EN BLANCO
+                if(resultado[i].length%2!=0){
+                    resultado[i]="0"+resultado[i];
+                }
+                i++;
+            }
+            //CONCATENANDO
+            _fecha=resultado[0]+"/"+resultado[1]+"/"+resultado[2];
+        
+        return _fecha
+    }
+
+    cCeroFechaForEditar(f : string) :string{
+        let fecha:string, _fecha:string, resultado, i=0;
+        resultado = f.split('/');
+            while(i<resultado.length){
+                resultado[i]=resultado[i].trim(); //BORRANDO ESPACIOS EN BLANCO
+                if(resultado[i].length%2!=0){
+                    resultado[i]="0"+resultado[i];
+                }
+                i++;
+            }
+            //CONCATENANDO
+            _fecha=resultado[0]+"-"+resultado[1]+"-"+resultado[2];
+        
+        return _fecha
+    }
+    
+    //CONVERTIR DATE A STRING PARA FECHA  - ---   BD A GRILLA
+    _fecha(fecha: Date) :string{
+        let fechaProg : string; let _fechaProg : string; let _fecha = new Date(fecha); 
+        _fechaProg=(_fecha.getDate()).toString() +" / "+ (_fecha.getMonth() +1 ).toString() +" / "+ (_fecha.getFullYear()).toString();
+        //_fechaProg=(_fecha.getFullYear()).toString() +" / "+ (_fecha.getMonth() +1 ).toString() +" / "+(_fecha.getDate()).toString() ;
+        
+        _fechaProg=this.cCeroFecha(_fechaProg);
+        return  _fechaProg;
     }
 }

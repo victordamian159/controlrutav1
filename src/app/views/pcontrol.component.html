@@ -56,6 +56,7 @@
             <!--mapa-->
             <div class="container">
                 <!--MAPA-->
+                    <div>Mapa </div>
                     <div class="container">
                         <p-growl [value]="msgs"></p-growl>
                         <p-gmap 
@@ -69,12 +70,12 @@
                         </p-gmap>   
                     </div>
                     <div class="container">
-                        <button type="button" pButton label="Guardar" (click)="guardarpuntosDetalleRest()" [disabled]="desGuardarPCD_BD"></button>
-                        <button type="button" pButton label="Borrar" (click)="BorrarPuntosDetalle()" [disabled]="desBorrarPCDet"></button>
-                        <button type="button" pButton label="Nuevo" (click)="nuevosPuntos()"    [disabled]="desNuevosPuntos"></button>
+                        <div class="ui-grid-col-2"><button type="button" pButton style = " width:41px; height:50px; font-size: 20px;"  icon="fa-save" label="Guardar" (click)="guardarpuntosDetalleRest()" [disabled]="desGuardarPCD_BD"></button></div>
+                        <div class="ui-grid-col-2"><button type="button" pButton style = " width:41px; height:50px; font-size: 20px;"  icon="fa-eraser" label="Borrar" (click)="BorrarPuntosDetalle()" [disabled]="desBorrarPCDet"></button></div>    
+                        <div class="ui-grid-col-2"><button type="button" pButton style = " width:41px; height:50px; font-size: 20px;"  icon="fa-file-o" label="Nuevo" (click)="nuevosPuntos()"    [disabled]="desNuevosPuntos"></button></div>
                         <!--<button type="button" pButton label="Deshacer" (click)="deshacerPunto()"    [disabled]="desDeshacerPCDet"></button>-->
                       
-                        <button type="button" pButton label="Editar"  (click)="editarPuntosDetalleMapa()" [disabled]="desEditarPCDetMarker"></button>
+                        <div class="ui-grid-col-2"><button type="button" pButton style = " width:41px; height:50px; font-size: 20px;"  icon="fa-edit" label="Editar"  (click)="editarPuntosDetalleMapa()" [disabled]="desEditarPCDetMarker"></button></div>
                         <!--    
                         <button type="button" pButton label="Zoom +" (click)="zoomPosMapa(gmap.getMap())" [disabled]="disButBorrar"></button>
                         <button type="button" pButton label="Zoom -" (click)="zoomNegMapa(gmap.getMap())" [disabled]="disButBorrar"></button>
@@ -207,47 +208,65 @@
                     </div>
                 </p-footer>
             </p-dialog>
+
+            <p-dialog [(visible)]="displayElimRegCabecera" modal="modal" width="100%" responsive="true" [closable]="false">
+                {{mensaje}}
+                <p-footer>
+                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                        <button type="button" pButton label="Eliminar" (click)="_eliminarMaestro()"></button>
+                        <button type="button" pButton label="Cancelar" (click)="cancel_eliminarMaestro()"></button>
+                    </div>
+                </p-footer>
+            </p-dialog>
+
+            <p-dialog [(visible)]="displayElimRegDetalle" modal="modal" width="100%" responsive="true" [closable]="false">
+                {{mensaje}}
+                <p-footer>
+                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                        <button type="button" pButton label="Eliminar" (click)="_eliminarDetalle()"></button>
+                        <button type="button" pButton label="Cancelar" (click)="cancel_eliminarDetalle()"></button>
+                    </div>
+                </p-footer>
+            </p-dialog>
+
+            <!-- MOSTRAR EN LA PANTALLA EL MENSAJE DE VALIDACION DE DATOS-->
+            <p-dialog [(visible)]="displayValidarDatoCabecera" modal="modal" width="100%" responsive="true" [closable]="false">
+                {{mensaje}}
+                <p-footer>
+                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                        <button type="button" pButton label="Aceptar" (click)="aceptarErrorValidacionCabecera()"></button>
+                    </div>
+                </p-footer>
+            </p-dialog>
+
+            <!--CLICK SOBRE UN OBJETO-->
+            <p-dialog [(visible)]="displayOnObjec" modal="modal" width="100%" responsive="true" [closable]="false">
+                {{mensaje}}
+                <p-footer>
+                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                        <button type="button" pButton label="Aceptar" (click)="aceptarClickObjeto()"></button>
+                    </div>
+                </p-footer>
+            </p-dialog>
+
+            <!--CLICK SOBRE MAPA-->
+            <p-dialog [(visible)]="displayMapaClick" modal="modal" width="100%" responsive="true" [closable]="false">
+                {{mensaje}}
+                <p-footer>
+                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                        <button type="button" pButton label="Aceptar" (click)="aceptarModalAgregarMarker()"></button>
+                    </div>
+                </p-footer>
+            </p-dialog>
+
+            <!--ERROR NO SE PUEDE EDITAR LOS PUNTOS DE CONTROL DETALLE-->
+            <p-dialog [(visible)]="displayErrorEditarPuntos" modal="modal" width="100%" responsive="true" [closable]="false">
+                {{mensaje}}
+                <p-footer>
+                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                        <button type="button" pButton label="Aceptar" (click)="aceptarEditarPuntos()"></button>
+                    </div>
+                </p-footer>
+            </p-dialog>
     </div>
 </div>
-
- <!--
-<div class="ui-grid-col-9 ui-grid-row">
-    <input type="text" pInputText id="posicionTitle" [disabled]="disabledInputPos"/>
-    <button type="button" size="30" (click)="activarInputPos()" pButton label="Auto"></button>
-</div>
--->
-
-<!--probando
-<div class="ui-g-12 ui-md-4">
-<div class="form-group">
-    <label class="control-label" >Tiempo de Recorrido:</label>
-    <p-calendar [(ngModel)]="pcMaestro.PuCoTiempoBus" [timeOnly]="true"  ></p-calendar>
-</div>
-<br><br>-->
-<!--
-    
-<div class="form-group">
-    <label class="control-label" >Tipo de Tarjeta:</label>
-    <p-calendar [(ngModel)]="pcMaestro.PuCoClase" [timeOnly]="true" showTime="showTime" showSeconds=true ></p-calendar>
-</div>-->
-
- <!--
-</div>
-</div>
-</div>-->
-
- <!--encabezado botones para la columna
-                    <template pTempalte="header">
-                        <button type="button" pButton icon="fa-refresh">  </button>
-                    </template>-->
-                
-      <!--
-                <p-column field="PuCoDeId"      header="PuCoDeId"   [style]="{'width':'2em'}"  hidden="true"></p-column>
-                <p-column field="PuCoId"        header="PuCoId"    [style]="{'width':'3em'}" hidden="true"></p-column>
-                <p-column field="PuCoDeLatitud" header="Latitud"     [style]="{'width':'6em'}" hidden="true"></p-column>
-                <p-column field="PuCoDeLongitud" header="Longitud"  [style]="{'width':'6em'}" hidden="true"></p-column>
-                -->
- <!--
-                <p-column field="UsId"              header="Usuario"     [style]="{'width':'9em'}" hidden="true"></p-column>
-                <p-column field="UsFechaReg"    header="Fecha"   [style]="{'width':'9em'}"     hidden="true"></p-column>                    
-                -->
