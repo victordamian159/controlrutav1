@@ -69,24 +69,13 @@
                             (onOverlayDragEnd)="handleDragEnd($event)">
                         </p-gmap>   
                     </div>
+                    <!--BOTONES DEL MAPA-->
                     <div class="container">
                         <div class="ui-grid-col-2"><button type="button" pButton style = " width:41px; height:50px; font-size: 20px;"  icon="fa-save" label="Guardar" (click)="guardarpuntosDetalleRest()" [disabled]="desGuardarPCD_BD"></button></div>
                         <div class="ui-grid-col-2"><button type="button" pButton style = " width:41px; height:50px; font-size: 20px;"  icon="fa-eraser" label="Borrar" (click)="BorrarPuntosDetalle()" [disabled]="desBorrarPCDet"></button></div>    
                         <div class="ui-grid-col-2"><button type="button" pButton style = " width:41px; height:50px; font-size: 20px;"  icon="fa-file-o" label="Nuevo" (click)="nuevosPuntos()"    [disabled]="desNuevosPuntos"></button></div>
-                        <!--<button type="button" pButton label="Deshacer" (click)="deshacerPunto()"    [disabled]="desDeshacerPCDet"></button>-->
-                      
                         <div class="ui-grid-col-2"><button type="button" pButton style = " width:41px; height:50px; font-size: 20px;"  icon="fa-edit" label="Editar"  (click)="editarPuntosDetalleMapa()" [disabled]="desEditarPCDetMarker"></button></div>
-                        <!--    
-                        <button type="button" pButton label="Zoom +" (click)="zoomPosMapa(gmap.getMap())" [disabled]="disButBorrar"></button>
-                        <button type="button" pButton label="Zoom -" (click)="zoomNegMapa(gmap.getMap())" [disabled]="disButBorrar"></button>
-                        -->
                     </div>
-                    <!--
-                       <p-dialog showEffect="fade" [(visible)]="dialogVisible" header="New Location">
-                    -->
-                    
-                <!--BOTONES DEL MAPA-->
-                
             </div>
                 
             <!--MODAL BOTON  NUEVO PUNTO CONTROL CABECERA-->
@@ -132,7 +121,7 @@
                 </p-footer>
             </p-dialog>  <!--final boton nuevo modal-->      
 
-            <!--cuadro modal nuevo punto de control detalle-->
+            <!--cuadro modal nuevo punto de control detalle ADDMARKER-->
             <p-dialog [(visible)]="displayNuevoPunto" modal="modal" width="300" responsive="true"  [closable]="false">
                 <div class="ui-grid ui-grid-pad ui-fluid" *ngIf="selectedPosition">
                             
@@ -259,7 +248,7 @@
                 </p-footer>
             </p-dialog>
 
-            <!--ERROR NO SE PUEDE EDITAR LOS PUNTOS DE CONTROL DETALLE-->
+            <!--ERROR NO SE PUEDE ELIMINAR LOS PUNTOS DE CONTROL DETALLE-->
             <p-dialog [(visible)]="displayErrorEditarPuntos" modal="modal" width="100%" responsive="true" [closable]="false">
                 {{mensaje}}
                 <p-footer>
@@ -268,5 +257,55 @@
                     </div>
                 </p-footer>
             </p-dialog>
+
+            <!--ERROR NO SE PUEDE EDITAR EL REGISTRO DE LOS PUNTOS DE CONTROL DETALLE (NOMBRE Y TIEMPO)-->
+            <p-dialog [(visible)]="displayErrorEditar" modal="modal" width="100%" responsive="true" [closable]="false">
+                {{mensaje}}
+                <p-footer>
+                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                        <button type="button" pButton label="Aceptar" (click)="aceptarErrorEditar()"></button>
+                    </div>
+                </p-footer>
+            </p-dialog>
+
+            <!--ERROR NO HAY PUNTOS DE CONTROL DETALLE SOBRE EL MAPA-->
+            <p-dialog [(visible)]="displayNohayPuntos" modal="modal" width="100%" responsive="true" [closable]="false">
+                {{mensaje}}
+                <p-footer>
+                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                        <button type="button" pButton label="Aceptar" (click)="aceptarNoHayPuntos()"></button>
+                    </div>
+                </p-footer>
+            </p-dialog>
+
+            <!--NUEVOS PUNTOS DE CONTROL DETALLE SOBRE EL MAPA-->
+            <p-dialog [(visible)]="displayNuevosPuntos" modal="modal" width="100%" responsive="true" [closable]="false">
+                {{mensaje}}
+                <p-footer>
+                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                        <button type="button" pButton label="Aceptar" (click)="aceptarNuevosPuntos()"></button>
+                    </div>
+                </p-footer>
+            </p-dialog>
+
+             <!--GUARDAR PUNTOS DE CONTROL DETALLE SOBRE EL MAPA-->
+            <p-dialog [(visible)]="displayGuardarPuntosDetalle" modal="modal" width="100%" responsive="true" [closable]="false">
+                {{mensaje}}
+                <p-footer>
+                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                        <button type="button" pButton label="Aceptar" (click)="aceptarGuardarPuntosDetalle()"></button>
+                    </div>
+                </p-footer>
+            </p-dialog>
     </div>
 </div>
+                <!--    
+                        <button type="button" pButton label="Zoom +" (click)="zoomPosMapa(gmap.getMap())" [disabled]="disButBorrar"></button>
+                        <button type="button" pButton label="Zoom -" (click)="zoomNegMapa(gmap.getMap())" [disabled]="disButBorrar"></button>
+                        -->
+                        <!--<button type="button" pButton label="Deshacer" (click)="deshacerPunto()"    [disabled]="desDeshacerPCDet"></button>-->
+                      
+                    <!--
+                       <p-dialog showEffect="fade" [(visible)]="dialogVisible" header="New Location">
+                    -->
+                    

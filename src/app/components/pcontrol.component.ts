@@ -123,6 +123,11 @@ export class PcontrolComponent implements OnInit{
     displayOnObjec : boolean =false;
     displayMapaClick : boolean = false;
     displayErrorEditarPuntos : boolean = false;
+    displayErrorEditar : boolean = false;
+    displayNohayPuntos : boolean = false;
+    displayNuevosPuntos : boolean = false;
+    displayGuardarPuntosDetalle :boolean=false;
+
     mapa:any;
 
     _PuCoId:number; //almacena el PuCoId para poder usarlo en editar Y ELIMINAR
@@ -206,7 +211,7 @@ export class PcontrolComponent implements OnInit{
             this.addmarker();
             this.displayNuevoPunto=true;
         }else if(this.activeAddMarker == 0){ //addmarker desactivado
-            this.mensaje ="Error, No Puede Agregar Punto de Control Sobre la Ruta";
+            this.mensaje ="No Puede Agregar Punto de Control, Seleccione un Registro";
             this.displayMapaClick=true;
             //console.log("No Puede Agregar Marcadores");
         }
@@ -289,7 +294,6 @@ export class PcontrolComponent implements OnInit{
     }
     //AGREGAR MARCADOR AL MAPA (PUNTOS DE CONTROL)
     addmarker(){
-      
         //ACTIVANDO BOTONES SEGUN EL TAMAÑO DE OBJETOS Y DE PUNTOSCONTROL EN SU RESPECTIVO ARRAY
         if(this.overlays.length >0 || this.pCArrayDetalleBD.length > 0){
             this.desGuardarPCD_BD = false;
@@ -305,13 +309,6 @@ export class PcontrolComponent implements OnInit{
             this.draggable=false;
             this.indexMarkerTitle=this.indexMarker.toString();
   
-
-            //console.log("coordenadas addmarker: ");
-            //console.log("j: "+this.j);
-            //console.log("lat: "+this.coordenadas[this.j].x+"-----"+"lng: "+this.coordenadas[this.j].y);
-            
-            //console.log(this.indexMarkerTitle);
-            
             this.overlays.push(new google.maps.Marker({
                     position: {lat: this.coordenadas[this.j].x, lng: this.coordenadas[this.j].y},
                     title:this.indexMarkerTitle,
@@ -394,7 +391,9 @@ export class PcontrolComponent implements OnInit{
                         //CASO NO HAY PUNTOS DE CONTROL EN LA BD
                         }else if(this.pCArrayDetalleBD.length == 0){
                             //HACER UNA VENTANA MODAL PARA ESTE MENSAJE
-                            console.log("NO HAY PUNTOS DE CONTROL");
+                            this.mensaje = "No Hay Puntos De Control, Lista Vacia";
+                            this.displayNohayPuntos = true;
+                            //console.log("NO HAY PUNTOS DE CONTROL");
                             //ACTIVANDO BOTON NUEVOS PUNTOS DE CONTROL
                             this.desNuevosPuntos = false;
                             this.desEditarPCDetMarker = true;
@@ -405,12 +404,12 @@ export class PcontrolComponent implements OnInit{
             err => {this.errorMessage = err},
             () => this.isLoading = false
         );
-
-        //this.reiniciarVariables();
-        console.log("editando: "+this.editando);
-         //cargarlos en el array de objetos
-         //this.overlays=[];//ver si se puede eliminar esta cosa 
     }//fin funcion onRowSelectMaestro
+
+    aceptarNoHayPuntos(){
+        this.mensaje="";
+        this.displayNohayPuntos=false;
+    }
 
     //SELECCION DE PUNTOS DE CONTROL DE LA GRILLA DETALLE
     onRowSelectDetalle(event){
@@ -538,7 +537,7 @@ export class PcontrolComponent implements OnInit{
            this.mensaje = "¿Esta Seguro de Eliminar El Punto de Control?";
         }else if(this.editando == 0){
             //MOSTRARLO EN UNA VENTANA MODAL
-            this.mensaje="Error, No se puede Editar la Tabla de Puntos";
+            this.mensaje="Error, No se puede Eliminar de la Tabla de Puntos";
             this.displayErrorEditarPuntos=true;
             //console.log("no se puede editar el registro");
         }
@@ -658,15 +657,12 @@ export class PcontrolComponent implements OnInit{
 
 
   
-    //VENTANA MODAL EDITAR SOLO EL NOMBRE Y TIEMPO MAS NO LA POSICION
-    //EDITAR PUNTOS CONTROL-> LLAMAR A LA FUNCIONA ELIMINAR PARA PODER BORRAR TODOS 
-    //LOS PUNTOS DE CONTROL EXISTENTES Y PODER MANDAR LA NUEVA LISTA MODIFICADA
+    //VENTANA MODAL EDITAR SOLO EL NOMBRE Y TIEMPO MAS NO LA POSICION EDITAR PUNTOS CONTROL-> LLAMAR A LA FUNCIONA ELIMINAR PARA PODER BORRAR TODOS  LOS PUNTOS DE CONTROL EXISTENTES Y PODER MANDAR LA NUEVA LISTA MODIFICADA
     editarDetalle(_PuCoDeId : number){
         let i=0,cen=0;
         let puntos = this.pCDetalleMostrar;
 
         if(this.editando==1){   //SE PULSO EL BOTON EDITAR
-            console.log("editando: "+_PuCoDeId);
             //BUSCANDO OBJETO X _PUCODEID EN EL ARRAY DEVUELTO
            while(i<puntos.length && cen==0){
                if(puntos[i].PuCoDeId != _PuCoDeId){
@@ -675,18 +671,21 @@ export class PcontrolComponent implements OnInit{
                    cen=1;
                }
            } 
-           console.log("indice: "+i);
            this.pcDetalle = puntos[i];
-           console.log(puntos);
            this.indexPunto = i;
            this.displayEditarPunto = true;
         }else if(this.editando==0){ //NO SE PULSO EL BOTON EDITAR
             //MENSAJE EN LA PANTALLA
-            console.log("NO SE PUEDE EDITAR");
+            this.mensaje="No se Puede Editar el Registro"
+            this.displayErrorEditar=true
+            //console.log("NO SE PUEDE EDITAR");
         }
     }
 
-
+    aceptarErrorEditar(){
+        this.mensaje = "";
+        this.displayErrorEditar= false;
+    }
 
     //GUARDAR DETALLE PUNTO CONTROL EN ARRAY PERO NO ES SUBIDO A LA BD HASTA PRESIONAR EL BOTON GUARDAR PUNTOS
     //BOTON GUARDAR PUNTOS (CUADRO MODAL AGREGAR PUNTO CONTROL)
@@ -694,7 +693,6 @@ export class PcontrolComponent implements OnInit{
         this.newPCDetalle(); // crear un nuevo punto (REST)
        //CASO NUEVOS PUNTOS DE CONTROL DE CERO O CUANDO SE PRESIONA EL BOTON BORRAR (TODO LOS PUNTOS)
        //NUEVO REGISTRO Y EL ARRAY PARA LA BD ESTA VACIO                   EXISTE AL MENOS UN NUEVO PUNTO
-       //if(this.editando == 0 && this.pCArrayDetalleBD.length ==0){
        if(this.editando == 0 ){
             if(this.disabledInputPos == true){ //activado el  textbox (se puede ingresar una posicion manualmente)
                 //cargando los puntos control detalle a un array para ser mostrados y poder mandarlos al servidor REST
@@ -721,7 +719,6 @@ export class PcontrolComponent implements OnInit{
                         UsFechaReg : new Date(),
                         PuCoDeOrden : this.pcDetalle.PuCoDeOrden-- 
                 });
-                //this.n++;
                 //actualizando orden de los demas puntos de control
                 let n = this.pcDetalle.PuCoDeOrden; // n = 4
                 while( n <this.pCArrayDetalleBD.length){  //4 < 8
@@ -730,13 +727,12 @@ export class PcontrolComponent implements OnInit{
                 }
             }
             
-       //CASO PUNTOS EXISTENTES Y SE NECESITA AGREGAR NUEVOS PUNTOS, SI SE PRESIONA EL BOTON BORRAR NO SE TIENE QUE PASAR POR ACA
        
+       //CASO PUNTOS EXISTENTES Y SE NECESITA AGREGAR NUEVOS PUNTOS, SI SE PRESIONA EL BOTON BORRAR NO SE TIENE QUE PASAR POR ACA
        //SE ESTA EDITANDO Y ARRAY EXISTEN AL MENOS UN PUNTO EN EL ARRAY 
-       //}else if(this.editando == 1 && this.pCArrayDetalleBD.length!=0){
-        }else if(this.editando == 1){
+       }else if(this.editando == 1){
             //ENCONTRANDO NRO DE ORDEN MAYOR EN EL ARRAY DE PUNTOS
-            console.log("ingresar marcadores despues de: "+this.ordenMayor);
+            //console.log("ingresar marcadores despues de: "+this.ordenMayor);
             if(this.disabledInputPos == true){ //activado el  textbox (se puede ingresar una posicion manualmente)
                 //cargando los puntos control detalle a un array para ser mostrados y poder mandarlos al servidor REST
                 this.pCArrayDetalleBD.push({ //INGRESANDO EN EL FINAL DEL ARRAY
@@ -763,7 +759,14 @@ export class PcontrolComponent implements OnInit{
                         PuCoDeOrden : this.pcDetalle.PuCoDeOrden-- 
                 });
             }   
-            this.ordenMayor = this.ordenMayor+1;
+
+            let n = this.pcDetalle.PuCoDeOrden; // n = 4
+            while( n <this.pCArrayDetalleBD.length){  //4 < 8
+                this.pCArrayDetalleBD[n].PuCoDeOrden =   (n+1); 
+                n++;
+            }
+            this.ordenMayor = this.ordenMayor+1; //PASANDO AL SIGUIENTE PUNTOS AL FINAL
+
        //CASO NO ARRAY, VACIO
        }else if(this.editando==1 && this.pCArrayDetalleBD.length==0){
            this.editando=0; // NUEVO REGISTRO
@@ -937,7 +940,8 @@ export class PcontrolComponent implements OnInit{
 
         }
 
-        
+        this.mensaje="Se Guardo los Puntos Correctamente";
+        this.displayGuardarPuntosDetalle=true;
         this.reiniciarVariables();//REINICIANDO LA VARIABLES
         this.cargarRuta();
         this.cargarmarker();
@@ -946,6 +950,11 @@ export class PcontrolComponent implements OnInit{
         this.activeAddMarker = 0; //0: desactivado,   1: activado //DESACTIVANDO ADDMARKER
     }
    
+    aceptarGuardarPuntosDetalle(){
+        this.mensaje="";
+        this.displayGuardarPuntosDetalle=false;
+    }
+
     // mostrar los puntos de control en la grilla (1era grilla)
     mgPuntoControlMaestro(){
         this.pCMaestroMostrar=[];// para mostrarlo en la grilla
@@ -1000,8 +1009,7 @@ export class PcontrolComponent implements OnInit{
         }//fin for
     }//fin funcion
 
-    //recuperar puntos de controldetalle por pucoID (por el ID)
-    //de esta forma no se necesita actualizar la pagina para ver el resultado
+    //recuperar puntos de controldetalle por pucoID (por el ID) de esta forma no se necesita actualizar la pagina para ver el resultado
     //de agregar un nuevo elemento a la lista
     getAllPuntoControlDetalleByPuCo(puCoId:number){
         this.pcontrolService.getAllPuntoControlDetalleByPuCo(puCoId).subscribe(
@@ -1027,8 +1035,14 @@ export class PcontrolComponent implements OnInit{
         this.desNuevosPuntos = true;
         this.activeAddMarker = 1 ; //addmarker activado
        this.editando == 0; //NUEVOS PUNTOS DE CONTROL
+       this.mensaje="Ingrese los Nuevos Puntos Sobre El Mapa";
+       this.displayNuevosPuntos=true;
     }
 
+    aceptarNuevosPuntos(){
+        this.mensaje="";
+        this.displayNuevosPuntos=false;
+    }
      //CANCELAR EL MARCADOR QUE SE AGREGA EN EL MAPA ADDMARKER
     cancelarPuntoControlDetalle(){
         
@@ -1078,7 +1092,7 @@ export class PcontrolComponent implements OnInit{
         this.cargarmarker();
 
         //EVALUAR SI SE MANDA A UNA VENTANA MODAL AVISO
-        console.log("ingresar marcadores despues de: "+this.ordenMayor);
+        //console.log("ingresar marcadores despues de: "+this.ordenMayor);
 
         //DESACTIVANDO Y ACTIVANDO BOTONES
         this.desGuardarPCD_BD=false;
@@ -1086,8 +1100,6 @@ export class PcontrolComponent implements OnInit{
         //this.desDeshacerPCDet=false;
         this.desEditarPCDetMarker=true;
 
-        //TODOS LOS objetos
-        console.log(this.overlays);
         //EDITAR EL ARRAY DE PUNTOS QUE SON SUBIDOS A LA BD Y EL overlays
         //ACTIVAR DRAGGABLE DE MARKERS (REEMPLAZANDO EXISTENTES)
     }
@@ -1221,6 +1233,9 @@ var coords={
         lng : 0 
 }
 
+
+     //if(this.editando == 0 && this.pCArrayDetalleBD.length ==0){
+       //}else if(this.editando == 1 && this.pCArrayDetalleBD.length!=0){
  //PONER CONDICIONAL PARA HABILITAR LA ELIMINACION, CONFIRMAR LA ELIMINACION
         
           //BUSCANDO INDICE DEL OBJETO
