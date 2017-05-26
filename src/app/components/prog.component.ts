@@ -34,6 +34,9 @@ export class ProgComponent implements OnInit{
     displayProgramacionBase: boolean = false;
     displayProgramacion: boolean = false;
     displayConfirmar: boolean = false;
+    displayAceptarProgNueva : boolean = false;
+    displayErrorDatos : boolean = false; // PRIMERA VENTANA MODAL PROGRAMACION
+    displayErrorTablaProgramacion : boolean=false; // ERROR EN LA TABLA DE PROGRAMACION
 
     selectedPlacas: string[] = [];
     disabledbutton: boolean = false;
@@ -42,7 +45,8 @@ export class ProgComponent implements OnInit{
     placas:any[]=[]; //se utiliza para almacenar lo q devuelve el rest de las placas
     
     //datos para la picklist (prog base)
-    arrayPlacas:any[] = []; 
+    arrayPlacas:any[] = []; //ESTATICO
+    _arrayPlacas:any[] = []; //DINAMICO
     ordenSorteo:any[] = []; 
 
     //grilla
@@ -123,8 +127,46 @@ export class ProgComponent implements OnInit{
     }
  
     tipoProgramacion($event){
-        console.log(this.tipoProg);
+        this.ordenSorteo=[];
+        if(this.tipoProg==1){ // AUTOMATICO
+            let array = ["c"];  let nro;//ARRAY NUMEROS ALEATORIOS NO REPETIDOS
+            let arrayplacas= this.arrayPlacas;  let long = this.arrayPlacas.length; console.log("automatico");
+            let _arrayplacas=[];  let i=0,j=0, cen=0; // cen=0: no existe         cen=1: existe
+            //ALGORITMO NROS ALEATORIOS
+            while(i<long ){
+                nro = Math.floor(Math.random()*long);//NUMEROS ALEATORIOS ENTRE 0 Y LONG(7)
+                while(j<array.length ){
+                    if(array[j]!=nro){
+                        cen=0;
+                    }else if(array[j]==nro){ 
+                        cen=1; j=array.length;
+                    }
+                    j++;
+                }
+                if(cen==0){  
+                    array[i]=nro;   
+                    i++;    
+                }
+                cen=0; j=0;
+                //console.log(i);
+            }
+            console.log(array);
+            //APLICANDO ALGORITMO, BUSCANDO INDICES CON ARRAY DE PLACAS
+            i=0; nro=0;
+            while(i<array.length){
+                _arrayplacas.push(arrayplacas[array[i]]);
+                i++;
+            }
+ 
+            this.ordenSorteo=_arrayplacas; 
+            //console.log(this.arrayPlacas); 
+            //console.log(this.ordenSorteo);
+        }else if(this.tipoProg==0){
+            console.log("manual");
+        }
+        
     }
+
 
     formaProgramacion($event){
         console.log(this.formaProg);
@@ -153,21 +195,38 @@ export class ProgComponent implements OnInit{
     }
 
     //ABRIR 1ERA VENTANA MODAL(BOTON NUEVO)
-    showNuevaProgramacionModalMaestro(){
+    NuevaProgCabecera(){
         this.nuevaProgramacionMaestroRest();
         this.displayNuevaProgramacion=true;
-        
-        this.arrayPlacas=[]; //PLACAS 
         this.ordenSorteo=[]; //SORTEO DE PLACAS
-
         this.titleNuevoProgPrimerModal = 'Nueva';
-        this.extrayendoPlacasBus(); //EXTRAER PLACAS PARA LA PROGRAMACION
+        
+        //VERIFICANDO SI EL ARRAY DE PLACAS YA ESTA CARGADO O NO
+        if(this.bAct==undefined){  
+            this.extrayendoPlacasBus(); //EXTRAER PLACAS PARA LA PROGRAMACION
+        }else if(this.bAct !=undefined || this.bAct>0){ }
         this.unidadesEstado(); //CALCULA EL NRO DE UNIDADES ACTIVAS Y NO ACTIVAS
 
+        //PONER EN CERO VALORES DE OBJETOS 
+        this.progMaestro = {
+            PrId:0,     //oculto
+            EmId:1,     //oculto
+            PrCantidadBuses:0,
+            PrDescripcion:"",
+            PrFecha:'0-0-0',     //oculto
+            PrFechaInicio:'0-0-0',
+            PrFechaFin:'0-0-0',
+            PrTipo:"",      
+            PrAleatorio:true,
+            UsId:0,        //oculto
+            UsFechaReg:'0-0-0'   //oculto
+        
+        }
+        this.tipoProg=null; //PROGRAMACION POR DEFECTO: MANUAL
+        this.formaProg=null;
     }
 
-    //1ERA VENTANA MODAL
-    //aqui recien se guarda la tabla MAESTRO en el REST 
+    //1ERA VENTANA MODAL aqui recien se guarda la tabla MAESTRO en el REST 
     showProgBase(){
         let i = 0, cen = 0;
         let error = [
@@ -177,20 +236,31 @@ export class ProgComponent implements OnInit{
             {id:4, nom: 'Identificador de Programacion', val: 0 }
         ]
 
-         //capturando fecha actual
-        {
-            this.date = new Date();
-            this.dia = this.date.getDate();
-            this.mes = this.date.getMonth();
-            this.anio = this.date.getFullYear();
-            this.progMaestro.PrFecha = this.anio+"-"+this.mes+"-"+this.dia;
+        //PROGRAMACION AUTOMATICA O MANUAL
+        if(this.tipoProg == 1){ //AUTOMATICA
+            this._arrayPlacas=this.arrayPlacas;
+            this.arrayPlacas = [];
+        }else if(this.tipoProg == 0){ //MANUAL
+            //NO SE HACE NADA
         }
 
-        //TIPO PROGRAMACION MANUAL O AUTOMATICO
+         //capturando fecha actual
+        {
+            /*
+                this.date = new Date();
+                this.dia = this.date.getDate();
+                this.mes = this.date.getMonth();
+                this.anio = this.date.getFullYear();
+                this.progMaestro.PrFecha = this.anio+"-"+this.mes+"-"+this.dia;
+            */  
+            this.progMaestro.PrFecha = new Date();
+        }
+
+        //TIPO PROGRAMACION MANUAL O AUTOMATICO .  CORREGIR PROGRAMACION TRUE O FALSE
         if(this.tipoProg == 0){
-            this.progMaestro.PrAleatorio = false; error[0].val = 1;
+            this.progMaestro.PrAleatorio = false; error[0].val = 1; //MANUAL
             }else if(this.tipoProg == 1){
-            this.progMaestro.PrAleatorio = true;  error[0].val = 1;
+            this.progMaestro.PrAleatorio = false;  error[0].val = 1; //AUTOMATICO
         }
         
         //FORMA PROGRAMACION ESCALA O PESCADITO
@@ -247,7 +317,7 @@ export class ProgComponent implements OnInit{
                     EmId : this.progMaestro.EmId,
                     PrCantidadBuses : this.progMaestro.PrCantidadBuses,
                     PrDescripcion : this.progMaestro.PrDescripcion,
-                    PrFecha : "2017-04-01",
+                    PrFecha : this.progMaestro.PrFecha,
 
                     PrFechaInicio : this.fecha(this.progMaestro.PrFechaInicio),
                     PrFechaFin : this.fecha(this.progMaestro.PrFechaFin),
@@ -255,7 +325,7 @@ export class ProgComponent implements OnInit{
                     PrTipo : this.progMaestro.PrTipo,
                     PrAleatorio : this.progMaestro.PrAleatorio,
                     UsId : this.progMaestro.UsId,
-                    UsFechaReg : "2017-04-01"
+                    UsFechaReg : this.progMaestro.PrFecha
                 });
 
                 //guardando en el rest Programacion Maestro (pasarlo  a la 2da VEntana modal)
@@ -274,12 +344,20 @@ export class ProgComponent implements OnInit{
 
         }else if(cen == 1){
             //MANDAR MENSAJE A LA PANTALLA, ERROR DE LOS OBJETOS
-            console.log("Se Encontro Errores En Los Datos");
+            this.mensaje="Se Encontro Errores En Los Datos Ingresados";
+            this.displayErrorDatos = true;
+            //console.log("Se Encontro Errores En Los Datos");
         }
-     
+        
     }
 
-    //CONVERTIR STRING A DATE PARA FECHA   ----   FORMULARIO A BD   2017/03/31  2017-03-31
+    //CERRAR MENSAJE DE SE ENCONTRO ERROR EN LOS DATOS INGRESADOS
+    errorDatos(){
+        this.mensaje="";
+        this.displayErrorDatos=false;
+    }
+
+    //CONVERTIR STRING A DATE PARA FECHA   ----   FORMULARIO A BD 
     fecha(fecha: string) : Date{
         let thoy:Date , _thoy:Date, _fecha:string;
         thoy = new Date();
@@ -391,20 +469,23 @@ export class ProgComponent implements OnInit{
         //condicional para ver si esta cumpliendo con el total de placas a mandar para generar la programacion
         if(this.progMaestro.PrCantidadBuses>this.ordenSorteo.length){
             //cantidad ingresada es mayor a la cantidad de placas ingresadas (falta terminar programacion base)
+            //MOSTRAR EN UNA VENTANA MODAL
             console.log("falta placas por ingresar :c");
+
         }else if(this.progMaestro.PrCantidadBuses == this.ordenSorteo.length){
             //si las cantidades son iguales la programacion puede terminar
-            console.log("programacion terminada  c: ");
+            //console.log("programacion terminada  c: ");
             this.displayProgramacionBase=false; //cerrar 2da ventana Prog Base
             this.progMaestro.PrCantidadBuses=0;
 
-            //fecha
+            //FECHA ACTUAL
             {
-                this.date = new Date();
+                /*this.date = new Date();
                 this.dia = this.date.getDate();
                 this.mes = this.date.getMonth();
                 this.anio = this.date.getFullYear();
-                this.progDetalle.PrDeFecha = this.anio+"-"+this.mes+"-"+this.dia;
+                this.progDetalle.PrDeFecha = this.anio+"-"+this.mes+"-"+this.dia;*/
+                this.progDetalle.PrDeFecha = new Date();
             }
 
             
@@ -419,23 +500,42 @@ export class ProgComponent implements OnInit{
                     UsId: this.progDetalle.UsId,
                     UsFechaReg: this.progDetalle.PrDeFecha
                 });  
-            } //console.log(this.ordenSorteo);
+            } 
 
             //guardando en el rest Programacion detalle   MANDANDO A LA BD
             this.programacionService.saveProgramacionDetalle(this.programacionArrayDetalleBD,this.progMaestro.EmId,this.progMaestro.PrId,this.progMaestro.PrAleatorio)
                 .subscribe( 
                     realizar => {
-                            //this.mgprogDetalle();
                             //PONER UNA VENTANA MODAL CON EL MENSAJE 
-                            console.log("SE GENERO LA PROGRAMACION =D");
+                            this.mensaje="Se Genero Correctamente La Programacion";
+                            this.displayAceptarProgNueva=true; 
                         }, 
                     err => {this.errorMessage = err}
             );
-            console.log("se agrego programacion detalle --> SE GENERO LA PROGRAMACION =D");
-    
+            //console.log("se agrego programacion detalle --> SE GENERO LA PROGRAMACION =D");
+            this.ordenSorteo=[];
+
+            //PROGRAMACION AUTOMATICA O MANUAL
+            if(this.tipoProg == 1){ //AUTOMATICA
+                this.arrayPlacas=this._arrayPlacas;
+                this._arrayPlacas = [];
+                console.log(this.arrayPlacas);
+                console.log(this._arrayPlacas);
+                console.log(this.ordenSorteo);
+            }else if(this.tipoProg == 0){ //MANUAL
+                //NO SE HACE NADA
+                console.log(this.arrayPlacas);
+                console.log(this.ordenSorteo);
+            }
+
         }//final condicional IF
     }//final funcion generarProgramacionSegundoModal
     
+    aceptarNuevaProg(){
+        this.mensaje="";
+        this.displayAceptarProgNueva=false;
+    }
+
     //deshabilitando botones
     disabledButtonForm(){
         this.disabledbutton = false;
@@ -492,7 +592,7 @@ export class ProgComponent implements OnInit{
         }
 
         //MANUAL O AUTOMATICO PROGRAMACION
-        console.log("long: "+this.programacionMaestroArrayHTML.length);
+        //console.log("long: "+this.programacionMaestroArrayHTML.length);
         for(let i=0; i<this.programacionMaestroArrayHTML.length; i++){
 
             if(this.programacionMaestroArrayHTML[i].PrTipo=='01'){
@@ -503,7 +603,7 @@ export class ProgComponent implements OnInit{
             }
 
         }
-        console.log(this.programacionMaestroArrayHTML);
+        //console.log(this.programacionMaestroArrayHTML);
     }//FIN FUNCION MOSTRAR GRILLA CABECERA
 
     //CARGAR COLUMNAS Y ARRAY DE PROGRAMACION
@@ -517,7 +617,7 @@ export class ProgComponent implements OnInit{
                 err  => {this.errorMessage = err},
                 () =>this.isLoading = false
             );
-            console.log(this.placas);
+            //console.log(this.placas);
     }
 
     //todas las programaciones por empresa y año
@@ -526,7 +626,7 @@ export class ProgComponent implements OnInit{
             .subscribe(
                 datos => {
                     this.progRest = datos ; 
-                    console.log(this.progRest);
+                    //console.log(this.progRest);
                     this.mostrargrillaProgramacionMaestro();
                 },
                 err => {this.errorMessage = err}, 
@@ -562,6 +662,7 @@ export class ProgComponent implements OnInit{
         this.programacionService.getAllProgramacionDetalleByPrId(this.idFilaSeleccionada).subscribe(
             data => {
                         this.progBDDetalle = data; 
+                        console.log(this.progBDDetalle);
                         this.tablaProgramaciones();
                     },
             err => {this.errorMessage=err},
@@ -574,18 +675,19 @@ export class ProgComponent implements OnInit{
         //PARA COLUMNAS, CUENTA EL NUMERO DE DIAS DE LA PROGRAMACION
         //console.log(this.progBDDetalle);
         //CONDICIONAL PARA CAPTURAR ERROR EN CASO DE QUE LA PROGRAMACION NO SE GENERO DE FORMA COMPLETA
+        console.log("LongPD:  "+this.progBDDetalle.length +"----"+ "NroFila:  "+this.nroBusesFilaSelect);
         if(  (this.progBDDetalle.length > this.nroBusesFilaSelect )){
                 //ALGORITMO PARA PASAR LOS ID DE BUSES DE LOS PRIMEROS 
                 //1ERA MATRIZ
                 let a1 :any[]=[]; let a2 :any[]=[]; let a3 :any[]=[]; 
                 let i=0; let j=0; let k=0;       
                 while(i<this.nroDiasFilaSelect){
-                //PARA FILAS
-                while(j<(this.nroBusesFilaSelect*this.nroDiasFilaSelect) && k<this.nroBusesFilaSelect){
-                    a2.push(this.progBDDetalle[j].BuId);
-                    a1[i]={field:i, header:i}; //COLUMNAS                                   
-                    j++; k++;
-                }
+                    //PARA FILAS
+                    while(j<(this.nroBusesFilaSelect*this.nroDiasFilaSelect) && k<this.nroBusesFilaSelect){
+                        a2.push(this.progBDDetalle[j].BuId);
+                        a1[i]={field:i, header:i}; //COLUMNAS                                   
+                        j++; k++;
+                    }
                 a3[i]=a2; k=0; i++; a2=[];
                 }
 
@@ -656,13 +758,21 @@ export class ProgComponent implements OnInit{
                 for(l=1; l<=this.nroDiasFilaSelect; l++){
                     this.nroDias.push(l);
                 } 
-                console.log(this.nroDias);
+
                 //PARA ELEGIR TAMAÑO DE TABLA 2000PX O 500PX
                 this.nroColumn=this.nroDias.length;
+                console.log("nroColumn: "+this.nroColumn);   console.log(this._detalle);   console.log(this.nroDias);
         }else{
                 //MOSTRAR MENSAJE AL MOMENTO DE CAPTURAR EL ERROR
-                console.log("Error al Generar la Programacion, Vuelva a intentarlo");
+                this.mensaje="Error al Generar la Programacion, Vuelva a Generarlo";
+                this.displayErrorTablaProgramacion=true;
+                //console.log("Error al Generar la Programacion, Vuelva a intentarlo");
         }
+    }
+
+    errorTablaProgramacion(){
+        this.mensaje="";
+        this.displayErrorTablaProgramacion=false;
     }
     
     //BOTON ELIMINAR REGISTRO 
@@ -778,3 +888,10 @@ export class ProgComponent implements OnInit{
         return  _fechaProg;
     }
 }
+
+ /*var num = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25];
+        var indice = Math.floor(Math.random()*num.length);
+        var number = num[indice];
+        num.splice(indice, 1);
+        console.log(num);*/
+        //console.log(this.arrayPlacas);
