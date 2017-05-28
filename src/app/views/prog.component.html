@@ -201,82 +201,80 @@
 
         <!--MODAL PROGRAMACIONES-->
         
-            <p-dialog header="Programacion" [(visible)]="displayProgramacion" modal="modal" 
-                width="500"  [closable]="false" resizable="true" *ngIf="nroColumn>=5">
-                <div class="container "> 
-                    
-                            <div class="table-container" > 
-                                <div class="container" style="overflow-x:auto;">
-                                    <table *ngIf="nroColumn>30" width="2800px">
-                                        
-                                        <thead>
-                                            <tr><th *ngFor="let dia of this.nroDias;">{{dia}}</th></tr>
-                                        </thead>
-                                        
-                                        <tbody>
-                                            <tr *ngFor="let c of _detalle">
-                                                <td *ngFor="let placa of c">{{placa}}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+        <p-dialog header="Programacion" [(visible)]="displayProgramacion" modal="modal" 
+            width="500"  [closable]="false" resizable="true" *ngIf="nroColumn>=5">
+            <div class="container "> 
+                
+                        <div class="table-container" > 
+                            <div class="container" style="overflow-x:auto;">
+                                <table *ngIf="nroColumn>30" width="2800px">
+                                    
+                                    <thead>
+                                        <tr><th *ngFor="let dia of this.nroDias;">{{dia}}</th></tr>
+                                    </thead>
+                                    
+                                    <tbody>
+                                        <tr *ngFor="let c of _detalle">
+                                            <td *ngFor="let placa of c">{{placa}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
-                                    <table *ngIf="30>nroColumn && nroColumn>=20" width="2000px">
-                                        
-                                        <thead>
-                                            <tr><th *ngFor="let dia of this.nroDias;">{{dia}}</th></tr>
-                                        </thead>
-                                        
-                                        <tbody>
-                                            <tr *ngFor="let c of _detalle">
-                                                <td *ngFor="let placa of c">{{placa}}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                <table *ngIf="30>nroColumn && nroColumn>=20" width="2000px">   
+                                    <thead>
+                                        <tr><th *ngFor="let dia of this.nroDias;">{{dia}}</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let c of _detalle">
+                                            <td *ngFor="let placa of c">{{placa}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
-                                    <table *ngIf="20>nroColumn && nroColumn>10" width="1500px">
-                                        
-                                        <thead>
-                                            <tr><th *ngFor="let dia of this.nroDias;">{{dia}}</th></tr>
-                                        </thead>
-                                        
-                                        <tbody>
-                                            <tr *ngFor="let c of _detalle">
-                                                <td *ngFor="let placa of c">{{placa}}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                <table *ngIf="20>nroColumn && nroColumn>10" width="1500px">
+                                    
+                                    <thead>
+                                        <tr><th *ngFor="let dia of this.nroDias;">{{dia}}</th></tr>
+                                    </thead>
+                                    
+                                    <tbody>
+                                        <tr *ngFor="let c of _detalle">
+                                            <td *ngFor="let placa of c">{{placa}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
-                                    <table *ngIf="10>=nroColumn && nroColumn>5" width="750px">
-                                        
-                                        <thead>
-                                            <tr><th *ngFor="let dia of this.nroDias;">{{dia}}</th></tr>
-                                        </thead>
-                                        
-                                        <tbody>
-                                            <tr *ngFor="let c of _detalle">
-                                                <td *ngFor="let placa of c">{{placa}}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                <table *ngIf="10>=nroColumn && nroColumn>5" width="750px">
+                                    
+                                    <thead>
+                                        <tr><th *ngFor="let dia of this.nroDias;">{{dia}}</th></tr>
+                                    </thead>
+                                    
+                                    <tbody>
+                                        <tr *ngFor="let c of _detalle">
+                                            <td *ngFor="let placa of c">{{placa}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
-                                    <table *ngIf="5>=nroColumn && nroColumn>0" width="500px">
-                                        <thead>
-                                            <tr><th *ngFor="let dia of this.nroDias;">{{dia}}</th></tr>
-                                        </thead>                                  
-                                        <tbody>
-                                            <tr *ngFor="let c of _detalle">
-                                                <td *ngFor="let placa of c">{{placa}}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                <table *ngIf="5>=nroColumn && nroColumn>0" width="500px">
+                                    <thead>
+                                        <tr><th *ngFor="let dia of this.nroDias;">{{dia}}</th></tr>
+                                    </thead>                                  
+                                    <tbody>
+                                        <tr *ngFor="let c of _detalle">
+                                            <td *ngFor="let placa of c">{{placa}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                    <footer >
-                            <button type="button" pButton (click)="cerrarProg()"   label="Cerrar"></button>
-                            <button type="button" pButton (click)="imprimirProg()" label="Imprimir"></button>
-                    </footer>
-                </div>
-            </p-dialog>
+                        </div>
+                <footer >
+                        <button type="button" pButton (click)="cerrarProg()"   label="Cerrar"></button>
+                        <button type="button" pButton (click)="imprimirProg()" label="Imprimir"></button>
+                </footer>
+            </div>
+        </p-dialog>
         
 
         <!--MODAL CONFIRMAR ELIMINAR REGISTRO-->
@@ -309,6 +307,14 @@
                 <p>{{mensaje}}</p>
                 <p-footer class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
                      <button type="button" pButton (click)="errorTablaProgramacion()" label="Aceptar"></button>
+                </p-footer>
+        </p-dialog>
+
+        <!--ERROR FALTAN PLACAS EN EL SORTEO, VENTANA MODAL-->
+        <p-dialog [(visible)]="displayFaltanPlacas" modal="modal" width="100%" responsive="true" [closable]="false">
+                <p>{{mensaje}}</p>
+                <p-footer class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                     <button type="button" pButton (click)="faltanPlacas()" label="Aceptar"></button>
                 </p-footer>
         </p-dialog>
       

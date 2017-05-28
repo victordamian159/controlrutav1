@@ -26,6 +26,8 @@ export class ProgComponent implements OnInit{
     nroDiasFilaSelect: number;
     titleNuevoProgPrimerModal:string;  
     mensaje:string;     //MENSAJE CONFIRMACION MODAL 
+    //private fi; //FECHA INICIO
+    //private ff; //FECHA FIN
 
     //formaProgramacion:string = 'Escala'; //almacena el string del item seleccionado
     //tipoProgramacion: string='Manual'; //tipo manual o automatico
@@ -37,6 +39,7 @@ export class ProgComponent implements OnInit{
     displayAceptarProgNueva : boolean = false;
     displayErrorDatos : boolean = false; // PRIMERA VENTANA MODAL PROGRAMACION
     displayErrorTablaProgramacion : boolean=false; // ERROR EN LA TABLA DE PROGRAMACION
+    displayFaltanPlacas : boolean = false;
 
     selectedPlacas: string[] = [];
     disabledbutton: boolean = false;
@@ -89,6 +92,7 @@ export class ProgComponent implements OnInit{
 
     _detalle:any[]=[];
     nroDias:any[]=[];
+    private calendario:any[]=[];
     nroColumn:number;
     bAct:number; //NRO BUSES ACTIVOS
     bNAct:number; //NRO DE BUSES NO ACTIVOS
@@ -318,10 +322,8 @@ export class ProgComponent implements OnInit{
                     PrCantidadBuses : this.progMaestro.PrCantidadBuses,
                     PrDescripcion : this.progMaestro.PrDescripcion,
                     PrFecha : this.progMaestro.PrFecha,
-
                     PrFechaInicio : this.fecha(this.progMaestro.PrFechaInicio),
-                    PrFechaFin : this.fecha(this.progMaestro.PrFechaFin),
-                    
+                    PrFechaFin : this.fecha(this.progMaestro.PrFechaFin),           
                     PrTipo : this.progMaestro.PrTipo,
                     PrAleatorio : this.progMaestro.PrAleatorio,
                     UsId : this.progMaestro.UsId,
@@ -331,13 +333,16 @@ export class ProgComponent implements OnInit{
                 //guardando en el rest Programacion Maestro (pasarlo  a la 2da VEntana modal)
                 this.programacionService.saveProgramacion(this.objProgVentanaUno)
                     .subscribe( 
-                        data => {this.progMaestro=data; 
+                        data => {this.progMaestro=data;  //RECUPERANDO OBJETO PARA SACAR EL PRID
                             this.mostrargrillaProgramacionMaestro() ;
                             this.getAllProgramacionByEm(1,0);
 
                         }, 
                         err => {this.errorMessage = err}
                 );
+
+                //FUNCION GENERAR CALENDARIO DE LA PROGRAMACION
+                this.calendarioProg(this.progMaestro.PrFechaInicio, this.progMaestro.PrFechaFin);
 
                 this.displayNuevaProgramacion=false; //cerrar 1era ventana
                 this.displayProgramacionBase=true; //abrir 2da ventana
@@ -348,8 +353,190 @@ export class ProgComponent implements OnInit{
             this.displayErrorDatos = true;
             //console.log("Se Encontro Errores En Los Datos");
         }
-        
     }
+
+    //ARRAY DIAS PROGRAMACION//      1 : NO BISIESTO    2017-05-02   0 : BISIESTO
+    calendarioProg(f1 : string, f2 : string){
+        let _f1, _f2;  let a1, a2; let res=[]; let _res=[]; let i=0,j=0, k,l,m,n;
+        let ab=[31,29,31,30,31,30,31,31,30,31,30,31], anb=[31,28,31,30,31,30,31,31,30,31,30,31];
+        {
+            _f1 = f1.split('-'); 
+            _f2 = f2.split('-');  
+            _f1.push(this.bisiesto(_f1[0])); 
+            _f2.push(this.bisiesto(_f2[0]));
+            //CONVIRTIENDO ELEMENTOS A NROS -- CONTIENE SU AÑO BISIESTO(0) O NO BISIESTO(1)
+            while(i<_f1.length){ _f1[i]=Number(_f1[i]); i++;}   _f1[1]=_f1[1]-1;   
+            while(j<_f2.length){ _f2[j]=Number(_f2[j]); j++;}   _f2[1]=_f2[1]-1;
+        }
+        if(_f2[1]-_f1[1]==0){ //MESES IGUALES    AÑOS IGUALES
+            if(_f2[1]==1){//FEBRERO
+                k=_f1[2];
+                if(_f1[3]==0){  //  BISIESTO
+                    while(k<=_f2[2] && k<anb[1]){
+                        res.push(k);
+                        k++
+                    }
+                }else if(_f1[3]==1){// NO BISIESTO
+                    while(k<=_f2[2] && k<ab[1]){
+                        res.push(k);
+                        k++
+                    }
+                }
+            }else if(_f2[1]!=1){//CUALQUIER MES
+                k=_f1[2];
+                while(k<=_f2[2] && k<anb[1]){
+                    res.push(k);
+                    k++;
+                }
+            }
+        }
+        else if(_f2[1]-_f1[1]>0){//DIFERENCIA DE MESES  AÑOS IGUALES (1,2,3 DE DIFERENCIA)
+            k=_f1[2]; j=_f2[2];/*DIAS*/
+            
+            //CORREGIR ESTO, TIENE PROBLEMA CON RECONOCER SI ES AÑO BISIESTO O NO
+            if(_f1[3]==0){ // BISIESTO
+                while(k<=ab[_f1[1]]){ //1ER MES
+                    res.push(k);
+                    k++;
+                }
+                k=_f1[1]+1;
+                while(k<_f2[1]){/*OTROS MESES */ 
+                    l=1;
+                    console.log(ab[k]);
+                    while(l<=ab[k]){
+                        res.push(l);
+                        l++;
+                    }
+                    k++;
+                }
+                k=1;
+                while(k<=j){ //ULT MES
+                    res.push(k);
+                    k++;
+                }
+            }else if(_f1[3]==1){// NO BISIESTO
+                while(k<=anb[_f1[1]]){ //1ER MES
+                    res.push(k);
+                    k++;
+                }
+                k=_f1[1]+1;
+                while(k<_f2[1]){/*OTROS MESES */ 
+                    l=1;
+                    while(l<=anb[k]){
+                        res.push(l);
+                        l++;
+                    }
+                    k++;
+                }
+                k=1;
+                while(k<=j){ //ULT MES
+                    res.push(k);
+                    k++;
+                }
+            }
+        }else if(_f2[1]-_f1[1]<0){//AÑOS DIFERENTES
+            i=_f1[1]; j=_f2[1]; /*MESES*/ k=_f1[2]; l=_f2[2] /*DIAS*/
+            if(_f1[3]==0 && _f2[3]==1){       /* B NB */ 
+                //DIAS 1ER MES-MAYOR AÑO BISIESTO
+                while(k<=ab[_f1[1]]){ 
+                    res.push(k);
+                    k++;
+                }
+                /*MESES QUE ESTAN ENTRE LAS FECHAS*/
+                i=_f1[1]+1;//SGTE MES AL 1ERO 
+                j=_f2[1]-1;//ANT  MES AL ULT
+                while(i<=11){ //AB
+                    k=1;
+                    while(k<ab[i]){
+                        res.push(k);
+                        k++;
+                    }
+                    i++;
+                }
+                while(j>=0){ //ANB
+                    k=1;
+                    while(k<anb[j]){
+                        res.push(k);
+                        k++;
+                    }
+                    j--;
+                }
+                //DIAS ULTIMO MES-MENOR AÑO NO BISIESTO
+                k=1;
+                while(k<=l){
+                    res.push(k);
+                    k++;
+                }
+            }else if(_f1[3]==1 && _f2[3]==0){ /* NB B */
+                //DIAS 1ER MES-MAYOR AÑO NO BISIESTO
+                while(k<=anb[_f1[1]]){ 
+                    res.push(k);
+                    k++;
+                }
+                /*MESES QUE ESTAN ENTRE LAS FECHAS*/
+                i=_f1[1]+1;//SGTE MES AL 1ERO 
+                j=_f2[1]-1;//ANT  MES AL ULT
+                while(i<=11){ //ANB
+                    k=1;
+                    while(k<anb[i]){
+                        res.push(k);
+                        k++;
+                    }
+                    i++;
+                }
+                while(j>=0){ //AB
+                    k=1;
+                    while(k<ab[j]){
+                        res.push(k);
+                        k++;
+                    }
+                    j--;
+                }
+                //DIAS ULTIMO MES-MENOR AÑO BISIESTO
+                k=1;
+                while(k<=l){
+                    res.push(k);
+                    k++;
+                }
+            }else if(_f1[3]==1 && _f2[3]==1){ /* NB NB */
+                //DIAS 1ER MES-MAYOR AÑO NO BISIESTO
+                while(k<=anb[_f1[1]]){ 
+                    res.push(k);
+                    k++;
+                }
+                /*MESES QUE ESTAN ENTRE LAS FECHAS*/
+                i=_f1[1]+1;//SGTE MES AL 1ERO 
+                j=_f2[1]-1;//ANT  MES AL ULT
+                while(i<=11){ //ANB
+                    k=1;
+                    while(k<anb[i]){
+                        res.push(k);
+                        k++;
+                    }
+                    i++;
+                }
+                
+                //SI ESTA FEBRERO DENTRO DE ESTOS MESES       //SI ES FEBRERO EL ULTIMO MES
+                while(j>=0){ //ANB
+                    k=1;
+                    while(k<anb[j]){
+                        res.push(k);
+                        k++;
+                    }
+                    j--;
+                }
+                //DIAS ULTIMO MES-MENOR AÑO BISIESTO 
+                k=1;
+                while(k<=l){
+                    res.push(k);
+                    k++;
+                }
+            }
+        }
+        this.calendario=res;
+        console.log(res);
+    }
+    
 
     //CERRAR MENSAJE DE SE ENCONTRO ERROR EN LOS DATOS INGRESADOS
     errorDatos(){
@@ -398,11 +585,6 @@ export class ProgComponent implements OnInit{
         var time = date.getTime();
         n = Math.round(time/day);
         return n;
-    }
-
-    //ARRAY DIAS PROGRAMACION
-    calendarioProg(){
-
     }
 
     //DETERMINAR SI ES AÑO BISIESTO
@@ -470,11 +652,12 @@ export class ProgComponent implements OnInit{
         if(this.progMaestro.PrCantidadBuses>this.ordenSorteo.length){
             //cantidad ingresada es mayor a la cantidad de placas ingresadas (falta terminar programacion base)
             //MOSTRAR EN UNA VENTANA MODAL
-            console.log("falta placas por ingresar :c");
-
+            this.mensaje="Faltan Placas Por Ingresar a la Lista Del Sorteo";
+            this.displayFaltanPlacas=true;
+            //console.log("falta placas por ingresar :c");
+        //SE INGRESARON TODAS LAS PLACAS AL SORTEO
         }else if(this.progMaestro.PrCantidadBuses == this.ordenSorteo.length){
             //si las cantidades son iguales la programacion puede terminar
-            //console.log("programacion terminada  c: ");
             this.displayProgramacionBase=false; //cerrar 2da ventana Prog Base
             this.progMaestro.PrCantidadBuses=0;
 
@@ -519,18 +702,19 @@ export class ProgComponent implements OnInit{
             if(this.tipoProg == 1){ //AUTOMATICA
                 this.arrayPlacas=this._arrayPlacas;
                 this._arrayPlacas = [];
-                console.log(this.arrayPlacas);
-                console.log(this._arrayPlacas);
-                console.log(this.ordenSorteo);
             }else if(this.tipoProg == 0){ //MANUAL
                 //NO SE HACE NADA
-                console.log(this.arrayPlacas);
-                console.log(this.ordenSorteo);
             }
 
         }//final condicional IF
     }//final funcion generarProgramacionSegundoModal
     
+    //MENSAJE FALTAN PLACAS
+    faltanPlacas(){
+        this.mensaje="";
+        this.displayFaltanPlacas=false;
+    }
+
     aceptarNuevaProg(){
         this.mensaje="";
         this.displayAceptarProgNueva=false;
@@ -648,9 +832,13 @@ export class ProgComponent implements OnInit{
 
     //seleccionar fila de la tabla
     onRowSelectMaestro(event){
+        let fi, ff;
         this.idFilaSeleccionada = event.data.prId; //ID DE LA FILA 
         this.nroBusesFilaSelect = event.data.PrCantidadBuses; // CANT BUSES
         this.nroDiasFilaSelect  = event.data.dias; //CANT DIAS
+        fi = this.formatoCal(event.data.PrFechaInicio); 
+        ff = this.formatoCal(event.data.PrFechaFin);  
+        this.calendarioProg(fi,ff);
         this.displayProgramacion = true;
         this.nroDias=[];
 
@@ -662,7 +850,7 @@ export class ProgComponent implements OnInit{
         this.programacionService.getAllProgramacionDetalleByPrId(this.idFilaSeleccionada).subscribe(
             data => {
                         this.progBDDetalle = data; 
-                        console.log(this.progBDDetalle);
+                        //console.log(this.progBDDetalle);
                         this.tablaProgramaciones();
                     },
             err => {this.errorMessage=err},
@@ -670,12 +858,29 @@ export class ProgComponent implements OnInit{
         );
     }
 
+    //ACOMODANDO FORMATO PARA MANDAR A LA FUNCION CALENDARIO
+    /*
+        formatoCalendario(fi:string, ff:string){
+            let _fi,_ff,aux;
+            _fi=fi.split("/"); _ff=ff.split("/");
+            //INVIRTIENDO POSICION fi
+            aux=_fi[0]; _fi[0]=_fi[2]; _fi[2]=aux;
+            aux=_ff[0]; _ff[0]=_ff[2]; _ff[2]=aux;
+            _fi=_fi.join("-"); _ff=_ff.join("-");
+        }
+    */
+    formatoCal(fi:string) : string{
+        let _fi,aux;
+        _fi=fi.split("/");
+        //INVIRTIENDO POSICION fi
+        aux=_fi[0]; _fi[0]=_fi[2]; _fi[2]=aux;
+        _fi=_fi.join("-"); 
+        return _fi;
+    }
     //TABLA PROGRAMACIONES, VERIFICA SI LA PROGRAMACION ESTA COMPLETA
     tablaProgramaciones(){
         //PARA COLUMNAS, CUENTA EL NUMERO DE DIAS DE LA PROGRAMACION
-        //console.log(this.progBDDetalle);
         //CONDICIONAL PARA CAPTURAR ERROR EN CASO DE QUE LA PROGRAMACION NO SE GENERO DE FORMA COMPLETA
-        console.log("LongPD:  "+this.progBDDetalle.length +"----"+ "NroFila:  "+this.nroBusesFilaSelect);
         if(  (this.progBDDetalle.length > this.nroBusesFilaSelect )){
                 //ALGORITMO PARA PASAR LOS ID DE BUSES DE LOS PRIMEROS 
                 //1ERA MATRIZ
@@ -754,19 +959,16 @@ export class ProgComponent implements OnInit{
 
                 this._detalle = a5;
                 //CALCULANDO EL NRO DE COLUMNAS (NRODIAS PROGRAMACION)
-                
                 for(l=1; l<=this.nroDiasFilaSelect; l++){
                     this.nroDias.push(l);
                 } 
-
-                //PARA ELEGIR TAMAÑO DE TABLA 2000PX O 500PX
-                this.nroColumn=this.nroDias.length;
-                console.log("nroColumn: "+this.nroColumn);   console.log(this._detalle);   console.log(this.nroDias);
+                this.nroDias=this.calendario;
+                this.nroColumn=this.nroDias.length; //PARA ELEGIR TAMAÑO DE TABLA 2000PX O 500PX
+               
         }else{
                 //MOSTRAR MENSAJE AL MOMENTO DE CAPTURAR EL ERROR
                 this.mensaje="Error al Generar la Programacion, Vuelva a Generarlo";
                 this.displayErrorTablaProgramacion=true;
-                //console.log("Error al Generar la Programacion, Vuelva a intentarlo");
         }
     }
 
