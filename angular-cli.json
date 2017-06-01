@@ -20,18 +20,18 @@
       "styles": [
           "styles.css",
           "../node_modules/bootstrap/dist/css/bootstrap.min.css",
-
           "../node_modules/primeng/resources/themes/omega/theme.css",
-        "../node_modules/primeng/resources/primeng.min.css",
-        "./content/font-awesome-4.7.0/css/font-awesome.min.css"
+          "../node_modules/primeng/resources/primeng.min.css",
+          "./content/font-awesome-4.7.0/css/font-awesome.min.css"
       ],
    
       "scripts": [
           "../node_modules/jquery/dist/jquery.min.js",     
           "../node_modules/tether/dist/js/tether.min.js",
           "../node_modules/bootstrap/dist/js/bootstrap.min.js",
-
-          "../node_modules/jquery/dist/jquery.js"
+          "../node_modules/jquery/dist/jquery.js",
+          "../node_modules/jspdf/dist/jspdf.min.js",
+          "../node_modules/jspdf-autotable/dist/jspdf.plugin.autotable.js"
       ],
      "environmentSource": "environments/environment.ts",
 

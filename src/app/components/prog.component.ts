@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {SelectItem} from 'primeng/primeng';
 import {ProgramacionService} from '../service/prog.service'
 import {PlacasService} from '../service/placas.service'
-
+declare var jsPDF: any; //PARA PASAR HTML A PDF 
 @Component({
     selector: 'app-prog',
     templateUrl	: '../views/prog.component.html',
@@ -793,11 +793,11 @@ export class ProgComponent implements OnInit{
     //CARGAR COLUMNAS Y ARRAY DE PROGRAMACION
 
 
-    //CONSULTA RECUPERAR BUSES POR empId(id de empresa)  suemId(subempresa id)
+    //CONSULTA RECUPERAR BUSES POR empId(id de empresa)  suemId(subempresa id) SOLO DA LOS BUSES ACTIVOS
     getAllPlacasBusByEmSuEm(empId: number, suemId : number){
         this.placasservice.getAllPlacasBusByEmSuEm(empId, suemId)
             .subscribe(
-                data => {this.placas = data},
+                data => {this.placas = data;},
                 err  => {this.errorMessage = err},
                 () =>this.isLoading = false
             );
@@ -841,7 +841,7 @@ export class ProgComponent implements OnInit{
         this.calendarioProg(fi,ff);
         this.displayProgramacion = true;
         this.nroDias=[];
-
+        //this.descargarProgramacion(this.nroBusesFilaSelect); //FUNCION PARA GENERAR PROG EN PDF
         //LIMPIANDO VARIABLES
         this.columnas=[]; //COLUMNAS
         this._columnas=[]; //ITEMS COLUMNAS DATATABLE
@@ -997,14 +997,9 @@ export class ProgComponent implements OnInit{
          );
     }
 
-    //CERRAR PROGRAMACION
+    //CERRAR VENTANA MODAL PROGRAMACION TABLA 
     cerrarProg(){
         this.displayProgramacion=false;
-    }
-
-    //IMPRIMIR PROGRAMACION
-    imprimirProg(){
-        console.log("falta programar");
     }
 
      //CONVERTIR STRING A DATE FORMULARIO A BD  HORAS
@@ -1088,6 +1083,116 @@ export class ProgComponent implements OnInit{
         
         _fechaProg=this.cCeroFecha(_fechaProg);
         return  _fechaProg;
+    }
+
+    //DESCARGAR LA PROGRAMACION EN FORMATO PDF 
+    descargarProgramacion(){
+        //VARIABLES 
+        var doc = new jsPDF('l','pt','a4');
+        let arr0=[], i =0,j=0,k=0 ,arr1=[], nrosalto = 0;
+        let ncol:number, r, dividendo=this.nroDiasFilaSelect,c=1;
+
+        while(i<this.nroBusesFilaSelect){ arr0[i]=arr1; i++;} //NUMERO DE ARRAYS(FILAS) DE TODA LA TABLA
+        arr1=[[],[],[],[],[],[],[]]; //NRO DE HOJAS EN TOTAL Q SE PUEDE DIVIDIR EL CALENDARIO
+
+        console.log(this.nroDiasFilaSelect); 
+        /* console.log(this.progBDDetalle); */ 
+        console.log(this.nroBusesFilaSelect); // PARA DIVIDIRLO EN FILAS
+        
+        //ALGORITMOS
+        i=0; /*DIVIDIENDO EN ARRAYS EL ARRAY PRINCIPAL*/
+        while(i<this.nroBusesFilaSelect){
+            while(j<this.nroDiasFilaSelect && i+nrosalto<this.progBDDetalle.length){
+                arr0[i][j]=this.progBDDetalle[i+nrosalto];
+                nrosalto=nrosalto+this.nroBusesFilaSelect;
+                j++;
+            }
+            i++;
+        }
+        /*AJUSTANDO EL NRO DE COLUMNAS A LA HOJA = 15 X HOJA*/
+        i=j=0;
+        ncol = 15; //NUMERO DE COLUMNAS MAXIMO EN CADA HOJA
+        r = dividendo - ncol;//1ER RESIDUO, SABER SI EL TOTAL DE COLUMNAS ES MENOR O IGUAL QUE EL MAXIMO DE COLUMNAS PERMITIDO 
+
+        if(r>=0){
+            while( r > ncol ){
+                dividendo = r;
+                r = dividendo - ncol; 
+                dividendo = r;
+                c++;
+            }
+            
+            //DIVIDIENDO EN ARRAYS EL ARRAY DE CALENDARIO
+            while(i<c){
+                while( k<ncol && j<15*(i+1)){
+                    arr1[i][k]=this.calendario[j]; 
+                    j++; k++;
+                }
+                k=0; i++;   
+            }
+
+            //TOMANDO EL RESIDUO DE DIVIDIR LA TABLA 
+            //ULTIMA HOJA
+            dividendo=this.nroDiasFilaSelect;
+            i=ncol*c; j=0;
+            while(i<dividendo){//DIVIDENDO = NRO DE COLUMNAS TOTAL
+                arr1[c][j]=this.calendario[i];
+                i++; j++;
+            }
+
+            //GENERANDO EL ARCHIVO PDF
+            i=j=0;
+            //DIVIDIENDO EN ARRAYS EL ARRAY DE FILAS
+            while(arr1[i].length != 0 && j<(c)){ 
+                doc.autoTable(arr1[i],arr0,{ 
+                    styles: {fontSize: 7,halign: 'center',cellPadding: 1,},   
+                    margin: {top: 30, right: 10, bottom: 10, left: 10},
+                    theme: 'grid',
+                    columnWidth: 'auto',
+                    valign: 'top',
+                    });
+                doc.addPage();
+                i++;
+                j++;
+            }
+            //INTEGRAR EL RESTO DE LAS COLUMNAS QUE FALTAN, USAR EL RESIDUO DE LA DIVISION
+            doc.autoTable(arr1[c], arr0,{ 
+                    styles: { /*ESTILO COLUMNAS Y CELDAS*/
+                                fontSize: 7,
+                                halign: 'center',
+                                cellPadding: 1,
+                                columnWidth: 60
+                            },   
+                    margin: {top: 30, right: 10, bottom: 10, left: 10},
+                    theme: 'striped',
+                    columnWidth: 70,
+                    valign: 'top',
+            });
+
+        }else if(r<0){
+            /*CREAR DEFRENTE EL ARCHIVO PDF*/
+            console.log("RESIDUO ES MENOR A CERO");
+            doc.autoTable(this.calendario, arr0,{ 
+                styles: { 
+                          fontSize: 7,
+                          halign: 'center',
+                          cellPadding: 1,
+                          columnWidth: 60
+                        },   
+                margin: {top: 30, right: 10, bottom: 10, left: 10},
+                theme: 'striped',
+                columnWidth: 70,
+                valign: 'top',
+            });
+            
+        }
+
+        console.log("c: "+c);
+        console.log("r: "+r);
+        //RESULTADO
+        console.log(arr1); //CALENDARIO
+        console.log(arr0); //FILAS DE LA TABLA
+        doc.save('programacion.pdf'); //CAMBIAR EL NOMBRE DEL ARCHIVO QUE SE VA A DESCARGAR, PONERLE LA FECHA Y LA SI ES POSIBLE LA RUTA A LA Q PERTENECE
     }
 }
 
