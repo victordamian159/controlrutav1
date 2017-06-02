@@ -40,6 +40,7 @@ export class ProgComponent implements OnInit{
     displayErrorDatos : boolean = false; // PRIMERA VENTANA MODAL PROGRAMACION
     displayErrorTablaProgramacion : boolean=false; // ERROR EN LA TABLA DE PROGRAMACION
     displayFaltanPlacas : boolean = false;
+    displayDescargaProg : boolean = false;
 
     selectedPlacas: string[] = [];
     disabledbutton: boolean = false;
@@ -204,13 +205,8 @@ export class ProgComponent implements OnInit{
         this.displayNuevaProgramacion=true;
         this.ordenSorteo=[]; //SORTEO DE PLACAS
         this.titleNuevoProgPrimerModal = 'Nueva';
-        
-        //VERIFICANDO SI EL ARRAY DE PLACAS YA ESTA CARGADO O NO
-        if(this.bAct==undefined){  
-            this.extrayendoPlacasBus(); //EXTRAER PLACAS PARA LA PROGRAMACION
-        }else if(this.bAct !=undefined || this.bAct>0){ }
+        this.extrayendoPlacasBus(); 
         this.unidadesEstado(); //CALCULA EL NRO DE UNIDADES ACTIVAS Y NO ACTIVAS
-
         //PONER EN CERO VALORES DE OBJETOS 
         this.progMaestro = {
             PrId:0,     //oculto
@@ -402,7 +398,6 @@ export class ProgComponent implements OnInit{
                 k=_f1[1]+1;
                 while(k<_f2[1]){/*OTROS MESES */ 
                     l=1;
-                    console.log(ab[k]);
                     while(l<=ab[k]){
                         res.push(l);
                         l++;
@@ -534,7 +529,7 @@ export class ProgComponent implements OnInit{
             }
         }
         this.calendario=res;
-        console.log(res);
+        //console.log(res);
     }
     
 
@@ -801,7 +796,6 @@ export class ProgComponent implements OnInit{
                 err  => {this.errorMessage = err},
                 () =>this.isLoading = false
             );
-            //console.log(this.placas);
     }
 
     //todas las programaciones por empresa y año
@@ -819,14 +813,14 @@ export class ProgComponent implements OnInit{
         //console.log(this.progRest)
     }
     
-    //extraer placas y el ID de los buses
+    //extraer placas y el ID de los buses OPTIMIZAR ESTE CODIGO, MUCHAS VECES SE ESTA USANDO EN EL FUNCIONAMIENTO DEL PROGRAMA
     extrayendoPlacasBus(){
         for(let i =0; i<this.placas.length ; i++){
-            this.arrayPlacas.push({
+            this.arrayPlacas[i]={
                 nroPlaca: this.placas[i].BuPlaca,
                 BuId: this.placas[i].BuId,
                 BuActivo:this.placas[i].BuActivo
-            });
+            };
         }
     }
 
@@ -850,7 +844,6 @@ export class ProgComponent implements OnInit{
         this.programacionService.getAllProgramacionDetalleByPrId(this.idFilaSeleccionada).subscribe(
             data => {
                         this.progBDDetalle = data; 
-                        //console.log(this.progBDDetalle);
                         this.tablaProgramaciones();
                     },
             err => {this.errorMessage=err},
@@ -924,7 +917,15 @@ export class ProgComponent implements OnInit{
 
                 //CAPTURANDO LAS PLACAS POR BUID
                 this.getAllPlacasBusByEmSuEm(1, 0);
-                this.extrayendoPlacasBus();
+
+                //VERIFICANDO SI EL ARRAY DE PLACAS YA ESTA CARGADO O NO
+                
+                if(this.arrayPlacas.length==0){  
+                    this.extrayendoPlacasBus(); //EXTRAER PLACAS PARA LA PROGRAMACION
+                    
+                }else if(this.arrayPlacas.length>0){console.log("ya se extrayeron las placas");}
+
+                //this.extrayendoPlacasBus(); //
                 //console.log(this.arrayPlacas);
 
                 //ACTUALIZANDO EL ARRAY a5, cambiando BUID por su respectiva PLACA---BUSQUEDA
@@ -1089,26 +1090,28 @@ export class ProgComponent implements OnInit{
     descargarProgramacion(){
         //VARIABLES 
         var doc = new jsPDF('l','pt','a4');
-        let arr0=[], i =0,j=0,k=0 ,arr1=[], nrosalto = 0;
+        let arr0=[], i:number =0,j=0,k=0 ,arr1=[], nrosalto:number = 0, arrprog=[];
         let ncol:number, r, dividendo=this.nroDiasFilaSelect,c=1;
 
         while(i<this.nroBusesFilaSelect){ arr0[i]=arr1; i++;} //NUMERO DE ARRAYS(FILAS) DE TODA LA TABLA
         arr1=[[],[],[],[],[],[],[]]; //NRO DE HOJAS EN TOTAL Q SE PUEDE DIVIDIR EL CALENDARIO
 
-        console.log(this.nroDiasFilaSelect); 
-        /* console.log(this.progBDDetalle); */ 
-        console.log(this.nroBusesFilaSelect); // PARA DIVIDIRLO EN FILAS
-        
         //ALGORITMOS
-        i=0; /*DIVIDIENDO EN ARRAYS EL ARRAY PRINCIPAL*/
+        arrprog=this.placasProgramacion(this.progBDDetalle,this.arrayPlacas);
+        
+        i=0; let arrAux=[],arrborrar2=[];
+
         while(i<this.nroBusesFilaSelect){
-            while(j<this.nroDiasFilaSelect && i+nrosalto<this.progBDDetalle.length){
-                arr0[i][j]=this.progBDDetalle[i+nrosalto];
+            while(j<this.nroDiasFilaSelect && i+nrosalto<arrprog.length){
+                //arr0[i][j]=arrprog[i+nrosalto].slice(0);
+                arr0[i][j]=arrprog[i+nrosalto];
                 nrosalto=nrosalto+this.nroBusesFilaSelect;
                 j++;
             }
-            i++;
+            arrAux.push(arr0[i].slice(0));
+            i++;  nrosalto=0;  j=0;
         }
+        arr0=arrAux;
         /*AJUSTANDO EL NRO DE COLUMNAS A LA HOJA = 15 X HOJA*/
         i=j=0;
         ncol = 15; //NUMERO DE COLUMNAS MAXIMO EN CADA HOJA
@@ -1187,12 +1190,40 @@ export class ProgComponent implements OnInit{
             
         }
 
-        console.log("c: "+c);
-        console.log("r: "+r);
-        //RESULTADO
-        console.log(arr1); //CALENDARIO
-        console.log(arr0); //FILAS DE LA TABLA
         doc.save('programacion.pdf'); //CAMBIAR EL NOMBRE DEL ARCHIVO QUE SE VA A DESCARGAR, PONERLE LA FECHA Y LA SI ES POSIBLE LA RUTA A LA Q PERTENECE
+        this.mensaje="Se Descargo La Programacion";
+        this.displayDescargaProg=true;
+    }
+
+    //BOTON ACEPTAR DESCARGA PROGRAMACION
+    descargaProg(){
+        this.mensaje="";
+        this.displayDescargaProg=false;
+    }
+
+    placasProgramacion(arr1 = [],arrplacas = []) {
+        let arrbuid=[{}], arrplacasprog=[];
+        let i,j,k,cen=0;
+        /*SEPARANDO BUID PARA CAMBIARLO POR SUS PLACAS*/
+        for(let i=0; i<arr1.length; i++){
+            arrbuid[i]=arr1[i].BuId;
+        }
+        /*CAMBIAR BUID POR SU PLACA RESPECTIVA*/
+        i=0; j=0; k=0;
+        while(i<arr1.length){
+                while(j<arrplacas.length && cen==0){
+                    if(arrbuid[i]==arrplacas[j].BuId){
+                        arrplacasprog.push(arrplacas[j].nroPlaca);
+                        cen=1;
+                    }else if(arrbuid[i]!=arrplacas[j].BuId){
+                        j++;
+                    }
+                }
+                j=0;
+                cen=0;
+            i++;
+        }
+        return arrplacasprog;
     }
 }
 

@@ -207,7 +207,8 @@
                 
                         <div class="table-container" > 
                             <div class="container" style="overflow-x:auto;">
-                                <table *ngIf="nroColumn>30" width="2800px">
+                                <!--AUMENTAR MAS TAMAÑOS DE TABLAS COMO MAXIMO HASTA 63 DIAS DE PROGRAMACION DE DOS MESES-->
+                                <table *ngIf="nroColumn>30" width="3500px">
                                     
                                     <thead>
                                         <tr><th *ngFor="let dia of this.nroDias;">{{dia}}</th></tr>
@@ -315,6 +316,14 @@
                 <p>{{mensaje}}</p>
                 <p-footer class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
                      <button type="button" pButton (click)="faltanPlacas()" label="Aceptar"></button>
+                </p-footer>
+        </p-dialog>
+
+        <!--MENSAJE SE ACABA DE DESCARGAR LA PROGRAMACION, VENTANA MODAL-->
+        <p-dialog [(visible)]="displayDescargaProg" modal="modal" width="100%" responsive="true" [closable]="false">
+                <p>{{mensaje}}</p>
+                <p-footer class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                     <button type="button" pButton (click)="descargaProg()" label="Aceptar"></button>
                 </p-footer>
         </p-dialog>
       
