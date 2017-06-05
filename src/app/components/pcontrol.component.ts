@@ -62,8 +62,9 @@ export class PcontrolComponent implements OnInit{
         UsFechaReg      : "",
         PuCoDeOrden     : 0
     };
-    idFilaSeleccionada: number;  
-    idRutaFilaSeleccionada : number;
+    idFilaSeleccionada: number;  /* ONSELECT ROW GRILLA PRINCIPAL*/
+    idRutaFilaSeleccionada : number; /* ONSELECT ROW GRILLA PRINCIPAL*/
+    horaReg : string; /* ONSELECT ROW GRILLA PRINCIPAL*/
     _pcRecuperado :any; // objeto recuperado de la consulta getPuntoCOntrolById
     getPuntoControlMaestro:any; //se almacena lo q se recupero del rest para editar o eliminar (consulta al rest)
 
@@ -127,6 +128,7 @@ export class PcontrolComponent implements OnInit{
     displayNohayPuntos : boolean = false;
     displayNuevosPuntos : boolean = false;
     displayGuardarPuntosDetalle :boolean=false;
+    displayVerificarTiempoPc : boolean = false;
 
     mapa:any;
 
@@ -149,13 +151,16 @@ export class PcontrolComponent implements OnInit{
     desEditarPCDetMarker:boolean;
     desNuevosPuntos : boolean;
 
-    tipoTarjeta:{nomb:"", val:""};
+    //tipoTarjeta:{nomb:"", val:""};
+    tipoTarjeta:{nomb:string, val:string};
     _tipoTarjeta = [
         {nomb:"Hora Punta", val:'01'},
         {nomb:"Dias Feriados", val:'02'},
         {nomb:"Dias Normal", val:'03'}
     ];
 
+    selected : any;
+    
     constructor( 
         private pcontrolService: PuntoControlService,
         //public el: ElementRef 
@@ -166,7 +171,8 @@ export class PcontrolComponent implements OnInit{
     ngOnInit(){
         this.options={
             center: new google.maps.LatLng(-18.0065679, -70.2462741),
-            zoom:14
+            zoom:14,
+            gestureHandling: 'greedy'
         };
 
         //MAESTRO
@@ -211,7 +217,7 @@ export class PcontrolComponent implements OnInit{
             this.addmarker();
             this.displayNuevoPunto=true;
         }else if(this.activeAddMarker == 0){ //addmarker desactivado
-            this.mensaje ="No Puede Agregar Punto de Control, Seleccione un Registro";
+            this.mensaje ="No Puede Agregar Punto de Control :(";
             this.displayMapaClick=true;
             //console.log("No Puede Agregar Marcadores");
         }
@@ -236,11 +242,11 @@ export class PcontrolComponent implements OnInit{
 
         x = event.overlay.getPosition().lat();
         y = event.overlay.getPosition().lng();
-        console.log(x + "---" +y);
+        //console.log(x + "---" +y);
 
         indexInOverlays  = this.overlays.indexOf(event.overlay); // INDICE EN ARRAY OBJETOS
         
-        console.log(this.overlays[indexInOverlays].title);
+        //console.log(this.overlays[indexInOverlays].title);
 
         while(j<this.pCArrayDetalleBD.length && cen == 0){
             if(       this.overlays[indexInOverlays].title==this.pCArrayDetalleBD[j].PuCoDeDescripcion){
@@ -252,8 +258,8 @@ export class PcontrolComponent implements OnInit{
         //indexArrayParaBD = j;
         //indexArrayParaBD = this.pCArrayDetalleBD.indexOf(this.overlays[indexInOverlays].title);
 
-        console.log("index: "+indexInOverlays);
-        console.log("index: "+j);
+        //console.log("index: "+indexInOverlays);
+        //console.log("index: "+j);
 
         //console.log(this.pCArrayDetalleBD);
         //ACTUALIZANDO EL ARRAY DE PUNTOS, LAS NUEVAS COORDENADAS Q SE CAMBIARON DE CADA PUNTO
@@ -363,6 +369,8 @@ export class PcontrolComponent implements OnInit{
         //buscando en el rest deacuerdo al id de la row
         this.idFilaSeleccionada = event.data.PuCoId;  //recupera la PuCoId de la fila seleccionada (para recuperar los puntos de control con la consulta)
         this.idRutaFilaSeleccionada = event.data.RuId; //recupera el RuId para poder sacar la ruta de la BD
+        this.horaReg = event.data.PuCoTiempoBus; //HORA DE TODA LA RUTA
+        console.log("hora ruta: "+this.horaReg);
 
          this.mayorOrdenPuntos();//PARA EL CASO DE EDITAR UNA LISTA EXISTENTE
 
@@ -416,7 +424,6 @@ export class PcontrolComponent implements OnInit{
         console.log("seleccionando detalle =D");
         //CENTRAR EL MAPA EN EL PUNTO DE CONTROL
     }
-
 
     //CARGAR LA RUTA AL MAPA
     cargarRuta(){
@@ -487,22 +494,22 @@ export class PcontrolComponent implements OnInit{
 
     }
     
-    //para editar la tabla maestro (grilla)BOTON DE LAS FILAS EDITAR
+    //para editar la tabla maestro (grilla)BOTON DE LAS FILAS EDITAR CABECERA
     editarMaestro(_puCoId:number){
-         //editar registro cabecera
-         
-       
         this.displayListaPuntos=true; //MOSTRAR CUADRO DE NUEVA LISTA PUNTOS(CABECERA)
         this.headertitle="Editar Lista" //TITULO PARA LA VENTANA
-
-        console.log("editar =D");
-        console.log(_puCoId);
-
         this._PuCoId = _puCoId; //GUARDANDO ID PARA USARLO PARA SABER SI SE ESTA GUARDANDO(ID = 0) O EDITANDO(ID != 0)
-
         //CONSULTAR A LA BD Y CARGAR EL OBJETO PARA EDITAR this.pcMaestro
         this.pcontrolService.getPuntoControlById(_puCoId).subscribe(
-            data => {this.pcMaestro = data; console.log(this.pcMaestro);}, err =>{this.errorMessage = err}, () =>this.isLoading=false);
+            data => {
+                        this.pcMaestro = data; 
+                        this.pcMaestro.PuCoTiempoBus=this.cCeroHora(this._fecha(this.pcMaestro.PuCoTiempoBus));
+                        //console.log(this.pcMaestro.PuCoTiempoBus);console.log(this.pcMaestro.PuCoClase); 
+                        //tipoTarjeta:{nomb:"", val:""};
+                        //this.selected = this.tipoTarjeta.val;
+                        //this.tipoTarjeta.val=this.pcMaestro.PuCoClase;
+                    }, 
+            err =>{this.errorMessage = err}, () =>this.isLoading=false);
     }
 
     //ELIMINAR UN REGISTRO DE LA TABLA MAESTRO PUNTOCONTROL
@@ -540,8 +547,7 @@ export class PcontrolComponent implements OnInit{
             this.mensaje="Error, No se puede Eliminar de la Tabla de Puntos";
             this.displayErrorEditarPuntos=true;
             //console.log("no se puede editar el registro");
-        }
-       
+        }    
     }
 
     //ACEPTAR, NO PUEDE EDITAR EL REGISTRO DE PUNTOS DE CONTROL DETALLE
@@ -565,6 +571,7 @@ export class PcontrolComponent implements OnInit{
             }
             this.pCArrayDetalleBD.splice(j,1); //ELIMINANDO UN SOLO ELEMENTO DESDE LA POSICION J
             this.mgPuntosControlDetalle(); //CARGANDO LA GRILLA PUNTOS DETALLE
+            this.displayElimRegDetalle=false;
     }
 
     cancel_eliminarDetalle(){
@@ -598,7 +605,6 @@ export class PcontrolComponent implements OnInit{
                 cen = 1;
             }
             i++;
-            console.log("tania");
         }
 
         console.log(this.pcMaestro.PuCoTiempoBus);
@@ -614,7 +620,8 @@ export class PcontrolComponent implements OnInit{
 
                     this.pcMaestroBD.UsId = this.pcMaestro.UsId,
                     this.pcMaestroBD.UsFechaReg = new Date()
-                }else if(this._PuCoId != 0){ //SE ESTA EDITANDO REGISTRO EXISTENTE
+            }else if(this._PuCoId != 0){ //SE ESTA EDITANDO REGISTRO EXISTENTE
+                    this.pcMaestro.PuCoTiempoBus =  this.hora(this.pcMaestro.PuCoTiempoBus);
                     this.pcMaestroBD = this.pcMaestro;//PASANDO LOS VALORES DEL MODAL AL OBJETO Q SERA MANDANDO A LA BD
             }
 
@@ -654,8 +661,6 @@ export class PcontrolComponent implements OnInit{
         this.pcontrolService.newPuntoControlDetalle()
         .subscribe(data => {this.pcDetalleRest=data});
     }
-
-
   
     //VENTANA MODAL EDITAR SOLO EL NOMBRE Y TIEMPO MAS NO LA POSICION EDITAR PUNTOS CONTROL-> LLAMAR A LA FUNCIONA ELIMINAR PARA PODER BORRAR TODOS  LOS PUNTOS DE CONTROL EXISTENTES Y PODER MANDAR LA NUEVA LISTA MODIFICADA
     editarDetalle(_PuCoDeId : number){
@@ -762,6 +767,8 @@ export class PcontrolComponent implements OnInit{
 
             let n = this.pcDetalle.PuCoDeOrden; // n = 4
             while( n <this.pCArrayDetalleBD.length){  //4 < 8
+                console.log("n : "+n); /*TENERLO PRESENTE, PARA CORREGIR EL ERROR QUE APARECE*/
+                console.log("this.pCArrayDetalleBD[n].PuCoDeOrden: "+(n+1));
                 this.pCArrayDetalleBD[n].PuCoDeOrden =   (n+1); 
                 n++;
             }
@@ -771,7 +778,7 @@ export class PcontrolComponent implements OnInit{
        }else if(this.editando==1 && this.pCArrayDetalleBD.length==0){
            this.editando=0; // NUEVO REGISTRO
            this.pCArrayDetalleBD = []; //reiniciando el array como VACIO
-           //REINICIANDO VARIABLES 
+           //REINICIANDO VARIABLES  HACER UN MENSAJE EN VENTANA MODAL
            console.log("se guardo una ruta vacia");
        }
         
@@ -829,9 +836,8 @@ export class PcontrolComponent implements OnInit{
         horaTarjeta=fecha;
         let resultado=horaTarjeta.split(':');
         otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));    
-        console.log(otra);
+        //console.log(otra);
         return otra; 
-        
     }
 
     //CONVERTIR DATE A STRING DE BD A FORMULARIO
@@ -862,94 +868,111 @@ export class PcontrolComponent implements OnInit{
 
     //mandar al servicio Rest los puntos, es para confirmar que se tiene los correctos
     guardarpuntosDetalleRest(){
+       let su:string;
        this.actualizarOrdenPC();
+       su = this.sumatoriaTiempoPC(this.pCArrayDetalleBD); //COMPROBAR SI ESTA BIEN LOS TIEMPOS
+       console.log("HORA TOTAL PUNTOS CO: "+su);
+       console.log("HORA TOTAL  RUTA    : "+this.horaReg);
 
-       //GUARDANDO NUEVA LISTA DE PUNTOS, Y LONG ES DIFERENTE DE CERO
-        if(this.editando == 0 && this.pCArrayDetalleBD.length!=0){ //0 : nuevo registro
-            //console.log(this.pCArrayDetalleBD);
+       su=this.horaReg;
 
-            this.pcontrolService.savePuntoControlDetalle(this.pCArrayDetalleBD).
-            subscribe(realizar => {this.mgPuntosControlDetalle();},
-                                err => {this.errorMessage=err});
+       //VERIFICANDO QUE LA SUMATORIA DE TIEMPO DE PC SEA LA MISMA QUE LA CABECERA
+       if(this.horaReg == su){
+           console.log("IGUALES =D");
+           //GUARDANDO NUEVA LISTA DE PUNTOS, Y LONG ES DIFERENTE DE CERO
+            if(this.editando == 0 && this.pCArrayDetalleBD.length!=0){ //0 : nuevo registro
+                //console.log(this.pCArrayDetalleBD);
 
-            //DESACTIVANDO ACTIVANDO BOTONES MAPA
-            this.desBorrarPCDet = true;
-            this.desDeshacerPCDet= true;
-            this.desEditarPCDetMarker = true;
-            this.desGuardarPCD_BD = true;
-            this.desNuevosPuntos = true;
+                this.pcontrolService.savePuntoControlDetalle(this.pCArrayDetalleBD).
+                subscribe(realizar => {this.mgPuntosControlDetalle();},
+                                    err => {this.errorMessage=err});
 
-            //DESACTIVANDO EVENTOS
-            //this.activeAddMarker = 0 //addmarker DESactivado
+                //DESACTIVANDO ACTIVANDO BOTONES MAPA
+                this.desBorrarPCDet = true;
+                this.desDeshacerPCDet= true;
+                this.desEditarPCDetMarker = true;
+                this.desGuardarPCD_BD = true;
+                this.desNuevosPuntos = true;
 
-        //SE ESTA EDITANDO LISTADO EXISTENTE, LONG ES DIFERENTE DE CERO
-        }else if(this.editando == 1 && this.pCArrayDetalleBD.length!=0){ //1 : editando registro existente
-            console.log(this.pCArrayDetalleBD);
-            console.log("se edito un registro existente");
+                //DESACTIVANDO EVENTOS
+                //this.activeAddMarker = 0 //addmarker DESactivado
 
-            //BORRANDO TODOS LOS REGISTROS DETALLE EN LA BD POR EL PUCOID Y PONER LOS NUEVOS ENCIMA
-            
-            this.pcontrolService.deletePuntoControlDetalleByRu(this.idDetalle).subscribe(
-                    realizar => {
-                                    console.log("se borro todo para guardar de nuevo");
-                                },  
-                    err => {console.log(err);}
-            );
-            
+            //SE ESTA EDITANDO LISTADO EXISTENTE, LONG ES DIFERENTE DE CERO
+            }else if(this.editando == 1 && this.pCArrayDetalleBD.length!=0){ //1 : editando registro existente
+                console.log(this.pCArrayDetalleBD);
+                console.log("se edito un registro existente");
+                //BORRANDO TODOS LOS REGISTROS DETALLE EN LA BD POR EL PUCOID Y PONER LOS NUEVOS ENCIMA
+                
+                this.pcontrolService.deletePuntoControlDetalleByRu(this.idDetalle).subscribe(
+                        realizar => {console.log("se borro todo para guardar de nuevo"); }, err => {console.log(err);}
+                );
+                
 
-            //ACTUALIZANDO EL PuCoDeId a CERO
-            for(let x=0; x<this.pCArrayDetalleBD.length; x++){
-                this.pCArrayDetalleBD[x].PuCoDeId = 0;
+                //ACTUALIZANDO EL PuCoDeId a CERO
+                for(let x=0; x<this.pCArrayDetalleBD.length; x++){
+                    this.pCArrayDetalleBD[x].PuCoDeId = 0;
+                }
+
+                //GUARDANDO LOS NUEVOS REGISTROS EN LA BD
+                this.pcontrolService.savePuntoControlDetalle(this.pCArrayDetalleBD).
+                subscribe(realizar => {this.mgPuntosControlDetalle();},
+                                    err => {this.errorMessage=err});
+                console.log("guardado editado en rest");
+                
+                //DESACTIVANDO ACTIVANDO BOTONES MAPA
+                this.desBorrarPCDet = true;
+                this.desDeshacerPCDet= true;
+                this.desEditarPCDetMarker = true;
+                this.desGuardarPCD_BD = true;
+                this.desNuevosPuntos = true;
+
+
+            //SE BORRO TODOS LOS PUNTOS DE UN LISTADO EXISTENTE
+            }else if(this.pCArrayDetalleBD.length == 0 && this.editando == 1){ //GUARDANDO ARRAY VACIO & 1 : editando registro existente
+                console.log(this.pCArrayDetalleBD);
+                //MANDAR UN MENSAJE MODAL 
+                console.log("se edito un registro existente");
+                //BORRANDO TODOS LOS REGISTROS DETALLE EN LA BD POR EL PUCOID Y PONER LOS NUEVOS ENCIMA
+                
+                this.pcontrolService.deletePuntoControlDetalleByRu(this.idDetalle).subscribe(
+                        realizar => {
+                                        console.log("SE BORRO TODO LOS PUNTOS DEL MAPA");
+                                        //this.cargarRuta();
+                                    },  
+                        err => {console.log(err);}
+                );
+
+                //DESACTIVANDO ACTIVANDO BOTONES MAPA
+                this.desBorrarPCDet = true;
+                this.desDeshacerPCDet= true;
+                this.desEditarPCDetMarker = true;
+                this.desGuardarPCD_BD = true;
+                this.desNuevosPuntos = true;
+
             }
 
-            //GUARDANDO LOS NUEVOS REGISTROS EN LA BD
-            this.pcontrolService.savePuntoControlDetalle(this.pCArrayDetalleBD).
-            subscribe(realizar => {this.mgPuntosControlDetalle();},
-                                err => {this.errorMessage=err});
-            console.log("guardado editado en rest");
-            
-            //DESACTIVANDO ACTIVANDO BOTONES MAPA
-            this.desBorrarPCDet = true;
-            this.desDeshacerPCDet= true;
-            this.desEditarPCDetMarker = true;
-            this.desGuardarPCD_BD = true;
-            this.desNuevosPuntos = true;
+            this.mensaje="Se Guardo los Puntos Correctamente";
+            this.displayGuardarPuntosDetalle=true;
+            this.reiniciarVariables();//REINICIANDO LA VARIABLES
+            this.cargarRuta();
+            //this.cargarmarker();
+            this.editando=0;//0: NUEVO REGISTRO (UNO NO EXISTENTE)      1: EDITANDO REGISTRO EXISTENTE
+            this.dragPunto=0 //MARKER NO DRAGGABLE
+            this.activeAddMarker = 0; //0: desactivado,   1: activado //DESACTIVANDO ADDMARKER
 
-
-        //SE BORRO TODOS LOS PUNTOS DE UN LISTADO EXISTENTE
-        }else if(this.pCArrayDetalleBD.length == 0 && this.editando == 1){ //GUARDANDO ARRAY VACIO & 1 : editando registro existente
-            console.log(this.pCArrayDetalleBD);
-            console.log("se edito un registro existente");
-
-            //BORRANDO TODOS LOS REGISTROS DETALLE EN LA BD POR EL PUCOID Y PONER LOS NUEVOS ENCIMA
-            
-            this.pcontrolService.deletePuntoControlDetalleByRu(this.idDetalle).subscribe(
-                    realizar => {
-                                    console.log("SE BORRO TODO LOS PUNTOS DEL MAPA");
-                                    //this.cargarRuta();
-                                },  
-                    err => {console.log(err);}
-            );
-
-            //DESACTIVANDO ACTIVANDO BOTONES MAPA
-            this.desBorrarPCDet = true;
-            this.desDeshacerPCDet= true;
-            this.desEditarPCDetMarker = true;
-            this.desGuardarPCD_BD = true;
-            this.desNuevosPuntos = true;
-
-        }
-
-        this.mensaje="Se Guardo los Puntos Correctamente";
-        this.displayGuardarPuntosDetalle=true;
-        this.reiniciarVariables();//REINICIANDO LA VARIABLES
-        this.cargarRuta();
-        this.cargarmarker();
-        this.editando=0;//0: NUEVO REGISTRO (UNO NO EXISTENTE)      1: EDITANDO REGISTRO EXISTENTE
-        this.dragPunto=0 //MARKER NO DRAGGABLE
-        this.activeAddMarker = 0; //0: desactivado,   1: activado //DESACTIVANDO ADDMARKER
+       }else if(this.horaReg != su){
+           console.log("DIFERENTES D=");
+           this.mensaje="Verifique los Tiempos: "+this.horaReg+" --"+su;
+           this.displayVerificarTiempoPc = true;
+       }
     }
-   
+    
+    //VERIFICAR TIEMPOS EN LOS PUTNOS DE CONTROL
+    verificarTiemposPc(){
+        this.mensaje="";
+        this.displayVerificarTiempoPc=false;
+    }
+
     aceptarGuardarPuntosDetalle(){
         this.mensaje="";
         this.displayGuardarPuntosDetalle=false;
@@ -1174,13 +1197,11 @@ export class PcontrolComponent implements OnInit{
             }
     }
 
-    
-
     //FUNCION COMBOBOX TIPO TARJETA
     ftipoTarjeta(event){
-        console.log(this.tipoTarjeta.nomb);
-        console.log(this.tipoTarjeta.val);
-        this.pcMaestro.PuCoClase = this.tipoTarjeta.val;
+        //console.log(this.tipoTarjeta.nomb);
+        //console.log(this.tipoTarjeta.val);
+        this.pcMaestro.PuCoClase = this.tipoTarjeta.val;        
     }
 
       //CONVERTIR STRING A DATE FORMULARIO A BD  HORAS
@@ -1222,61 +1243,109 @@ export class PcontrolComponent implements OnInit{
             _hora=resultado[0]+":"+resultado[1]+":"+resultado[2];
         return _hora;
     }
+
+    //SI SUMATORIA TODOS PUNTOS DE CONTROL IGUAL AL TIEMPO DE RECORRIDO BUS
+    sumatoriaTiempoPC(pControl = []):string{
+        let su:string, tx; 
+        let arrTiempos=[],_arrTiempos=[], timePc=[0,0,0], i=0,j=0;
+        for(let pC of pControl){ arrTiempos.push(this._hora(pC.PuCoDeHora).split(':')); }
+        for(let pC of arrTiempos){ _arrTiempos.push(pC.slice()); }
+        for(let i=0; i<_arrTiempos.length; i++){ for(let j=0; j<_arrTiempos[i].length; j++){  _arrTiempos[i][j]=Number(_arrTiempos[i][j]); } }
+
+        //SUMANDO TODOS LOS TIEMPOS ENTRE CADA PUNTO PARA HACER EL CALCULO 
+        let r;
+        console.log(_arrTiempos);
+        console.log("long: "+_arrTiempos.length);
+        while(i<_arrTiempos.length-1){
+            console.log(_arrTiempos[i+1][1]+" <- - -> "+_arrTiempos[i][1]);
+            if(_arrTiempos[i+1][1]>_arrTiempos[i][1]){
+                r=_arrTiempos[i+1][1]-_arrTiempos[i][1];
+                j = j + r;
+                console.log("> j: "+j);
+            }else if(_arrTiempos[i+1][1]<_arrTiempos[i][1]){
+                r = 60 - _arrTiempos[i][1];
+                j = j + r;
+                j = j + _arrTiempos[i+1][1];
+                console.log("< j: "+j);
+            }
+            console.log("i: "+i);
+            i++;
+            
+        }
+        console.log("j: "+j);
+        
+
+        tx="00:03:45";
+    return tx ;
+    }
 }
 var coords={
     x:0,
     y:0
 }
-
  var pos = {
         lat : 0,
         lng : 0 
 }
 
 
-     //if(this.editando == 0 && this.pCArrayDetalleBD.length ==0){
-       //}else if(this.editando == 1 && this.pCArrayDetalleBD.length!=0){
- //PONER CONDICIONAL PARA HABILITAR LA ELIMINACION, CONFIRMAR LA ELIMINACION
-        
-          //BUSCANDO INDICE DEL OBJETO
-            /*for(let i=0; i<this.pCArrayDetalleBD.length; i++){
-                console.log("indice: "+this.pCArrayDetalleBD.indexOf(this.pCArrayDetalleBD[i].PuCoDeId))
-            }*/
-
-            //marcador : impar,  circle : par 
-        //primer marker es index 0
-        //primer circle es index 1
-        /*
-        this.indexPCDetalle= this.overlays.indexOf(event.overlay);
-        console.log("indice objeto"+this.indexPCDetalle);
-        
-        if(this.indexPCDetalle==0 ){
-            console.log("titulo marker: "+this.overlays[this.indexPCDetalle].title);    
-            this.overlays[this.indexPCDetalle].setMap(null);
-            this.overlays[this.indexPCDetalle+1].setMap(null);
-            this.overlays.splice(this.indexPCDetalle,2);
-        }else if(this.indexPCDetalle%2==0 && this.indexPCDetalle>1){
-            //console.log("marcador");
-            console.log("titulo marker: "+this.overlays[this.indexPCDetalle].title);    
-            this.overlays[this.indexPCDetalle].setMap(null);
-            this.overlays[this.indexPCDetalle+1].setMap(null);
-            this.overlays.splice(this.indexPCDetalle,2);
-            this.pCArrayDetalleBD.splice( Number(this.overlays[this.indexPCDetalle].title) , 1);
-           
-        }
-        console.log("tamaño: "+this.overlays.length);
-
-        //actualizando la matriz de objetos puntosControlDetalleBD
-        if(this.indexPCDetalle>1){
-            let n = 0;
-            
-            this.m=this.indexPCDetalle
-            while(this.m<this.overlays.length){
-                n = Number(this.overlays[this.m].title);//title marker = nro marker
-                
-                this.overlays[this.m].title = (n -1).toString(); 
-                this.m=this.m+2;
+   //SUMANDO TODOS LOS TIEMPOS ENTRE CADA PUNTO PARA HACER EL CALCULO 
+        //console.log(timePc[i]); console.log(_arrTiempos[j][i]); console.log("i: "+i+" -- "+"j: "+j);
+     /*   
+        for(let i=0; i<3; i++){
+            while(j<_arrTiempos.length){
+                timePc[i]=timePc[i]+_arrTiempos[j][i];
+                j++;
             }
+            j=0;
         }
-        console.log(this.overlays);
-        */
+        
+        console.log(timePc);
+        //CALCULANDO LOS MINUTOS Y SEGUNDOS 
+        let smax=60, res , mmax=60;
+        
+        //MINUTOS Y SEGUNDOS
+        res = this.calMinSeg(timePc[2],smax );
+        if(timePc[2] != res[1] || timePc[1] != res[0]){
+            timePc[2] = res[1]; //RESTO 
+            timePc[1] = timePc[1] + res[0]; //SUMANDO MINUTOS ADICIONALES
+        }else if(timePc[2] == res[1] && timePc[1] == res[0]){
+            //NO HACER NADA
+        }
+        
+        //HORAS
+        res = this.calMinSeg(timePc[1],mmax );
+        if(timePc[1] != res[0]){
+            timePc[1] = res[1]; 
+            timePc[0] = timePc[0] + res[0];
+        }else if(timePc[1] == res[0]){
+            //NO HACER NADA
+        }
+        su = this.cCeroHora(timePc.join(':'));
+        return su;
+        }
+
+        calMinSeg(dividendo:number, segminmax:number){
+            let tx=[0,0], r,c=1;
+            r=dividendo - segminmax;
+            //console.log("1ERO ----> r: "+r+" -- "+"dividendo: "+dividendo+"  --- "+"cociente :"+c);
+            if(r>=0){
+                while( r >= segminmax ){
+                    dividendo = r;
+                    r = dividendo - segminmax; 
+                    //console.log("* r: "+r+" -- "+"dividendo: "+dividendo+"  --- "+"cociente :"+c);
+                    dividendo = r;
+                    c++;
+                    //console.log("** r: "+r+" -- "+"dividendo: "+dividendo+"  --- "+"cociente :"+c);
+                }
+                if(r<segminmax){
+                    tx[0]=c;  tx[1]=r;   
+                }
+            }else if(r<0){
+                c=0;  tx[1]=r+segminmax; tx[0]=0;
+            }
+            //console.log("ULT   ----> r: "+r+" -- "+"dividendo: "+dividendo+"  --- "+"cociente :"+c);
+            console.log("resultado: "+tx);
+            return tx;
+        }
+    */

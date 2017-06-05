@@ -9,11 +9,11 @@
             </div>
                 
             <!--tablas PUNTO CONTROL CABECERA-->
-            <p-dataTable [value]="pCMaestroMostrar" [rows]="2" [paginator]="true" [pageLinks]="2" [rowsPerPageOptions]="[3,5]" 
+            <p-dataTable [value]="pCMaestroMostrar" [rows]="6" [paginator]="true" [pageLinks]="2" [rowsPerPageOptions]="[3,5]" 
                 [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" selectionMode="single" 
                 [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">
                 
-                <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                <p-column styleClass="col-button" [style]="{'width':'6em'}">
                     <template let-col let-pcMostrar="rowData" pTemplate="body">
                         <button type="button" pButton class="btn" (click)=  "editarMaestro(pcMostrar.PuCoId)" icon="fa-pencil-square-o" > </button>                  
                         <button type="button" pButton class="btn" (click)= "eliminarMaestro(pcMostrar.PuCoId)" icon="fa-trash">  </button>
@@ -21,10 +21,10 @@
                 </p-column>
                 
                 <!--campos de la datatable-->
-                <p-column field="nro"        header="N°" [style]="{'width':'2em'}" ></p-column>
-                <p-column field="PuCoTiempoBus" header="Tiempo" [style]="{'width':'4em'}" ></p-column>
-                <p-column field="PuCoClase"     header="Clase" [style]="{'width':'4em'}"></p-column>
-                <p-column field="PuCoDescripcion"     header="Descripcion" [style]="{'width':'3em'}"></p-column>
+                <p-column field="nro"             header="N°" [style]="{'width':'3em'}" ></p-column>
+                <p-column field="PuCoDescripcion" header="Descripcion" [style]="{'width':'12em'}"></p-column>
+                <p-column field="PuCoTiempoBus" header="Tiempo" [style]="{'width':'7em'}" ></p-column>
+                <p-column field="PuCoClase"     header="Clase" [style]="{'width':'10em'}"></p-column>
                 <!--
                 <p-column field="RuId"          header="RuId" [style]="{'width':'9em'}" hidden="true"></p-column>
                 <p-column field="RuDescripcion"  header="Descripcion" [style]="{'width':'9em'}" hidden="true"></p-column>
@@ -34,12 +34,12 @@
             
             <br>Puntos de Control<br>
             <!--PUNTOS DE CONTROL DETALLE (GRILLA PEQUEÑA)-->
-            <p-dataTable [value]="pCDetalleMostrar" [rows]="4" [paginator]="true" [pageLinks]="2"
+            <p-dataTable [value]="pCDetalleMostrar" [rows]="4" [paginator]="true" [pageLinks]="4"
                 emptyMessage="Seleccione Una Lista de Punto de Control" [rowsPerPageOptions]="[4,6]"
                 [globalFilter]="filtroGlobal"  scrollable="true" scrollWidth="100%" selectionMode="single" 
                 [(selection)]="selectedProgPresentar"  (onRowSelect)="onRowSelectDetalle($event)">
 
-                <p-column styleClass="col-button" [style]="{'width':'5em'}">
+                <p-column styleClass="col-button" [style]="{'width':'6em'}">
                     <!--botones de las filas-->
                     <template let-col let-pcDetalle="rowData" pTemplate="body">                                        
                         <button type="button" pButton class="btn" (click)="editarDetalle(pcDetalle.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
@@ -47,9 +47,9 @@
                     </template>
                 </p-column>
                 <!--campos de la datatable-->
-                <p-column field="PuCoDeOrden"      header="N°"   [style]="{'width':'2em'}"  ></p-column>
-                <p-column field="PuCoDeDescripcion" header="Lugar"  [style]="{'width':'5em'}"></p-column>
-                <p-column field="PuCoDeHora"        header="Hora"      [style]="{'width':'3em'}"></p-column>
+                <p-column field="PuCoDeOrden"      header="N°"   [style]="{'width':'4em','text-align':'center'}"  ></p-column>
+                <p-column field="PuCoDeDescripcion" header="Lugar"  [style]="{'width':'7em'}"></p-column>
+                <p-column field="PuCoDeHora"        header="Hora"      [style]="{'width':'6em'}"></p-column>
                
             </p-dataTable>
            
@@ -91,28 +91,19 @@
                 <!--TIEMPO RECORRIDO-->
                 <div class="form-group">
                     <label class="control-label" for="timeb">Tiempo de Recorrido:</label>
-                    <input class="form-control" id="timeb" name="timebus"  type="time" [(ngModel)]="pcMaestro.PuCoTiempoBus" step="1">
+                    <input class="form-control" id="timeb" name="timebus"  type="text" [(ngModel)]="pcMaestro.PuCoTiempoBus" step="1">
                 </div>
 
                 <!--TIPO DE TARJETA     COMBO_BOX-->
-                <div class="form-group row">
-                    <div class="col-3">
-                        <label class="col-2 col-form-label">Tipo de Tarjeta:</label>
-                    </div>
-                    <div class="col-9">
-                        <select [(ngModel)]="tipoTarjeta" (change)="ftipoTarjeta($event)">
-                            <option *ngFor="let tipo of _tipoTarjeta" [ngValue]="tipo">
-                                {{tipo.nomb}}
-                            </option>
-                        </select>
-                        </div>
+                <div class="form-group">
+                    <label class="col-form-label">Tipo de Tarjeta:</label>
+                    <select class="form-control" [(ngModel)]="tipoTarjeta" (change)="ftipoTarjeta($event)">
+                        <option *ngFor="let tipo of _tipoTarjeta" [ngValue]="tipo" selected="selected">
+                            {{tipo.nomb}}
+                        </option>
+                    </select>
                 </div>
-                <!--<div class="form-group ">
-                    <select [(ngModel)]="tipoTarjeta" (change)="placaObj($event)">
-                    <label class="control-label" for="tipetarj">Tipo de Tarjeta:</label>
-                    <input class="form-control" id="tipetarj" name="tipetarjeta"  type="text" [(ngModel)]="pcMaestro.PuCoClase"/>
-                </div>-->
-                
+           
                 <p-footer>
                     <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix ">
                         <button type="button" pButton  (click)="guardarPCMaestro()" label="Guardar"></button>
@@ -297,6 +288,16 @@
                     </div>
                 </p-footer>
             </p-dialog>
+
+             <!--GUARDAR PUNTOS DE CONTROL DETALLE SOBRE EL MAPA-->
+            <p-dialog [(visible)]="displayVerificarTiempoPc" modal="modal" width="100%" responsive="true" [closable]="false">
+                {{mensaje}}
+                <p-footer>
+                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                        <button type="button" pButton label="Aceptar" (click)="verificarTiemposPc()"></button>
+                    </div>
+                </p-footer>
+            </p-dialog>
     </div>
 </div>
                 <!--    
@@ -309,3 +310,12 @@
                        <p-dialog showEffect="fade" [(visible)]="dialogVisible" header="New Location">
                     -->
                     
+                     <!--<div class="form-group ">
+                    <div class="col-3">
+                        <label class="col-2 col-form-label">Tipo de Tarjeta:</label>
+                    <div class="col-9">
+                    <select [(ngModel)]="tipoTarjeta" (change)="placaObj($event)">
+                    <label class="control-label" for="tipetarj">Tipo de Tarjeta:</label>
+                    <input class="form-control" id="tipetarj" name="tipetarjeta"  type="text" [(ngModel)]="pcMaestro.PuCoClase"/>
+                </div>-->
+                

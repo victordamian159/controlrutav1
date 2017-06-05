@@ -9,7 +9,7 @@
         
         <!--TABLA MAESTRO  [pageLinks]="3" [rowsPerPageOptions]="[3,10,20]"-->
         
-        <p-dataTable [value]="_allTarjControl" [rows]="3" [paginator]="true"  [globalFilter]="filtroGlobal"
+        <p-dataTable [value]="_allTarjControl" [rows]="5" [paginator]="true"  [globalFilter]="filtroGlobal"
             scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectCabecera($event)">
                 <p-column styleClass="col-button" [style]="{'width':'6em'}">
                     <template let-col let-row="rowData" pTemplate="body">
@@ -37,24 +37,25 @@
         </div>
         <div class="card-block" style="padding:3">
             <div class="card-text">
-                <p-dataTable [value]="_allTarjDetalle" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal"
+                <!--<p-dataTable [value]="_allTarjDetalle" [globalFilter]="filtroGlobal" [rows]="10" scrollable="true" scrollHeight="100px" selectionMode="single">-->
+                <p-dataTable [value]="_allTarjDetalle" [rows]="10"   [globalFilter]="filtroGlobal"
                     scrollable="true" scrollWidth="100%" selectionMode="single">
                     <!--
                         <p-column styleClass="col-button" [style]="{'width':'6em'}"> 
-                            <template pTempalte="header">
+                            <template pTempalte="header"> [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]"
                                 <button type="button" pButton icon="fa-refresh">  </button>
                             </template>
                             <template let-col let-envioPresentar="rowData" pTemplate="body">
                                 <button type="button" class="btn"> </button>
                                 <button type="button" class="btn"> </button>
                             </template>
-                        </p-column>
+                        </p-column>TaCoDeHora
                     -->
-                    
-                    <p-column field="nro" header="N°"  [style]="{'width':'4em'}"></p-column>
-                    <p-column field="TaCoDeDescripcion" header="TaCoDeDescripcion"  [style]="{'width':'9em'}"></p-column>
+                    <p-column field="nro" header="N°"  [style]="{'width':'3em'}"></p-column>
+                    <p-column field="TaCoDeDescripcion" header="Punto"  [style]="{'width':'6em'}"></p-column>
                     <!--<p-column field="TaCoDeId" header="TaCoDeId"  [style]="{'width':'9em'}"></p-column>-->
-                    <p-column field="TaCoDeTiempo" header="TaCoDeTiempo"  [style]="{'width':'6em'}"></p-column>
+                    <p-column field="TaCoDeHora" header="Control"  [style]="{'width':'4em'}"></p-column>
+                    <p-column field="TaCoDeTiempo" header="Tiempo"  [style]="{'width':'4em'}"></p-column>
                 </p-dataTable>
             </div>
         </div>
@@ -69,22 +70,21 @@
                 <label class="col-2 col-form-label">Puntos:</label>
                 </div>
                 <div class="col-9">
-                <select [(ngModel)]="puntoControl" (change)="puntosControlId($event)">
+                <select class="form-control" [(ngModel)]="puntoControl" (change)="puntosControlId($event)">
                     <option *ngFor="let punto of _puntosControl" [ngValue]="punto" selected="selected">
                         {{punto.RuDescripcion}}
                     </option>
                 </select>
                 </div>
             </div>
-
-        
+      
         <!--LISTA PROGRAMACION EN LA BD-->
             <div class="form-group row">
                 <div class="col-4">
                 <label class="col-3 col-form-label">Programas:</label>
                 </div>
             <div class="col-8">
-                <select [(ngModel)]="_prId" (change)="programacionId($event)">
+                <select class="form-control" [(ngModel)]="_prId" (change)="programacionId($event)">
                     <option *ngFor="let prog of _programacion" [ngValue]="prog.prId">
                         {{prog.prDescripcion}}
                     </option>
@@ -101,7 +101,7 @@
                     <input class="form-control" name="fecha" placeholder="MM/DD/YYY" type="date" [(ngModel)]="tarjeta._TaCoFecha" />
                 </div>
                 <div class="col-1 row">    
-                    <button type="button" (click)="buscarxFecha()" pButton label=" "></button>
+                    <button type="button" (click)="buscarxFecha()" pButton icon="fa-search" label=" "></button>
                 </div>
             </div>
 
@@ -156,18 +156,17 @@
             </p-footer>
     </p-dialog>
 
+    <!--EDITAR PUNTOS DE CONTROL-->
      <p-dialog [(visible)]="displayEditarTarjeta" modal="modal" width="100%" [closable]= false>
          <!--PUNTOS DE CONTROL EXISTENTES-->
             <div class="form-group row">
-                <div class="col-3">
-                <label class="col-2 col-form-label">Puntos:</label>
-                </div>
-                <div class="col-9">
-                <select [(ngModel)]="puntoControl" (change)="puntosControlId($event)">
-                    <option *ngFor="let punto of _puntosControl" [ngValue]="punto" selected="selected">
-                        {{punto.RuDescripcion}}
-                    </option>
-                </select>
+                <div class="form-group">
+                    <label  class="control-label">Puntos:</label>
+                    <select class="form-control" [(ngModel)]="puntoControl" (change)="puntosControlId($event)">
+                        <option *ngFor="let punto of _puntosControl" [ngValue]="punto" selected="selected">
+                            {{punto.RuDescripcion}}
+                        </option>
+                    </select>
                 </div>
             </div>
 
@@ -203,7 +202,13 @@
                 </div>
             </p-footer>
      </p-dialog>  
-<!--<div class="col-6">-->
+<!--<div class="col-6">
+     <div class="col-3">
+                    <div class="col-9">
+                </div>
+                </div>
+    class="col-2 col-form-label"
+    -->
                                     <!--</div>
                                     <div class="col-6">-->
                             <!--<div class="col-6">-->

@@ -15,9 +15,9 @@
                             scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">
                             <!--botones para la PRIMERA COLUMNA -->
                             <p-column styleClass="col-button" [style]="{'width':'4em'}">
-                                <template pTempalte="header">
+                                <!--<template pTempalte="header">
                                     <button type="button" pButton icon="fa-refresh">  </button>
-                                </template>
+                                </template>-->
                                 <template let-col let-progrRowMaestro="rowData" pTemplate="body">
                                     <!--<button type="button" pButton class="btn" (click)="editarMaestro(progrRowMaestro.prId)" icon="fa-pencil-square-o" ></button>-->
                                     <button type="button" pButton class="btn" (click)="eliminarRegistroGrilla(progrRowMaestro.prId)" icon="fa-trash" ></button>
@@ -47,7 +47,7 @@
                     <div class="form-group row">
                         <div class="col-4"><label >Tipo:</label></div>
                         <div class="col-8">
-                            <select [(ngModel)]="tipoProg" (change)="tipoProgramacion($event)">
+                            <select class="form-control" [(ngModel)]="tipoProg" (change)="tipoProgramacion($event)">
                                 <option *ngFor="let tipo of _tipoProg" [ngValue]="tipo.id">
                                     {{tipo.nTipo}}
                                 </option>
@@ -59,7 +59,7 @@
                     <div class="form-group row">
                         <div class="col-4"><label >Forma:</label></div>
                         <div class="col-8">
-                            <select [(ngModel)]="formaProg" (change)="formaProgramacion($event)">
+                            <select class="form-control" [(ngModel)]="formaProg" (change)="formaProgramacion($event)">
                                 <option *ngFor="let forma of _formaProg" [ngValue]="forma.id">
                                     {{forma.nForma}}
                                 </option>
@@ -88,7 +88,7 @@
                     <!--Descripcion  -->
                     <div class="form-group">
                         <label for="descripcion" class="control-label">Identificador:</label>
-                        <input type="text" id="descripcion"[(ngModel)]="progMaestro.PrDescripcion" >
+                        <input class="form-control" type="text" id="descripcion"[(ngModel)]="progMaestro.PrDescripcion" >
                     </div>
                     <!--modal footer-->
                     <p-footer>
@@ -208,7 +208,7 @@
                         <div class="table-container" > 
                             <div class="container" style="overflow-x:auto;">
                                 <!--AUMENTAR MAS TAMAÑOS DE TABLAS COMO MAXIMO HASTA 63 DIAS DE PROGRAMACION DE DOS MESES-->
-                                <table *ngIf="nroColumn>30" width="3500px">
+                                <table *ngIf="nroColumn>=30" width="3500px">
                                     
                                     <thead>
                                         <tr><th *ngFor="let dia of this.nroDias;">{{dia}}</th></tr>

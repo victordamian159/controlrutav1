@@ -128,7 +128,7 @@ export class TcontrolComponent implements OnInit{
     ngOnInit(){
         //console.log(this.placas);
         this.getallplacasbusbyemsuem(1,0); //PLACAS
-        this.getallpuntocontrolbyemru(1,0); //PUNTOS DE CONTROL
+        this.getallpuntocontrolbyemru(1,51); //PUNTOS DE CONTROL
         this.getalltarjetacontrol(); 
         
         this.getallprogramacionbyem(1,0); //PROGRAMACION X EMP
@@ -336,8 +336,6 @@ export class TcontrolComponent implements OnInit{
   
     }
 
-  
-
     //CONSULTA TARJETAS DE CONTROL BY ID ---NO ESTA EN USO
     getalltarjetacontrolbyid(tacoid:number){
         this.tcontrolservice.getAllTarjetaControlById(tacoid).subscribe(
@@ -384,7 +382,7 @@ export class TcontrolComponent implements OnInit{
     //SE CANCELA TARJETA
     cancelarTarjeta(){
         this.displayAsignarTarjeta = false;
-        console.log("cancelado =()");
+        console.log("cancelado =(");
     }
 
     cancelarEditarTarjeta(){
@@ -395,16 +393,10 @@ export class TcontrolComponent implements OnInit{
     onRowSelectCabecera(event){
         this.tarjeta._TaCoId=0; 
         this.tarjeta._TaCoId = event.data.TaCoId;
-        //console.log(this.tarjeta._TaCoId);
+        //console.log(this.tarjeta._TaCoId);  //console.log(this.progD_BD);  //console.log(this._tarjetaDetalle); //this.progD_BD=data;
 
         this.tcontrolservice.getAllTarjetaControlDetalleBytaCoId(this.tarjeta._TaCoId).subscribe(
-            data => {
-                        //this.progD_BD=data;
-                        //console.log(this.progD_BD);
-                        this._tarjetaDetalle = data;
-                        //console.log(this._tarjetaDetalle);
-                        this.mgTarjetaDetalle();
-                    }
+            data => { this._tarjetaDetalle = data;  this.mgTarjetaDetalle();  }
         );
     }
 
@@ -417,11 +409,11 @@ export class TcontrolComponent implements OnInit{
                 PuCoDeId:tDetalle.PuCoDeId, 
                 TaCoDeDescripcion:tDetalle.TaCoDeDescripcion, 
                 TaCoDeFecha:tDetalle.TaCoDeFecha, 
-                TaCoDeHora:tDetalle.TaCoDeHora, 
+                TaCoDeHora: this._hora(tDetalle.TaCoDeHora), 
                 TaCoDeId:tDetalle.TaCoDeId, 
                 TaCoDeLatitud:tDetalle.TaCoDeLatitud, 
                 TaCoDeLongitud:tDetalle.TaCoDeLongitud, 
-                TaCoDeTiempo:tDetalle.TaCoDeTiempo, 
+                TaCoDeTiempo: this._hora(tDetalle.TaCoDeTiempo), 
                 TaCoId:tDetalle.TaCoId, 
                 UsFechaReg:tDetalle.UsFechaReg, 
                 UsId:tDetalle.UsId
