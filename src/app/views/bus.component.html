@@ -1,0 +1,25 @@
+<div class="card">
+    <div class="card-block" style="padding : 3">
+        <div class="card-title">
+            <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+            <span class="text-xs-right">  <button (click)="nuevoBus()" pButton icon="fa-file-text-o" label="Nuevo"></button>  </span>
+        </div>
+        <!--TABLA BUS CABECERA-->
+         <p-dataTable [value]="personalArr" [rows]="15"  [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectPersonal($event)">
+            <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                <template let-col  let-objBus="rowData"  pTemplate="body">
+                        <button type="button" pButton class="btn" (click)=  "editarBus(objBus)" icon="fa-pencil-square-o" > </button>                  
+                        <button type="button" pButton class="btn" (click)= "eliminarBus(objBus.BuId)" icon="fa-trash">  </button>
+                </template>
+            </p-column>
+            <p-column field="nro"             header="N°"       [style]="{'width':'3em','text-align':'center'}" ></p-column>
+            <p-column field="PeNombres" header="Empresa" [style]="{'width':'14em'}"></p-column>
+            <p-column field="PeApellidos" header="Placa"      [style]="{'width':'18em'}" ></p-column>
+            <p-column field="PeDni"     header="Combustible"     [style]="{'width':'6em','text-align':'center'}"></p-column>
+            <p-column field="PeDireccion" header="SOAT" [style]="{'width':'20em'}"></p-column>
+            <p-column field="PeTipo" header="Fecha"      [style]="{'width':'8em','text-align':'center'}" ></p-column>
+            <p-column field="PeLicencia"     header="Licencia"     [style]="{'width':'10em'}"></p-column>
+            <p-column field="PeCelular"     header="Celular"     [style]="{'width':'8em','text-align':'center'}"></p-column>
+        </p-dataTable>
+    </div>
+</div>

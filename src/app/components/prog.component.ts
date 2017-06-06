@@ -978,6 +978,10 @@ export class ProgComponent implements OnInit{
         this.displayErrorTablaProgramacion=false;
     }
     
+    //EDITAR CABECERA
+    editarCabecera(reg : Object){
+        console.log(reg);
+    }
     //BOTON ELIMINAR REGISTRO 
     eliminarRegistroGrilla(_PrId : number){
         //console.log("eliminar "+_PrId);

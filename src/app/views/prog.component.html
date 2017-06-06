@@ -1,6 +1,6 @@
 <div class="card">
 <div><h4>Programaciones</h4></div>
-
+</div>
         <!--TABLA PROGRAMACION MAESTRO-->
         <div class="card-block" style="padding:3">
             <div class="card-title">
@@ -19,19 +19,19 @@
                                     <button type="button" pButton icon="fa-refresh">  </button>
                                 </template>-->
                                 <template let-col let-progrRowMaestro="rowData" pTemplate="body">
-                                    <!--<button type="button" pButton class="btn" (click)="editarMaestro(progrRowMaestro.prId)" icon="fa-pencil-square-o" ></button>-->
+                                    <button type="button" pButton class="btn" (click)="editarCabecera(progrRowMaestro)" icon="fa-pencil-square-o" ></button>
                                     <button type="button" pButton class="btn" (click)="eliminarRegistroGrilla(progrRowMaestro.prId)" icon="fa-trash" ></button>
                                 </template>
                             </p-column>
 
                             <!--campos de la datatable-->
-                            <p-column field="nro" header="N°"  [style]="{'width':'3em'}"></p-column>
-                            <p-column field="tipo" header="Tipo"  [style]="{'width':'5em'}"></p-column>
-                            <p-column field="prDescripcion" header="Nombre"  [style]="{'width':'5em'}"></p-column>
-                            <p-column field="PrCantidadBuses" header="Cant."  [style]="{'width':'4em'}"></p-column>
-                            <p-column field="PrFechaInicio" header="Desde" [style]="{'width':'6em'}"></p-column>
-                            <p-column field="PrFechaFin" header="Hasta" [style]="{'width':'6em'}"></p-column>
-                            <p-column field="dias" header="N° Dias"  [style]="{'width':'4em'}"></p-column>
+                            <p-column field="nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
+                            <p-column field="tipo" header="Tipo"  [style]="{'width':'8em','text-align':'center'}"></p-column>
+                            <p-column field="prDescripcion" header="Nombre"  [style]="{'width':'14em','text-align':'center'}"></p-column>
+                            <p-column field="PrCantidadBuses" header="Cant."  [style]="{'width':'4em','text-align':'center'}"></p-column>
+                            <p-column field="PrFechaInicio" header="Desde" [style]="{'width':'8em','text-align':'center'}"></p-column>
+                            <p-column field="PrFechaFin" header="Hasta" [style]="{'width':'8em','text-align':'center'}"></p-column>
+                            <p-column field="dias" header="Dias"  [style]="{'width':'4em','text-align':'center'}"></p-column>
                         </p-dataTable>
                     </div><!--fin tabla PROGRAMACION MAESTRO-->
             </div>
@@ -327,7 +327,7 @@
                 </p-footer>
         </p-dialog>
       
-</div>
+
   <!--MODAL VALIDAR DATOS-->
         <!--
             <p-dialog [(visible)]="displayConfirmar" modal="modal" width="100%" responsive="true">

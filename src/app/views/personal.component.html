@@ -1,0 +1,138 @@
+<div class="card">
+    <div class="card-block" style="padding : 3">
+        <div class="card-title">
+            <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+            <span class="text-xs-right">  <button (click)="nuevoPersonal()" pButton icon="fa-file-text-o" label="Nuevo"></button>  </span>
+        </div>
+
+        <p-dataTable [value]="personalArr" [rows]="15"  [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectPersonal($event)">
+            <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                <template let-col  let-pcMostrar="rowData"  pTemplate="body">
+                        <button type="button" pButton class="btn" (click)=  "editarPersonal(pcMostrar)" icon="fa-pencil-square-o" > </button>                  
+                        <button type="button" pButton class="btn" (click)= "eliminarPersonal(pcMostrar.PuCoId)" icon="fa-trash">  </button>
+                </template>
+            </p-column>
+            <p-column field="nro"             header="N°"       [style]="{'width':'3em','text-align':'center'}" ></p-column>
+            <p-column field="PeNombres" header="Nombres" [style]="{'width':'14em'}"></p-column>
+            <p-column field="PeApellidos" header="Apellidos"      [style]="{'width':'18em'}" ></p-column>
+            <p-column field="PeDni"     header="Dni"     [style]="{'width':'6em','text-align':'center'}"></p-column>
+            <p-column field="PeDireccion" header="Direccion" [style]="{'width':'20em'}"></p-column>
+            <p-column field="PeTipo" header="Tipo"      [style]="{'width':'8em','text-align':'center'}" ></p-column>
+            <p-column field="PeLicencia"     header="Licencia"     [style]="{'width':'10em'}"></p-column>
+            <p-column field="PeCelular"     header="Celular"     [style]="{'width':'8em','text-align':'center'}"></p-column>
+        </p-dataTable>
+
+
+        <!--MODAL NUEVO PERSONAL-->
+        <p-dialog [(visible)]="displayNuevo" modal="modal" width="100%" height="100%" responsive="true" [closable]="false">
+            <p-header>
+                {{titulo}}
+            </p-header>
+            <div style="overflow-y: auto; height:300px; ">
+                <!--NOMBRE-->
+                <div class="form-group">
+                    <label class="control-label" for="nom">Nombres:</label>
+                    <input class="form-control" id="descr" name="nom"  type="text" [(ngModel)]="personal.PeNombres"/>
+                </div>
+
+                <!--APELLIDO-->
+                <div class="form-group">
+                    <label class="control-label" for="ape">Apellidos:</label>
+                    <input class="form-control" id="timeb" name="ape"  type="text" [(ngModel)]="personal.PeApellidos" />
+                </div>
+
+                <!--DNI-->
+                <div class="form-group">
+                    <label class="control-label" for="dni">Dni:</label>
+                    <input class="form-control" id="descr" name="dni"  type="text" [(ngModel)]="personal.PeDni" />
+                </div>
+
+                <!--SEXO-->
+                <div class="form-group">
+                    <label class="control-label" for="genero">Genero:</label>
+                    <!--DROPDOWN-->
+                    <input class="form-control" id="descr" name="genero"  type="text" [(ngModel)]="personal.PeSexo" />
+                </div>
+
+                <!--ESTADO CIVIL-->
+                <div class="form-group">
+                    <label class="control-label" for="desc">EstadoCivil:</label>
+                    <!--DROPDOWN-->
+                    <input class="form-control" id="descr" name="desc"  type="text" [(ngModel)]="personal.PeEstCivil" />
+                </div>
+
+                <!--FECHA NACIMIENTO-->
+                <div class="form-group">
+                    <label class="control-label" for="fnac">Fecha Nac.:</label>
+                    <input class="form-control" id="timeb" name="fnac"  type="date" [(ngModel)]="personal.PeFecNac" />
+                </div>
+
+                <!--DIRECCION-->
+                <div class="form-group">
+                    <label class="control-label" for="direc">Direccion:</label>
+                    <input class="form-control" id="descr" name="direc"  type="text" [(ngModel)]="personal.PeDireccion" />
+                </div>
+
+                <!--TIPO PERSONAL-->
+                <div class="form-group">
+                    <label class="control-label" for="tper">Tipo:</label>
+                    <!--DROPDOWN-->
+                    <input class="form-control" id="timeb" name="tper"  type="text" [(ngModel)]="personal. PeTipo" />
+                </div>
+
+                <!--LICENCIA-->
+                <div class="form-group">
+                    <label class="control-label" for="lic">Licencia:</label>
+                    <input class="form-control" id="descr" name="lic"  type="text" [(ngModel)]="personal.PeTipoLicencia" />
+                </div>
+
+                <!--NRO CELULAR-->
+                <div class="form-group">
+                    <label class="control-label" for="nmovil">Nro Movil:</label>
+                    <input class="form-control" id="timeb" name="nmovil"  type="text" [(ngModel)]="personal.PeNMovil" />
+                </div>
+
+                <!--NRO FIJO-->
+                <div class="form-group">
+                    <label class="control-label" for="nfijo">Nro Fijo:</label>
+                    <input class="form-control" id="descr" name="nfijo"  type="text" [(ngModel)]="personal.PeNFijo" />
+                </div>
+
+                <!--CORREO ELECTRONICO-->
+                <div class="form-group">
+                    <label class="control-label" for="email">Email:</label>
+                    <input class="form-control" id="timeb" name="email"  type="text" [(ngModel)]="personal.PeEmail" />
+                </div>
+
+                <!--FECHA INGRESO-->
+                <div class="form-group">
+                    <label class="control-label" for="timeb">Fecha Ingreso:</label>
+                    <input class="form-control" id="timeb" name="fingr"  type="date" [(ngModel)]="personal.PeFechaIng" />
+                </div>
+
+                <!--FECHA SALIDA-->
+                <div class="form-group">
+                    <label class="control-label" for="fsal">Fecha Salida:</label>
+                    <input class="form-control" id="timeb" name="fsal"  type="date" [(ngModel)]="personal.PeFechaSal" />
+                </div>
+            </div>
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton label="Guardar" (click)="guardarPersonal()"></button>
+                    <button type="button" pButton label="Cancelar" (click)="cancelarPersonal()"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
+
+        <!--MODAL CONFIRMAR ELIMINAR PERSONAL-->
+        <p-dialog [(visible)]="displayEliminar" modal="modal" width="100%" responsive="true" [closable]="false">
+            {{mensaje}}
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton label="Aceptar" (click)="verificarEliminar()"></button>
+                    <button type="button" pButton label="Cancelar" (click)="cancelarEliminar()"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
+    </div>
+</div>

@@ -48,7 +48,7 @@
                 </p-column>
                 <!--campos de la datatable-->
                 <p-column field="PuCoDeOrden"      header="N°"   [style]="{'width':'4em','text-align':'center'}"  ></p-column>
-                <p-column field="PuCoDeDescripcion" header="Lugar"  [style]="{'width':'7em'}"></p-column>
+                <p-column field="PuCoDeDescripcion" header="Lugar"  [style]="{'width':'12em'}"></p-column>
                 <p-column field="PuCoDeHora"        header="Hora"      [style]="{'width':'6em'}"></p-column>
                
             </p-dataTable>
@@ -289,7 +289,7 @@
                 </p-footer>
             </p-dialog>
 
-             <!--GUARDAR PUNTOS DE CONTROL DETALLE SOBRE EL MAPA-->
+             <!--VENTANA CONFIRMAR VERIFICAR TIEMPOS PUNTOS DE CONTROL-->
             <p-dialog [(visible)]="displayVerificarTiempoPc" modal="modal" width="100%" responsive="true" [closable]="false">
                 {{mensaje}}
                 <p-footer>

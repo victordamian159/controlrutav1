@@ -1,3 +1,4 @@
+/*COMPONENTES ANGULAR 2*/ 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -13,30 +14,38 @@ import {InputTextModule,CalendarModule} from 'primeng/primeng';
 
 import { AppComponent } from './app.component';
 
-
-//importando clases de los componentes .ts
+//IMPORTANDO CLASES DE LOS COMPONENTES .ts DEL APLICATIVO
 import { RutaComponent } from './components/ruta.component';
 import { PcontrolComponent} from './components/pcontrol.component';
 import { ProgComponent } from './components/prog.component';
 import {RegtimeComponent} from './components/regtime.component';
 import {TcontrolComponent} from './components/tcontrol.component';
 
-//para el routing
+import {BusComponent} from './components/bus.component';
+import {EmpComponent} from './components/empresa.component';
+import {PersComponent} from './components/personal.component';
+
+
+//ROUTING MODULE
 import {AppRoutingModule} from './app-routing.module';
 
-//proveedor ruta service
+//LLAMANDO A LOS PROVEEDORES DE SERVICIO
 import {RutaService} from './service/ruta.service';
 import {ProgramacionService} from './service/prog.service';
 import {PuntoControlService} from './service/pcontrol.service';
 import {PlacasService} from './service/placas.service';
 import {TControlService}  from './service/tcontrol.service';
+import {BusService} from './service/bus.service';
+import {EmpService} from './service/empresa.service';
+import {PersService}  from './service/personal.service';
+
 
 //import { InMemoryWebApiModule } from 'angular2-in-memory-web-api';
 //import { InMemoryDataService }  from './in-memory-data.service';
 
 
 @NgModule({
-  //modulos del aplicativo
+  //MODULOS DEL APLICATIVO
   declarations: [
     AppComponent,
     RutaComponent,
@@ -44,10 +53,14 @@ import {TControlService}  from './service/tcontrol.service';
     ProgComponent,
     RegtimeComponent,
     TcontrolComponent,
+    BusComponent,
+    EmpComponent,
+    PersComponent
     //InMemoryWebApiModule.forRoot()
     //InMemoryWebApiModule.forRoot(InMemoryDataService)
   ],
-  //modulos de los frameworks
+  
+  /*MODULOS FRAMWORK PRIMENG*/
   imports: [
     BrowserModule,
     FormsModule,
@@ -75,6 +88,8 @@ import {TControlService}  from './service/tcontrol.service';
       CalendarModule
 
   ],
+
+  /*SERVICIOS*/
   providers: [
       RutaService, 
       PuntoControlService,

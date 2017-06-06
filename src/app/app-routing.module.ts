@@ -8,13 +8,23 @@ import {ProgComponent} from './components/prog.component';
 import {RegtimeComponent} from './components/regtime.component';
 import {TcontrolComponent} from './components/tcontrol.component';
 
+
+import {BusComponent} from './components/bus.component';
+import {EmpComponent} from './components/empresa.component';
+import {PersComponent} from './components/personal.component';
+
+
 //estableciencido las path para los componentes del aplicativo
 const app_routes: Routes = [
       {path: 'ruta', component: RutaComponent},
       {path: 'pcontrol', component: PcontrolComponent},
       {path: 'prog', component: ProgComponent},
       {path: 'regtime', component: RegtimeComponent},
-      {path: 'tcontrol', component:TcontrolComponent }
+      {path: 'tcontrol', component:TcontrolComponent },
+
+      {path: 'regpersonal', component:PersComponent },
+      {path: 'regbus', component:BusComponent },
+      {path: 'regempresa', component:EmpComponent }
 ];
 
 

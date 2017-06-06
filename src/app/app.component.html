@@ -1,11 +1,12 @@
-<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse"  style="background-color: #e3f2fd;">
+<nav class="navbar navbar-toggleable-md navbar-inverse bg-primary"  style="background-color: #FF4000;">
   <button class="navbar-toggler navbar-toggler-right" type="button" 
           data-toggle="collapse" data-target="#navbarNavDropdown" 
           aria-controls="navbarNavDropdown" aria-expanded="false" 
           aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <a class="navbar-brand" href="#">Inicio</a>
+  <!--<a class="navbar-brand" href="#">Menu</a>-->
+  <a class="navbar-brand" href="#">-</a>
   
   
   <div class="navbar-collapse collapse" id="navbarNavDropdown">
@@ -36,13 +37,23 @@
         <a href="#" class="nav-link" routerLink="/regtime" routerLinkActive="active">Reg Tiempo</a>						
       </li>
 
+      <!--FORMULARIOS RECIENTES-->
+      <!--Boton Registro de PERSONAL-->
+      <li class="nav-item active">
+        <a href="#" class="nav-link" routerLink="/regpersonal" routerLinkActive="active">Personal</a>						
+      </li>
+      <!--Boton Registro de EMPRESA-->
+      <li class="nav-item active">
+        <a href="#" class="nav-link" routerLink="/regempresa" routerLinkActive="active">Empresa</a>						
+      </li>
+      <!--Boton Registro de BUS-->
+      <li class="nav-item active">
+        <a href="#" class="nav-link" routerLink="/regbus" routerLinkActive="active">Bus</a>						
+      </li>
 
       <!-- Lista despliegue hacia abajo-->
       <li class="nav-item dropdown">
-
-        <a href="#" class="nav-link dropdown-toggle"  id="navbarDropdownMenuLink" 
-           data-toggle="dropdown" >Bandeja<b class="caret"></b></a>
-
+        <a href="#" class="nav-link dropdown-toggle"  id="navbarDropdownMenuLink"  data-toggle="dropdown" >Bandeja<b class="caret"></b></a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" href="#">Reportes</a>
           <a class="dropdown-item" href="#">Bandeja Interno 1</a>
@@ -52,7 +63,6 @@
           <a class="dropdown-item" href="#">Bandeja Interno 5</a>
           <a class="dropdown-item" href="#">Bandeja Interno 6</a>
         </div>					
-        
       </li>					
     </ul>
   
