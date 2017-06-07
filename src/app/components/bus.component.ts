@@ -17,7 +17,7 @@ export class BusComponent implements OnInit{
         BuDescripcion :"",
         BuTipoCombustible:null,
         BuColor:"",
-        BuCapacidad:null,
+        BuCapacidad:"",
         BuMarca:"",
         BuTipo:null,
         BuSOAT:"",
@@ -35,10 +35,15 @@ export class BusComponent implements OnInit{
     _gbus=[]; /*ARRAY GRILLA*/
 
     /* VARIEBLES*/
+    titulo:string;
+    mensaje:string;
 
     /* DISPLAY MODAL*/
+    displayNuevoBus : boolean = false;
+    displayAceptarNuevoBus : boolean = false;
 
     /* OTRAS VARIABLES*/
+    
     
     ngOnInit(){
         this._bus=[
@@ -57,12 +62,17 @@ export class BusComponent implements OnInit{
     
     /* NUEVO OBJETO BUS*/ 
     nuevoBus(){
-        console.log("nuevo");
+        this.titulo="Nuevo Registro";
+        this.displayNuevoBus = true;
     }
 
     /* NUEVO OBJETO BUS*/ 
     editarBus(bus : Object){
+
         console.log("editar");
+
+        this.titulo = "EditarRegistro";
+        this.displayNuevoBus = true;
     }
 
     /* NUEVO OBJETO BUS*/ 
@@ -87,7 +97,33 @@ export class BusComponent implements OnInit{
         }
     }
 
+    /* TABLE BUS */
     onRowSelectBus(event){
         console.log("seleccionado :s");
+    }
+    guardarbus(){
+        this.titulo="";
+        this.displayNuevoBus = false;
+        this.mensaje = "Se Guardo Un Nuevo Registro";
+
+        /* CONDICIONAL NUEVO REGISTRO O EDITADO*/
+        if(this.bus.BuId==0){
+            console.log("NUEVO REGISTRO");
+        }else if(this.bus.BuId!=0){
+            console.log("EDITANDO REGISTRO");
+        }
+
+        /*PROCEDIMIENTO GUARDAR NUEVO REGISTRO */ 
+        this.displayAceptarNuevoBus = true;
+        
+        console.log("guardar");
+    }
+    cancelarbus(){
+        this.displayNuevoBus = false;
+        console.log("cancelado");
+    }
+    aceptarNuevoBus(){
+        this.mensaje="";
+        this.displayAceptarNuevoBus=false;
     }
 }

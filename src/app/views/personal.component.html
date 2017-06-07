@@ -5,7 +5,8 @@
             <span class="text-xs-right">  <button (click)="nuevoPersonal()" pButton icon="fa-file-text-o" label="Nuevo"></button>  </span>
         </div>
 
-        <p-dataTable [value]="personalArr" [rows]="15"  [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectPersonal($event)">
+        <p-dataTable [value]="personalArr" [rows]="15"  [globalFilter]="filtroGlobal" scrollable="true" 
+                    scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectPersonal($event)">
             <p-column styleClass="col-button" [style]="{'width':'3em'}">
                 <template let-col  let-pcMostrar="rowData"  pTemplate="body">
                         <button type="button" pButton class="btn" (click)=  "editarPersonal(pcMostrar)" icon="fa-pencil-square-o" > </button>                  

@@ -10,7 +10,7 @@
   
   
   <div class="navbar-collapse collapse" id="navbarNavDropdown">
-    <ul class="navbar-nav">
+    <ul class="navbar-nav" *ngIf="infor==1">
 
       <!--Boton Ruta-->
       <li class="nav-item active">
@@ -37,7 +37,6 @@
         <a href="#" class="nav-link" routerLink="/regtime" routerLinkActive="active">Reg Tiempo</a>						
       </li>
 
-      <!--FORMULARIOS RECIENTES-->
       <!--Boton Registro de PERSONAL-->
       <li class="nav-item active">
         <a href="#" class="nav-link" routerLink="/regpersonal" routerLinkActive="active">Personal</a>						
