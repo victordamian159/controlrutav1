@@ -1,11 +1,12 @@
 <div class="card">
     <div class="card-block" style="padding : 3">
+        <h5>Bus</h5>
         <div class="card-title">
             <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
             <span class="text-xs-right">  <button (click)="nuevoBus()" pButton icon="fa-file-text-o" label="Nuevo"></button>  </span>
         </div>
         <!--TABLA BUS CABECERA-->
-         <p-dataTable [value]="_gbus" [rows]="6"  [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" [paginator]="true" selectionMode="single" (onRowSelect)="onRowSelectBus($event)">
+         <p-dataTable [value]="_gbus" [rows]="3"  [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" [paginator]="true" selectionMode="single" (onRowSelect)="onRowSelectBus($event)">
             <p-column styleClass="col-button" [style]="{'width':'3em'}">
                 <template let-col  let-objBus="rowData"  pTemplate="body">
                         <button type="button" pButton class="btn" (click)=  "editarBus(objBus)" icon="fa-pencil-square-o" > </button>                  
@@ -19,9 +20,25 @@
             <p-column field="BuSOAT" header="SOAT" [style]="{'width':'12em'}"></p-column>
             <p-column field="BuModelo" header="Modelo" [style]="{'width':'10em','text-align':'center'}" ></p-column>
         </p-dataTable>
+
+        <!--TABLA BUS DETALLE-->
+        <br>
+        <h5>Detalles</h5>
+        <button (click)="nuevoBusD()" pButton icon="fa-file-text-o" label="Nuevo"></button>
+         <p-dataTable [value]="_gbusD" [rows]="2"  [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" [paginator]="true" selectionMode="single" (onRowSelect)="onRowSelectBusDetalle($event)">
+             <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                <template let-col  let-objBusD="rowData"  pTemplate="body">
+                        <button type="button" pButton class="btn" (click)=  "editarBusD(objBusD)" icon="fa-pencil-square-o" > </button>                  
+                        <button type="button" pButton class="btn" (click)= "eliminarBusD(objBusD.PeId)" icon="fa-trash">  </button>
+                </template>
+            </p-column>
+            <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
+            <p-column field="BuPeTipo" header="" [style]="{'width':'10em','text-align':'center'}"></p-column>
+            <p-column field="UsId" header="Usuarios" [style]="{'width':'10em','text-align':'left'}"></p-column>
+         </p-dataTable>
     </div>
 
-    <!--VENTANAS MODALES-->
+    
      <!--MODAL NUEVO BUS-->
         <p-dialog [(visible)]="displayNuevoBus" modal="modal" width="100%" height="100%" responsive="true" [closable]="false">
             <p-header>
@@ -129,12 +146,77 @@
             </p-footer>
         </p-dialog>
 
-    <!--MODAL ACEPTAR NUEVO BUS-->
+    <!--MODAL NUEVO BUS DETALLE-->
+        <p-dialog [(visible)]="displayNuevoBusD" modal="modal" width="100%" height="100%" responsive="true" [closable]="false">
+            <p-header>
+                {{titulo}}
+            </p-header>
+            <div style="overflow-y: auto; height:300px; ">
+                <!--PLACA-->
+                <div class="form-group">
+                    <label class="control-label" for="placa">Placa:</label>
+                    <input class="form-control" id="placa" name="placa"  type="text" [(ngModel)]="busD.BuId"/>
+                </div>
+
+                <!--IDENTIFICACION DEL INDIVIDUO-->
+                <div class="form-group">
+                    <label class="control-label" for="ident">Identificacion:</label>
+                    <input class="form-control" id="ident" name="ident"  type="text" [(ngModel)]="busD.PeId" />
+                </div>
+
+                <!--TIPO DE CARGO REPRESENTACION-->
+                <div class="form-group">
+                    <label class="control-label" for="motor">Tipo:</label>
+                    <input class="form-control" id="motor" name="motor"  type="text" [(ngModel)]="busD.BuPeTipo" />
+                </div>
+            </div>
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton label="Guardar" (click)="guardarbusD()"></button>
+                    <button type="button" pButton label="Cancelar" (click)="cancelarbusD()"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
+
+    <!--VENTANAS MODAL CONFIRMACION-->
+        <!--MODAL ACEPTAR NUEVO BUS-->
         <p-dialog [(visible)]="displayAceptarNuevoBus" modal="modal" width="100%" height="100%" responsive="true" [closable]="false">
                 {{mensaje}}
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
                     <button type="button" pButton label="Aceptar" (click)="aceptarNuevoBus()"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
+
+        <!--MODAL ELIMINAR BUS-->
+        <p-dialog [(visible)]="displayEliminarBus" modal="modal" width="100%" height="100%" responsive="true" [closable]="false">
+                {{mensaje}}
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton label="Aceptar" (click)="_eliminarBus()"></button>
+                    <button type="button" pButton label="Cancelar" (click)="cancelEliminar()"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
+
+         <!--MODAL ACEPTAR NUEVO BUS DETALLE-->
+        <p-dialog [(visible)]="displayAceptarNuevoBusD" modal="modal" width="100%" height="100%" responsive="true" [closable]="false">
+                {{mensaje}}
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton label="Aceptar" (click)="aceptarNuevoBusD()"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
+
+        <!--MODAL ELIMINAR BUS DETALLE-->
+        <p-dialog [(visible)]="displayEliminarBusD" modal="modal" width="100%" height="100%" responsive="true" [closable]="false">
+                {{mensaje}}
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton label="Aceptar" (click)="_eliminarBusD()"></button>
+                    <button type="button" pButton label="Cancelar" (click)="cancEliBusD()"></button>
                 </div>
             </p-footer>
         </p-dialog>

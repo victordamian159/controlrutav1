@@ -106,6 +106,9 @@ export class PersComponent implements OnInit{
     }
 
     /*NUEVO PERSONAL*/
+    onsubmit(){
+        console.log("enviado =D");
+    }
     nuevoPersonal(){
         this.titulo="Nuevo Registro de Personal";
         this.displayNuevo=true;

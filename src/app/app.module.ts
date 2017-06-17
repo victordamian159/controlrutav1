@@ -20,10 +20,11 @@ import { PcontrolComponent} from './components/pcontrol.component';
 import { ProgComponent } from './components/prog.component';
 import {RegtimeComponent} from './components/regtime.component';
 import {TcontrolComponent} from './components/tcontrol.component';
-
+import {menuComponent} from './components/menu.component' ; 
 import {BusComponent} from './components/bus.component';
 import {EmpComponent} from './components/empresa.component';
 import {PersComponent} from './components/personal.component';
+
 
 
 //ROUTING MODULE
@@ -39,7 +40,19 @@ import {BusService} from './service/bus.service';
 import {EmpService} from './service/empresa.service';
 import {PersService}  from './service/personal.service';
 
+/* PARA EL LOGIN*/
 
+/*import { AlertComponent } from './_directives/index';
+import { RegisterComponent } from './register/index';*/
+/*
+import { AuthorizatedGuard } from './login/core/guards/authorizated.guard';
+import { AlertService} from './login/services/alert.service';
+import { AuthenticationService } from './login/services/authentication.service';
+import { UserService } from './login/services/user.service';
+*/
+
+import {CoreModule} from "./login/core/_core.module";
+import {LoginComponent} from "./login/login/login.component";
 //import { InMemoryWebApiModule } from 'angular2-in-memory-web-api';
 //import { InMemoryDataService }  from './in-memory-data.service';
 
@@ -55,7 +68,9 @@ import {PersService}  from './service/personal.service';
     TcontrolComponent,
     BusComponent,
     EmpComponent,
-    PersComponent
+    PersComponent,
+    menuComponent,
+    LoginComponent
     //InMemoryWebApiModule.forRoot()
     //InMemoryWebApiModule.forRoot(InMemoryDataService)
   ],
@@ -85,17 +100,16 @@ import {PersService}  from './service/personal.service';
       RadioButtonModule,
       DropdownModule,
       InputTextModule,
-      CalendarModule
+      CalendarModule,
+    /* MODULO LOGIN*/
+    CoreModule
 
   ],
 
   /*SERVICIOS*/
   providers: [
-      RutaService, 
-      PuntoControlService,
-      ProgramacionService,
-      PlacasService,
-      TControlService
+      RutaService, PuntoControlService,ProgramacionService,PlacasService,TControlService,
+      //AuthGuard,AlertService,AuthenticationService,UserService
   ],
   bootstrap: [AppComponent]
 })

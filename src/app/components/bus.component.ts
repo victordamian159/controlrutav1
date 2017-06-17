@@ -29,10 +29,19 @@ export class BusComponent implements OnInit{
         UsId:null,
         UsFechaReg:"",
     }
+    busD={
+        PeId:null,
+        BuId:null,
+        BuPeTipo:"",
+        UsId:null,
+        UsFechaReg:null
+    }
 
     /*ARRAYS */
     _bus=[]; /*ARRAY BD*/
     _gbus=[]; /*ARRAY GRILLA*/
+    _busD=[];
+    _gbusD=[];
 
     /* VARIEBLES*/
     titulo:string;
@@ -41,21 +50,32 @@ export class BusComponent implements OnInit{
     /* DISPLAY MODAL*/
     displayNuevoBus : boolean = false;
     displayAceptarNuevoBus : boolean = false;
+    displayEliminarBus : boolean = false;
+    displayEliminarBusD : boolean = false;
 
     /* OTRAS VARIABLES*/
     
     
     ngOnInit(){
         this._bus=[
-            {BuEmp : "CAMOTE", BuPlaca : "CSD 1231", BuCombustible : "COCA COLA", BuSOAT : "3242341213NLKML", BuModelo : "MARIPOSA"},
-            {BuEmp : "PAPA HUAYRO", BuPlaca : "XZ 131", BuCombustible : "VENCINA", BuSOAT : "90809090FFFML", BuModelo : "ABEJITA"},
-            {BuEmp : "OLLUCO", BuPlaca : "ÑD 1441", BuCombustible : "KEROSENE", BuSOAT : "02I3029MD029", BuModelo : "TORTUGA"},
-            {BuEmp : "RUTA NRO 18", BuPlaca : "PP 199", BuCombustible : "GASOLINA", BuSOAT : "D2LK3D2D23988293", BuModelo : "CORRE CAMINOS"},
-            {BuEmp : "ALBERT EINSTEIN", BuPlaca : "DD 331", BuCombustible : "GLP", BuSOAT : "384F3J9843JN38 ", BuModelo : "CARACOL"},
-            {BuEmp : "XILOFONO", BuPlaca : "AAW 151", BuCombustible : "PETROLEO", BuSOAT : "2320000000SCDCD", BuModelo : "ESCARABAJO"},
-            {BuEmp : "RUTA 13", BuPlaca : "MWM 100", BuCombustible : "CHICHA MORADA", BuSOAT : "ML342FM2MLKMLKM", BuModelo : "BAGONETA"},
-            {BuEmp : "RUTA UTA", BuPlaca : "AAA 1351", BuCombustible : "PISCO", BuSOAT : "22225555500S1233CD", BuModelo : "MINI BAND"},
-            {BuEmp : "RUTA 13", BuPlaca : "MWM 100", BuCombustible : "ALCOHOL", BuSOAT : "ML342FM2MLKMLKM", BuModelo : "GAVIOTA"}
+            {BuId : 0, BuEmp : "CAMOTE", BuPlaca : "CSD 1231", BuCombustible : "COCA COLA", BuSOAT : "3242341213NLKML", BuModelo : "MARIPOSA"},
+            {BuId : 1, BuEmp : "PAPA HUAYRO", BuPlaca : "XZ 131", BuCombustible : "VENCINA", BuSOAT : "90809090FFFML", BuModelo : "ABEJITA"},
+            {BuId : 2, BuEmp : "OLLUCO", BuPlaca : "ÑD 1441", BuCombustible : "KEROSENE", BuSOAT : "02I3029MD029", BuModelo : "TORTUGA"},
+            {BuId : 3, BuEmp : "RUTA NRO 18", BuPlaca : "PP 199", BuCombustible : "GASOLINA", BuSOAT : "D2LK3D2D23988293", BuModelo : "CORRE CAMINOS"},
+            {BuId : 4, BuEmp : "ALBERT EINSTEIN", BuPlaca : "DD 331", BuCombustible : "GLP", BuSOAT : "384F3J9843JN38 ", BuModelo : "CARACOL"},
+            {BuId : 5, BuEmp : "XILOFONO", BuPlaca : "AAW 151", BuCombustible : "PETROLEO", BuSOAT : "2320000000SCDCD", BuModelo : "ESCARABAJO"},
+            {BuId : 6, BuEmp : "RUTA 13", BuPlaca : "MWM 100", BuCombustible : "CHICHA MORADA", BuSOAT : "ML342FM2MLKMLKM", BuModelo : "BAGONETA"},
+            {BuId : 7, BuEmp : "RUTA UTA", BuPlaca : "AAA 1351", BuCombustible : "PISCO", BuSOAT : "22225555500S1233CD", BuModelo : "MINI BAND"},
+            {BuId : 8, BuEmp : "RUTA 13", BuPlaca : "MWM 100", BuCombustible : "ALCOHOL", BuSOAT : "ML342FM2MLKMLKM", BuModelo : "GAVIOTA"}
+        ];
+        this._busD=[
+            {PeId:0,BuId:0, BuPeTipo:"01",UsId:0,UsFechaReg:"08/06/2017"},
+            {PeId:0,BuId:1, BuPeTipo:"00",UsId:0,UsFechaReg:"08/06/2017"},
+            {PeId:0,BuId:2, BuPeTipo:"00",UsId:0,UsFechaReg:"08/06/2017"},
+            {PeId:3,BuId:3, BuPeTipo:"00",UsId:0,UsFechaReg:"08/06/2017"},
+            {PeId:7,BuId:3, BuPeTipo:"01",UsId:0,UsFechaReg:"08/06/2017"},
+            {PeId:4,BuId:7, BuPeTipo:"01",UsId:0,UsFechaReg:"08/06/2017"},
+            {PeId:4,BuId:9, BuPeTipo:"01",UsId:0,UsFechaReg:"08/06/2017"},
         ];
         this.mgBus();
     }
@@ -68,18 +88,30 @@ export class BusComponent implements OnInit{
 
     /* NUEVO OBJETO BUS*/ 
     editarBus(bus : Object){
-
         console.log("editar");
 
         this.titulo = "EditarRegistro";
         this.displayNuevoBus = true;
     }
 
-    /* NUEVO OBJETO BUS*/ 
+    /* ELIMINAR REGISTRO BUS*/ 
     eliminarBus(idbus : number){
         console.log("eliminar");
+        this.mensaje="¿Esta Seguro De Eliminar El Registro?";
+        this.displayEliminarBus = true;
     }
-
+    
+    _eliminarBus(idbus : number){
+        this.mensaje ="";        
+        /* CONSULTA ELIMINAR BUS*/
+        this.displayEliminarBus = false;
+    }
+    cancelEliminar(){
+        this.mensaje = "";
+        this.displayEliminarBus=false;
+        /*BORRAR DE MEMORIA EL OBJETO*/
+        
+    }
     /* MOSTRAR DATOS EN GRILLA*/
     mgBus(){
         for(let bus of this._bus){
@@ -100,6 +132,7 @@ export class BusComponent implements OnInit{
     /* TABLE BUS */
     onRowSelectBus(event){
         console.log("seleccionado :s");
+        this.mgBusD();
     }
     guardarbus(){
         this.titulo="";
@@ -125,5 +158,46 @@ export class BusComponent implements OnInit{
     aceptarNuevoBus(){
         this.mensaje="";
         this.displayAceptarNuevoBus=false;
+    }
+
+    /* TABLA BUS DETALLE*/
+    mgBusD(){
+        this._gbusD=[];
+        console.log("bus bus");
+        for(let busd of this._busD){
+            this._gbusD.push({
+                nro: 0,
+                PeId:busd.PeId,
+                BuId:busd.BuId,
+                BuPeTipo:busd.BuPeTipo,
+                UsId:busd.UsId
+            });
+        }
+
+        for(let i; i<this._busD.length; i++){
+            this._gbusD[i]=i+1;
+        }
+    }
+
+    nuevoBusD(){
+        
+    }
+
+    editarBusD(busd : Object){
+
+    }
+    eliminarBusD(PeId : number){
+        this.mensaje="¿Esta Seguro De ELiminar el Registro?";
+        this.displayEliminarBusD=true;
+    }
+    _eliminarBusD(){
+        this.mensaje="";
+
+        /*CONSULTA Y RECUPERAR VARIABLE PA ELIMINAR */ 
+        this.displayEliminarBusD=false;
+    }
+    cancEliBusD(){
+        this.mensaje="";
+        this.displayEliminarBusD=false;
     }
 }

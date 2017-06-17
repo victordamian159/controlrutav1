@@ -1,0 +1,55 @@
+<!--NO FUNCIONA-->
+<div class="col-md-6 col-md-offset-3">
+    <!--TITULO DEL FORMULARIO-->
+    <h2>Login</h2>
+    
+    <!--CONTENIDO-->
+    <md-card-content>
+        <!--FUNCION LOGIN PARA EL FORMULARIO-->
+        <form id="login-form" #lForm="ngForm" [formGroup]="loginForm" (ngSubmit)="submitLogin()" novalidate>
+            <!--NOMBRE DE USUARIO-->
+            <md-input-container style="width: 100%; margin-bottom: 10px;" 
+                [ngClass]="{'mat-input-invalid': submitted && error?.code == 1}">
+                
+                <!--INPUT USERNAME-->
+                <input mdInput type="text" formControlName="username" placeholder="Username"/>
+                
+                <!--ERROR EN EL USUARIO NO EXISTE-->
+                <md-hint style="color: red;" 
+                    *ngIf="submitted && error?.code == 1 && !loginForm.controls.username.hasError('required')">
+                    {{error.message}}
+                </md-hint>
+
+                <!--El campo es obligatorio-->
+                <md-hint style="color: red;" 
+                    *ngIf="submitted && loginForm.controls.username.hasError('required')">
+                    Field is mandatory
+                </md-hint>
+            </md-input-container>
+            
+            <!--CONTRASEÑA-->
+            <md-input-container style="width: 100%;" [ngClass]="{'mat-input-invalid': submitted && error?.code == 2}">
+                
+                <!--INPUT PASSWORD-->
+                <input mdInput type="password" formControlName="password" placeholder="Password"/>
+                <!--ERROR EN LA CONTRASEÑA NO EXISTE-->
+                <md-hint style="color: red;" 
+                    *ngIf="submitted && error?.code == 2 && !loginForm.controls.password.hasError('required')">
+                    {{error.message}}
+                </md-hint>
+                <!--El campo es obligatorio-->
+                <md-hint style="color: red;" 
+                    *ngIf="submitted && loginForm.controls.password.hasError('required')">
+                    Field is mandatory
+                </md-hint>
+
+            </md-input-container>
+        </form>
+    </md-card-content>
+
+    <!--BOTON PARA LOGIN-->
+    <md-card-actions style="text-align: right;">
+      <button md-raised-button type="submit" form="login-form"> Sign In</button>
+    </md-card-actions>
+  </md-card>
+</div>

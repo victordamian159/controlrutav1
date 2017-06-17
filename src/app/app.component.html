@@ -1,106 +1,52 @@
-<nav class="navbar navbar-toggleable-md navbar-inverse bg-primary"  style="background-color: #FF4000;">
-  <button class="navbar-toggler navbar-toggler-right" type="button" 
-          data-toggle="collapse" data-target="#navbarNavDropdown" 
-          aria-controls="navbarNavDropdown" aria-expanded="false" 
-          aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <!--<a class="navbar-brand" href="#">Menu</a>-->
-  <a class="navbar-brand" href="#">-</a>
-  
-  
-  <div class="navbar-collapse collapse" id="navbarNavDropdown">
-    <ul class="navbar-nav" *ngIf="infor==1">
+<!--
+  <nav class="navbar navbar-toggleable-md navbar-inverse bg-primary"  style="background-color: #FF4000;">
+    <button class="navbar-toggler navbar-toggler-right" type="button"  data-toggle="collapse" data-target="#navbarNavDropdown"  aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+    
+    <a class="navbar-brand" href="#">-</a> 
+    <div class="navbar-collapse collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+          <li class="nav-item active"><a href="#" class="nav-link" routerLink="/ruta" routerLinkActive="active">Ruta</a> </li>		
+          <li class="nav-item active"><a href="#" class="nav-link" routerLink="/pcontrol" routerLinkActive="active">Puntos de Control</a> </li>						
+          <li class="nav-item active"><a href="#" class="nav-link" routerLink="/prog" routerLinkActive="active">Programacion</a></li>		
+          <li class="nav-item active"><a href="#" class="nav-link" routerLink="/tcontrol" routerLinkActive="active">Tarjeta de Control</a></li>		
+          <li class="nav-item active"><a href="#" class="nav-link" routerLink="/regtime" routerLinkActive="active">Reg Tiempo</a></li>
+          <li class="nav-item active"><a href="#" class="nav-link" routerLink="/regpersonal" routerLinkActive="active">Personal</a></li>
+          <li class="nav-item active"><a href="#" class="nav-link" routerLink="/regempresa" routerLinkActive="active">Empresa</a></li>
+          <li class="nav-item active"><a href="#" class="nav-link" routerLink="/regbus" routerLinkActive="active">Bus</a>						</li>
 
-      <!--Boton Ruta-->
-      <li class="nav-item active">
-        <a href="#" class="nav-link" routerLink="/ruta" routerLinkActive="active">Ruta</a>						
-      </li>		
-
-       <!--Boton Puntos Control-->
-      <li class="nav-item active">
-        <a href="#" class="nav-link" routerLink="/pcontrol" routerLinkActive="active">Puntos de Control</a>						
-      </li>						
-
-      <!--Boton Programaciones-->
-      <li class="nav-item active">
-        <a href="#" class="nav-link" routerLink="/prog" routerLinkActive="active">Programacion</a>						
-      </li>		
-
-      <!--Boton Tarjeta de Control-->
-      <li class="nav-item active">
-        <a href="#" class="nav-link" routerLink="/tcontrol" routerLinkActive="active">Tarjeta de Control</a>						
-      </li>		
-
-      <!--Boton Registro de Tiempos-->
-      <li class="nav-item active">
-        <a href="#" class="nav-link" routerLink="/regtime" routerLinkActive="active">Reg Tiempo</a>						
-      </li>
-
-      <!--Boton Registro de PERSONAL-->
-      <li class="nav-item active">
-        <a href="#" class="nav-link" routerLink="/regpersonal" routerLinkActive="active">Personal</a>						
-      </li>
-      <!--Boton Registro de EMPRESA-->
-      <li class="nav-item active">
-        <a href="#" class="nav-link" routerLink="/regempresa" routerLinkActive="active">Empresa</a>						
-      </li>
-      <!--Boton Registro de BUS-->
-      <li class="nav-item active">
-        <a href="#" class="nav-link" routerLink="/regbus" routerLinkActive="active">Bus</a>						
-      </li>
-
-      <!-- Lista despliegue hacia abajo-->
-      <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"  id="navbarDropdownMenuLink"  data-toggle="dropdown" >Bandeja<b class="caret"></b></a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="#">Reportes</a>
-          <a class="dropdown-item" href="#">Bandeja Interno 1</a>
-          <a class="dropdown-item" href="#">Bandeja Interno 2</a>
-          <a class="dropdown-item" href="#">Bandeja Interno 3</a>
-          <a class="dropdown-item" href="#">Bandeja Interno 4</a>
-          <a class="dropdown-item" href="#">Bandeja Interno 5</a>
-          <a class="dropdown-item" href="#">Bandeja Interno 6</a>
-        </div>					
-      </li>					
-    </ul>
-  
-    <ul class="navbar-nav navbar-right">
-      <li><a  class="nav-link" href="#"></a></li><!-- Login: {{currentUser.nombrecom}}-->
-      <li><a class="nav-link" href="#" (click)="logout()">Salir</a></li>
-    </ul>
-  </div><!--/.nav-collapse -->
-</nav>
-
+          <li class="nav-item dropdown">
+              <a href="#" class="nav-link dropdown-toggle"  id="navbarDropdownMenuLink"  data-toggle="dropdown" >Bandeja<b class="caret"></b></a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" href="#">Reporte Usuarios</a>
+                  <a class="dropdown-item" href="#">Mantenimiento</a>
+                  <a class="dropdown-item" href="#">Reporte Buses</a>
+                  <a class="dropdown-item" href="#">Reporte de Puntos</a>
+              </div>					
+          </li>					
+      </ul>
+      <ul class="navbar-nav navbar-right">
+        <li><a  class="nav-link" href="#"></a></li>
+        <li><a class="nav-link" href="#" (click)="logout()">Salir</a></li>
+      </ul>
+    </div>
+  </nav>
+-->
 
 <!--
-<br>
-<br>
-<br>
-<div class="container">
-  <div class="btn-group-vertical" role="group" aria-label=".....">
-      <button type="button" class="btn btn-primary btn-md ">Block level button</button>
-      <br>
-      <button type="button" class="btn btn-primary btn-md ">Block level button</button>
-      <br>
-      <button type="button" class="btn btn-primary btn-md ">Block level button</button>
-      <br>
-      <button type="button" class="btn btn-primary btn-md ">Block level button</button>
-      <br>
-      <button type="button" class="btn btn-primary btn-md ">Block level button</button>
-      <br>
-      <button type="button" class="btn btn-primary btn-md ">Block level button</button>
-  </div>
-</div>
+  <body>
+      <form action="">
+        <h2>Ingrese Su Usuario</h2>
+        <input type="text" placeholder="&#128272; Usuario" name="usuario">
+        <input type="password" placeholder="&#128272; Contraseña" name="clave">
+        <button type="button" pButton label="Guardar" (click)="guardarbus()"></button>
+
+        <div class="container" *ngIf="i!=0">
+            <h5>SI ENTRE =S  i != 0</h5>
+        </div>
+      </form>
+  </body>
 -->
+<!--<app-bus></app-bus>-->
+
 <router-outlet></router-outlet>
 
-<!--
-<div class="container-fluid">
-  <div class="content">
-    
-        
-  
-  </div>
-</div>
--->

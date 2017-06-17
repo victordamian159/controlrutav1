@@ -130,7 +130,7 @@
             {{mensaje}}
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <button type="button" pButton label="Aceptar" (click)="verificarEliminar()"></button>
+                    <button type="button" pButton label="Aceptar" (click)="verificarEliminar()" (ngSubmit)="onsubmit()"></button>
                     <button type="button" pButton label="Cancelar" (click)="cancelarEliminar()"></button>
                 </div>
             </p-footer>
