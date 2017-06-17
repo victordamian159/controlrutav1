@@ -42,20 +42,25 @@ import {PersService}  from './service/personal.service';
 
 /* PARA EL LOGIN*/
 
-/*import { AlertComponent } from './_directives/index';
-import { RegisterComponent } from './register/index';*/
-/*
-import { AuthorizatedGuard } from './login/core/guards/authorizated.guard';
+/*  
+  import { AlertComponent } from './_directives/index';
+  import { RegisterComponent } from './register/index';
+
+  import { InMemoryWebApiModule } from 'angular2-in-memory-web-api';
+  import { InMemoryDataService }  from './in-memory-data.service';
+*/
+
+import { AuthGuard } from './login/guards/auth.guard';
 import { AlertService} from './login/services/alert.service';
 import { AuthenticationService } from './login/services/authentication.service';
 import { UserService } from './login/services/user.service';
-*/
+import { LoginComponent} from "./login/_login/_login.component";
+import { RegisterComponent } from "./login/register/register.component";
 
-import {CoreModule} from "./login/core/_core.module";
-import {LoginComponent} from "./login/login/login.component";
-//import { InMemoryWebApiModule } from 'angular2-in-memory-web-api';
-//import { InMemoryDataService }  from './in-memory-data.service';
-
+// used to create fake backend
+import { fakeBackendProvider } from './login/helper/fake-backend';
+import { MockBackend, MockConnection } from '@angular/http/testing';
+import { BaseRequestOptions } from '@angular/http';
 
 @NgModule({
   //MODULOS DEL APLICATIVO
@@ -70,7 +75,8 @@ import {LoginComponent} from "./login/login/login.component";
     EmpComponent,
     PersComponent,
     menuComponent,
-    LoginComponent
+    LoginComponent,
+    RegisterComponent
     //InMemoryWebApiModule.forRoot()
     //InMemoryWebApiModule.forRoot(InMemoryDataService)
   ],
@@ -100,16 +106,26 @@ import {LoginComponent} from "./login/login/login.component";
       RadioButtonModule,
       DropdownModule,
       InputTextModule,
-      CalendarModule,
+      CalendarModule
     /* MODULO LOGIN*/
-    CoreModule
-
   ],
 
   /*SERVICIOS*/
   providers: [
-      RutaService, PuntoControlService,ProgramacionService,PlacasService,TControlService,
-      //AuthGuard,AlertService,AuthenticationService,UserService
+      RutaService, 
+      PuntoControlService,
+      ProgramacionService,
+      PlacasService,
+      TControlService,
+      AuthGuard,
+      AlertService,
+      AuthenticationService,
+      UserService,
+      
+      /* fake backend*/
+      fakeBackendProvider,
+      MockBackend,
+      BaseRequestOptions
   ],
   bootstrap: [AppComponent]
 })

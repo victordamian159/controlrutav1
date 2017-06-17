@@ -12,33 +12,34 @@ import {menuComponent} from './components/menu.component';
 import {BusComponent} from './components/bus.component';
 import {EmpComponent} from './components/empresa.component';
 import {PersComponent} from './components/personal.component';
-import {LoginComponent} from './login/login/login.component';
+import {LoginComponent} from './login/_login/_login.component';
+import { RegisterComponent } from './login/register/register.component';
 
 /*COMPONENTES PARA EL LOGIN */
 //import { HomeComponent } from './home/index';
 //import { LoginComponent } from './login/index';
 //import { RegisterComponent } from './register/index';
-import { AuthorizatedGuard } from './login/core/guards/authorizated.guard';
+import { AuthGuard } from './login/guards/auth.guard';
 
 //estableciencido las path para los componentes del aplicativo
 const app_routes: Routes = [
-      {path: 'ruta', component: RutaComponent,canActivate: [AuthorizatedGuard]},
-      {path: 'pcontrol', component: PcontrolComponent,canActivate: [AuthorizatedGuard]},
-      {path: 'prog', component: ProgComponent,canActivate: [AuthorizatedGuard]},
-      {path: 'regtime', component: RegtimeComponent,canActivate: [AuthorizatedGuard]},
-      {path: 'tcontrol', component:TcontrolComponent,canActivate: [AuthorizatedGuard] },
-      {path: 'regpersonal', component:PersComponent,canActivate: [AuthorizatedGuard] },
-      {path: 'regbus', component:BusComponent,canActivate: [AuthorizatedGuard] },
-      {path: 'menu', component:menuComponent,canActivate: [AuthorizatedGuard]  },
-      {path: 'regemp', component:EmpComponent,canActivate: [AuthorizatedGuard] },
+      {path: 'ruta', component: RutaComponent,canActivate: [AuthGuard]},
+      {path: 'pcontrol', component: PcontrolComponent,canActivate: [AuthGuard]},
+      {path: 'prog', component: ProgComponent,canActivate: [AuthGuard]},
+      {path: 'regtime', component: RegtimeComponent,canActivate: [AuthGuard]},
+      {path: 'tcontrol', component:TcontrolComponent,canActivate: [AuthGuard] },
+      {path: 'regpersonal', component:PersComponent,canActivate: [AuthGuard] },
+      {path: 'regbus', component:BusComponent,canActivate: [AuthGuard] },
+      {path: 'menu', component:menuComponent,canActivate: [AuthGuard]  },
+      {path: 'regemp', component:EmpComponent,canActivate: [AuthGuard] },
       {path: 'login', component:LoginComponent },
+      {path: 'regusersystem', component:RegisterComponent},
+      { path: '**', redirectTo: 'login' } /*  ** : SI ESCRIBE CUALQUIER COSA MANDA AL LOGIN*/
+      
       /*FOR LOGGER */
       //{ path: '', component: HomeComponent, canActivate: [AuthGuard] },
       //{ path: 'login', component: LoginComponent },
       //{ path: 'register', component: RegisterComponent },
-      
-      // ** : SI ESCRIBE CUALQUIER COSA QUE NO SEA UNA EXISTENTE MANDA AL regempresa
-      { path: '**', redirectTo: 'login' }
 ];
 
 
