@@ -6,7 +6,7 @@ import {AuthenticationService} from '../services/authentication.service'; /*LLAM
 @Component({
     moduleId: module.id.toString(),
     templateUrl: '_login.component.html'
-})
+}) 
 
 export class LoginComponent implements OnInit {
     model: any = {}; /* OBJETO USUARIO*/
@@ -22,11 +22,9 @@ export class LoginComponent implements OnInit {
     ngOnInit() {
         /* reset login status      --  Restablecer el estado de inicio de sesión*/
         this.authenticationService.logout();/*DESCONECTANDO ANTES DE INICIAR UNA SESION */
-
         /* get return url from route parameters or default to '/'
             Obtener url de retorno de los parámetros de ruta o predeterminado para '/'  */
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/menu';
-        console.log(this.returnUrl);
     }
 
     login() {

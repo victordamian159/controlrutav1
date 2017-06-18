@@ -8,6 +8,6 @@ import {Component, OnInit} from '@angular/core';
 
 export class menuComponent implements OnInit{
     ngOnInit(){
-        console.log("menu principal");
+        console.log("Instrucciones");
     }
 }

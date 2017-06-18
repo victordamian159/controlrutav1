@@ -1,52 +1,48 @@
-<!--
-  <nav class="navbar navbar-toggleable-md navbar-inverse bg-primary"  style="background-color: #FF4000;">
-    <button class="navbar-toggler navbar-toggler-right" type="button"  data-toggle="collapse" data-target="#navbarNavDropdown"  aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+<nav class="navbar navbar-toggleable-md navbar-inverse bg-primary"  style="background-color: #FF4000;">
+  <button 
+          class="navbar-toggler navbar-toggler-right" 
+          type="button"  
+          data-toggle="collapse" 
+          data-target="#navbarNavDropdown" 
+          aria-controls="navbarNavDropdown" 
+          aria-expanded="false" 
+          aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+  </button>
+  
+  <a class="navbar-brand" href="#">Menu</a> 
+  <div class="navbar-collapse collapse" id="navbarNavDropdown">
     
-    <a class="navbar-brand" href="#">-</a> 
-    <div class="navbar-collapse collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav">
-          <li class="nav-item active"><a href="#" class="nav-link" routerLink="/ruta" routerLinkActive="active">Ruta</a> </li>		
-          <li class="nav-item active"><a href="#" class="nav-link" routerLink="/pcontrol" routerLinkActive="active">Puntos de Control</a> </li>						
-          <li class="nav-item active"><a href="#" class="nav-link" routerLink="/prog" routerLinkActive="active">Programacion</a></li>		
-          <li class="nav-item active"><a href="#" class="nav-link" routerLink="/tcontrol" routerLinkActive="active">Tarjeta de Control</a></li>		
-          <li class="nav-item active"><a href="#" class="nav-link" routerLink="/regtime" routerLinkActive="active">Reg Tiempo</a></li>
-          <li class="nav-item active"><a href="#" class="nav-link" routerLink="/regpersonal" routerLinkActive="active">Personal</a></li>
-          <li class="nav-item active"><a href="#" class="nav-link" routerLink="/regempresa" routerLinkActive="active">Empresa</a></li>
-          <li class="nav-item active"><a href="#" class="nav-link" routerLink="/regbus" routerLinkActive="active">Bus</a>						</li>
+    <ul class="navbar-nav">
+        <li class="nav-item active"><a href="#" class="nav-link" routerLink="/ruta" routerLinkActive="active">Ruta</a> </li>		
+        <li class="nav-item active"><a href="#" class="nav-link" routerLink="/pcontrol" routerLinkActive="active">Puntos de Control</a> </li>						
+        <li class="nav-item active"><a href="#" class="nav-link" routerLink="/prog" routerLinkActive="active">Programacion</a></li>		
+        <li class="nav-item active"><a href="#" class="nav-link" routerLink="/tcontrol" routerLinkActive="active">Tarjeta de Control</a></li>		
+        <li class="nav-item active"><a href="#" class="nav-link" routerLink="/regtime" routerLinkActive="active">Reg Tiempo</a></li>
+        <li class="nav-item active"><a href="#" class="nav-link" routerLink="/regpersonal" routerLinkActive="active">Personal</a></li>
+        <li class="nav-item active"><a href="#" class="nav-link" routerLink="/regempresa" routerLinkActive="active">Empresa</a></li>
+        <li class="nav-item active"><a href="#" class="nav-link" routerLink="/regbus" routerLinkActive="active">Bus</a>						</li>
 
-          <li class="nav-item dropdown">
-              <a href="#" class="nav-link dropdown-toggle"  id="navbarDropdownMenuLink"  data-toggle="dropdown" >Bandeja<b class="caret"></b></a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="#">Reporte Usuarios</a>
-                  <a class="dropdown-item" href="#">Mantenimiento</a>
-                  <a class="dropdown-item" href="#">Reporte Buses</a>
-                  <a class="dropdown-item" href="#">Reporte de Puntos</a>
-              </div>					
-          </li>					
-      </ul>
-      <ul class="navbar-nav navbar-right">
-        <li><a  class="nav-link" href="#"></a></li>
-        <li><a class="nav-link" href="#" (click)="logout()">Salir</a></li>
-      </ul>
-    </div>
-  </nav>
--->
+        <li class="nav-item active"><a href="#" class="nav-link"  [routerLink]="['/login']">Logout</a></li>
 
-<!--
-  <body>
-      <form action="">
-        <h2>Ingrese Su Usuario</h2>
-        <input type="text" placeholder="&#128272; Usuario" name="usuario">
-        <input type="password" placeholder="&#128272; Contraseña" name="clave">
-        <button type="button" pButton label="Guardar" (click)="guardarbus()"></button>
-
-        <div class="container" *ngIf="i!=0">
-            <h5>SI ENTRE =S  i != 0</h5>
-        </div>
-      </form>
-  </body>
--->
-<!--<app-bus></app-bus>-->
+        <li class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle"  id="navbarDropdownMenuLink"  data-toggle="dropdown" >Bandeja<b class="caret"></b></a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="#">Reporte Usuarios</a>
+                <a class="dropdown-item" href="#">Mantenimiento</a>
+                <a class="dropdown-item" href="#">Reporte Buses</a>
+                <a class="dropdown-item" href="#">Reporte de Puntos</a>
+            </div>					
+        </li>					
+    </ul>
+    
+    <ul class="navbar-nav navbar-right">
+      <li><a  class="nav-link" href="#"></a></li>
+      <li><a class="nav-link" href="#" (click)="logout()">Salir</a></li>
+    </ul>
+  
+  </div>
+</nav>
 
 <router-outlet></router-outlet>
 
