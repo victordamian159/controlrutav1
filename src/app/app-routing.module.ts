@@ -29,13 +29,15 @@ const app_routes: Routes = [
       {path: 'regtime', component: RegtimeComponent,canActivate: [AuthGuard]},
       {path: 'tcontrol', component:TcontrolComponent,canActivate: [AuthGuard] },
       {path: 'regpersonal', component:PersComponent,canActivate: [AuthGuard] },
-      {path: 'regbus', component:BusComponent,canActivate: [AuthGuard] },
-      {path: 'menu', component:menuComponent,canActivate: [AuthGuard]  },
-      {path: 'regemp', component:EmpComponent,canActivate: [AuthGuard] },
+
+      {path: 'regbus', component:BusComponent, canActivate: [AuthGuard] }, 
+      {path: 'menu',   component:menuComponent,canActivate: [AuthGuard] }, /* ISNTRUCCIONES??*/
+      {path: 'regemp', component:EmpComponent }, 
+
       {path: 'login', component:LoginComponent },
       {path: 'regusersystem', component:RegisterComponent},
       { path: '**', redirectTo: 'login' } /*  ** : SI ESCRIBE CUALQUIER COSA MANDA AL LOGIN*/
-      
+
       /*FOR LOGGER */
       //{ path: '', component: HomeComponent, canActivate: [AuthGuard] },
       //{ path: 'login', component: LoginComponent },

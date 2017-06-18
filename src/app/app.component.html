@@ -20,27 +20,32 @@
         <li class="nav-item active"><a href="#" class="nav-link" routerLink="/tcontrol" routerLinkActive="active">Tarjeta de Control</a></li>		
         <li class="nav-item active"><a href="#" class="nav-link" routerLink="/regtime" routerLinkActive="active">Reg Tiempo</a></li>
         <li class="nav-item active"><a href="#" class="nav-link" routerLink="/regpersonal" routerLinkActive="active">Personal</a></li>
-        <li class="nav-item active"><a href="#" class="nav-link" routerLink="/regempresa" routerLinkActive="active">Empresa</a></li>
-        <li class="nav-item active"><a href="#" class="nav-link" routerLink="/regbus" routerLinkActive="active">Bus</a>						</li>
-
-        <li class="nav-item active"><a href="#" class="nav-link"  [routerLink]="['/login']">Logout</a></li>
-
-        <li class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle"  id="navbarDropdownMenuLink"  data-toggle="dropdown" >Bandeja<b class="caret"></b></a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" href="#">Reporte Usuarios</a>
-                <a class="dropdown-item" href="#">Mantenimiento</a>
-                <a class="dropdown-item" href="#">Reporte Buses</a>
-                <a class="dropdown-item" href="#">Reporte de Puntos</a>
-            </div>					
-        </li>					
+        <li class="nav-item active"><a href="#" class="nav-link" routerLink="/regemp" routerLinkActive="active">Empresa</a></li>
+        <li class="nav-item active"><a href="#" class="nav-link" routerLink="/regbus" routerLinkActive="active">Bus</a></li>
+        <li class="nav-item active"><a href="#" class="nav-link" routerLink="/login">Cerrar Sesion</a></li>
+        
+        <!--
+            <li class="nav-item active"><a href="#" class="nav-link"  [routerLink]="['/login']">Logout</a></li>
+        -->
+        <!--
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle"  id="navbarDropdownMenuLink"  data-toggle="dropdown" >Bandeja<b class="caret"></b></a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="#">Reporte Usuarios</a>
+                    <a class="dropdown-item" href="#">Mantenimiento</a>
+                    <a class="dropdown-item" href="#">Reporte Buses</a>
+                    <a class="dropdown-item" href="#">Reporte de Puntos</a>
+                </div>					
+            </li>
+        -->					
     </ul>
     
-    <ul class="navbar-nav navbar-right">
-      <li><a  class="nav-link" href="#"></a></li>
-      <li><a class="nav-link" href="#" (click)="logout()">Salir</a></li>
-    </ul>
-  
+    <!--
+        <ul class="navbar-nav navbar-right">
+        <li><a  class="nav-link" href="#"></a></li>
+        <li><a class="nav-link" href="#" (click)="logout()">Salir</a></li>
+        </ul>
+    -->
   </div>
 </nav>
 
