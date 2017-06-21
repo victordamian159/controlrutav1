@@ -21,7 +21,7 @@ export class RutaComponent implements OnInit{
         RuId : 0,
         EmId : 1,
         RuDescripcion : "",
-        RuFechaCreacion:  '0-0-0',
+        RuFechaCreacion:  "",
         RuRegMunicipal : "",
         RuKilometro : 0,
         RuActivo : true,
@@ -220,7 +220,7 @@ export class RutaComponent implements OnInit{
         this.rutaService.getRutaById(_RuId).subscribe(
             data => {
                         this.Ruta=data; 
-                        this.Ruta.RuFechaCreacion=this._fecha(this.Ruta.RuFechaCreacion);
+                        this.Ruta.RuFechaCreacion=this.formatFech(this._fecha(this.Ruta.RuFechaCreacion));
                         console.log(this.Ruta);
                     },
             err => {this.errorMessage = err}
@@ -230,6 +230,15 @@ export class RutaComponent implements OnInit{
            //borrando los campos de la vairable puntosRUta para que al momento de crear uno nuevo los campos estes vacios para ser llenados
         //this.Ruta={};
     }   
+
+    /* DANDO FORMATO A LA FECHA PARA SER EDITADA EN EL FORMULARIO DE EDITAR*/
+    formatFech(f : string) : string{
+        let _f, r, aux;
+        _f = f.split("/");
+        aux = _f[0]; _f[0]=_f[2]; _f[2]=aux;
+        r = _f.join("-");
+        return r;
+    }
 
     //eliminar los registros de la tabla Ruta (MAESTRO)
     eliminarRutaMaestro(_RuId : number){
@@ -968,26 +977,14 @@ export class RutaComponent implements OnInit{
 
     //Nuevo Registro Maestro (BOTON NUEVO - CABECERA)
      nuevaRutaMaestro(){
-        this.displayNuevaRutaModal = true;
-        this.headertitle ="Nueva";
-        this._RuId = 0;
+        this.displayNuevaRutaModal = true; this.headertitle ="Nueva"; this._RuId = 0;
         this.rutaService.newRuta().subscribe(
             data => {
                 this.Ruta2 = data;
                 //LIMPIANDO LOS OBJETOS EN EL FORMULARIO PARA PODER INGRESAR NUEVOS DATOS
-                 this.Ruta ={
-                    RuId : 0,
-                    EmId : 1,
-                    RuDescripcion : "",
-                    RuFechaCreacion: '',
-                    RuRegMunicipal : "",
-                    RuKilometro : 0,
-                    RuActivo : true,
-                    UsId: 0,
-                    UsFechaReg: ''
-                }
-            }
-        );
+                 this.Ruta ={RuId : 0, EmId : 1, RuDescripcion : "", RuFechaCreacion: "", RuRegMunicipal : "",
+                             RuKilometro : 0, RuActivo : true, UsId: 0,UsFechaReg: ""}
+            });
      }
   
      //guardar en el rest la cabecera de la ruta (MAESTRO)
@@ -1006,35 +1003,19 @@ export class RutaComponent implements OnInit{
             this.Ruta2.RuActivo = this.Ruta.RuActivo,
             this.Ruta2.UsId = this.Ruta.UsId,
             this.Ruta2.UsFechaReg = this.Ruta.UsFechaReg
-
-            this.displayNuevaRutaModal=false;
-            console.log(this.Ruta2);
          }else if(this._RuId != 0){
              //EL CASO DE EDITAR UN REGISTRO RUID != 0
-            console.log("editado _RuId: "+this._RuId);
-
-            //capturando la fecha actual
-            this.date = new Date();
-            this.dia = this.date.getDate();
-            this.mes = this.date.getMonth();
-            this.anio = this.date.getFullYear();
-            this.Ruta.UsFechaReg = this.anio+"-"+this.mes+"-"+this.dia;
+            this.Ruta.UsFechaReg = new Date();
             this.Ruta.RuFechaCreacion = this.fecha(this.Ruta.RuFechaCreacion);
-            //let ID = this._RuId;
-
-            
             this.Ruta2=this.Ruta; //PASANDO DATOS AL OBJETO PARA SER SUBIDO A LA BD
-
-            console.log(this.Ruta);
-            console.log(this.Ruta.RuFechaCreacion);
-
-            this.displayNuevaRutaModal=false;
-            //console.log(this.Ruta2);
+            
          }
-         this.rutaService.saveRuta
-         (this.Ruta2).subscribe( realizar => { this.mostrargrillaruta(); 
-                                               this.getAllRutaByEm(1);} ,
-                                      err => { this.errorMessage = err });		
+         console.log(this.Ruta2);
+        this.displayNuevaRutaModal=false;
+         this.rutaService.saveRuta(this.Ruta2).subscribe( 
+                                            realizar => { this.mostrargrillaruta(); this.getAllRutaByEm(1);} ,
+                                                 err => { this.errorMessage = err }
+                                                        );		
      
     }
     
