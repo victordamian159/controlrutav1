@@ -38,65 +38,71 @@
         </div>
         
          <!--modal boton nuevo (PROGRAMACION 1ERA VENTANA)-->
-        <p-dialog  [(visible)]="displayNuevaProgramacion" 
-                    modal="modal" width="100%" responsive="true" [closable]="false">
-                    <p-header>
-                        {{titleNuevoProgPrimerModal }} Programacion
-                    </p-header>
-                        <!--tipo de programcion MANUAL O AUTOMATICO-->
-                    <div class="form-group row">
-                        <div class="col-4"><label >Tipo:</label></div>
-                        <div class="col-8">
-                            <select class="form-control" [(ngModel)]="tipoProg" (change)="tipoProgramacion($event)">
-                                <option *ngFor="let tipo of _tipoProg" [ngValue]="tipo.id">
-                                    {{tipo.nTipo}}
-                                </option>
-                            </select>
-                        </div>
-                    </div>
+        <p-dialog  [(visible)]="displayNuevaProgramacion" modal="modal" width="100%" responsive="true" [closable]="false">
+            <p-header> {{titleNuevoProgPrimerModal }} Programacion </p-header>
 
-                    <!--forma de programacion por tiempo y cantidad de buses (Escala o Pescadito)-->
-                    <div class="form-group row">
-                        <div class="col-4"><label >Forma:</label></div>
-                        <div class="col-8">
-                            <select class="form-control" [(ngModel)]="formaProg" (change)="formaProgramacion($event)">
-                                <option *ngFor="let forma of _formaProg" [ngValue]="forma.id">
-                                    {{forma.nForma}}
-                                </option>
-                            </select>
-                        </div>
-                    </div>
+            <!--tipo de programcion MANUAL O AUTOMATICO-->
+            <div class="form-group row">
+                <div class="col-4"><label >Tipo:</label></div>
+                <div class="col-8">
+                    <select class="form-control" [(ngModel)]="tipoProg" (change)="tipoProgramacion($event)">
+                        <option *ngFor="let tipo of _tipoProg" [ngValue]="tipo.id">
+                            {{tipo.nTipo}}
+                        </option>
+                    </select>
+                </div>
+            </div>
 
-                    <!--fechas -->
-                    <div class="form-group row">
-                        <div class="form-group">
-                            <label class="control-label" for="date1">De:</label>
-                            <input class="form-control" id="date1" name="finicio" placeholder="MM/DD/YYY" type="date" [(ngModel)]="progMaestro.PrFechaInicio" />
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="date2">Hasta:</label>
-                            <input class="form-control" id="date2" name="ffinal" placeholder="MM/DD/YYY" type="date"  [(ngModel)]="progMaestro.PrFechaFin"/>
-                        </div>
-                    </div>
+            <!--forma de programacion por tiempo y cantidad de buses (Escala o Pescadito)-->
+            <div class="form-group row">
+                <div class="col-4"><label >Forma:</label></div>
+                <div class="col-8">
+                    <select class="form-control" [(ngModel)]="formaProg" (change)="formaProgramacion($event)">
+                        <option *ngFor="let forma of _formaProg" [ngValue]="forma.id">
+                            {{forma.nForma}}
+                        </option>
+                    </select>
+                </div>
+            </div>
 
-                    <!--cantidad de buses-->
-                    <div class="form-group">
-                        <label for="nrobuses" class="control-label">Buses:____Activos:{{bAct}}_ No Activos: {{bNAct}}</label>
-                        <!--<input class="form-control" type="number" [(ngModel)]="progMaestro.PrCantidadBuses" id="nrobuses">-->
-                    </div>
+            <!--fechas -->
+            <div class="form-group">
+                <label class="control-label" for="finicio">Del:</label>
+                <input class="form-control" id="finicio" name="finicio"  type="date" [(ngModel)]="progMaestro.PrFechaInicio" required #fde="ngModel" />
+                <span *ngIf="!fde.valid && fde.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >   
+                    <div [hidden]="!fde.errors.required"> Obligatorio </div>
+                </span>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="ffinal">Ingreso:</label>
+                <input class="form-control" id="ffinal" name="ffinal"  type="date" [(ngModel)]="progMaestro.PrFechaFin"  required #fha="ngModel" />
+                <span *ngIf="!fha.valid && fha.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
+                    <div [hidden]="!fha.errors.required"> Obligatorio </div>
+                </span>
+            </div>
 
-                    <!--Descripcion  -->
-                    <div class="form-group">
-                        <label for="descripcion" class="control-label">Identificador:</label>
-                        <input class="form-control" type="text" id="descripcion"[(ngModel)]="progMaestro.PrDescripcion" >
-                    </div>
-                    <!--modal footer-->
-                    <p-footer>
-                        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                            <button type="text" pButton icon="fa-check" (click)="showProgBase()" label="Continuar"></button>
-                            <button type="text" pButton icon="fa-close" (click)="cancelNewProgramacion()" label="Cancelar"></button>
-                        </div>
-                    </p-footer>
+            <!--cantidad de buses-->
+            <div class="form-group">
+                <label for="nrobuses" class="control-label">Buses:____Activos:{{bAct}}_ No Activos: {{bNAct}}</label>
+                <!--<input class="form-control" type="number" [(ngModel)]="progMaestro.PrCantidadBuses" id="nrobuses">-->
+            </div>
+
+            <!--NOMBRE PARA RECONOCER A LA PROGRAMACION  -->
+            <div class="form-group">
+                <label for="descripcion" class="control-label">Identificador:</label>
+                <input class="form-control" type="text" id="descripcion"[(ngModel)]="progMaestro.PrDescripcion" #descrip="ngModel" required />
+                    <span *ngIf="!descrip.valid && descrip.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;" >
+                        <div [hidden]="!descrip.errors.required"> obligatorio </div>
+                    </span>
+            </div>
+
+            <!--modal footer-->
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="text" pButton icon="fa-check" (click)="showProgBase()" label="Continuar"></button>
+                    <button type="text" pButton icon="fa-close" (click)="cancelNewProgramacion()" label="Cancelar"></button>
+                </div>
+            </p-footer>
         </p-dialog> 
         <!--FIN BOTON NUEVO MODAL-->
 
@@ -124,83 +130,8 @@
                     </p-footer>
         </p-dialog> <!--fin boton modal guardar-->
 
-        <!--MODAL TABLA PROGRAMACION-->
-        <!--
-        <p-dialog header="Programacion" [(visible)]="displayProgramacion" modal="modal" 
-            width="320"  [closable]="false" resizable="true" *ngIf="nroColumn<=5">
-            <div class="container "> 
-                  
-                        <div class="table-container" > 
-                            <div class="container" style="overflow-x:auto;">
-                                <table *ngIf="nroColumn>30" width="2800px">        
-                                    <thead>
-                                        <tr><th *ngFor="let dia of this.nroDias;">{{dia}}</th></tr>
-                                    </thead>
-                                    
-                                    <tbody>
-                                        <tr *ngFor="let c of _detalle">
-                                            <td *ngFor="let placa of c">{{placa}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                                <table *ngIf="30>=nroColumn && nroColumn>20" width="1500px">
-                                    
-                                    <thead>
-                                        <tr><th *ngFor="let dia of this.nroDias;">{{dia}}</th></tr>
-                                    </thead>
-                                    
-                                    <tbody>
-                                        <tr *ngFor="let c of _detalle">
-                                            <td *ngFor="let placa of c">{{placa}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                                <table *ngIf="20>=nroColumn && nroColumn>10" width="1000px"> 
-                                    <thead>  <tr><th *ngFor="let dia of this.nroDias;">{{dia}}</th></tr>  </thead>
-                                    <h1>damian</h1>    
-                                    <tbody>
-                                        <tr *ngFor="let c of _detalle">
-                                            <td *ngFor="let placa of c">{{placa}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                                <table *ngIf="10>=nroColumn && nroColumn>5" width="750px">
-                                    <h1>damian</h1> 
-                                    <thead>    <tr><th *ngFor="let dia of this.nroDias;">{{dia}}</th></tr>    </thead>
-                                    
-                                    <tbody>
-                                        <tr *ngFor="let c of _detalle">
-                                            <td *ngFor="let placa of c">{{placa}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                                <table *ngIf="5>=nroColumn && nroColumn>0" width="550px">
-                                    <thead>
-                                        <tr><th *ngFor="let dia of this.nroDias;">{{dia}}</th></tr>
-                                    </thead>
-                                    <h1>damian</h1>                                  
-                                    <tbody>
-                                        <tr *ngFor="let c of _detalle">
-                                            <td *ngFor="let placa of c">{{placa}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                <footer class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                        <button type="button" pButton (click)="cerrarProg()"   label="Cerrar"></button>
-                        <button type="button" pButton (click)="imprimirProg()" label="Imprimir"></button>
-                </footer>
-            </div>
-        </p-dialog>
-        -->
 
         <!--MODAL PROGRAMACIONES-->
-        
         <p-dialog header="Programacion" [(visible)]="displayProgramacion" modal="modal" 
             width="500"  [closable]="false" resizable="true" *ngIf="nroColumn>=5">
             <div class="container "> 
@@ -277,7 +208,6 @@
             </div>
         </p-dialog>
         
-
         <!--MODAL CONFIRMAR ELIMINAR REGISTRO-->
         <p-dialog [(visible)]="displayConfirmar" modal="modal" width="100%" responsive="true" [closable]="false">
                 <p>{{mensaje}}</p>
@@ -327,31 +257,5 @@
                 </p-footer>
         </p-dialog>
       
-
-  <!--MODAL VALIDAR DATOS-->
-        <!--
-            <p-dialog [(visible)]="displayConfirmar" modal="modal" width="100%" responsive="true">
-                    <p>{{mensaje}}</p>
-                    <p-footer class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                        <button type="button" pButton (click)="displayConfirmar=false"   label="No"></button>
-                        <button type="button" pButton (click)="borrarRegistro()" label="Si"></button>
-                    </p-footer>
-            </p-dialog>
-        -->
-        <!--
-          <tr>
-                <th>Month</th>
-                <th>Savings</th>  class="col-xs-4 col-sm-4 col-md-4 col-lg-4"
-            </tr>
-            <tr>
-                <td>January</td>
-                <td>$100</td>
-            </tr>
-            <tr>
-                <td>February</td>
-                <td>$50</td>
-            </tr>
-        -->
-
 
 

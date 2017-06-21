@@ -994,15 +994,8 @@ export class RutaComponent implements OnInit{
      saveRutaMaestro(){
          //EL CASO DE GUARDAR UN NUEVO REGISTRO RUID = 0
          if(this._RuId == 0){
-            //capturando la fecha actual
-            {
-                this.date = new Date();
-                this.dia = this.date.getDate();
-                this.mes = this.date.getMonth();
-                this.anio = this.date.getFullYear();
-                this.Ruta.UsFechaReg = this.anio+"-"+this.mes+"-"+this.dia;
-            }
-            console.log(this.Ruta.RuFechaCreacion);
+            //capturando la fecha actual       
+            this.Ruta.UsFechaReg = new Date();
 
             this.Ruta2.RuId = this.Ruta.RuId,
             this.Ruta2.EmId = this.Ruta.EmId,

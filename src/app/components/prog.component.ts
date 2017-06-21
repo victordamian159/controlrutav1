@@ -63,13 +63,13 @@ export class ProgComponent implements OnInit{
         EmId:1,     //oculto
         PrCantidadBuses:0,
         PrDescripcion:"",
-        PrFecha:'0-0-0',     //oculto
-        PrFechaInicio:'0-0-0',
-        PrFechaFin:'0-0-0',
+        PrFecha:"",     //oculto
+        PrFechaInicio:"",
+        PrFechaFin:"",
         PrTipo:"",      
         PrAleatorio:true,
         UsId:0,        //oculto
-        UsFechaReg:'0-0-0'   //oculto
+        UsFechaReg:""   //oculto
     }
     
     //objeto maestro para Mandar al rest
@@ -213,13 +213,13 @@ export class ProgComponent implements OnInit{
             EmId:1,     //oculto
             PrCantidadBuses:0,
             PrDescripcion:"",
-            PrFecha:'0-0-0',     //oculto
-            PrFechaInicio:'0-0-0',
-            PrFechaFin:'0-0-0',
+            PrFecha:"",     //oculto
+            PrFechaInicio:"",
+            PrFechaFin:"",
             PrTipo:"",      
             PrAleatorio:true,
             UsId:0,        //oculto
-            UsFechaReg:'0-0-0'   //oculto
+            UsFechaReg:""   //oculto
         
         }
         this.tipoProg=null; //PROGRAMACION POR DEFECTO: MANUAL

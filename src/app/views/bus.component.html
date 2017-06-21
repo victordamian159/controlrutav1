@@ -45,22 +45,35 @@
                 {{titulo}}
             </p-header>
             <div style="overflow-y: auto; height:300px; ">
-                <!--PLACA-->
+                <!--PLACA   **-->
                 <div class="form-group">
                     <label class="control-label" for="placa">Placa:</label>
-                    <input class="form-control" id="placa" name="placa"  type="text" [(ngModel)]="bus.BuPlaca"/>
+                    <input class="form-control" id="placa" name="placa"  type="text" [(ngModel)]="bus.BuPlaca" #placa="ngModel" required minlength="6" maxlength="10"/>
+                    <span *ngIf="!placa.valid && placa.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;" >
+                        <div [hidden]="!placa.errors.required"> Obligatorio </div>
+                        <div [hidden]="!placa.errors.minlength"> Minimo 6 Caracteres </div>
+                        <div [hidden]="!placa.errors.maxlength"> Maximo 15 Caracteres </div>
+                    </span>
                 </div>
 
-                <!--AÑO-->
+                <!--AÑO  **-->
                 <div class="form-group">
                     <label class="control-label" for="anio">Año:</label>
-                    <input class="form-control" id="anio" name="anio"  type="text" [(ngModel)]="bus.BuAnio" />
+                    <input class="form-control" id="anio" name="anio"  type="text" [(ngModel)]="bus.BuAnio" #anio="ngModel" required length="4" pattern="[0-9]{4}" />
+                    <span *ngIf="!anio.valid && anio.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;" >
+                        <div [hidden]="!anio.errors.required"> Obligatorio </div>
+                        <div [hidden]="!anio.errors.length"> 4 Digitos </div>
+                        <div [hidden]="!anio.errors.pattern"> Solo Numeros </div>
+                    </span>
                 </div>
 
-                <!--MOTOR-->
+                <!--MOTOR  **-->
                 <div class="form-group">
                     <label class="control-label" for="motor">Motor:</label>
-                    <input class="form-control" id="motor" name="motor"  type="text" [(ngModel)]="bus.BuMotor" />
+                    <input class="form-control" id="motor" name="motor"  type="text" [(ngModel)]="bus.BuMotor" required #motor="ngModel" />
+                    <span *ngIf="!motor.valid && motor.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
+                        <div [hidden]="!anio.errors.required"> Obligatorio </div>
+                    </span>
                 </div>
 
                 <!--DESCRIPCION-->
@@ -70,11 +83,14 @@
                     <input class="form-control" id="descr" name="descr"  type="text" [(ngModel)]="bus.BuDescripcion" />
                 </div>
 
-                <!--TIPO COMBUSTIBLE-->
+                <!--TIPO COMBUSTIBLE  **-->
                 <div class="form-group">
                     <label class="control-label" for="comb">Combustible:</label>
                     <!--DROPDOWN-->
-                    <input class="form-control" id="comb" name="comb"  type="text" [(ngModel)]="bus.BuTipoCombustible" />
+                    <input class="form-control" id="comb" name="comb"  type="text" [(ngModel)]="bus.BuTipoCombustible" required #tipoCos="ngModel" />
+                    <span *ngIf="!tipoCos.valid && tipoCos.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
+                        <div [hidden]="!tipoCos.errors.required"> Obligatorio </div>
+                    </span>
                 </div>
 
                 <!--COLOR-->
@@ -102,40 +118,55 @@
                     <input class="form-control" id="tipo" name="tipo"  type="text" [(ngModel)]="bus.BuTipo" />
                 </div>
 
-                <!--SOAT-->
+                <!--SOAT  **-->
                 <div class="form-group">
                     <label class="control-label" for="soat">SOAT:</label>
-                    <input class="form-control" id="soat" name="soat"  type="text" [(ngModel)]="bus.BuSOAT" />
+                    <input class="form-control" id="soat" name="soat"  type="text" [(ngModel)]="bus.BuSOAT" required #soat="ngModel" />
+                    <span *ngIf="!soat.valid && soat.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
+                        <div [hidden]="!soat.errors.required"> Obligatorio </div>
+                    </span>
                 </div>
 
-                <!--MODELO-->
+                <!--MODELO  **-->
                 <div class="form-group">
                     <label class="control-label" for="mod">Modelo:</label>
-                    <input class="form-control" id="mod" name="mod"  type="text" [(ngModel)]="bus.BuModelo" />
+                    <input class="form-control" id="mod" name="mod"  type="text" [(ngModel)]="bus.BuModelo" required #mod="ngModel" />
+                    <span *ngIf="!mod.valid && mod.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
+                        <div [hidden]="!mod.errors.required"> Obligatorio </div>
+                    </span>
                 </div>
 
-                <!--OPERATIVIDAD-->
+                <!--OPERATIVIDAD (SI ESTA APTO EL BUS PARA CIRCULAR O SE ENCUENTRA EN EL TALLER POR REPARACION) -->
                 <div class="form-group">
                     <label class="control-label" for="oper">Operatividad:</label>
-                    <input class="form-control" id="oper" name="oper"  type="text" [(ngModel)]="bus.BuOperatividad" />
+                    <input class="form-control" id="oper" name="oper"  type="text" [(ngModel)]="bus.BuOperatividad" required #oper="ngModel" />
+                    <span *ngIf="!oper.valid && oper.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
+                        <div [hidden]="!oper.errors.required"> Obligatorio </div>
+                    </span>
                 </div>
 
-                <!--ACTIVO-->
+                <!--ACTIVO (SI ESTA O NO CIRCULANDO EN LA EMPRESA)-->
                 <div class="form-group">
                     <label class="control-label" for="act">Activo:</label>
-                    <input class="form-control" id="act" name="act"  type="text" [(ngModel)]="bus.BuActivo" />
+                    <input class="form-control" id="act" name="act"  type="text" [(ngModel)]="bus.BuActivo" required #act="ngModel" />
+                    <span *ngIf="!act.valid && act.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
+                        <div [hidden]="!act.errors.required"> Obligatorio </div>
+                    </span>
                 </div>
 
                 <!--FECHA INGRESO-->
                 <div class="form-group">
                     <label class="control-label" for="fingr">Ingreso:</label>
-                    <input class="form-control" id="fingr" name="fingr"  type="date" [(ngModel)]="bus.BuFIngr" />
+                    <input class="form-control" id="fingr" name="fingr"  type="date" [(ngModel)]="bus.BuFIngr"  required #fingreso="ngModel" />
+                    <span *ngIf="!fingreso.valid && fingreso.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
+                        <div [hidden]="!fingreso.errors.required"> Obligatorio </div>
+                    </span>
                 </div>
 
                 <!--FECHA SALIDA-->
                 <div class="form-group">
                     <label class="control-label" for="fsal">Salida:</label>
-                    <input class="form-control" id="fsal" name="fsal"  type="date" [(ngModel)]="bus.BuFSal" />
+                    <input class="form-control" id="fsal" name="fsal"  type="date" [(ngModel)]="bus.BuFSal"  />
                 </div>
             </div>
             <p-footer>
@@ -148,14 +179,14 @@
 
     <!--MODAL NUEVO BUS DETALLE-->
         <p-dialog [(visible)]="displayNuevoBusD" modal="modal" width="100%" height="100%" responsive="true" [closable]="false">
-            <p-header>
-                {{titulo}}
-            </p-header>
+            <p-header>{{titulo}}</p-header>
+
             <div style="overflow-y: auto; height:300px; ">
                 <!--PLACA-->
                 <div class="form-group">
                     <label class="control-label" for="placa">Placa:</label>
                     <input class="form-control" id="placa" name="placa"  type="text" [(ngModel)]="busD.BuId"/>
+                   
                 </div>
 
                 <!--IDENTIFICACION DEL INDIVIDUO-->
@@ -170,6 +201,7 @@
                     <input class="form-control" id="motor" name="motor"  type="text" [(ngModel)]="busD.BuPeTipo" />
                 </div>
             </div>
+            
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
                     <button type="button" pButton label="Guardar" (click)="guardarbusD()"></button>
