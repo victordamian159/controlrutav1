@@ -59,18 +59,19 @@
                 <!--AÑO  **-->
                 <div class="form-group">
                     <label class="control-label" for="anio">Año:</label>
-                    <input class="form-control" id="anio" name="anio"  type="text" [(ngModel)]="bus.BuAnio" #anio="ngModel" required length="4" pattern="[0-9]{4}" />
+                    <input class="form-control" id="anio" name="anio"  type="text" [(ngModel)]="buanio" #anio="ngModel" 
+                           required length="4" />
                     <span *ngIf="!anio.valid && anio.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;" >
                         <div [hidden]="!anio.errors.required"> Obligatorio </div>
                         <div [hidden]="!anio.errors.length"> 4 Digitos </div>
-                        <div [hidden]="!anio.errors.pattern"> Solo Numeros </div>
                     </span>
+                    {{buanio}}
                 </div>
 
                 <!--MOTOR  **-->
                 <div class="form-group">
                     <label class="control-label" for="motor">Motor:</label>
-                    <input class="form-control" id="motor" name="motor"  type="text" [(ngModel)]="bus.BuMotor" required #motor="ngModel" />
+                    <input class="form-control" id="motor" name="motor"  type="text" [(ngModel)]="bumotor" required #motor="ngModel" />
                     <span *ngIf="!motor.valid && motor.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
                         <div [hidden]="!anio.errors.required"> Obligatorio </div>
                     </span>
@@ -87,7 +88,7 @@
                 <div class="form-group">
                     <label class="control-label" for="comb">Combustible:</label>
                     <!--DROPDOWN-->
-                    <input class="form-control" id="comb" name="comb"  type="text" [(ngModel)]="bus.BuTipoCombustible" required #tipoCos="ngModel" />
+                    <input class="form-control" id="comb" name="comb"  type="text" [(ngModel)]="bucombus" required #tipoCos="ngModel" />
                     <span *ngIf="!tipoCos.valid && tipoCos.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
                         <div [hidden]="!tipoCos.errors.required"> Obligatorio </div>
                     </span>

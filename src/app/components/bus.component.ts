@@ -7,12 +7,15 @@ import {Component, OnInit} from '@angular/core';
 })
 
 export class BusComponent implements OnInit{
+    buanio:string;
+    bumotor:string;
+    bucombus:string;
     /* OBJETOS*/
     bus={
         BuId : null,
         SuEmId : null,
         BuPlaca : "",
-        BuAnio :null,
+        BuAnio :"",
         BuMotor :"",
         BuDescripcion :"",
         BuTipoCombustible:null,

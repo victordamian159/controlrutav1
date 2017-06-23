@@ -12,10 +12,15 @@ export class TcontrolComponent implements OnInit{
      private errorMessage:string='';  //mensaje error del rest
     private isLoading: boolean = false;  
 
+    /* DISPLAY VENTANAS MODAL*/
     displayAsignarTarjeta : boolean = false;
     displayEditarTarjeta : boolean = false;
     displayConfirmarEliminar : boolean = false;
+    displayErrorDatosProgxFecha : boolean = false;
+    displayNoProgEnFecha : boolean = false;
+
     val:number;
+    actRadioButton:boolean=true;
 
     //OBEJTO PLACA PARA EL COMBO DE PLACAS DE LA PROGRAMACION POR FECHA
     placa:{
@@ -153,10 +158,20 @@ export class TcontrolComponent implements OnInit{
         this.tcontrolservice.getAllProgramacionDetalleByPrFecha(PrId, Date).subscribe(
             data => {
                         this.progDetalle=data;
-                        //console.log(this.progDetalle);
-                        this.mgprogDetalle(); //GRILLA PROG POR FECHA
+                        if(this.progDetalle.length>0 ){
+                            this.mgprogDetalle(); /*GRILLA PROG POR FECHA*/
+                        }else if(this.progDetalle.length==0 ){
+                            this.mensaje="No hay programacion en la fecha indicada";
+                            this.displayNoProgEnFecha = true;
+                        }
                     }
         );
+    }
+
+    /* ERROR, NO PROGRAMACION EN LA FECHA BUSCADA*/
+    errorBusquedaProg(){
+        this.mensaje="";
+        this.displayNoProgEnFecha = false;
     }
 
     //GRILLA PROGRAMACION CABECERA
@@ -255,7 +270,7 @@ export class TcontrolComponent implements OnInit{
         this.tcontrolservice.getAllPuntoControlDetalleByPuCo(puCoId).subscribe(
             data => {
                         this.puntosControlDet=data; 
-                        console.log(this.puntosControlDet);
+                        //console.log(this.puntosControlDet);
                     }
         );
     }
@@ -347,17 +362,29 @@ export class TcontrolComponent implements OnInit{
     }
 
     buscarxFecha(){
-        console.log(this.tarjeta._TaCoFecha);
-        //CAMBIANDO POSICION FECHA
-        let fecha:string;
-        let dia:string; let anio:string; let mes:string;
-        
-        dia = this.tarjeta._TaCoFecha[this.tarjeta._TaCoFecha.length-2]+this.tarjeta._TaCoFecha[this.tarjeta._TaCoFecha.length-1];
-        mes = this.tarjeta._TaCoFecha[5]+this.tarjeta._TaCoFecha[6];
-        anio= this.tarjeta._TaCoFecha[0]+this.tarjeta._TaCoFecha[1]+this.tarjeta._TaCoFecha[2]+this.tarjeta._TaCoFecha[3];
-        
-        //CONSULTA PROGRAMACION POR FECHA
-        this.getallprogramacionbydate(this.tarjeta._prId, dia+"-"+mes+"-"+anio);
+        /* VERIFICAR SI LOS DATOS ESTAN CORRECTOS */
+        if(this.puntoControl!=undefined && this._prId!=undefined){
+            //CAMBIANDO POSICION FECHA console.log(this.tarjeta._TaCoFecha);
+            let fecha:string;
+            let dia:string; let anio:string; let mes:string;
+            
+            dia = this.tarjeta._TaCoFecha[this.tarjeta._TaCoFecha.length-2]+this.tarjeta._TaCoFecha[this.tarjeta._TaCoFecha.length-1];
+            mes = this.tarjeta._TaCoFecha[5]+this.tarjeta._TaCoFecha[6];
+            anio= this.tarjeta._TaCoFecha[0]+this.tarjeta._TaCoFecha[1]+this.tarjeta._TaCoFecha[2]+this.tarjeta._TaCoFecha[3];
+            
+            //CONSULTA PROGRAMACION POR FECHA
+            this.getallprogramacionbydate(this.tarjeta._prId, dia+"-"+mes+"-"+anio);
+        }else if(this.puntoControl==undefined || this._prId==undefined){
+            //console.log("Error, Revise Bien El Punto de Control y La Programacion");
+            this.mensaje="Error, Revise Bien El Punto de Control y La Programacion";
+            this.displayErrorDatosProgxFecha=true;
+        }  
+    }
+
+    /* ERROR, FALTO DATOS NECESARIOS PARA BUSCAR POR FECHA */
+    errorBuscarxFecha(){
+        this.mensaje="";
+        this.displayErrorDatosProgxFecha=false;
     }
 
     //ABRIR MODAL ASIGNAR NUEVA TARJETA CONTROL
@@ -485,16 +512,15 @@ export class TcontrolComponent implements OnInit{
     cCeroFecha(f : string) :string{
         let fecha:string, _fecha:string, resultado, i=0;
         resultado = f.split('/');
-        console.log(resultado);
-            while(i<resultado.length){
-                resultado[i]=resultado[i].trim(); //BORRANDO ESPACIOS EN BLANCO
-                if(resultado[i].length%2!=0){
-                    resultado[i]="0"+resultado[i];
-                }
-                i++;
+        while(i<resultado.length){
+            resultado[i]=resultado[i].trim(); //BORRANDO ESPACIOS EN BLANCO
+            if(resultado[i].length%2!=0){
+                resultado[i]="0"+resultado[i];
             }
-            //CONCATENANDO
-            _fecha=resultado[0]+"/"+resultado[1]+"/"+resultado[2];
+            i++;
+        }
+        //CONCATENANDO
+        _fecha=resultado[0]+"/"+resultado[1]+"/"+resultado[2];
         
         return _fecha
     }
@@ -512,20 +538,14 @@ export class TcontrolComponent implements OnInit{
 
     //CONVERTIR DATE A STRING PARA FECHA  - ---   BD A GRILLA
     _fecha(fecha: Date) :string{
-        console.log(fecha);
         let fechaProg : string; let _fechaProg : string; let _fecha = new Date(fecha);  
-        console.log(_fecha);
         _fechaProg=(_fecha.getFullYear()).toString() +" / "+ (_fecha.getMonth()+1 ).toString() +" / "+(_fecha.getDate()).toString() ;
-        
-        console.log(_fechaProg);
         _fechaProg=this.cCeroFecha(_fechaProg);
-        
         return  _fechaProg;
     }
 
   //AQUI SE GUARDA TANTO CABECERA COMO DETALLE Y SE EDITA LA TABLA PROGRAMACIONDETALLE EL CAMPO ASIGNADO
     guardarTarjeta(){
-
         //VALIDANDO DATOS INGRESADOS
         let error=[
             {nomb:"Puntos De Control", val:0},
@@ -630,7 +650,7 @@ export class TcontrolComponent implements OnInit{
 
     //SELECCIONAR PUNTOS DE CONTROL DEL COMBOBOX
     puntosControlId(event:Event){
-        console.log(this.puntoControl);
+        //console.log(this.puntoControl);
         this.idPunto = this.puntoControl.PuCoId;
         let ruID = this.puntoControl.RuId;
 
@@ -663,7 +683,7 @@ export class TcontrolComponent implements OnInit{
 
     onRowPlaca(event){    
         let obj = event.data; //ID DE LA PLACA EN LA BD
-        console.log(obj);
+        this.actRadioButton=false;
         this.val=0;
         this._prDeId = obj.PrDeId;
         this.tarjeta._BuId=obj.BuId;
