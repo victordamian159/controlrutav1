@@ -65,7 +65,7 @@
                 </div>
             </div>
 
-            <!--fechas -->
+            <!--FECHAS -->
             <div class="form-group">
                 <label class="control-label" for="finicio">Del:</label>
                 <input class="form-control" id="finicio" name="finicio"  type="date" [(ngModel)]="progMaestro.PrFechaInicio" required #fde="ngModel" />
@@ -81,7 +81,7 @@
                 </span>
             </div>
 
-            <!--cantidad de buses-->
+            <!--CANTIDAD DE BUSES ACTIVOS E INACTIVOS-->
             <div class="form-group">
                 <label for="nrobuses" class="control-label">Buses:____Activos:{{bAct}}_ No Activos: {{bNAct}}</label>
                 <!--<input class="form-control" type="number" [(ngModel)]="progMaestro.PrCantidadBuses" id="nrobuses">-->
@@ -99,8 +99,8 @@
             <!--modal footer-->
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <button type="text" pButton icon="fa-check" (click)="showProgBase()" label="Continuar"></button>
-                    <button type="text" pButton icon="fa-close" (click)="cancelNewProgramacion()" label="Cancelar"></button>
+                    <button type="text" pButton icon="fa-check" (click)="showProgBase(); fde.reset(); fha.reset(); descrip.reset();" label="Continuar"></button>
+                    <button type="text" pButton icon="fa-close" (click)="cancelNewProgramacion(); fde.reset(); fha.reset(); descrip.reset();" label="Cancelar"></button>
                 </div>
             </p-footer>
         </p-dialog> 
