@@ -80,60 +80,60 @@
                 
             <!--MODAL BOTON  NUEVO PUNTO CONTROL CABECERA-->
             <p-dialog  [(visible)]="displayListaPuntos" modal="modal" width="320" responsive="true" >
+                    <!--<p-header>{{headertitle}} : {{pcMaestro.PuCoId}}</p-header>-->
+                    <!--DESCRIPCION-->
+                    <div class="form-group">
+                        <label class="control-label" for="descr">Descripcion:</label>
+                        <input class="form-control" id="descr" name="descripcion"  type="text" 
+                                [(ngModel)]="descr" #desc="ngModel" required/>
+                        <!--<span *ngIf="!desc.valid && (desc.touched || desc.dirty )" class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                            <div [hidden]="!desc.errors.required">obligatorio</div>
+                        </span>-->
+                        <div [hidden]="!desc.touched || desc.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                            Error, revise los datos ingresados
+                        </div>
+                    </div>
 
-                <!--<p-header>{{headertitle}} : {{pcMaestro.PuCoId}}</p-header>-->
-                <!--DESCRIPCION-->
-                <div class="form-group">
-                    <label class="control-label" for="descr">Descripcion:</label>
-                    <input class="form-control" id="descr" name="descripcion"  type="text" 
-                            [(ngModel)]="pcMaestro.PuCoDescripcion" #desc="ngModel" required/>
-                    <!--<span *ngIf="!desc.valid && (desc.touched || desc.dirty )" class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                        <div [hidden]="!desc.errors.required">obligatorio</div>
-                    </span>-->
-                    <div [hidden]="!desc.touched || desc.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                        Error, revise los datos ingresados
+                    <!--TIEMPO RECORRIDO-->
+                    <div class="form-group">
+                        <label class="control-label" for="timeb">Tiempo de Recorrido:</label>
+                        <input class="form-control" id="timeb" name="timebus"  type="text" [(ngModel)]="timeRec" 
+                            pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})"  #time="ngModel" required/>
+                        <!--<span *ngIf="!time.touched && time.valid" class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                            <div [hidden]="!time.errors.required">obligatorio</div>
+                            <div [hidden]="!time.errors.pattern">el dato ingresado no es hora</div>
+                        </span>-->
+                        <div [hidden]="!time.touched || time.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                            Error, revise los datos ingresados
+                        </div>
                     </div>
-                </div>
 
-                <!--TIEMPO RECORRIDO-->
-                <div class="form-group">
-                    <label class="control-label" for="timeb">Tiempo de Recorrido:</label>
-                    <input class="form-control" id="timeb" name="timebus"  type="text" [(ngModel)]="pcMaestro.PuCoTiempoBus" 
-                           pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})"  #time="ngModel" required/>
-                    <!--<span *ngIf="!time.touched && time.valid" class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                        <div [hidden]="!time.errors.required">obligatorio</div>
-                        <div [hidden]="!time.errors.pattern">el dato ingresado no es hora</div>
-                    </span>-->
-                    <div [hidden]="!time.touched || time.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                        Error, revise los datos ingresados
+                    <!--TIPO DE TARJETA     COMBO_BOX-->
+                    <div class="form-group">
+                        <label class="col-form-label">Tipo de Tarjeta:</label>
+                        <!--<select class="form-control" [(ngModel)]="tipoTarjeta" (change)="ftipoTarjeta($event)" required #tipotarj="ngModel">-->
+                        <select class="form-control" [(ngModel)]="tipoTarjeta" (change)="ftipoTarjeta($event)" required #tipotarj="ngModel" >
+                            <option *ngFor="let tipo of _tipoTarjeta" [ngValue]="tipo" >
+                                {{tipo.nomb}}
+                            </option>
+                        </select>
+                        <div [hidden]="!tipotarj.touched || tipotarj.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                            Error, revise los datos ingresados
+                        </div>
+                        <!--
+                        <span *ngIf="tipotarj.touched " class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
+                            <div [hidden]="!tipotarj.errors.required"> obligatorio </div>
+                        </span>
+                        -->   
                     </div>
-                </div>
-
-                <!--TIPO DE TARJETA     COMBO_BOX-->
-                <div class="form-group">
-                    <label class="col-form-label">Tipo de Tarjeta:</label>
-                    <!--<select class="form-control" [(ngModel)]="tipoTarjeta" (change)="ftipoTarjeta($event)" required #tipotarj="ngModel">-->
-                    <select class="form-control" [(ngModel)]="tipoTarjeta" (change)="ftipoTarjeta($event)" required #tipotarj="ngModel" >
-                        <option *ngFor="let tipo of _tipoTarjeta" [ngValue]="tipo" >
-                            {{tipo.nomb}}
-                        </option>
-                    </select>
-                    <div [hidden]="!tipotarj.touched || tipotarj.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                        Error, revise los datos ingresados
-                    </div>
-                    <!--
-                    <span *ngIf="tipotarj.touched " class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                        <div [hidden]="!tipotarj.errors.required"> obligatorio </div>
-                    </span>
-                    -->   
-                </div>
-           
-                <p-footer>
-                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix ">
-                        <button type="button" pButton  (click)="guardarPCMaestro()" label="Guardar" [disabled]="!desc.valid || !time.valid || !tipotarj.valid"></button>
-                        <button type="button" pButton  (click)="cancelarPCMaestro()" label="Close"></button>
-                    </div>
-                </p-footer>
+            
+                    <p-footer>
+                        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix ">
+                            <button type="button" pButton  (click)="guardarPCMaestro();" label="Guardar" [disabled]="!desc.valid || !time.valid || !tipotarj.valid"></button>
+                            <button type="button" pButton  (click)="cancelarPCMaestro(); desc.reset();  time.reset(); tipotarj.reset();" label="Close"></button>
+                        </div>
+                    </p-footer>
+                
             </p-dialog>  <!--final boton nuevo modal-->      
 
             <!--cuadro modal nuevo punto de control detalle ADDMARKER-->

@@ -25,6 +25,10 @@ export class PcontrolComponent implements OnInit{
     //trazar la ruta
     puntosRuta : any[]=[];
 //maestro
+    descr:string;
+    timeRec:string;
+
+
      pcMaestro: any ={ 
         PuCoId : 0,
         RuId : 51,
@@ -342,7 +346,13 @@ export class PcontrolComponent implements OnInit{
         this.editar = 0; // si editar es cero es nuevo registro
         this._PuCoId=0;
         this.displayListaPuntos = true;
-        this.pcontrolService.newPuntoControl().subscribe(data => {this.pcMaestroBD=data});
+        this.pcontrolService.newPuntoControl().subscribe(data => {
+            this.pcMaestroBD=data; 
+            //this.pcMaestro={}; 
+            this.descr="";
+            this.timeRec="";
+            this.tipoTarjeta={nomb:"", val:""};
+        });
         
     }
 
@@ -442,9 +452,6 @@ export class PcontrolComponent implements OnInit{
 
     //CARGAR LOS MARCADORES SOBRE EL MAPA 
     cargarmarker(){
-        //console.log(this.pCArrayDetalleBD);
-        //console.log(this.overlays);
-
         //CONDICIONAL PARA PODER EDITAR MARCADORES (DRAGGABLE=TRUE) ----- 
         //REVISAR LA VARIABLE THIS.EDITANDO SI SE PUEDE INTEGRAR, 
         //TAMBIEN AL AGREGAR MARCADORES ARRASTRABLES O NO EN ADDMARKER
