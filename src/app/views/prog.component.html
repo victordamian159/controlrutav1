@@ -1,42 +1,35 @@
 <div class="card">
-<div><h4>Programaciones</h4></div>
-</div>
+    <h5>Tabla Programaciones</h5>
+    <!--TABLA PROGRAMACION MAESTRO-->
+    <div class="card-block" style="padding:3">
+        <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+        <span class="text-xs-right"><button type="text" (click)="NuevaProgCabecera()" pButton  label="Nuevo"></button></span>
         <!--TABLA PROGRAMACION MAESTRO-->
-        <div class="card-block" style="padding:3">
-            <div class="card-title">
-                    <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
-                    <!--boton nuevo-->
-                    <span class="text-xs-right">
-                        <button type="text" (click)="NuevaProgCabecera()" pButton  label="Nuevo"></button>
-                    </span>
-                    <!--TABLA PROGRAMACION MAESTRO-->
-                    <div class="card-text">
-                        <p-dataTable [value]="programacionMaestroArrayHTML" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,15,20]" [globalFilter]="filtroGlobal"
-                            scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">
-                            <!--botones para la PRIMERA COLUMNA -->
-                            <p-column styleClass="col-button" [style]="{'width':'4em'}">
-                                <!--<template pTempalte="header">
-                                    <button type="button" pButton icon="fa-refresh">  </button>
-                                </template>-->
-                                <template let-col let-progrRowMaestro="rowData" pTemplate="body">
-                                    <button type="button" pButton class="btn" (click)="editarCabecera(progrRowMaestro)" icon="fa-pencil-square-o" ></button>
-                                    <button type="button" pButton class="btn" (click)="eliminarRegistroGrilla(progrRowMaestro.prId)" icon="fa-trash" ></button>
-                                </template>
-                            </p-column>
+        <div class="card-text">
+            <p-dataTable [value]="programacionMaestroArrayHTML" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,15,20]" [globalFilter]="filtroGlobal"
+                scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">
+                <!--botones para la PRIMERA COLUMNA -->
+                <p-column styleClass="col-button" [style]="{'width':'4em'}">
+                    <!--<template pTempalte="header"><button type="button" pButton icon="fa-refresh">  </button></template>-->
+                    <template let-col let-progrRowMaestro="rowData" pTemplate="body">
+                        <button type="button" pButton class="btn" (click)="editarCabecera(progrRowMaestro)" icon="fa-pencil-square-o" ></button>
+                        <button type="button" pButton class="btn" (click)="eliminarRegistroGrilla(progrRowMaestro.prId)" icon="fa-trash" ></button>
+                    </template>
+                </p-column>
+                <!--campos de la datatable-->
+                <p-column field="nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
+                <p-column field="tipo" header="Tipo"  [style]="{'width':'8em','text-align':'center'}"></p-column>
+                <p-column field="prDescripcion" header="Nombre"  [style]="{'width':'14em','text-align':'center'}"></p-column>
+                <p-column field="PrCantidadBuses" header="Cant."  [style]="{'width':'4em','text-align':'center'}"></p-column>
+                <p-column field="PrFechaInicio" header="Desde" [style]="{'width':'8em','text-align':'center'}"></p-column>
+                <p-column field="PrFechaFin" header="Hasta" [style]="{'width':'8em','text-align':'center'}"></p-column>
+                <p-column field="dias" header="Dias"  [style]="{'width':'4em','text-align':'center'}"></p-column>
+            </p-dataTable>
+        </div><!--fin tabla PROGRAMACION MAESTRO-->
+    </div>
 
-                            <!--campos de la datatable-->
-                            <p-column field="nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
-                            <p-column field="tipo" header="Tipo"  [style]="{'width':'8em','text-align':'center'}"></p-column>
-                            <p-column field="prDescripcion" header="Nombre"  [style]="{'width':'14em','text-align':'center'}"></p-column>
-                            <p-column field="PrCantidadBuses" header="Cant."  [style]="{'width':'4em','text-align':'center'}"></p-column>
-                            <p-column field="PrFechaInicio" header="Desde" [style]="{'width':'8em','text-align':'center'}"></p-column>
-                            <p-column field="PrFechaFin" header="Hasta" [style]="{'width':'8em','text-align':'center'}"></p-column>
-                            <p-column field="dias" header="Dias"  [style]="{'width':'4em','text-align':'center'}"></p-column>
-                        </p-dataTable>
-                    </div><!--fin tabla PROGRAMACION MAESTRO-->
-            </div>
-        </div>
-        
+</div>
+
          <!--modal boton nuevo (PROGRAMACION 1ERA VENTANA)-->
         <p-dialog  [(visible)]="displayNuevaProgramacion" modal="modal" width="100%" responsive="true" [closable]="false">
             <p-header> {{titleNuevoProgPrimerModal }} Programacion </p-header>
@@ -45,11 +38,12 @@
             <div class="form-group row">
                 <div class="col-4"><label >Tipo:</label></div>
                 <div class="col-8">
-                    <select class="form-control" [(ngModel)]="tipoProg" (change)="tipoProgramacion($event)">
-                        <option *ngFor="let tipo of _tipoProg" [ngValue]="tipo.id">
-                            {{tipo.nTipo}}
-                        </option>
+                    <select class="form-control" [(ngModel)]="tipoProg" (change)="tipoProgramacion($event)" required #tprog="ngModel">
+                        <option *ngFor="let tipo of _tipoProg" [ngValue]="tipo.id">{{tipo.nTipo}}</option>
                     </select>
+                    <div [hidden]="!tprog.touched || tprog.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                            Error, revise los datos ingresados
+                    </div>
                 </div>
             </div>
 
@@ -57,11 +51,12 @@
             <div class="form-group row">
                 <div class="col-4"><label >Forma:</label></div>
                 <div class="col-8">
-                    <select class="form-control" [(ngModel)]="formaProg" (change)="formaProgramacion($event)">
-                        <option *ngFor="let forma of _formaProg" [ngValue]="forma.id">
-                            {{forma.nForma}}
-                        </option>
+                    <select class="form-control" [(ngModel)]="formaProg" (change)="formaProgramacion($event)" required #fprog="ngModel" >
+                        <option *ngFor="let forma of _formaProg" [ngValue]="forma.id">{{forma.nForma}}</option>
                     </select>
+                    <div [hidden]="!fprog.touched || fprog.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                            Error, revise los datos ingresados
+                    </div>
                 </div>
             </div>
 
@@ -99,8 +94,9 @@
             <!--modal footer-->
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <button type="text" pButton icon="fa-check" (click)="showProgBase(); fde.reset(); fha.reset(); descrip.reset();" label="Continuar"></button>
-                    <button type="text" pButton icon="fa-close" (click)="cancelNewProgramacion(); fde.reset(); fha.reset(); descrip.reset();" label="Cancelar"></button>
+                    <button type="text" pButton icon="fa-check" (click)="showProgBase(); tprog.reset(); fprog.reset(); fde.reset(); fha.reset(); descrip.reset();" 
+                            label="Continuar" [disabled]="!tprog.valid || !fprog.valid || !fde.valid || !fha.valid || !descrip.valid "></button>
+                    <button type="text" pButton icon="fa-close" (click)="cancelNewProgramacion(); tprog.reset(); fprog.reset(); fde.reset(); fha.reset(); descrip.reset();" label="Cancelar"></button>
                 </div>
             </p-footer>
         </p-dialog> 

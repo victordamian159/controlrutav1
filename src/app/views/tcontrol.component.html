@@ -1,28 +1,25 @@
 <div class="card w-120">
     <div class="card-block">
         <h4 class="card-title">Tarjetas De Control </h4>
-        
         <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
-        
-        <!--boton nuevo-->
         <button type="text" (click)="nuevaAsignaTarjeta()" pButton label="Nuevo" data-toggle="modal" ></button>
         
         <!--TABLA MAESTRO  [pageLinks]="3" [rowsPerPageOptions]="[3,10,20]"-->
         
         <p-dataTable [value]="_allTarjControl" [rows]="5" [paginator]="true"  [globalFilter]="filtroGlobal"
             scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectCabecera($event)">
-            <p-column styleClass="col-button" [style]="{'width':'6em'}">
+            <p-column styleClass="col-button" [style]="{'width':'3em'}">
                 <template let-col let-row="rowData" pTemplate="body">
                     <button type="button" pButton class="btn" (click)="editarC(row.TaCoId)" icon="fa-pencil-square-o" > </button>
                     <button type="button" pButton class="btn" (click)="eliminarC(row.TaCoId)" icon="fa-trash" > </button>
                 </template>
             </p-column>
             <!--campos de la datatable-->
-            <p-column field="nro" header="N°"  [style]="{'width':'3em'}"></p-column>
-            <p-column field="PuCoId" header="Punto De Control|"  [style]="{'width':'12em'}"></p-column>
+            <p-column field="nro" header="N°"  [style]="{'width':'4em'}"></p-column>
+            <p-column field="PuCoId" header="Descripcion P. Control"  [style]="{'width':'17em'}"></p-column>
             <!--<p-column field="rutaDescripcion" header="Puntos"  [style]="{'width':'9em'}"></p-column>-->
             <!--<p-column field="BuId" header="BuId"  [style]="{'width':'9em'}"></p-column>-->
-            <p-column field="RuId" header="Ruta"  [style]="{'width':'12em'}"></p-column>
+            <p-column field="RuId" header="Descripcion Ruta"  [style]="{'width':'17em'}"></p-column>
             <p-column field="placa" header="Placa"  [style]="{'width':'8em'}"></p-column>
             <p-column field="TaCoFecha" header="Fecha"  [style]="{'width':'9em'}"></p-column>
             <p-column field="TaCoHoraSalida" header="Salida"  [style]="{'width':'7em'}"></p-column>

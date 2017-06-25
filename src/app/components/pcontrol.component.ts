@@ -157,13 +157,13 @@ export class PcontrolComponent implements OnInit{
 
     //tipoTarjeta:{nomb:"", val:""};
     tipoTarjeta:{nomb:string, val:string};
+    tTarj:string;
     _tipoTarjeta = [
         {nomb:"Hora Punta", val:'01'},
         {nomb:"Dias Feriados", val:'02'},
         {nomb:"Dias Normal", val:'03'}
     ];
 
-    selected : any;
     
     constructor( 
         private pcontrolService: PuntoControlService,
@@ -348,10 +348,10 @@ export class PcontrolComponent implements OnInit{
         this.displayListaPuntos = true;
         this.pcontrolService.newPuntoControl().subscribe(data => {
             this.pcMaestroBD=data; 
-            //this.pcMaestro={}; 
+            /* LIMPIANDO VARIABLES*/
             this.descr="";
             this.timeRec="";
-            this.tipoTarjeta={nomb:"", val:""};
+            this.tTarj="";
         });
         
     }
@@ -508,13 +508,12 @@ export class PcontrolComponent implements OnInit{
         this._PuCoId = _puCoId; //GUARDANDO ID PARA USARLO PARA SABER SI SE ESTA GUARDANDO(ID = 0) O EDITANDO(ID != 0)
         //CONSULTAR A LA BD Y CARGAR EL OBJETO PARA EDITAR this.pcMaestro
         this.pcontrolService.getPuntoControlById(_puCoId).subscribe(
-            data => {
-                        this.pcMaestro = data; 
-                        this.pcMaestro.PuCoTiempoBus=this.cCeroHora(this._fecha(this.pcMaestro.PuCoTiempoBus));
-                        //console.log(this.pcMaestro.PuCoTiempoBus);console.log(this.pcMaestro.PuCoClase); 
-                        //tipoTarjeta:{nomb:"", val:""};
-                        //this.selected = this.tipoTarjeta.val;
-                        //this.tipoTarjeta.val=this.pcMaestro.PuCoClase;
+            data => {this.pcMaestro = data; 
+                     this.pcMaestro.PuCoTiempoBus=this.cCeroHora(this._fecha(this.pcMaestro.PuCoTiempoBus));
+                     this.timeRec=this.pcMaestro.PuCoTiempoBus;
+                     this.descr=this.pcMaestro.PuCoDescripcion;
+                    
+                     console.log(this.pcMaestro.PuCoClase); 
                     }, 
             err =>{this.errorMessage = err}, () =>this.isLoading=false);
     }
@@ -588,69 +587,28 @@ export class PcontrolComponent implements OnInit{
     }
     //guardar nuevo Maestro puntos de control
     guardarPCMaestro(){      
-        let cen=0, i=0;
-        let error = [
-            {nomb:"Descripcion", val:0},
-            {nomb:"Clase", val:0},
-            {nomb:"Tiempo De Recorrido", val:0}
-        ];
-        //VALIDACION DE DATOS
-        if(this.pcMaestro.PuCoDescripcion != ''){
-            error[0].val = 1;
-        } 
-        if(this.pcMaestro.PuCoTiempoBus != ''){
-            error[1].val = 1;
-           
-        }
-        if(this.pcMaestro.PuCoClase != ''){
-            error[2].val = 1;
+        if(this._PuCoId == 0){ //NUEVO REGISTRO
+                //almacenado para los datos
+                this.pcMaestroBD.PuCoId = this.pcMaestro.PuCoId,
+                this.pcMaestroBD.PuCoDescripcion = this.pcMaestro.PuCoDescripcion, 
+                this.pcMaestroBD.RuId = this.pcMaestro.RuId,
+                this.pcMaestroBD.PuCoTiempoBus =  this.hora(this.pcMaestro.PuCoTiempoBus),        //TIME
+                this.pcMaestroBD.PuCoClase = this.pcMaestro.PuCoClase, //COMBO
+                this.pcMaestroBD.UsId = this.pcMaestro.UsId,
+                this.pcMaestroBD.UsFechaReg = new Date()
+        }else if(this._PuCoId != 0){ //SE ESTA EDITANDO REGISTRO EXISTENTE
+                this.pcMaestro.PuCoTiempoBus =  this.hora(this.pcMaestro.PuCoTiempoBus);
+                this.pcMaestroBD = this.pcMaestro;//PASANDO LOS VALORES DEL MODAL AL OBJETO Q SERA MANDANDO A LA BD
         }
 
-        //RECORRIENDO ARRAY EN BUSCA DE ERRORES
-        while( (i<error.length)  && cen == 0){
-            if(error[i].val == 0){
-                cen = 1;
-            }
-            i++;
-        }
-
-        console.log(this.pcMaestro.PuCoTiempoBus);
-        if(cen == 0){
-            if(this._PuCoId == 0){ //NUEVO REGISTRO
-                    //almacenado para los datos
-                    this.pcMaestroBD.PuCoId = this.pcMaestro.PuCoId,
-                    this.pcMaestroBD.PuCoDescripcion = this.pcMaestro.PuCoDescripcion, 
-                    this.pcMaestroBD.RuId = this.pcMaestro.RuId,
-
-                    this.pcMaestroBD.PuCoTiempoBus =  this.hora(this.pcMaestro.PuCoTiempoBus),        //TIME
-                    this.pcMaestroBD.PuCoClase = this.pcMaestro.PuCoClase, //COMBO
-
-                    this.pcMaestroBD.UsId = this.pcMaestro.UsId,
-                    this.pcMaestroBD.UsFechaReg = new Date()
-            }else if(this._PuCoId != 0){ //SE ESTA EDITANDO REGISTRO EXISTENTE
-                    this.pcMaestro.PuCoTiempoBus =  this.hora(this.pcMaestro.PuCoTiempoBus);
-                    this.pcMaestroBD = this.pcMaestro;//PASANDO LOS VALORES DEL MODAL AL OBJETO Q SERA MANDANDO A LA BD
-            }
-
-            //mandando al rest
-            console.log(this.pcMaestroBD);
-            this.pcontrolService.savePuntoControl(this.pcMaestroBD)
-            .subscribe(realizar => {
-                    this.getAllPuntoControlByEmRu(1,51); //RECARGANDO LA GRILLA
-                    this.mgPuntoControlMaestro(); // MOSTRANDO EN LA GRILLA
-                }, err => {this.errorMessage=err});
-            this.displayListaPuntos = false;
-        }else if(cen == 1){
-            //MENSAJE EN PANTALLA
-            this.mensaje ="Error al Ingresar los Datos, Vuelva a Ingresarlos";
-            this.displayValidarDatoCabecera=true;
-        }
-        
+        //mandando al rest
+        this.pcontrolService.savePuntoControl(this.pcMaestroBD)
+        .subscribe(realizar => {this.getAllPuntoControlByEmRu(1,51); //RECARGANDO LA GRILLA
+                                this.mgPuntoControlMaestro();}, // MOSTRANDO EN LA GRILLA
+                        err => {this.errorMessage=err});
+        this.displayListaPuntos = false;
     }
-    aceptarErrorValidacionCabecera(){
-        this.mensaje="";
-        this.displayValidarDatoCabecera=false;
-    }
+
     //cancelar la agregacion de un Maestro punto de control
     cancelarPCMaestro(){
         console.log("lista cancelada");
@@ -1205,10 +1163,9 @@ export class PcontrolComponent implements OnInit{
     }
 
     //FUNCION COMBOBOX TIPO TARJETA
-    ftipoTarjeta(event){
-        //console.log(this.tipoTarjeta.nomb);
-        //console.log(this.tipoTarjeta.val);
-        this.pcMaestro.PuCoClase = this.tipoTarjeta.val;        
+    ftipoTarjeta(event){ 
+        console.log(this.tTarj);
+        this.pcMaestro.PuCoClase = this.tTarj;  
     }
 
       //CONVERTIR STRING A DATE FORMULARIO A BD  HORAS

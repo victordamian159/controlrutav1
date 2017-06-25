@@ -1,217 +1,207 @@
 <div class="card">
     <div class="card-block" style="padding:3">
-            <div class="card-title">
-                <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
-                <!--boton nuevo-->
-                <span class="text-xs-right">
-                    <button (click)="newPuntoControlMaestro()" pButton icon="fa-file-text-o" label="Nuevo"></button>
-                </span>
-            </div>
-                
-            <!--tablas PUNTO CONTROL CABECERA-->
-            <p-dataTable [value]="pCMaestroMostrar" [rows]="6" [paginator]="true" [pageLinks]="2" [rowsPerPageOptions]="[3,5]" 
-                [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" selectionMode="single" 
-                [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">
-                
-                <p-column styleClass="col-button" [style]="{'width':'6em'}">
-                    <template let-col let-pcMostrar="rowData" pTemplate="body">
-                        <button type="button" pButton class="btn" (click)=  "editarMaestro(pcMostrar.PuCoId)" icon="fa-pencil-square-o" > </button>                  
-                        <button type="button" pButton class="btn" (click)= "eliminarMaestro(pcMostrar.PuCoId)" icon="fa-trash">  </button>
-                    </template>
-                </p-column>
-                
-                <!--campos de la datatable-->
-                <p-column field="nro"             header="N°" [style]="{'width':'3em'}" ></p-column>
-                <p-column field="PuCoDescripcion" header="Descripcion" [style]="{'width':'12em'}"></p-column>
-                <p-column field="PuCoTiempoBus" header="Tiempo" [style]="{'width':'7em'}" ></p-column>
-                <p-column field="PuCoClase"     header="Clase" [style]="{'width':'10em'}"></p-column>
-                <!--
+        <div class="card-title">
+            <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+            <span class="text-xs-right"><button (click)="newPuntoControlMaestro()" pButton icon="fa-file-text-o" label="Nuevo"></button></span>
+        </div>
+    
+    <!--TABLAS-->
+        <!--tablas PUNTO CONTROL CABECERA-->
+        <p-dataTable [value]="pCMaestroMostrar" [rows]="6" [paginator]="true" [pageLinks]="2" [rowsPerPageOptions]="[3,5]" 
+            [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" selectionMode="single" 
+            [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">
+            
+            <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                <template let-col let-pcMostrar="rowData" pTemplate="body">
+                    <button type="button" pButton class="btn" (click)=  "editarMaestro(pcMostrar.PuCoId)" icon="fa-pencil-square-o" > </button>                  
+                    <button type="button" pButton class="btn" (click)= "eliminarMaestro(pcMostrar.PuCoId)" icon="fa-trash">  </button>
+                </template>
+            </p-column>
+            <p-column field="nro"             header="N°" [style]="{'width':'3em'}" ></p-column>
+            <p-column field="PuCoDescripcion" header="Descripcion" [style]="{'width':'12em'}"></p-column>
+            <p-column field="PuCoTiempoBus" header="Tiempo" [style]="{'width':'7em'}" ></p-column>
+            <p-column field="PuCoClase"     header="Clase" [style]="{'width':'10em'}"></p-column>
+            <!--
                 <p-column field="RuId"          header="RuId" [style]="{'width':'9em'}" hidden="true"></p-column>
                 <p-column field="RuDescripcion"  header="Descripcion" [style]="{'width':'9em'}" hidden="true"></p-column>
                 <p-column field="EmId"       header="EmId" [style]="{'width':'6em'}" hidden="true"></p-column>
-                -->
-            </p-dataTable>
-            
-            <br>Puntos de Control<br>
-            <!--PUNTOS DE CONTROL DETALLE (GRILLA PEQUEÑA)-->
-            <p-dataTable [value]="pCDetalleMostrar" [rows]="4" [paginator]="true" [pageLinks]="4"
-                emptyMessage="Seleccione Una Lista de Punto de Control" [rowsPerPageOptions]="[4,6]"
-                [globalFilter]="filtroGlobal"  scrollable="true" scrollWidth="100%" selectionMode="single" 
-                [(selection)]="selectedProgPresentar"  (onRowSelect)="onRowSelectDetalle($event)">
+            -->
+        </p-dataTable>
+        
+        <br>Puntos de Control<br>
+        <!--PUNTOS DE CONTROL DETALLE (GRILLA PEQUEÑA)-->
+        <p-dataTable [value]="pCDetalleMostrar" [rows]="4" [paginator]="true" [pageLinks]="4"
+            emptyMessage="Seleccione Una Lista de Punto de Control" [rowsPerPageOptions]="[4,6]"
+            [globalFilter]="filtroGlobal"  scrollable="true" scrollWidth="100%" selectionMode="single" 
+            [(selection)]="selectedProgPresentar"  (onRowSelect)="onRowSelectDetalle($event)">
 
-                <p-column styleClass="col-button" [style]="{'width':'6em'}">
-                    <!--botones de las filas-->
-                    <template let-col let-pcDetalle="rowData" pTemplate="body">                                        
-                        <button type="button" pButton class="btn" (click)="editarDetalle(pcDetalle.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
-                        <button type="button" pButton class="btn" (click)="eliminarDetalle(pcDetalle.PuCoDeId)" icon="fa-trash"> </button>
-                    </template>
-                </p-column>
-                <!--campos de la datatable-->
-                <p-column field="PuCoDeOrden"      header="N°"   [style]="{'width':'4em','text-align':'center'}"  ></p-column>
-                <p-column field="PuCoDeDescripcion" header="Lugar"  [style]="{'width':'12em'}"></p-column>
-                <p-column field="PuCoDeHora"        header="Hora"      [style]="{'width':'6em'}"></p-column>
-               
-            </p-dataTable>
-           
-            <!--mapa-->
-            <div class="container">
-                <!--MAPA-->
-                    <div>Mapa </div>
-                    <div class="container">
-                        <p-growl [value]="msgs"></p-growl>
-                        <p-gmap 
-                            #gmap
-                            [options]="options" 
-                            [overlays]="overlays"
-                            [style]="{'width':'100%','height':'350px'}" 
-                            (onMapClick)="handleMapClick($event)"
-                            (onOverlayClick)="handleOverClick($event)"
-                            (onOverlayDragEnd)="handleDragEnd($event)">
-                        </p-gmap>   
+            <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                <!--botones de las filas-->
+                <template let-col let-pcDetalle="rowData" pTemplate="body">                                        
+                    <button type="button" pButton class="btn" (click)="editarDetalle(pcDetalle.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
+                    <button type="button" pButton class="btn" (click)="eliminarDetalle(pcDetalle.PuCoDeId)" icon="fa-trash"> </button>
+                </template>
+            </p-column>
+            <!--campos de la datatable-->
+            <p-column field="PuCoDeOrden"      header="N°"   [style]="{'width':'4em','text-align':'center'}"  ></p-column>
+            <p-column field="PuCoDeDescripcion" header="Lugar"  [style]="{'width':'12em'}"></p-column>
+            <p-column field="PuCoDeHora"        header="Hora"      [style]="{'width':'6em'}"></p-column>
+            
+        </p-dataTable>
+        
+    <!--GRAFICOS Y VENTANAS MODALES-->
+        <!--MAPA-->
+        <div class="container">
+            <!--MAPA-->
+                <div>Mapa </div>
+                <div class="container">
+                    <p-growl [value]="msgs"></p-growl>
+                    <p-gmap 
+                        #gmap
+                        [options]="options" 
+                        [overlays]="overlays"
+                        [style]="{'width':'100%','height':'350px'}" 
+                        (onMapClick)="handleMapClick($event)"
+                        (onOverlayClick)="handleOverClick($event)"
+                        (onOverlayDragEnd)="handleDragEnd($event)">
+                    </p-gmap>   
+                </div>
+                <!--BOTONES DEL MAPA-->
+                <div class="container">
+                    <div class="ui-grid-col-2"><button type="button" pButton style = " width:41px; height:50px; font-size: 20px;"  icon="fa-save" label="Guardar" (click)="guardarpuntosDetalleRest()" [disabled]="desGuardarPCD_BD"></button></div>
+                    <div class="ui-grid-col-2"><button type="button" pButton style = " width:41px; height:50px; font-size: 20px;"  icon="fa-eraser" label="Borrar" (click)="BorrarPuntosDetalle()" [disabled]="desBorrarPCDet"></button></div>    
+                    <div class="ui-grid-col-2"><button type="button" pButton style = " width:41px; height:50px; font-size: 20px;"  icon="fa-file-o" label="Nuevo" (click)="nuevosPuntos()"    [disabled]="desNuevosPuntos"></button></div>
+                    <div class="ui-grid-col-2"><button type="button" pButton style = " width:41px; height:50px; font-size: 20px;"  icon="fa-edit" label="Editar"  (click)="editarPuntosDetalleMapa()" [disabled]="desEditarPCDetMarker"></button></div>
+                </div>
+        </div>
+            
+        <!--MODAL BOTON  NUEVO PC CABECERA, SEGUN EL CASO ES NUEVA TABLA O EDITARLA-->
+        <p-dialog  [(visible)]="displayListaPuntos" modal="modal" width="320" responsive="true" >
+            <p-header>{{headertitle}} : {{pcMaestro.PuCoId}}</p-header>
+            <!--DESCRIPCION-->
+            <div class="form-group">
+                <label class="control-label" for="descr">Descripcion:</label>
+                <input class="form-control" id="descr" name="descripcion"  type="text" 
+                        [(ngModel)]="descr" #desc="ngModel" required/>
+                <!--<span *ngIf="!desc.valid && (desc.touched || desc.dirty )" class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                    <div [hidden]="!desc.errors.required">obligatorio</div>
+                </span>-->
+                <div [hidden]="!desc.touched || desc.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                    Error, revise los datos ingresados
+                </div>
+            </div>
+            <!--TIEMPO RECORRIDO-->
+            <div class="form-group">
+                <label class="control-label" for="timeb">Tiempo de Recorrido:</label>
+                <input class="form-control" id="timeb" name="timebus"  type="text" [(ngModel)]="timeRec" 
+                    pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})"  #time="ngModel" required/>
+                <!--<span *ngIf="!time.touched && time.valid" class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                    <div [hidden]="!time.errors.required">obligatorio</div>
+                    <div [hidden]="!time.errors.pattern">el dato ingresado no es hora</div>
+                </span>-->
+                <div [hidden]="!time.touched || time.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                    Error, revise los datos ingresados
+                </div>
+            </div>
+            <!--TIPO DE TARJETA     COMBO_BOX-->
+            <div class="form-group">
+                <label class="col-form-label">Tipo de Tarjeta:</label>
+                <!--<select class="form-control" [(ngModel)]="tipoTarjeta" (change)="ftipoTarjeta($event)" required #tipotarj="ngModel">-->
+                <select class="form-control" [(ngModel)]="tTarj" (change)="ftipoTarjeta($event)" required #tipotarj="ngModel" >
+                    <option *ngFor="let tipo of _tipoTarjeta" [ngValue]="tipo.val" (selected)="tipo==_tipoTarjeta[0]">
+                        {{tipo.nomb}}
+                    </option>
+                </select>
+                <div [hidden]="!tipotarj.touched || tipotarj.valid" class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                    Error, revise los datos ingresados
+                </div>
+            </div>
+    
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix ">
+                    <button type="button" pButton  (click)="guardarPCMaestro(); desc.reset();  time.reset(); tipotarj.reset();" label="Guardar" 
+                            [disabled]="!desc.valid || !time.valid || !tipotarj.valid"></button>
+                    <button type="button" pButton  (click)="cancelarPCMaestro(); desc.reset();  time.reset(); tipotarj.reset();" label="Close"></button>
+                </div>
+            </p-footer>
+        </p-dialog>  <!--final boton nuevo modal-->      
+
+        <!--cuadro modal nuevo punto de control detalle ADDMARKER-->
+        <p-dialog [(visible)]="displayNuevoPunto" modal="modal" width="300" responsive="true"  [closable]="false">
+            <div class="ui-grid ui-grid-pad ui-fluid" *ngIf="selectedPosition">
+                        
+                    <!--posicion en la lista de puntos-->
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-3"><label for="positionTitle">N°Pos:</label></div>
+                        <div class="ui-grid-col-6"><input type="text" pInputText id="posicionTitle" [disabled]="disabledInputPos" [(ngModel)]=pcDetalle.PuCoDeOrden/></div>
+                        <!--activar el input de orden de los puntos de control-->
+                        <div class="ui-grid-col-3"><button type="button" (click)="activarInputPos()" pButton label="#"></button></div>
                     </div>
-                    <!--BOTONES DEL MAPA-->
-                    <div class="container">
-                        <div class="ui-grid-col-2"><button type="button" pButton style = " width:41px; height:50px; font-size: 20px;"  icon="fa-save" label="Guardar" (click)="guardarpuntosDetalleRest()" [disabled]="desGuardarPCD_BD"></button></div>
-                        <div class="ui-grid-col-2"><button type="button" pButton style = " width:41px; height:50px; font-size: 20px;"  icon="fa-eraser" label="Borrar" (click)="BorrarPuntosDetalle()" [disabled]="desBorrarPCDet"></button></div>    
-                        <div class="ui-grid-col-2"><button type="button" pButton style = " width:41px; height:50px; font-size: 20px;"  icon="fa-file-o" label="Nuevo" (click)="nuevosPuntos()"    [disabled]="desNuevosPuntos"></button></div>
-                        <div class="ui-grid-col-2"><button type="button" pButton style = " width:41px; height:50px; font-size: 20px;"  icon="fa-edit" label="Editar"  (click)="editarPuntosDetalleMapa()" [disabled]="desEditarPCDetMarker"></button></div>
+                    <!--nombre punto control-->
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-3">
+                            <label for="title">Nombre:</label>
+                        </div>
+                        <div class="ui-grid-col-9">
+                            <input type="text" pInputText id="title" [(ngModel)]="pcDetalle.PuCoDeDescripcion">
+                        </div>
+                    </div>
+                        <!--tiempo -->                               
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-3">
+                            <label class="control-label" for="time">Tiempo:</label>
+                        </div>
+                        <div class="ui-grid-col-9">
+                            <input type="text" pInputText id="time" [(ngModel)]="pcDetalle.PuCoDeHora" step="1">
+                        </div>
                     </div>
             </div>
-                
-            <!--MODAL BOTON  NUEVO PUNTO CONTROL CABECERA-->
-            <p-dialog  [(visible)]="displayListaPuntos" modal="modal" width="320" responsive="true" >
-                    <!--<p-header>{{headertitle}} : {{pcMaestro.PuCoId}}</p-header>-->
-                    <!--DESCRIPCION-->
-                    <div class="form-group">
-                        <label class="control-label" for="descr">Descripcion:</label>
-                        <input class="form-control" id="descr" name="descripcion"  type="text" 
-                                [(ngModel)]="descr" #desc="ngModel" required/>
-                        <!--<span *ngIf="!desc.valid && (desc.touched || desc.dirty )" class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                            <div [hidden]="!desc.errors.required">obligatorio</div>
-                        </span>-->
-                        <div [hidden]="!desc.touched || desc.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                            Error, revise los datos ingresados
-                        </div>
-                    </div>
-
-                    <!--TIEMPO RECORRIDO-->
-                    <div class="form-group">
-                        <label class="control-label" for="timeb">Tiempo de Recorrido:</label>
-                        <input class="form-control" id="timeb" name="timebus"  type="text" [(ngModel)]="timeRec" 
-                            pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})"  #time="ngModel" required/>
-                        <!--<span *ngIf="!time.touched && time.valid" class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                            <div [hidden]="!time.errors.required">obligatorio</div>
-                            <div [hidden]="!time.errors.pattern">el dato ingresado no es hora</div>
-                        </span>-->
-                        <div [hidden]="!time.touched || time.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                            Error, revise los datos ingresados
-                        </div>
-                    </div>
-
-                    <!--TIPO DE TARJETA     COMBO_BOX-->
-                    <div class="form-group">
-                        <label class="col-form-label">Tipo de Tarjeta:</label>
-                        <!--<select class="form-control" [(ngModel)]="tipoTarjeta" (change)="ftipoTarjeta($event)" required #tipotarj="ngModel">-->
-                        <select class="form-control" [(ngModel)]="tipoTarjeta" (change)="ftipoTarjeta($event)" required #tipotarj="ngModel" >
-                            <option *ngFor="let tipo of _tipoTarjeta" [ngValue]="tipo" >
-                                {{tipo.nomb}}
-                            </option>
-                        </select>
-                        <div [hidden]="!tipotarj.touched || tipotarj.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                            Error, revise los datos ingresados
-                        </div>
-                        <!--
-                        <span *ngIf="tipotarj.touched " class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                            <div [hidden]="!tipotarj.errors.required"> obligatorio </div>
-                        </span>
-                        -->   
-                    </div>
-            
-                    <p-footer>
-                        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix ">
-                            <button type="button" pButton  (click)="guardarPCMaestro();" label="Guardar" [disabled]="!desc.valid || !time.valid || !tipotarj.valid"></button>
-                            <button type="button" pButton  (click)="cancelarPCMaestro(); desc.reset();  time.reset(); tipotarj.reset();" label="Close"></button>
-                        </div>
-                    </p-footer>
-                
-            </p-dialog>  <!--final boton nuevo modal-->      
-
-            <!--cuadro modal nuevo punto de control detalle ADDMARKER-->
-            <p-dialog [(visible)]="displayNuevoPunto" modal="modal" width="300" responsive="true"  [closable]="false">
-                <div class="ui-grid ui-grid-pad ui-fluid" *ngIf="selectedPosition">
-                            
-                        <!--posicion en la lista de puntos-->
-                        <div class="ui-grid-row">
-                            <div class="ui-grid-col-3"><label for="positionTitle">N°Pos:</label></div>
-                            <div class="ui-grid-col-6"><input type="text" pInputText id="posicionTitle" [disabled]="disabledInputPos" [(ngModel)]=pcDetalle.PuCoDeOrden/></div>
-                            <!--activar el input de orden de los puntos de control-->
-                            <div class="ui-grid-col-3"><button type="button" (click)="activarInputPos()" pButton label="#"></button></div>
-                        </div>
-                        <!--nombre punto control-->
-                        <div class="ui-grid-row">
-                            <div class="ui-grid-col-3">
-                                <label for="title">Nombre:</label>
-                            </div>
-                            <div class="ui-grid-col-9">
-                                <input type="text" pInputText id="title" [(ngModel)]="pcDetalle.PuCoDeDescripcion">
-                            </div>
-                        </div>
-                            <!--tiempo -->                               
-                        <div class="ui-grid-row">
-                            <div class="ui-grid-col-3">
-                                <label class="control-label" for="time">Tiempo:</label>
-                            </div>
-                            <div class="ui-grid-col-9">
-                                <input type="text" pInputText id="time" [(ngModel)]="pcDetalle.PuCoDeHora" step="1">
-                            </div>
-                        </div>
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton label="Agregar"  (click)="guardarPuntoControlDetalle()" ></button>
+                    <button type="button" pButton label="Cancelar" (click)="cancelarPuntoControlDetalle()"></button>
                 </div>
-                <p-footer>
-                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                        <button type="button" pButton label="Agregar"  (click)="guardarPuntoControlDetalle()" ></button>
-                        <button type="button" pButton label="Cancelar" (click)="cancelarPuntoControlDetalle()"></button>
-                    </div>
-                </p-footer>
-            </p-dialog>
+            </p-footer>
+        </p-dialog>
 
-            <!--EDITAR PUNTO CONTROL DETALLE, SOLO LOS OBJETOS QUE SON NECESARIOS-->
-            <p-dialog [(visible)]="displayEditarPunto" modal="modal" width="300" responsive="true"  [closable]="false">
-                <div class="ui-grid ui-grid-pad ui-fluid">
-                            
-                        <!--posicion en la lista de puntos-->
-                        <div class="ui-grid-row">
-                            <div class="ui-grid-col-3"><label for="positionTitle">N°Pos:</label></div>
-                            <div class="ui-grid-col-6"><input type="text" pInputText id="posicionTitle"  [(ngModel)]=pcDetalle.PuCoDeOrden/></div>
-                            <!--<div class="ui-grid-col-6"><input type="text" pInputText id="posicionTitle" [disabled]="disabledInputPos" [(ngModel)]=pcDetalle.PuCoDeOrden/></div>-->
-                            <!--activar el input de orden de los puntos de control
-                            <div class="ui-grid-col-3"><button type="button" (click)="activarInputPos()" pButton label="#"></button></div>-->
-                        </div>
-                        <!--nombre punto control-->
-                        <div class="ui-grid-row">
-                            <div class="ui-grid-col-3">
-                                <label for="title">Nombre:</label>
-                            </div>
-                            <div class="ui-grid-col-9">
-                                <input type="text" pInputText id="title" [(ngModel)]="pcDetalle.PuCoDeDescripcion">
-                            </div>
-                        </div>
-                            <!--tiempo -->                               
-                        <div class="ui-grid-row">
-                            <div class="ui-grid-col-3">
-                                <label class="control-label" for="time">Tiempo:</label>
-                            </div>
-                            <div class="ui-grid-col-9">
-                                <input type="text" pInputText id="time" [(ngModel)]="pcDetalle.PuCoDeHora" step="1">
-                            </div>
-                        </div>
-                </div>
-                <p-footer>
-                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                        <button type="button" pButton label="Editar"  (click)="editandoRegistroDetalle()" ></button>
-                        <button type="button" pButton label="Cancelar" (click)="cancelarEditandoRegistroDetalle()"></button>
+        <!--EDITAR PUNTO CONTROL DETALLE, SOLO LOS OBJETOS QUE SON NECESARIOS-->
+        <p-dialog [(visible)]="displayEditarPunto" modal="modal" width="300" responsive="true"  [closable]="false">
+            <div class="ui-grid ui-grid-pad ui-fluid">
+                        
+                    <!--posicion en la lista de puntos-->
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-3"><label for="positionTitle">N°Pos:</label></div>
+                        <div class="ui-grid-col-6"><input type="text" pInputText id="posicionTitle"  [(ngModel)]=pcDetalle.PuCoDeOrden/></div>
+                        <!--<div class="ui-grid-col-6"><input type="text" pInputText id="posicionTitle" [disabled]="disabledInputPos" [(ngModel)]=pcDetalle.PuCoDeOrden/></div>-->
+                        <!--activar el input de orden de los puntos de control
+                        <div class="ui-grid-col-3"><button type="button" (click)="activarInputPos()" pButton label="#"></button></div>-->
                     </div>
-                </p-footer>
-            </p-dialog>
+                    <!--nombre punto control-->
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-3">
+                            <label for="title">Nombre:</label>
+                        </div>
+                        <div class="ui-grid-col-9">
+                            <input type="text" pInputText id="title" [(ngModel)]="pcDetalle.PuCoDeDescripcion">
+                        </div>
+                    </div>
+                        <!--tiempo -->                               
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-3">
+                            <label class="control-label" for="time">Tiempo:</label>
+                        </div>
+                        <div class="ui-grid-col-9">
+                            <input type="text" pInputText id="time" [(ngModel)]="pcDetalle.PuCoDeHora" step="1">
+                        </div>
+                    </div>
+            </div>
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton label="Editar"  (click)="editandoRegistroDetalle()" ></button>
+                    <button type="button" pButton label="Cancelar" (click)="cancelarEditandoRegistroDetalle()"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
 
 
     <!--VENTANAS MODALES DE CONFIRMACION ELIMINAR EDITAR ACEPTAR--> 
