@@ -49,7 +49,7 @@
             
         </p-dataTable>
         
-    <!--GRAFICOS Y VENTANAS MODALES-->
+    <!--GRAFICOS -->
         <!--MAPA-->
         <div class="container">
             <!--MAPA-->
@@ -75,6 +75,7 @@
                 </div>
         </div>
             
+    <!--VENTANAS MODALES-->
         <!--MODAL BOTON  NUEVO PC CABECERA, SEGUN EL CASO ES NUEVA TABLA O EDITARLA-->
         <p-dialog  [(visible)]="displayListaPuntos" modal="modal" width="320" responsive="true" >
             <p-header>{{headertitle}} : {{pcMaestro.PuCoId}}</p-header>
@@ -108,7 +109,7 @@
                 <label class="col-form-label">Tipo de Tarjeta:</label>
                 <!--<select class="form-control" [(ngModel)]="tipoTarjeta" (change)="ftipoTarjeta($event)" required #tipotarj="ngModel">-->
                 <select class="form-control" [(ngModel)]="tTarj" (change)="ftipoTarjeta($event)" required #tipotarj="ngModel" >
-                    <option *ngFor="let tipo of _tipoTarjeta" [ngValue]="tipo.val" (selected)="tipo==_tipoTarjeta[0]">
+                    <option *ngFor="let tipo of _tipoTarjeta" [ngValue]="tipo.val" [selected]="tipo.val===tipoTarjeta.val ">
                         {{tipo.nomb}}
                     </option>
                 </select>
@@ -116,7 +117,6 @@
                     Error, revise los datos ingresados
                 </div>
             </div>
-    
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix ">
                     <button type="button" pButton  (click)="guardarPCMaestro(); desc.reset();  time.reset(); tipotarj.reset();" label="Guardar" 
@@ -204,134 +204,117 @@
         </p-dialog>
 
 
-    <!--VENTANAS MODALES DE CONFIRMACION ELIMINAR EDITAR ACEPTAR--> 
-            <p-dialog [(visible)]="displayElimRegCabecera" modal="modal" width="100%" responsive="true" [closable]="false">
-                {{mensaje}}
-                <p-footer>
-                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                        <button type="button" pButton label="Eliminar" (click)="_eliminarMaestro()"></button>
-                        <button type="button" pButton label="Cancelar" (click)="cancel_eliminarMaestro()"></button>
-                    </div>
-                </p-footer>
-            </p-dialog>
+        <!--VENTANA MODALES DE CONFIRMACION ELIMINAR EDITAR ACEPTAR--> 
+        <p-dialog [(visible)]="displayElimRegCabecera" modal="modal" width="100%" responsive="true" [closable]="false">
+            {{mensaje}}
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton label="Eliminar" (click)="_eliminarMaestro()"></button>
+                    <button type="button" pButton label="Cancelar" (click)="cancel_eliminarMaestro()"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
 
-            <p-dialog [(visible)]="displayElimRegDetalle" modal="modal" width="100%" responsive="true" [closable]="false">
-                {{mensaje}}
-                <p-footer>
-                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                        <button type="button" pButton label="Eliminar" (click)="_eliminarDetalle()"></button>
-                        <button type="button" pButton label="Cancelar" (click)="cancel_eliminarDetalle()"></button>
-                    </div>
-                </p-footer>
-            </p-dialog>
+        <p-dialog [(visible)]="displayElimRegDetalle" modal="modal" width="100%" responsive="true" [closable]="false">
+            {{mensaje}}
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton label="Eliminar" (click)="_eliminarDetalle()"></button>
+                    <button type="button" pButton label="Cancelar" (click)="cancel_eliminarDetalle()"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
 
-            <!-- MOSTRAR EN LA PANTALLA EL MENSAJE DE VALIDACION DE DATOS-->
-            <p-dialog [(visible)]="displayValidarDatoCabecera" modal="modal" width="100%" responsive="true" [closable]="false">
-                {{mensaje}}
-                <p-footer>
-                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                        <button type="button" pButton label="Aceptar" (click)="aceptarErrorValidacionCabecera()"></button>
-                    </div>
-                </p-footer>
-            </p-dialog>
+        <!-- MOSTRAR EN LA PANTALLA EL MENSAJE DE VALIDACION DE DATOS-->
+        <p-dialog [(visible)]="displayValidarDatoCabecera" modal="modal" width="100%" responsive="true" [closable]="false">
+            {{mensaje}}
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton label="Aceptar" (click)="aceptarErrorValidacionCabecera()"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
 
-            <!--CLICK SOBRE UN OBJETO-->
-            <p-dialog [(visible)]="displayOnObjec" modal="modal" width="100%" responsive="true" [closable]="false">
-                {{mensaje}}
-                <p-footer>
-                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                        <button type="button" pButton label="Aceptar" (click)="aceptarClickObjeto()"></button>
-                    </div>
-                </p-footer>
-            </p-dialog>
+        <!--CLICK SOBRE UN OBJETO-->
+        <p-dialog [(visible)]="displayOnObjec" modal="modal" width="100%" responsive="true" [closable]="false">
+            {{mensaje}}
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton label="Aceptar" (click)="aceptarClickObjeto()"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
 
-            <!--CLICK SOBRE MAPA-->
-            <p-dialog [(visible)]="displayMapaClick" modal="modal" width="100%" responsive="true" [closable]="false">
-                {{mensaje}}
-                <p-footer>
-                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                        <button type="button" pButton label="Aceptar" (click)="aceptarModalAgregarMarker()"></button>
-                    </div>
-                </p-footer>
-            </p-dialog>
+        <!--CLICK SOBRE MAPA-->
+        <p-dialog [(visible)]="displayMapaClick" modal="modal" width="100%" responsive="true" [closable]="false">
+            {{mensaje}}
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton label="Aceptar" (click)="aceptarModalAgregarMarker()"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
 
-            <!--ERROR NO SE PUEDE ELIMINAR LOS PUNTOS DE CONTROL DETALLE-->
-            <p-dialog [(visible)]="displayErrorEditarPuntos" modal="modal" width="100%" responsive="true" [closable]="false">
-                {{mensaje}}
-                <p-footer>
-                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                        <button type="button" pButton label="Aceptar" (click)="aceptarEditarPuntos()"></button>
-                    </div>
-                </p-footer>
-            </p-dialog>
+        <!--ERROR NO SE PUEDE ELIMINAR LOS PUNTOS DE CONTROL DETALLE-->
+        <p-dialog [(visible)]="displayErrorEditarPuntos" modal="modal" width="100%" responsive="true" [closable]="false">
+            {{mensaje}}
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton label="Aceptar" (click)="aceptarEditarPuntos()"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
 
-            <!--ERROR NO SE PUEDE EDITAR EL REGISTRO DE LOS PUNTOS DE CONTROL DETALLE (NOMBRE Y TIEMPO)-->
-            <p-dialog [(visible)]="displayErrorEditar" modal="modal" width="100%" responsive="true" [closable]="false">
-                {{mensaje}}
-                <p-footer>
-                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                        <button type="button" pButton label="Aceptar" (click)="aceptarErrorEditar()"></button>
-                    </div>
-                </p-footer>
-            </p-dialog>
+        <!--ERROR NO SE PUEDE EDITAR EL REGISTRO DE LOS PUNTOS DE CONTROL DETALLE (NOMBRE Y TIEMPO)-->
+        <p-dialog [(visible)]="displayErrorEditar" modal="modal" width="100%" responsive="true" [closable]="false">
+            {{mensaje}}
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton label="Aceptar" (click)="aceptarErrorEditar()"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
 
-            <!--ERROR NO HAY PUNTOS DE CONTROL DETALLE SOBRE EL MAPA-->
-            <p-dialog [(visible)]="displayNohayPuntos" modal="modal" width="100%" responsive="true" [closable]="false">
-                {{mensaje}}
-                <p-footer>
-                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                        <button type="button" pButton label="Aceptar" (click)="aceptarNoHayPuntos()"></button>
-                    </div>
-                </p-footer>
-            </p-dialog>
+        <!--ERROR NO HAY PUNTOS DE CONTROL DETALLE SOBRE EL MAPA-->
+        <p-dialog [(visible)]="displayNohayPuntos" modal="modal" width="100%" responsive="true" [closable]="false">
+            {{mensaje}}
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton label="Aceptar" (click)="aceptarNoHayPuntos()"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
 
-            <!--NUEVOS PUNTOS DE CONTROL DETALLE SOBRE EL MAPA-->
-            <p-dialog [(visible)]="displayNuevosPuntos" modal="modal" width="100%" responsive="true" [closable]="false">
-                {{mensaje}}
-                <p-footer>
-                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                        <button type="button" pButton label="Aceptar" (click)="aceptarNuevosPuntos()"></button>
-                    </div>
-                </p-footer>
-            </p-dialog>
+        <!--NUEVOS PUNTOS DE CONTROL DETALLE SOBRE EL MAPA-->
+        <p-dialog [(visible)]="displayNuevosPuntos" modal="modal" width="100%" responsive="true" [closable]="false">
+            {{mensaje}}
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton label="Aceptar" (click)="aceptarNuevosPuntos()"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
 
-             <!--GUARDAR PUNTOS DE CONTROL DETALLE SOBRE EL MAPA-->
-            <p-dialog [(visible)]="displayGuardarPuntosDetalle" modal="modal" width="100%" responsive="true" [closable]="false">
-                {{mensaje}}
-                <p-footer>
-                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                        <button type="button" pButton label="Aceptar" (click)="aceptarGuardarPuntosDetalle()"></button>
-                    </div>
-                </p-footer>
-            </p-dialog>
+            <!--GUARDAR PUNTOS DE CONTROL DETALLE SOBRE EL MAPA-->
+        <p-dialog [(visible)]="displayGuardarPuntosDetalle" modal="modal" width="100%" responsive="true" [closable]="false">
+            {{mensaje}}
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton label="Aceptar" (click)="aceptarGuardarPuntosDetalle()"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
 
-             <!--VENTANA CONFIRMAR VERIFICAR TIEMPOS PUNTOS DE CONTROL-->
-            <p-dialog [(visible)]="displayVerificarTiempoPc" modal="modal" width="100%" responsive="true" [closable]="false">
-                {{mensaje}}
-                <p-footer>
-                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                        <button type="button" pButton label="Aceptar" (click)="verificarTiemposPc()"></button>
-                    </div>
-                </p-footer>
-            </p-dialog>
+            <!--VENTANA CONFIRMAR VERIFICAR TIEMPOS PUNTOS DE CONTROL-->
+        <p-dialog [(visible)]="displayVerificarTiempoPc" modal="modal" width="100%" responsive="true" [closable]="false">
+            {{mensaje}}
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton label="Aceptar" (click)="verificarTiemposPc()"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
     </div>
 </div>
-                <!--    
-                        <button type="button" pButton label="Zoom +" (click)="zoomPosMapa(gmap.getMap())" [disabled]="disButBorrar"></button>
-                        <button type="button" pButton label="Zoom -" (click)="zoomNegMapa(gmap.getMap())" [disabled]="disButBorrar"></button>
-                        -->
-                        <!--<button type="button" pButton label="Deshacer" (click)="deshacerPunto()"    [disabled]="desDeshacerPCDet"></button>-->
-                      
-                    <!--
-                       <p-dialog showEffect="fade" [(visible)]="dialogVisible" header="New Location">
-                    -->
-                    
-                     <!--<div class="form-group ">
-                    <div class="col-3">
-                        <label class="col-2 col-form-label">Tipo de Tarjeta:</label>
-                    <div class="col-9">
-                    <select [(ngModel)]="tipoTarjeta" (change)="placaObj($event)">
-                    <label class="control-label" for="tipetarj">Tipo de Tarjeta:</label>
-                    <input class="form-control" id="tipetarj" name="tipetarjeta"  type="text" [(ngModel)]="pcMaestro.PuCoClase"/>
-                </div>-->
+
                 

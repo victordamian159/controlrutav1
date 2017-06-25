@@ -155,8 +155,9 @@ export class PcontrolComponent implements OnInit{
     desEditarPCDetMarker:boolean;
     desNuevosPuntos : boolean;
 
-    //tipoTarjeta:{nomb:"", val:""};
-    tipoTarjeta:{nomb:string, val:string};
+    tipoTarjeta={nomb:"", val:""};
+
+    //tipoTarjeta:{nomb:string, val:string};
     tTarj:string;
     _tipoTarjeta = [
         {nomb:"Hora Punta", val:'01'},
@@ -505,15 +506,20 @@ export class PcontrolComponent implements OnInit{
     editarMaestro(_puCoId:number){
         this.displayListaPuntos=true; //MOSTRAR CUADRO DE NUEVA LISTA PUNTOS(CABECERA)
         this.headertitle="Editar Lista" //TITULO PARA LA VENTANA
+        this.tipoTarjeta.val="";
         this._PuCoId = _puCoId; //GUARDANDO ID PARA USARLO PARA SABER SI SE ESTA GUARDANDO(ID = 0) O EDITANDO(ID != 0)
+        
         //CONSULTAR A LA BD Y CARGAR EL OBJETO PARA EDITAR this.pcMaestro
         this.pcontrolService.getPuntoControlById(_puCoId).subscribe(
             data => {this.pcMaestro = data; 
+                    /* HORA */
                      this.pcMaestro.PuCoTiempoBus=this.cCeroHora(this._fecha(this.pcMaestro.PuCoTiempoBus));
                      this.timeRec=this.pcMaestro.PuCoTiempoBus;
+                    /* DESCRIPCION */
                      this.descr=this.pcMaestro.PuCoDescripcion;
-                    
-                     console.log(this.pcMaestro.PuCoClase); 
+                    /* TIPO TARJETA */ 
+                     this.tipoTarjeta.val=this.pcMaestro.PuCoClase;
+                     this.tTarj=this.pcMaestro.PuCoClase;
                     }, 
             err =>{this.errorMessage = err}, () =>this.isLoading=false);
     }
