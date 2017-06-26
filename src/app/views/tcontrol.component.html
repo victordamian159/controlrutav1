@@ -1,159 +1,155 @@
-<div class="card w-120">
-    <div class="card-block">
-        <h4 class="card-title">Tarjetas De Control </h4>
-        <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
-        <button type="text" (click)="nuevaAsignaTarjeta()" pButton label="Nuevo" data-toggle="modal" ></button>
+<div class="card">
+    <div class="card-block" style="padding:3">
+        <div class="row">
+            <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+            <button type="text" (click)="nuevaAsignaTarjeta()" pButton label="Nuevo" data-toggle="modal" ></button>
+        </div>
         
-        <!--TABLA MAESTRO  [pageLinks]="3" [rowsPerPageOptions]="[3,10,20]"-->
-        
-        <p-dataTable [value]="_allTarjControl" [rows]="5" [paginator]="true"  [globalFilter]="filtroGlobal"
-            scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectCabecera($event)">
-            <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                <template let-col let-row="rowData" pTemplate="body">
-                    <button type="button" pButton class="btn" (click)="editarC(row.TaCoId)" icon="fa-pencil-square-o" > </button>
-                    <button type="button" pButton class="btn" (click)="eliminarC(row.TaCoId)" icon="fa-trash" > </button>
-                </template>
-            </p-column>
-            <!--campos de la datatable-->
-            <p-column field="nro" header="N°"  [style]="{'width':'4em'}"></p-column>
-            <p-column field="PuCoId" header="Descripcion P. Control"  [style]="{'width':'17em'}"></p-column>
-            <!--<p-column field="rutaDescripcion" header="Puntos"  [style]="{'width':'9em'}"></p-column>-->
-            <!--<p-column field="BuId" header="BuId"  [style]="{'width':'9em'}"></p-column>-->
-            <p-column field="RuId" header="Descripcion Ruta"  [style]="{'width':'17em'}"></p-column>
-            <p-column field="placa" header="Placa"  [style]="{'width':'8em'}"></p-column>
-            <p-column field="TaCoFecha" header="Fecha"  [style]="{'width':'9em'}"></p-column>
-            <p-column field="TaCoHoraSalida" header="Salida"  [style]="{'width':'7em'}"></p-column>
-        </p-dataTable>
-        
-    </div>
+        <div class="row">
+            <!--TABLA MAESTRO-->
+            <div class="col-xl-6">
+                <div class=" table table-responsive">
+                    <p-dataTable [value]="_allTarjControl" [rows]="5" [paginator]="true"  [globalFilter]="filtroGlobal" [responsive]="false" emptyMessage="Lista Vacia"
+                        scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectCabecera($event)">
+                        
+                        <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                            <template let-col let-row="rowData" pTemplate="body">
+                                <button type="button" pButton class="btn" (click)="editarC(row.TaCoId)" icon="fa-pencil-square-o" > </button>
+                                <button type="button" pButton class="btn" (click)="eliminarC(row.TaCoId)" icon="fa-trash" > </button>
+                            </template>
+                        </p-column>
+                        <!--campos de la datatable-->
+                        <p-column field="nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
+                        <p-column field="PuCoId" header="Descripcion P. Control"  [style]="{'width':'17em'}"></p-column>
+                        <!--<p-column field="rutaDescripcion" header="Puntos"  [style]="{'width':'9em'}"></p-column>-->
+                        <!--<p-column field="BuId" header="BuId"  [style]="{'width':'9em'}"></p-column>-->
+                        <p-column field="RuId" header="Descripcion Ruta"  [style]="{'width':'17em'}"></p-column>
+                        <p-column field="placa" header="Placa"  [style]="{'width':'8em','text-align':'center'}"></p-column>
+                        <p-column field="TaCoFecha" header="Fecha"  [style]="{'width':'9em','text-align':'center'}"></p-column>
+                        <p-column field="TaCoHoraSalida" header="Salida"  [style]="{'width':'7em','text-align':'center'}"></p-column>
+                    </p-dataTable>
+                </div>
+            </div>
 
-    <!--TABLA DETALLE TARJETA CONTROL-->
-    <div class="card-block">
-        <div><h4>Tarjeta</h4></div>
-        <div class="card-block" style="padding:3">
-            <div class="card-text">
-                <!--<p-dataTable [value]="_allTarjDetalle" [globalFilter]="filtroGlobal" [rows]="10" scrollable="true" scrollHeight="100px" selectionMode="single">-->
-                <p-dataTable [value]="_allTarjDetalle" [rows]="10"   [globalFilter]="filtroGlobal"
-                    scrollable="true" [paginator]="true" selectionMode="single" scrollWidth="100%" >
-                    <!--
-                        <p-column styleClass="col-button" [style]="{'width':'6em'}"> 
-                            <template pTempalte="header"> [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]"
-                                <button type="button" pButton icon="fa-refresh">  </button>
-                            </template>
-                            <template let-col let-envioPresentar="rowData" pTemplate="body">
-                                <button type="button" class="btn"> </button>
-                                <button type="button" class="btn"> </button>
-                            </template>
-                        </p-column>TaCoDeHora
-                    -->
-                    <p-column field="nro" header="N°"  [style]="{'width':'3em'}"></p-column>
-                    <p-column field="TaCoDeDescripcion" header="Punto"  [style]="{'width':'10em'}"></p-column>
-                    <!--<p-column field="TaCoDeId" header="TaCoDeId"  [style]="{'width':'9em'}"></p-column>-->
-                    <p-column field="TaCoDeHora" header="Control"  [style]="{'width':'7em'}"></p-column>
-                    <p-column field="TaCoDeTiempo" header="Tiempo"  [style]="{'width':'7em'}"></p-column>
-                </p-dataTable>
+            <!--TABLA DETALLE TARJETA CONTROL-->
+            <div class="col-xl-6">
+                <div class=" table table-responsive">
+                    <p-dataTable [value]="_allTarjDetalle" [rows]="10"   [globalFilter]="filtroGlobal" [responsive]="false"
+                        scrollable="true" [paginator]="true" selectionMode="single" scrollWidth="100%" emptyMessage="Lista Vacia" >
+                        <p-column field="nro" header="N°"  [style]="{'width':'3em','text-align':'center'}"></p-column>
+                        <p-column field="TaCoDeDescripcion" header="Punto"  [style]="{'width':'10em'}"></p-column>
+                        <p-column field="TaCoDeHora" header="Control"  [style]="{'width':'7em','text-align':'center'}"></p-column>
+                        <p-column field="TaCoDeTiempo" header="Tiempo"  [style]="{'width':'7em','text-align':'center'}"></p-column>
+                    </p-dataTable>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+    
+
     <!--modal boton nuevo-->
-    <p-dialog [(visible)]="displayAsignarTarjeta" modal="modal" width="100%" [closable]= false>
-            <!--PUNTOS DE CONTROL EXISTENTES COMBOBOX-->
-            <div class="form-group row">
-                <div class="col-3"><label class="col-2 col-form-label">Puntos:</label></div>
-                <div class="col-9">
-                    <select class="form-control" [(ngModel)]="puntoControl" (change)="puntosControlId($event)" required #PC="ngModel">
-                        <option *ngFor="let punto of _puntosControl" [ngValue]="punto" selected="selected">
-                            {{punto.RuDescripcion}}
-                        </option>
-                    </select>  
-                    <div [hidden]="!PC.touched || PC.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                        Error, revise los datos ingresados
+    <p-dialog header="Asignando Nueva Tarjeta" [(visible)]="displayAsignarTarjeta" modal="modal" width="100%" [closable]= false>
+        <div class="container">
+            <div class="row"  style="overflow-y: auto; height:300px; ">
+                <div class="col-xl-4 col-md-6 col-sm-12 col-xs-12">
+                    <!--PUNTOS DE CONTROL EXISTENTES COMBOBOX-->
+                    <div class="form-group ">
+                        <label>Puntos:</label>
+                        <select class="form-control" [(ngModel)]="puntoControl" (change)="puntosControlId($event)" required #PC="ngModel">
+                            <option *ngFor="let punto of _puntosControl" [ngValue]="punto" selected="selected">
+                                {{punto.RuDescripcion}}
+                            </option>
+                        </select>  
+                        <div [hidden]="!PC.touched || PC.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                            Error, revise los datos ingresados
+                        </div>
                     </div>
-                </div>
-            </div>
-      
-            <!--LISTA PROGRAMACION EN LA BD COMBOBOX-->
-            <div class="form-group row">
-                <div class="col-4"><label class="col-3 col-form-label">Programas:</label></div>
-                <div class="col-8">
-                    <select class="form-control" required [(ngModel)]="_prId" (change)="programacionId($event)"   #PROG="ngModel">
-                        <!--<option *ngFor="let prog of _programacion" [ngValue]="prog.prId">{{prog.prDescripcion}}</option>-->
-                        <option *ngFor="let prog of _programacion" [value]="prog.prId">{{prog.prDescripcion}}</option>
-                    </select> 
-                    <div [hidden]="!PROG.touched || PROG.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                        Error, revise los datos ingresados
+                    <!--LISTA PROGRAMACION EN LA BD COMBOBOX-->
+                    <div class="form-group ">
+                        <label>Programas:</label>
+                        <select class="form-control" required [(ngModel)]="_prId" (change)="programacionId($event)"   #PROG="ngModel">
+                            <!--<option *ngFor="let prog of _programacion" [ngValue]="prog.prId">{{prog.prDescripcion}}</option>-->
+                            <option *ngFor="let prog of _programacion" [value]="prog.prId">{{prog.prDescripcion}}</option>
+                        </select> 
+                        <div [hidden]="!PROG.touched || PROG.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                            Error, revise los datos ingresados
+                        </div>
                     </div>
+                    <!--HORA SALIDA-->  
+                    <div class="form-group">
+                        <!--<label class="control-label" for="hora" for="hora" class="col-1 col-form-label">Salida:</label>-->
+                        <label >Salida:</label>
+                        <input class="form-control" type="time"[(ngModel)]="tarjeta._TaCoHoraSalida"  step="1"  required #hsal="ngModel" />
+                        <span *ngIf="!hsal.valid && (hsal.touched || hsal.dirty)" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
+                            <div [hidden]="!hsal.errors.required"> obligatorio </div>
+                        </span>   
+                    </div>                
                 </div>
-            </div>
-
-            <!--INGRESAR FECHA PARA BUSCAR SU PROGRAMACION EXISTENTE--> 
-            <div class="form-group row ">
-                <div class="col-4"><label class="col-2 col-form-label" >Fecha:</label></div>
-                <div class="col-7 row">
-                    <input class="form-control" name="fecha" type="date" [(ngModel)]="tarjeta._TaCoFecha" required #fprog="ngModel" />
-                     <div [hidden]="fprog.valid || !fprog.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                        Error, revise los datos ingresados
-                    </div> 
-                    <button type="button" (click)="buscarxFecha()" pButton icon="fa-search" [disabled]="!fprog.valid"></button>
-                </div> 
-            </div>
-
-            <!--TABLA PROGRAMCION DEL DIA BUSCADO (AQUI UN DATATABLE     OPCIONAL)-->
-            <div class="container form-group row">
-                <div class="col-3">
-                    <label class="col-2 col-form-label">Placas:</label>
-                </div>
-                <div class="col-10">
-                    <p-dataTable [value]="_progDetalle" scrollable="true" scrollHeight="100px" selectionMode="single" 
-                                (onRowSelect)="onRowPlaca($event)" emptyMessage="Lista Vacia" >
-                            <p-column field="BuId" [style]="{'width':'3em'}" ></p-column>
-                            <p-column field="nroPlaca" [style]="{'width':'6em'}" ></p-column>
-                    </p-dataTable>
-                </div>
-                
-            </div>
-
-            <!--ESTADO RADIOBUTTON  CREO Q MEJOR CAMBIARLO A COMBOBOX-->
-            <div class="form-group row">
-                <div class="col-3"><label for="cuota" class="col-1 col-form-label">Estado:</label></div>
-                <div class="col-9" >
-                    <label class="radio-inline"><p-radioButton  value="0" label="No Asig" [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton></label>
-                    <label class="radio-inline"><p-radioButton  value="1" label="Asig"    [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton></label>
-                    <label class="radio-inline"><p-radioButton  value="2" label="Ausente" [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton></label>
-                </div>
-            </div>
-
-            <!--HORA SALIDA Y CUOTA-->  
-            <div class="form-group row">
-                <div class="form-group">
-                    <!--<label for="hora" class="col-1 col-form-label">Salida:</label>-->
-                    <label class="control-label" for="hora">Salida:</label>
-                    <input class="form-control" type="time" id="hora" [(ngModel)]="tarjeta._TaCoHoraSalida"  step="1"  required #hsal="ngModel" />
-                    <span *ngIf="!hsal.valid && (hsal.touched || hsal.dirty)" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                        <div [hidden]="!hsal.errors.required"> obligatorio </div>
-                    </span>   
-                </div>
-                
-                <div class="form-group">    
-                    <label class="control-label" for="cuota">Cuota:</label>
-                    <div class="col-6">
-                        <input class="form-control" type="number" value="0" id="cuota" [(ngModel)]="tarjeta._TaCoCuota" required #cuota="ngModel" />
+                <div class="col-xl-4 col-md-6 col-sm-12 col-xs-12">
+                    <!-- CUOTA-->
+                    <div class="form-group">    
+                        <label>Cuota:</label>
+                        <input class="form-control" type="number" value="0" [(ngModel)]="tarjeta._TaCoCuota" required #cuota="ngModel" />
                         <span *ngIf="!cuota.valid && (cuota.touched || cuota.dirty)" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
                             <div [hidden]="!cuota.errors.required"> obligatorio </div>
                         </span>   
+                    </div>    
+                    <!--INGRESAR FECHA PARA BUSCAR SU PROGRAMACION EXISTENTE--> 
+                    <div class="form-group  ">
+                        <label>Fecha:</label>
+                        <input class="form-control" name="fecha" type="date" [(ngModel)]="tarjeta._TaCoFecha" required #fprog="ngModel" />
+                        <button type="button" (click)="buscarxFecha()" pButton icon="fa-search" [disabled]="!fprog.valid"></button>
+                        <div [hidden]="fprog.valid || !fprog.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                                Error, revise los datos ingresados
+                        </div> 
                     </div>
-                </div>     
+                    <!--ESTADO RADIOBUTTON  CREO Q MEJOR CAMBIARLO A COMBOBOX-->
+                    <div class="form-group ">
+                        <!--<div class="col-3"><label for="cuota" class="col-1 col-form-label">Estado:</label></div>-->
+                        <label>Estado:</label>
+                        <!--<div class="col-9" >-->
+                        <div class="row">
+                            <label class="radio-inline"><p-radioButton  value="0" label="No Asignado" [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton></label>
+                            <label class="radio-inline"><p-radioButton  value="1" label="Asignado"    [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton></label>
+                            <label class="radio-inline"><p-radioButton  value="2" label="Ausente" [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-12 col-sm-12 col-xs-12">
+                    <!--TABLA PROGRAMCION DEL DIA BUSCADO-->
+                    <div class=" form-group ">
+                        <!--
+                        <div class="col-3">
+                            <label class="col-2 col-form-label">Placas:</label>
+                        </div>
+                        -->
+                        <label>Placas:</label>
+                        <!--<div class="col-10"></div>-->
+                        
+                        <p-dataTable [value]="_progDetalle" scrollable="true" scrollHeight="100px" selectionMode="single" 
+                                    (onRowSelect)="onRowPlaca($event)" emptyMessage="Lista Vacia" >
+                                <p-column field="BuId" [style]="{'width':'3em'}" ></p-column>
+                                <p-column field="nroPlaca" [style]="{'width':'6em'}" ></p-column>
+                        </p-dataTable>
+                        
+                        
+                    </div>
+                </div>
             </div>
         
-            <!--modal footer    PC PROG fprog hsal cuota-->
+            <div class="row">
+                <!--modal footer  VACIO  PC PROG fprog hsal cuota-->
+                
+            </div>
             <p-footer>
-                <div class="ui-dialog-buttonpane ui-helper-clearfix" >              
-                    <button type="button" pButton  (click)="guardarTarjeta()" [disabled]="!PC.valid || !PROG.valid || !fprog.valid || !hsal.valid || !cuota.valid || this.actRadioButton" label="Guardar"></button>
-                    <button type="button" pButton  (click)="cancelarTarjeta()" label="Cancelar"></button>
-                </div>
+                    <div class="ui-dialog-buttonpane ui-helper-clearfix ui-dialog-footer" >
+                        <button type="button" pButton (click)="guardarTarjeta()" [disabled]="!PC.valid || !PROG.valid || !fprog.valid || !hsal.valid || !cuota.valid || this.actRadioButton" label="Guardar"></button>
+                        <button type="button" pButton  (click)="cancelarTarjeta()" label="Cancelar"></button>
+                    </div>
             </p-footer>
+        </div>
     </p-dialog>
 
     <!--EDITAR TARJETA DE CONTROL-->

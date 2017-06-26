@@ -1,38 +1,77 @@
 <div class="card">
     
-    <!--barra para pendientes de envio-->
+    <!--barra para pendientes de envio
 	<div class="card-header">
 		<div id="loader" style="display: none">
 			<i class="fa-spinner fa-spin fa-2x"> </i> Getting values
 		</div>
 		<span >Registro de Ruta</span>
-	</div>
+	</div>-->
 
     <!--agregando estilos card de bootstrap-->
     <!--Ruta-->
-	<div class="card-block" style="padding:3">
-		<div class="card-title ">
-			<input placeholder="Buscar..." type="text"  id="gb1" #filtroGlobal />
-			<span class="text-xs-right" ><button type="button" pButton icon="fa-2x" (click)="nuevaRutaMaestro()" label="Nuevo"></button></span>
-		</div>
+	<div class="container card-block" style="padding:3">
+        <div class="row">Manejo de Ruta</div>
+        <div class="row">
+            <div class="col-5">
+                <div class="row ">
+                    <input placeholder="Buscar..." type="text"  id="gb1" #filtroGlobal />
+                    <span class="text-xs-right" ><button type="button" pButton icon="fa-2x" (click)="nuevaRutaMaestro()" label="Nuevo"></button></span>
+                </div>
 
-        <!--tabla maestro ruta-->
-		<div class="card-text">
-			<p-dataTable [value]="rutasPresentar" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal" 
-                scrollable="true"  scrollWidth="100%" selectionMode="single"[(selection)]="selectedRutaPresentar" (onRowSelect)="onRowSelect($event)">
-                    <!--COLUMNAS-->
-                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                        <template let-col let-Ruta="rowData" pTemplate="body" >
-                            <button type="button" pButton (click)="editarRutaMaestro(Ruta.RuId)" icon="fa-pencil-square-o" class="btn"></button>
-                            <button type="button" pButton (click)="eliminarRutaMaestro(Ruta.RuId)" icon="fa-trash" class="btn"></button>					
-                        </template>          
-                    </p-column>
-                    <p-column field="nro" header="N°" [style]="{'width':'4em'}"></p-column>
-                    <p-column field="RuDescripcion" header="Descripcion" [style]="{'width':'18em'}" ></p-column>
-                    <p-column field="RuFechaCreacion" header="Fecha" [style]="{'width':'8em'}" ></p-column>
-			</p-dataTable>
-		</div><!--fin tabla ruta-->
+                <!--tabla maestro ruta-->
+                <div class="row table table-responsive">
+                    <p-dataTable [value]="rutasPresentar" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal" 
+                        scrollable="true"  scrollWidth="100%" selectionMode="single"[(selection)]="selectedRutaPresentar" (onRowSelect)="onRowSelect($event)">
+                            <!--COLUMNAS-->
+                            <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                                <template let-col let-Ruta="rowData" pTemplate="body" >
+                                    <button type="button" pButton (click)="editarRutaMaestro(Ruta.RuId)" icon="fa-pencil-square-o" class="btn"></button>
+                                    <button type="button" pButton (click)="eliminarRutaMaestro(Ruta.RuId)" icon="fa-trash" class="btn"></button>					
+                                </template>          
+                            </p-column>
+                            <p-column field="nro" header="N°" [style]="{'width':'4em','text-align':'center'}"></p-column>
+                            <p-column field="RuDescripcion" header="Descripcion" [style]="{'width':'18em'}" ></p-column>
+                            <p-column field="RuFechaCreacion" header="Creacion" [style]="{'width':'8em','text-align':'center'}" ></p-column>
+                    </p-dataTable>
+                </div><!--fin tabla ruta-->
+            </div>
 
+            <!--mapa-->
+            <div class="col-7">
+                <div class="container">
+                    <!--<div class="form"><h5 id="mymaparuta">Trazar la ruta</h5></div>-->
+                    
+                    <p-growl [value]="msgs"></p-growl>
+                    <p-gmap 
+                        #gmap
+                        [options]="options" 
+                        [overlays]="overlays"
+                        [style]="{'width':'100%','height':'460px'}" 
+                        (onMapClick)="handleMapClick($event)"
+                        (onOverlayClick)="handleOverClick($event)"
+                        (onOverlayDragEnd)="handleDragEnd($event)">
+                    </p-gmap>   
+                    
+                </div>
+                <div class="container">
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-2"><button type="button" pButton  style = " width:41px; height:50px; font-size: 20px;"  icon="fa-eraser" (click)="clear()"[disabled]="disButBorrar"></button> </div>
+                        <div class="ui-grid-col-2"><button type="button" pButton  style = " width:41px; height:50px; font-size: 20px;"  icon="fa-edit"       (click)="showmodalEditar()"         [disabled]="disButEditar"></button></div>              
+                        <div class="ui-grid-col-2"><button type="button" pButton  style = " width:41px; height:50px; font-size: 20px;"  icon="fa-circle-o"   (click)="ultimalinea()"             [disabled]="disButTerminarRuta" ></button></div>
+                        <div class="ui-grid-col-2"><button type="button" pButton  style = " width:41px; height:50px; font-size: 20px;"  icon="fa-save"       (click)="guardarPuntosRutaDetalle()"[disabled]="disButSubirRuta"></button></div>
+                        <div class="ui-grid-col-2"><button type="button" pButton  style = " width:41px; height:50px; font-size: 20px;"  icon="fa-mail-reply" (click)="deshacer()"                [disabled]="disButDeshacer"></button></div>
+                        <div class="ui-grid-col-2"><button type="button" pButton  style = " width:41px; height:50px; font-size: 20px;"  icon="fa-file-o"     (click)="nuevaRutaDetalle()"        [disabled]="disButNuevaRuta"></button></div>
+                            <!--
+                            <button type="button" pButton label="Zoom +"        (click)="zoomIn(gmap.getMap())"     ></button>
+                            <button type="button" pButton label="Zoom -"        (click)="zoomOut(gmap.getMap())"    ></button>
+                            -->
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+</div>
          <!--Modal boton nuevo ruta-Maestro-->
          <p-dialog [(visible)]="displayNuevaRutaModal" modal="modal" width="100%" responsive="true" [closable]=false>
             <p-header>{{headertitle}} Ruta</p-header>
@@ -90,43 +129,6 @@
             </p-footer>
         </p-dialog>
 
-
-
-          <!--mapa-->
-            <div class="container">
-                <div class="form">
-                    <h5 id="mymaparuta">Trazar la ruta</h5>
-                </div>
-                
-                <p-growl [value]="msgs"></p-growl>
-                <p-gmap 
-                    #gmap
-                    [options]="options" 
-                    [overlays]="overlays"
-                    [style]="{'width':'100%','height':'400px'}" 
-                    (onMapClick)="handleMapClick($event)"
-                    (onOverlayClick)="handleOverClick($event)"
-                    (onOverlayDragEnd)="handleDragEnd($event)">
-                </p-gmap>   
-                
-            </div>
-            <div class="container">
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-2"><button type="button" pButton  style = " width:41px; height:50px; font-size: 20px;"  icon="fa-eraser" (click)="clear()"[disabled]="disButBorrar"></button> </div>
-                    <div class="ui-grid-col-2"><button type="button" pButton  style = " width:41px; height:50px; font-size: 20px;"  icon="fa-edit"       (click)="showmodalEditar()"         [disabled]="disButEditar"></button></div>              
-                    <div class="ui-grid-col-2"><button type="button" pButton  style = " width:41px; height:50px; font-size: 20px;"  icon="fa-circle-o"   (click)="ultimalinea()"             [disabled]="disButTerminarRuta" ></button></div>
-                    <div class="ui-grid-col-2"><button type="button" pButton  style = " width:41px; height:50px; font-size: 20px;"  icon="fa-save"       (click)="guardarPuntosRutaDetalle()"[disabled]="disButSubirRuta"></button></div>
-                    <div class="ui-grid-col-2"><button type="button" pButton  style = " width:41px; height:50px; font-size: 20px;"  icon="fa-mail-reply" (click)="deshacer()"                [disabled]="disButDeshacer"></button></div>
-                    <div class="ui-grid-col-2"><button type="button" pButton  style = " width:41px; height:50px; font-size: 20px;"  icon="fa-file-o"     (click)="nuevaRutaDetalle()"        [disabled]="disButNuevaRuta"></button></div>
-                        <!--
-                        <button type="button" pButton label="Zoom +"        (click)="zoomIn(gmap.getMap())"     ></button>
-                        <button type="button" pButton label="Zoom -"        (click)="zoomOut(gmap.getMap())"    ></button>
-                        -->
-                </div>
-            </div>
-         
-         <!--end mapa-->
-
          <!--modal boton editar (PARA DECIDIR SI SE EDITA O NO)-->
          <p-dialog  [(visible)]="displayfromEditar" modal="modal" width="100%" responsive="true">
             <p>¿Desea editar la Ruta?</p>
@@ -148,7 +150,6 @@
                 </div>
             </p-footer>
          </p-dialog>
-	</div>
 
     <!--MODAL PARA MENSAJES PARA EL USUARIO-->
             <!--NO SE PUEDE AGREGAR NODOS  SOBRE EL MAPA-->
@@ -210,4 +211,3 @@
                     </div>
                 </p-footer>
             </p-dialog>
-</div>
