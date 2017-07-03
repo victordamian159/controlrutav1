@@ -5,7 +5,8 @@ import {AuthenticationService} from '../services/authentication.service'; /*LLAM
 
 @Component({
     moduleId: module.id.toString(),
-    templateUrl: '_login.component.html'
+    templateUrl: '_login.component.html',
+    styleUrls: ['_login.component.css']
 }) 
 
 export class LoginComponent implements OnInit {
