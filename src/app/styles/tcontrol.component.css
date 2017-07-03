@@ -1,0 +1,30 @@
+#titulo{
+    color: black;
+    margin-top:20px;
+    text-decoration: none;
+}
+
+.table{
+    margin-top:20px;
+}
+
+.contenedor{
+    margin-top:20px;
+    margin-left:40px;
+    margin-right:20px;
+    margin-bottom:60px;
+}
+
+.col{
+    margin-top:0px;
+    margin-left:80px;
+    margin-right:80px;
+    margin-bottom:0px;
+}
+
+/* BOTON MODAL NUEVO */
+.btn_modal{
+    width: 100%;
+    padding: 10px 50px;
+    margin:0;
+}

@@ -52,9 +52,11 @@ export class BusComponent implements OnInit{
 
     /* DISPLAY MODAL*/
     displayNuevoBus : boolean = false;
+    displayNuevoBusD : boolean = false;
     displayAceptarNuevoBus : boolean = false;
     displayEliminarBus : boolean = false;
     displayEliminarBusD : boolean = false;
+    
 
     /* OTRAS VARIABLES*/
     
@@ -183,7 +185,7 @@ export class BusComponent implements OnInit{
     }
 
     nuevoBusD(){
-        
+        this.displayNuevoBusD=true;
     }
 
     editarBusD(busd : Object){

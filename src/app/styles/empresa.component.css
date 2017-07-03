@@ -1,0 +1,21 @@
+#titulo{
+    color: black;
+    margin-top:20px;
+    text-decoration: none;
+}
+.col{
+    margin-top:0px;
+    margin-left:80px;
+    margin-right:80px;
+    margin-bottom:0px;
+}
+.contenedor{
+    margin-top:20px;
+    margin-left:40px;
+    margin-right:20px;
+    margin-bottom:100px;
+}
+
+.table{
+    margin-top:20px;
+}

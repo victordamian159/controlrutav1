@@ -1,46 +1,56 @@
-<div class="card">
-    <div class="card-block" style="padding : 3">
+<div class="contenedor">
+    <div class="row">
         <!--TABLA EMPRESA-->
-            <h5>Empresa</h5>
-            <div class="card-title">
+        <div class="col-xl-6 col-md-12 col-sm-12 col-xs-12">
+            <div class="row">
+                <h5 id="titulo">Nombre De la Asociacion</h5>
+            </div>
+            <div class="row">
                 <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
                 <span class="text-xs-right">  <button (click)="nuevaEmpresa()" pButton icon="fa-file-text-o" label="Nuevo"></button>  </span>
             </div>
-            <p-dataTable [value]="_gempresa" [rows]="9"  [globalFilter]="filtroGlobal" scrollable="true" 
-                        scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectEmpresa($event)">
-                <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                    <template let-col  let-emp="rowData"  pTemplate="body">
-                            <button type="button" pButton class="btn" (click)=  "editarEmpresa(emp)" icon="fa-pencil-square-o" > </button>                  
-                            <button type="button" pButton class="btn" (click)= "eliminarEmpresa(emp.EmId)" icon="fa-trash">  </button>
-                    </template>
-                </p-column>
-                <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
-                <p-column field="EmConsorcio" header="Empresa" [style]="{'width':'14em'}"></p-column>
-                <p-column field="EmTipo" header="Tipo" [style]="{'width':'8em','text-align':'center'}" ></p-column>
-            </p-dataTable>
-        
+            <div class="row table table-responsive">
+                <p-dataTable [value]="_gempresa" [rows]="9"  [globalFilter]="filtroGlobal" scrollable="true" emptyMessage="No Hay Registros"
+                            scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectEmpresa($event)">
+                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                        <template let-col  let-emp="rowData"  pTemplate="body">
+                                <button type="button" pButton class="btn" (click)=  "editarEmpresa(emp)" icon="fa-pencil-square-o" > </button>                  
+                                <button type="button" pButton class="btn" (click)= "eliminarEmpresa(emp.EmId)" icon="fa-trash">  </button>
+                        </template>
+                    </p-column>
+                    <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
+                    <p-column field="EmConsorcio" header="Empresa" [style]="{'width':'14em'}"></p-column>
+                    <p-column field="EmTipo" header="Tipo" [style]="{'width':'8em','text-align':'center'}" ></p-column>
+                </p-dataTable>
+            </div>
+        </div>
         <!--TABLA SUBEMPRESA-->
-            <h5>Sub Empresa</h5>
-            <div class="card-title">
+        <div class="col-xl-6 col-md-12 col-sm-12 col-xs-12">
+            <div class="row">
+                <h5 id="titulo">Empresa</h5>
+            </div>
+            <div class="row">
                 <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
                 <span class="text-xs-right">  <button (click)="nuevaSubEmpresa()" pButton icon="fa-file-text-o" label="Nuevo"></button>  </span>
             </div>
             
-            <p-dataTable [value]="_gsubempresa" [rows]="9"  [globalFilter]="filtroGlobal" scrollable="true" 
-                        scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectSubEmpresa($event)">
-                <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                    <template let-col  let-subemp="rowData"  pTemplate="body">
-                            <button type="button" pButton class="btn" (click)=  "editarSubEmpresa(subemp)" icon="fa-pencil-square-o" > </button>                  
-                            <button type="button" pButton class="btn" (click)= "eliminarSubEmpresa(subemp.EmId)" icon="fa-trash">  </button>
-                    </template>
-                </p-column>
-                <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
-                <p-column field="SuEmRuc" header="Ruc" [style]="{'width':'10em'}"></p-column>
-                <p-column field="SuEmDireccion" header="Direccion" [style]="{'width':'12em'}" ></p-column>
-                <p-column field="SuEmUbigeo" header="Ubigeo" [style]="{'width':'12em'}"></p-column>
-                <p-column field="SuEmNfijo" header="Telefono" [style]="{'width':'8em','text-align':'center'}"></p-column>
-                <p-column field="SuEmTiempoVuelta" header="Tiempo" [style]="{'width':'6em','text-align':'center'}"></p-column>    
-            </p-dataTable>
-
+            <div class="row table table-responsive">
+                <p-dataTable [value]="_gsubempresa" [rows]="9"  [globalFilter]="filtroGlobal" scrollable="true" emptyMessage="No Hay Registros"
+                            scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectSubEmpresa($event)">
+                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                        <template let-col  let-subemp="rowData"  pTemplate="body">
+                                <button type="button" pButton class="btn" (click)=  "editarSubEmpresa(subemp)" icon="fa-pencil-square-o" > </button>                  
+                                <button type="button" pButton class="btn" (click)= "eliminarSubEmpresa(subemp.EmId)" icon="fa-trash">  </button>
+                        </template>
+                    </p-column>
+                    <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
+                    <p-column field="SuEmRuc" header="Ruc" [style]="{'width':'10em'}"></p-column>
+                    <p-column field="SuEmDireccion" header="Direccion" [style]="{'width':'12em'}" ></p-column>
+                    <p-column field="SuEmUbigeo" header="Ubigeo" [style]="{'width':'12em'}"></p-column>
+                    <p-column field="SuEmNfijo" header="Telefono" [style]="{'width':'8em','text-align':'center'}"></p-column>
+                    <p-column field="SuEmTiempoVuelta" header="Tiempo" [style]="{'width':'6em','text-align':'center'}"></p-column>    
+                </p-dataTable>
+            </div>
+        </div>
     </div>
 </div>

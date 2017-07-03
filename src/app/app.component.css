@@ -35,11 +35,6 @@ input{
     font-size:20px;
 }
 
-nav{
-    height:45px; 
-    font-size: 12px;
-    background: yellow;
-}
 
 @media(max-width:768px){
     form{
@@ -64,6 +59,7 @@ footer{
     width: 100%;
     height: 50px;
     bottom:0;
+    /*position:fixed;*/
     position:fixed;
     /*font-family:"Times New Roman", Times, serif;*/
     text-align:center;
@@ -72,30 +68,53 @@ footer{
     color:#fff;
 }
 
-.container{
-    margin-top:0px;
-    margin-left:100px;
-    margin-right:0px;
-    margin-bottom:150px;
-    border: 1px solid black;
-    background-color: lightblue;
-    padding-top: 50px;
-    padding-right: 30px;
-    padding-bottom: 50px;
-    padding-left: 80px;
-    position : center;
-}
-
-.mi-navbar{
+/* NAVEGADOR NORMAL*/
+.navbar{
     border:0;
+    margin-top: -5px;
     border-radius:0;
-    background: #0174DF;
+    padding-top: 0px; 
+    padding-bottom: -6px;
 }
 
+/*ICONO NAVBAR*/
 .navbar-brand{
-    font-size: 12px;
-    padding-left: 30px;
+    font-size: 15px;
+    padding-left: 10px;
     padding-right: 20px;
+    padding-bottom: 10px;
+    padding-top : 18px;
+}
+
+
+.navbar-toggler-right{
+    margin-top: 13px;
+    margin-right: -5px;
+}
+
+/* LISTA */
+.navbar-nav{
+    font-size: 16px;
+    margin: 0px 0px 0px 0px; 
+}
+
+/* ITEM LISTA*/
+.nav-item{
+    /*background: white;
+    margin-bottom: 0px;
+    margin-top:0px;
+    margin-left:0px;
+    margin-right:0px;
+    border-radius:0;*/
+    display: inline-block;
+    padding:10px;
+    border-right: 2px solid white;
+    line-height: 30px; 
+    border-top:  2px solid white;
+}
+
+.nav-item:hover{
+    background-color: black;
 }
    /*width:100%;
     height: 100px;

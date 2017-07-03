@@ -343,7 +343,7 @@ export class PcontrolComponent implements OnInit{
 //PUNTO CONTROL MAESTRO
     //funcion nueva Maestro de puntos de control (BOTON NUEVO)
     newPuntoControlMaestro(){
-        this.headertitle = "Nueva Lista";
+        this.headertitle = "Nueva Lista De Puntos de Control";
         this.editar = 0; // si editar es cero es nuevo registro
         this._PuCoId=0;
         this.displayListaPuntos = true;

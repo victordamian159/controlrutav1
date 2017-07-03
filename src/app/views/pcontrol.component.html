@@ -1,25 +1,22 @@
-<div class="container clearfix">
+<div class="contenedor">
     <!--TITULO-->
-    <div class="row align-items-start justify-content-center">
-        <header class="text-center"> Puntos de Control</header>
-    </div>
+    <div id="titulo">Puntos de Control</div>
 
     <!--CONTENIDO-->
     <div class="row">
         <!--TABLAS-->
-        <div class="container col-5 ">
+        <div class="col-xl-5 col-md-12 col-sm-12 col-xs-12">
             <!--FILTRO + BOTON NUEVO-->
             <div class="row ">
                 <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
                 <span class="text-xs-right"><button (click)="newPuntoControlMaestro()" pButton icon="fa-file-text-o" label="Nuevo"></button></span>
             </div>
             
-            <!--CABECERA-->
+            <!--TABLA CABECERA-->
             <div class="row table table-responsive">
                 <p-dataTable [value]="pCMaestroMostrar" [rows]="3" [paginator]="true" [pageLinks]="2" 
                     [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" selectionMode="single" 
-                    [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">
-                    
+                    [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">     
                     <p-column styleClass="col-button" [style]="{'width':'6em'}">
                         <template let-col let-pcMostrar="rowData" pTemplate="body">
                             <button type="button" pButton class="btn" (click)=  "editarMaestro(pcMostrar.PuCoId)" icon="fa-pencil-square-o" > </button>                  
@@ -33,14 +30,13 @@
                 </p-dataTable>
             </div>
 
-            <!--DETALLE-->
+            <!--TABLA DETALLE-->
             <p>Puntos de Control</p>
             <div class="row table table-responsive">
                 <p-dataTable [value]="pCDetalleMostrar" [rows]="4" [paginator]="true" [pageLinks]="4"
                     emptyMessage="Seleccione Una Lista de Punto de Control" [rowsPerPageOptions]="[4,6]"
                     [globalFilter]="filtroGlobal"  scrollable="true" scrollWidth="100%" selectionMode="single" 
                     [(selection)]="selectedProgPresentar"  (onRowSelect)="onRowSelectDetalle($event)">
-
                     <p-column styleClass="col-button" [style]="{'width':'6em'}">
                         <template let-col let-pcDetalle="rowData" pTemplate="body">                                        
                             <button type="button" pButton class="btn" (click)="editarDetalle(pcDetalle.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
@@ -55,11 +51,11 @@
         </div>
 
         <!--GRAFICOS -->
-        <div class="container col-7 ">
-            <div class="container">
-                <!--MAPA-->
-                <div class="row ">
-                    <div class="container">
+        <div class="col-xl-7 col-md-12 col-sm-12 col-xs-12">
+            <!--MAPA-->
+            <div class="row ">
+                <div class="col-xl-12">
+                    <div id="mapa">
                         <p-growl [value]="msgs"></p-growl>
                         <p-gmap 
                             #gmap
@@ -72,23 +68,29 @@
                         </p-gmap>   
                     </div>
                 </div>
-                <!--BOTONES DEL MAPA-->
-                <div class="row align-items-end justify-content-center ">
-                    <div class="ui-grid-col-2"><button type="button" pButton style = " width:41px; height:50px; font-size: 20px;"  icon="fa-save" label="Guardar" (click)="guardarpuntosDetalleRest()" [disabled]="desGuardarPCD_BD"></button></div>
-                    <div class="ui-grid-col-2"><button type="button" pButton style = " width:41px; height:50px; font-size: 20px;"  icon="fa-eraser" label="Borrar" (click)="BorrarPuntosDetalle()" [disabled]="desBorrarPCDet"></button></div>    
-                    <div class="ui-grid-col-2"><button type="button" pButton style = " width:41px; height:50px; font-size: 20px;"  icon="fa-file-o" label="Nuevo" (click)="nuevosPuntos()"    [disabled]="desNuevosPuntos"></button></div>
-                    <div class="ui-grid-col-2"><button type="button" pButton style = " width:41px; height:50px; font-size: 20px;"  icon="fa-edit" label="Editar"  (click)="editarPuntosDetalleMapa()" [disabled]="desEditarPCDetMarker"></button></div>
-                </div>
             </div>
-        </div>
-    </div>
 
-    
+            <!--BOTONES DEL MAPA-->
+            <div class="row">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12" >
+                    <div id="btnMap">
+                        <button id="btn" type="button" pButton icon="fa-save" label="Guardar" (click)="guardarpuntosDetalleRest()" [disabled]="desGuardarPCD_BD"></button>
+                        <button id="btn" type="button" pButton icon="fa-eraser" label="Borrar" (click)="BorrarPuntosDetalle()" [disabled]="desBorrarPCDet"></button>
+                        <button id="btn" type="button" pButton icon="fa-file-o" label="Nuevo" (click)="nuevosPuntos()"    [disabled]="desNuevosPuntos"></button>
+                        <button id="btn" type="button" pButton icon="fa-edit" label="Editar"  (click)="editarPuntosDetalleMapa()" [disabled]="desEditarPCDetMarker"></button>
+                    </div>
+                </div>
+            </div>  
+
+        </div>
+        
+    </div>
 </div>
+
     <!--VENTANAS MODALES-->
         <!--MODAL BOTON  NUEVO PC CABECERA, SEGUN EL CASO ES NUEVA TABLA O EDITARLA-->
-        <p-dialog  [(visible)]="displayListaPuntos" modal="modal" width="320" responsive="true" >
-            <p-header>{{headertitle}} : {{pcMaestro.PuCoId}}</p-header>
+        <p-dialog  [(visible)]="displayListaPuntos" [style]="{'font-size':'14px'}" [resizable]="false" [closable]="false" modal="modal" width="320" responsive="true" >
+            <p-header>{{headertitle}}</p-header>
             <!--DESCRIPCION-->
             <div class="form-group">
                 <label class="control-label" for="descr">Descripcion:</label>
@@ -98,9 +100,10 @@
                     <div [hidden]="!desc.errors.required">obligatorio</div>
                 </span>-->
                 <div [hidden]="!desc.touched || desc.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                    Error, revise los datos ingresados
+                    Error en los datos ingresados
                 </div>
             </div>
+
             <!--TIEMPO RECORRIDO-->
             <div class="form-group">
                 <label class="control-label" for="timeb">Tiempo de Recorrido:</label>
@@ -111,9 +114,10 @@
                     <div [hidden]="!time.errors.pattern">el dato ingresado no es hora</div>
                 </span>-->
                 <div [hidden]="!time.touched || time.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                    Error, revise los datos ingresados
+                    Error en los datos ingresados
                 </div>
             </div>
+
             <!--TIPO DE TARJETA     COMBO_BOX-->
             <div class="form-group">
                 <label class="col-form-label">Tipo de Tarjeta:</label>
@@ -124,20 +128,22 @@
                     </option>
                 </select>
                 <div [hidden]="!tipotarj.touched || tipotarj.valid" class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                    Error, revise los datos ingresados
+                    Error en los datos ingresados
                 </div>
             </div>
-            <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix ">
-                    <button type="button" pButton  (click)="guardarPCMaestro(); desc.reset();  time.reset(); tipotarj.reset();" label="Guardar" 
-                            [disabled]="!desc.valid || !time.valid || !tipotarj.valid"></button>
-                    <button type="button" pButton  (click)="cancelarPCMaestro(); desc.reset();  time.reset(); tipotarj.reset();" label="Close"></button>
+
+            <div class="row">
+                <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">
+                    <button class="btn_modal" type="button" pButton  (click)="guardarPCMaestro(); desc.reset();  time.reset(); tipotarj.reset();" label="Guardar" [disabled]="!desc.valid || !time.valid || !tipotarj.valid"></button>
                 </div>
-            </p-footer>
+                <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12"> 
+                    <button class="btn_modal" type="button" pButton  (click)="cancelarPCMaestro(); desc.reset();  time.reset(); tipotarj.reset();" label="Cancelar"></button>
+                </div>
+            </div>
         </p-dialog>  <!--final boton nuevo modal-->      
 
         <!--cuadro modal nuevo punto de control detalle ADDMARKER-->
-        <p-dialog [(visible)]="displayNuevoPunto" modal="modal" width="300" responsive="true"  [closable]="false">
+        <p-dialog [(visible)]="displayNuevoPunto" [resizable]="false" modal="modal" width="300" responsive="true"  [closable]="false">
             <div class="ui-grid ui-grid-pad ui-fluid" *ngIf="selectedPosition">
                         
                     <!--posicion en la lista de puntos-->
@@ -175,7 +181,7 @@
         </p-dialog>
 
         <!--EDITAR PUNTO CONTROL DETALLE, SOLO LOS OBJETOS QUE SON NECESARIOS-->
-        <p-dialog [(visible)]="displayEditarPunto" modal="modal" width="300" responsive="true"  [closable]="false">
+        <p-dialog [(visible)]="displayEditarPunto" [resizable]="false" modal="modal" width="300" responsive="true"  [closable]="false">
             <div class="ui-grid ui-grid-pad ui-fluid">
                         
                     <!--posicion en la lista de puntos-->
@@ -215,7 +221,7 @@
 
 
         <!--VENTANA MODALES DE CONFIRMACION ELIMINAR EDITAR ACEPTAR--> 
-        <p-dialog [(visible)]="displayElimRegCabecera" modal="modal" width="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayElimRegCabecera" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
@@ -225,7 +231,7 @@
             </p-footer>
         </p-dialog>
 
-        <p-dialog [(visible)]="displayElimRegDetalle" modal="modal" width="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayElimRegDetalle" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
@@ -236,7 +242,7 @@
         </p-dialog>
 
         <!-- MOSTRAR EN LA PANTALLA EL MENSAJE DE VALIDACION DE DATOS-->
-        <p-dialog [(visible)]="displayValidarDatoCabecera" modal="modal" width="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayValidarDatoCabecera" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
@@ -246,7 +252,7 @@
         </p-dialog>
 
         <!--CLICK SOBRE UN OBJETO-->
-        <p-dialog [(visible)]="displayOnObjec" modal="modal" width="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayOnObjec" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
@@ -256,7 +262,7 @@
         </p-dialog>
 
         <!--CLICK SOBRE MAPA-->
-        <p-dialog [(visible)]="displayMapaClick" modal="modal" width="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayMapaClick" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
@@ -266,7 +272,7 @@
         </p-dialog>
 
         <!--ERROR NO SE PUEDE ELIMINAR LOS PUNTOS DE CONTROL DETALLE-->
-        <p-dialog [(visible)]="displayErrorEditarPuntos" modal="modal" width="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayErrorEditarPuntos" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
@@ -276,7 +282,7 @@
         </p-dialog>
 
         <!--ERROR NO SE PUEDE EDITAR EL REGISTRO DE LOS PUNTOS DE CONTROL DETALLE (NOMBRE Y TIEMPO)-->
-        <p-dialog [(visible)]="displayErrorEditar" modal="modal" width="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayErrorEditar" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
@@ -286,7 +292,7 @@
         </p-dialog>
 
         <!--ERROR NO HAY PUNTOS DE CONTROL DETALLE SOBRE EL MAPA-->
-        <p-dialog [(visible)]="displayNohayPuntos" modal="modal" width="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayNohayPuntos" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
@@ -296,7 +302,7 @@
         </p-dialog>
 
         <!--NUEVOS PUNTOS DE CONTROL DETALLE SOBRE EL MAPA-->
-        <p-dialog [(visible)]="displayNuevosPuntos" modal="modal" width="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayNuevosPuntos" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
@@ -306,7 +312,7 @@
         </p-dialog>
 
             <!--GUARDAR PUNTOS DE CONTROL DETALLE SOBRE EL MAPA-->
-        <p-dialog [(visible)]="displayGuardarPuntosDetalle" modal="modal" width="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayGuardarPuntosDetalle" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
@@ -316,7 +322,7 @@
         </p-dialog>
 
             <!--VENTANA CONFIRMAR VERIFICAR TIEMPOS PUNTOS DE CONTROL-->
-        <p-dialog [(visible)]="displayVerificarTiempoPc" modal="modal" width="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayVerificarTiempoPc" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
@@ -326,7 +332,10 @@
         </p-dialog>
 
 
-<!--PIE DE PAGINA
+<!--
+    <p-header>{{headertitle}} : {{pcMaestro.PuCoId}}</p-header>
+    
+    PIE DE PAGINA
         <div class="row align-items-end justify-content-center">
             <footer class="text-center">
                 <p>Software De Control de Transporte Publico <br>

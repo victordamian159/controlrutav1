@@ -880,14 +880,14 @@ export class RutaComponent implements OnInit{
                 new google.maps.Polyline({
                 path: this.coordenadas,
                 //strokeColor: '#FF0000',
-                strokerColor: '#0101DF',
+                //strokerColor: '#0101DF',
+                strokeColor: '#0101FF',
                 strokeOpacity : 0.5,
                 strokeWeight :8 
             }));
         }else if(this.puntosRuta.length<2 || this.puntosRuta.length==0){
-            //EVALUAR MENSAJE MODAL
-            //console.log("ruta no valida");
-            this.Mensaje="No contiene una ruta trazada en el mapa";
+            //EVALUAR MENSAJE MODAL RUTA NO VALIDA
+            this.Mensaje="Registro Vacio, no contiene una ruta trazada sobre el mapa.";
             this.displaySinGrafica=true;
             this.puntosRuta=[]; //LIMPIANDO PUNTOSRUTA
         }

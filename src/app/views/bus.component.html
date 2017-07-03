@@ -1,185 +1,210 @@
-<div class="card">
-    <div class="card-block" style="padding : 3">
-        <h5>Bus</h5>
-        <div class="card-title">
-            <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
-            <span class="text-xs-right">  <button (click)="nuevoBus()" pButton icon="fa-file-text-o" label="Nuevo"></button>  </span>
+
+<!--TABLAS-->
+<div class="contenedor">
+    <div class="row" >
+         <!--TABLA BUS CABECERA-->
+        <div class="col-xl-6 col-md-12 col-sm-12 col-xs-12">
+            <div class="row">
+                <h5 id=titulo>Bus</h5>
+            </div>
+            <div class="row">
+                <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+                <span class="text-xs-right">  <button (click)="nuevoBus()" pButton icon="fa-file-text-o" label="Nuevo"></button>  </span>
+            </div>
+            <div class="row table table-responsive">
+                <p-dataTable [value]="_gbus" [rows]="3"  [globalFilter]="filtroGlobal" scrollable="true" emptyMessage="No Hay Registros" scrollWidth="100%" [paginator]="true" selectionMode="single" (onRowSelect)="onRowSelectBus($event)">
+                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                        <template let-col  let-objBus="rowData"  pTemplate="body">
+                                <button type="button" pButton class="btn" (click)=  "editarBus(objBus)" icon="fa-pencil-square-o" > </button>                  
+                                <button type="button" pButton class="btn" (click)= "eliminarBus(objBus.BuId)" icon="fa-trash">  </button>
+                        </template>
+                    </p-column>
+                    <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
+                    <p-column field="BuEmp" header="Empresa" [style]="{'width':'10em'}"></p-column>
+                    <p-column field="BuPlaca" header="Placa" [style]="{'width':'8em','text-align':'center'}" ></p-column>
+                    <p-column field="BuCombustible" header="Combustible" [style]="{'width':'8em','text-align':'center'}"></p-column>
+                    <p-column field="BuSOAT" header="SOAT" [style]="{'width':'12em'}"></p-column>
+                    <p-column field="BuModelo" header="Modelo" [style]="{'width':'10em','text-align':'center'}" ></p-column>
+                </p-dataTable>
+            </div>
         </div>
-        <!--TABLA BUS CABECERA-->
-         <p-dataTable [value]="_gbus" [rows]="3"  [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" [paginator]="true" selectionMode="single" (onRowSelect)="onRowSelectBus($event)">
-            <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                <template let-col  let-objBus="rowData"  pTemplate="body">
-                        <button type="button" pButton class="btn" (click)=  "editarBus(objBus)" icon="fa-pencil-square-o" > </button>                  
-                        <button type="button" pButton class="btn" (click)= "eliminarBus(objBus.BuId)" icon="fa-trash">  </button>
-                </template>
-            </p-column>
-            <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
-            <p-column field="BuEmp" header="Empresa" [style]="{'width':'10em'}"></p-column>
-            <p-column field="BuPlaca" header="Placa" [style]="{'width':'8em','text-align':'center'}" ></p-column>
-            <p-column field="BuCombustible" header="Combustible" [style]="{'width':'8em','text-align':'center'}"></p-column>
-            <p-column field="BuSOAT" header="SOAT" [style]="{'width':'12em'}"></p-column>
-            <p-column field="BuModelo" header="Modelo" [style]="{'width':'10em','text-align':'center'}" ></p-column>
-        </p-dataTable>
 
         <!--TABLA BUS DETALLE-->
-        <br>
-        <h5>Detalles</h5>
-        <button (click)="nuevoBusD()" pButton icon="fa-file-text-o" label="Nuevo"></button>
-         <p-dataTable [value]="_gbusD" [rows]="2"  [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" [paginator]="true" selectionMode="single" (onRowSelect)="onRowSelectBusDetalle($event)">
-             <p-column styleClass="col-button" [style]="{'width':'6em'}">
-                <template let-col  let-objBusD="rowData"  pTemplate="body">
-                        <button type="button" pButton class="btn" (click)=  "editarBusD(objBusD)" icon="fa-pencil-square-o" > </button>                  
-                        <button type="button" pButton class="btn" (click)= "eliminarBusD(objBusD.PeId)" icon="fa-trash">  </button>
-                </template>
-            </p-column>
-            <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
-            <p-column field="BuPeTipo" header="" [style]="{'width':'10em','text-align':'center'}"></p-column>
-            <p-column field="UsId" header="Usuarios" [style]="{'width':'10em','text-align':'left'}"></p-column>
-         </p-dataTable>
+        <div class="col-xl-6 col-md-12 col-sm-12 col-xs-12">
+            <div class="row">
+                <h5 id=titulo>Detalles</h5> 
+            </div>
+            <div class="row">
+                <button (click)="nuevoBusD()" pButton icon="fa-file-text-o" label="Nuevo"></button>
+            </div>
+            <div class="row table table-responsive">
+                <p-dataTable [value]="_gbusD" [rows]="2"  [globalFilter]="filtroGlobal" emptyMessage="No Hay Registros" scrollable="true" scrollWidth="100%" [paginator]="true" selectionMode="single" (onRowSelect)="onRowSelectBusDetalle($event)">
+                    <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                        <template let-col  let-objBusD="rowData"  pTemplate="body">
+                                <button type="button" pButton class="btn" (click)=  "editarBusD(objBusD)" icon="fa-pencil-square-o" > </button>                  
+                                <button type="button" pButton class="btn" (click)= "eliminarBusD(objBusD.PeId)" icon="fa-trash">  </button>
+                        </template>
+                    </p-column>
+                    <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
+                    <p-column field="BuPeTipo" header="" [style]="{'width':'10em','text-align':'center'}"></p-column>
+                    <p-column field="UsId" header="Usuarios" [style]="{'width':'10em','text-align':'left'}"></p-column>
+                </p-dataTable>
+            </div>
+        </div>
     </div>
-
+</div>
     
      <!--MODAL NUEVO BUS-->
-        <p-dialog [(visible)]="displayNuevoBus" modal="modal" width="100%" height="100%" responsive="true" [closable]="false">
-            <p-header>
-                {{titulo}}
-            </p-header>
-            <div style="overflow-y: auto; height:300px; ">
-                <!--PLACA   **-->
-                <div class="form-group">
-                    <label class="control-label" for="placa">Placa:</label>
-                    <input class="form-control" id="placa" name="placa"  type="text" [(ngModel)]="bus.BuPlaca" #placa="ngModel" required minlength="6" maxlength="10"/>
-                    <span *ngIf="!placa.valid && placa.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;" >
-                        <div [hidden]="!placa.errors.required"> Obligatorio </div>
-                        <div [hidden]="!placa.errors.minlength"> Minimo 6 Caracteres </div>
-                        <div [hidden]="!placa.errors.maxlength"> Maximo 15 Caracteres </div>
-                    </span>
-                </div>
+        <p-dialog [(visible)]="displayNuevoBus" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
+            <!--TITULO-->
+            <p-header> {{titulo}} </p-header>
+            
+            <!--CUERPO-->
+            <!--<div class="row" style="overflow-y: auto; height:300px; ">-->
+            <div class="win_modal" style="overflow-y: auto; height:380px; width: 100%;">
+                <div class="form-group row">
+                    <div class="col-xl-4 col-md-6 col-sm-12 col-xs-12">
+                        <!--PLACA   **-->
+                        <div class="form-group">
+                            <label class="control-label" for="placa">Placa:</label>
+                            <input class="form-control" id="placa" name="placa"  type="text" [(ngModel)]="bus.BuPlaca" #placa="ngModel" required minlength="6" maxlength="10"/>
+                            <span *ngIf="!placa.valid && placa.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;" >
+                                <div [hidden]="!placa.errors.required"> Obligatorio </div>
+                                <div [hidden]="!placa.errors.minlength"> Minimo 6 Caracteres </div>
+                                <div [hidden]="!placa.errors.maxlength"> Maximo 15 Caracteres </div>
+                            </span>
+                        </div>
 
-                <!--AÑO  **-->
-                <div class="form-group">
-                    <label class="control-label" for="anio">Año:</label>
-                    <input class="form-control" id="anio" name="anio"  type="text" [(ngModel)]="buanio" #anio="ngModel" 
-                           required length="4" />
-                    <span *ngIf="!anio.valid && anio.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;" >
-                        <div [hidden]="!anio.errors.required"> Obligatorio </div>
-                        <div [hidden]="!anio.errors.length"> 4 Digitos </div>
-                    </span>
-                    {{buanio}}
-                </div>
+                        <!--AÑO  **-->
+                        <div class="form-group">
+                            <label class="control-label" for="anio">Año:</label>
+                            <input class="form-control" id="anio" name="anio"  type="text" [(ngModel)]="buanio" #anio="ngModel" 
+                                required length="4" />
+                            <span *ngIf="!anio.valid && anio.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;" >
+                                <div [hidden]="!anio.errors.required"> Obligatorio </div>
+                                <div [hidden]="!anio.errors.length"> 4 Digitos </div>
+                            </span>
+                            {{buanio}}
+                        </div>
 
-                <!--MOTOR  **-->
-                <div class="form-group">
-                    <label class="control-label" for="motor">Motor:</label>
-                    <input class="form-control" id="motor" name="motor"  type="text" [(ngModel)]="bumotor" required #motor="ngModel" />
-                    <span *ngIf="!motor.valid && motor.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                        <div [hidden]="!anio.errors.required"> Obligatorio </div>
-                    </span>
-                </div>
+                        <!--MOTOR  **-->
+                        <div class="form-group">
+                            <label class="control-label" for="motor">Motor:</label>
+                            <input class="form-control" id="motor" name="motor"  type="text" [(ngModel)]="bumotor" required #motor="ngModel" />
+                            <span *ngIf="!motor.valid && motor.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
+                                <div [hidden]="!anio.errors.required"> Obligatorio </div>
+                            </span>
+                        </div>
 
-                <!--DESCRIPCION-->
-                <div class="form-group">
-                    <label class="control-label" for="descr">Descripcion:</label>
-                    <!--DROPDOWN-->
-                    <input class="form-control" id="descr" name="descr"  type="text" [(ngModel)]="bus.BuDescripcion" />
-                </div>
+                        <!--DESCRIPCION-->
+                        <div class="form-group">
+                            <label class="control-label" for="descr">Descripcion:</label>
+                            <!--DROPDOWN-->
+                            <input class="form-control" id="descr" name="descr"  type="text" [(ngModel)]="bus.BuDescripcion" />
+                        </div>
 
-                <!--TIPO COMBUSTIBLE  **-->
-                <div class="form-group">
-                    <label class="control-label" for="comb">Combustible:</label>
-                    <!--DROPDOWN-->
-                    <input class="form-control" id="comb" name="comb"  type="text" [(ngModel)]="bucombus" required #tipoCos="ngModel" />
-                    <span *ngIf="!tipoCos.valid && tipoCos.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                        <div [hidden]="!tipoCos.errors.required"> Obligatorio </div>
-                    </span>
-                </div>
+                        <!--TIPO COMBUSTIBLE  **-->
+                        <div class="form-group">
+                            <label class="control-label" for="comb">Combustible:</label>
+                            <!--DROPDOWN-->
+                            <input class="form-control" id="comb" name="comb"  type="text" [(ngModel)]="bucombus" required #tipoCos="ngModel" />
+                            <span *ngIf="!tipoCos.valid && tipoCos.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
+                                <div [hidden]="!tipoCos.errors.required"> Obligatorio </div>
+                            </span>
+                        </div>
+                    </div>
 
-                <!--COLOR-->
-                <div class="form-group">
-                    <label class="control-label" for="color">Color.:</label>
-                    <input class="form-control" id="color" name="color"  type="text" [(ngModel)]="bus.BuColor" />
-                </div>
+                    <div class="col-xl-4 col-md-6 col-sm-12 col-xs-12">
+                        <!--COLOR-->
+                        <div class="form-group">
+                            <label class="control-label" for="color">Color.:</label>
+                            <input class="form-control" id="color" name="color"  type="text" [(ngModel)]="bus.BuColor" />
+                        </div>
 
-                <!--CAPACIDAD-->
-                <div class="form-group">
-                    <label class="control-label" for="cap">Capacidad:</label>
-                    <input class="form-control" id="cap" name="cap"  type="text" [(ngModel)]="bus.BuCapacidad" />
-                </div>
+                        <!--CAPACIDAD-->
+                        <div class="form-group">
+                            <label class="control-label" for="cap">Capacidad:</label>
+                            <input class="form-control" id="cap" name="cap"  type="text" [(ngModel)]="bus.BuCapacidad" />
+                        </div>
 
-                <!--MARCA-->
-                <div class="form-group">
-                    <label class="control-label" for="marca">Marca:</label>
-                    <!--DROPDOWN-->
-                    <input class="form-control" id="marca" name="marca"  type="text" [(ngModel)]="bus.BuMarca" />
-                </div>
+                        <!--MARCA-->
+                        <div class="form-group">
+                            <label class="control-label" for="marca">Marca:</label>
+                            <!--DROPDOWN-->
+                            <input class="form-control" id="marca" name="marca"  type="text" [(ngModel)]="bus.BuMarca" />
+                        </div>
 
-                <!--TIPO-->
-                <div class="form-group">
-                    <label class="control-label" for="tipo">Tipo:</label>
-                    <input class="form-control" id="tipo" name="tipo"  type="text" [(ngModel)]="bus.BuTipo" />
-                </div>
+                        <!--TIPO-->
+                        <div class="form-group">
+                            <label class="control-label" for="tipo">Tipo:</label>
+                            <input class="form-control" id="tipo" name="tipo"  type="text" [(ngModel)]="bus.BuTipo" />
+                        </div>
 
-                <!--SOAT  **-->
-                <div class="form-group">
-                    <label class="control-label" for="soat">SOAT:</label>
-                    <input class="form-control" id="soat" name="soat"  type="text" [(ngModel)]="bus.BuSOAT" required #soat="ngModel" />
-                    <span *ngIf="!soat.valid && soat.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                        <div [hidden]="!soat.errors.required"> Obligatorio </div>
-                    </span>
-                </div>
+                        <!--SOAT  **-->
+                        <div class="form-group">
+                            <label class="control-label" for="soat">SOAT:</label>
+                            <input class="form-control" id="soat" name="soat"  type="text" [(ngModel)]="bus.BuSOAT" required #soat="ngModel" />
+                            <span *ngIf="!soat.valid && soat.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
+                                <div [hidden]="!soat.errors.required"> Obligatorio </div>
+                            </span>
+                        </div>
+                    </div>
 
-                <!--MODELO  **-->
-                <div class="form-group">
-                    <label class="control-label" for="mod">Modelo:</label>
-                    <input class="form-control" id="mod" name="mod"  type="text" [(ngModel)]="bus.BuModelo" required #mod="ngModel" />
-                    <span *ngIf="!mod.valid && mod.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                        <div [hidden]="!mod.errors.required"> Obligatorio </div>
-                    </span>
-                </div>
+                    <div class="col-xl-4 col-md-12 col-sm-12 col-xs-12">
+                        <!--MODELO  **-->
+                        <div class="form-group">
+                            <label class="control-label" for="mod">Modelo:</label>
+                            <input class="form-control" id="mod" name="mod"  type="text" [(ngModel)]="bus.BuModelo" required #mod="ngModel" />
+                            <span *ngIf="!mod.valid && mod.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
+                                <div [hidden]="!mod.errors.required"> Obligatorio </div>
+                            </span>
+                        </div>
 
-                <!--OPERATIVIDAD (SI ESTA APTO EL BUS PARA CIRCULAR O SE ENCUENTRA EN EL TALLER POR REPARACION) -->
-                <div class="form-group">
-                    <label class="control-label" for="oper">Operatividad:</label>
-                    <input class="form-control" id="oper" name="oper"  type="text" [(ngModel)]="bus.BuOperatividad" required #oper="ngModel" />
-                    <span *ngIf="!oper.valid && oper.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                        <div [hidden]="!oper.errors.required"> Obligatorio </div>
-                    </span>
-                </div>
+                        <!--OPERATIVIDAD (SI ESTA APTO EL BUS PARA CIRCULAR O SE ENCUENTRA EN EL TALLER POR REPARACION) -->
+                        <div class="form-group">
+                            <label class="control-label" for="oper">Operatividad:</label>
+                            <input class="form-control" id="oper" name="oper"  type="text" [(ngModel)]="bus.BuOperatividad" required #oper="ngModel" />
+                            <span *ngIf="!oper.valid && oper.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
+                                <div [hidden]="!oper.errors.required"> Obligatorio </div>
+                            </span>
+                        </div>
 
-                <!--ACTIVO (SI ESTA O NO CIRCULANDO EN LA EMPRESA)-->
-                <div class="form-group">
-                    <label class="control-label" for="act">Activo:</label>
-                    <input class="form-control" id="act" name="act"  type="text" [(ngModel)]="bus.BuActivo" required #act="ngModel" />
-                    <span *ngIf="!act.valid && act.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                        <div [hidden]="!act.errors.required"> Obligatorio </div>
-                    </span>
-                </div>
+                        <!--ACTIVO (SI ESTA O NO CIRCULANDO EN LA EMPRESA)-->
+                        <div class="form-group">
+                            <label class="control-label" for="act">Activo:</label>
+                            <input class="form-control" id="act" name="act"  type="text" [(ngModel)]="bus.BuActivo" required #act="ngModel" />
+                            <span *ngIf="!act.valid && act.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
+                                <div [hidden]="!act.errors.required"> Obligatorio </div>
+                            </span>
+                        </div>
 
-                <!--FECHA INGRESO-->
-                <div class="form-group">
-                    <label class="control-label" for="fingr">Ingreso:</label>
-                    <input class="form-control" id="fingr" name="fingr"  type="date" [(ngModel)]="bus.BuFIngr"  required #fingreso="ngModel" />
-                    <span *ngIf="!fingreso.valid && fingreso.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                        <div [hidden]="!fingreso.errors.required"> Obligatorio </div>
-                    </span>
-                </div>
+                        <!--FECHA INGRESO-->
+                        <div class="form-group">
+                            <label class="control-label" for="fingr">Ingreso:</label>
+                            <input class="form-control" id="fingr" name="fingr"  type="date" [(ngModel)]="bus.BuFIngr"  required #fingreso="ngModel" />
+                            <span *ngIf="!fingreso.valid && fingreso.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
+                                <div [hidden]="!fingreso.errors.required"> Obligatorio </div>
+                            </span>
+                        </div>
 
-                <!--FECHA SALIDA-->
-                <div class="form-group">
-                    <label class="control-label" for="fsal">Salida:</label>
-                    <input class="form-control" id="fsal" name="fsal"  type="date" [(ngModel)]="bus.BuFSal"  />
+                        <!--FECHA SALIDA-->
+                        <div class="form-group">
+                            <label class="control-label" for="fsal">Salida:</label>
+                            <input class="form-control" id="fsal" name="fsal"  type="date" [(ngModel)]="bus.BuFSal"  />
+                        </div>
+                    </div>
                 </div>
             </div>
-            <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <button type="button" pButton label="Guardar" (click)="guardarbus()"></button>
-                    <button type="button" pButton label="Cancelar" (click)="cancelarbus()"></button>
-                </div>
-            </p-footer>
+
+            <!--PIE-->
+            <div class="row">
+                <button id="btn" type="button" pButton label="Guardar" (click)="guardarbus()"></button>
+                <button id="btn" type="button" pButton label="Cancelar" (click)="cancelarbus()"></button>
+            </div>
         </p-dialog>
 
     <!--MODAL NUEVO BUS DETALLE-->
-        <p-dialog [(visible)]="displayNuevoBusD" modal="modal" width="100%" height="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayNuevoBusD" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
             <p-header>{{titulo}}</p-header>
 
             <div style="overflow-y: auto; height:300px; ">
@@ -190,13 +215,13 @@
                    
                 </div>
 
-                <!--IDENTIFICACION DEL INDIVIDUO-->
+                <!--IDENTIFICACION DEL INDIVIDUO RECUPERADO DE LA BD-->
                 <div class="form-group">
-                    <label class="control-label" for="ident">Identificacion:</label>
+                    <label class="control-label" for="ident">DNI:</label>
                     <input class="form-control" id="ident" name="ident"  type="text" [(ngModel)]="busD.PeId" />
                 </div>
 
-                <!--TIPO DE CARGO REPRESENTACION-->
+                <!--TIPO DE CARGO REPRESENTACION EN LA EMPRESA  RUTA -->
                 <div class="form-group">
                     <label class="control-label" for="motor">Tipo:</label>
                     <input class="form-control" id="motor" name="motor"  type="text" [(ngModel)]="busD.BuPeTipo" />
@@ -213,7 +238,7 @@
 
     <!--VENTANAS MODAL CONFIRMACION-->
         <!--MODAL ACEPTAR NUEVO BUS-->
-        <p-dialog [(visible)]="displayAceptarNuevoBus" modal="modal" width="100%" height="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayAceptarNuevoBus" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
                 {{mensaje}}
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
@@ -223,7 +248,7 @@
         </p-dialog>
 
         <!--MODAL ELIMINAR BUS-->
-        <p-dialog [(visible)]="displayEliminarBus" modal="modal" width="100%" height="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayEliminarBus" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
                 {{mensaje}}
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
@@ -234,7 +259,7 @@
         </p-dialog>
 
          <!--MODAL ACEPTAR NUEVO BUS DETALLE-->
-        <p-dialog [(visible)]="displayAceptarNuevoBusD" modal="modal" width="100%" height="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayAceptarNuevoBusD" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
                 {{mensaje}}
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
@@ -244,7 +269,7 @@
         </p-dialog>
 
         <!--MODAL ELIMINAR BUS DETALLE-->
-        <p-dialog [(visible)]="displayEliminarBusD" modal="modal" width="100%" height="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayEliminarBusD" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
                 {{mensaje}}
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
@@ -253,4 +278,3 @@
                 </div>
             </p-footer>
         </p-dialog>
-</div>

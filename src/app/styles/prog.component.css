@@ -33,3 +33,14 @@ tr:nth-child(even){
     background-color: #f2f2f2;
     width: 100%;
 }
+
+/* BOTON MODAL NUEVO */
+#btn{
+    width: 100%;
+    padding: 10px 50px;
+    margin:0;
+}
+
+.win_modal{
+    padding: 10px 20px;
+}

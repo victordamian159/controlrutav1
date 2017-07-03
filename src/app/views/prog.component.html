@@ -27,83 +27,86 @@
             </p-dataTable>
         </div><!--fin tabla PROGRAMACION MAESTRO-->
     </div>
-
 </div>
 
-         <!--modal boton nuevo (PROGRAMACION 1ERA VENTANA)-->
-        <p-dialog  [(visible)]="displayNuevaProgramacion" modal="modal" width="100%" responsive="true" [closable]="false">
+         <!--VENTANA BOTON NUEVO (PROGRAMACION 1ERA VENTANA)-->
+        <p-dialog  [(visible)]="displayNuevaProgramacion" modal="modal" width="100%" responsive="true" [resizable]="false" [closable]="false">
+            <!--TITULO-->
             <p-header> {{titleNuevoProgPrimerModal }} Programacion </p-header>
+            
+            <!--CUERPO-->
+            <div class="win_modal"  style="overflow-y: auto; height:380px; width: 100%;">
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                    <!--NOMBRE PARA RECONOCER A LA PROGRAMACION  -->
+                    <div class="form-group">
+                        <label for="descripcion" class="control-label">Identificador:</label>
+                        <input class="form-control" type="text" id="descripcion"[(ngModel)]="progMaestro.PrDescripcion" #descrip="ngModel" required />
+                        <span *ngIf="!descrip.valid && descrip.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;" >
+                            <div [hidden]="!descrip.errors.required"> obligatorio </div>
+                        </span>
+                    </div>
 
-            <!--tipo de programcion MANUAL O AUTOMATICO-->
-            <div class="form-group row">
-                <div class="col-4"><label >Tipo:</label></div>
-                <div class="col-8">
-                    <select class="form-control" [(ngModel)]="tipoProg" (change)="tipoProgramacion($event)" required #tprog="ngModel">
-                        <option *ngFor="let tipo of _tipoProg" [ngValue]="tipo.id">{{tipo.nTipo}}</option>
-                    </select>
-                    <div [hidden]="!tprog.touched || tprog.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                            Error, revise los datos ingresados
+                    <!--FECHAS -->
+                    <div class="form-group">
+                        <label>Del:</label>
+                        <input class="form-control" name="finicio"  type="date" [(ngModel)]="progMaestro.PrFechaInicio" required #fde="ngModel" />
+                        <span *ngIf="!fde.valid && fde.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >   
+                            <div [hidden]="!fde.errors.required"> Obligatorio </div>
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label >Hasta:</label>
+                        <input class="form-control" name="ffinal"  type="date" [(ngModel)]="progMaestro.PrFechaFin"  required #fha="ngModel" />
+                        <span *ngIf="!fha.valid && fha.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
+                            <div [hidden]="!fha.errors.required"> Obligatorio </div>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                    <!--CANTIDAD DE BUSES ACTIVOS E INACTIVOS-->
+                    <div class="form-group">
+                        <label for="nrobuses" class="control-label">Buses:____Activos:{{bAct}}_ No Activos: {{bNAct}}</label>
+                    </div>
+
+                    <!--TIPO DE PROGRAMACION MANUAL O AUTOMATICO-->
+                    <div class="form-group">
+                        <label >Tipo:</label>
+                        <select class="form-control" [(ngModel)]="tipoProg" (change)="tipoProgramacion($event)" required #tprog="ngModel">
+                            <option *ngFor="let tipo of _tipoProg" [ngValue]="tipo.id">{{tipo.nTipo}}</option>
+                        </select>
+                        <div [hidden]="!tprog.touched || tprog.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                                Error, revise los datos ingresados
+                        </div>
+                    </div>
+
+                    <!--FORMA DE PROGRAMACION POR TIEMPO Y CANTIDAD DE BUSES (Escala o Pescadito)-->
+                    <div class="form-group">
+                        <label >Forma:</label>
+                        <select class="form-control" [(ngModel)]="formaProg" (change)="formaProgramacion($event)" required #fprog="ngModel" >
+                            <option *ngFor="let forma of _formaProg" [ngValue]="forma.id">{{forma.nForma}}</option>
+                        </select>
+                        <div [hidden]="!fprog.touched || fprog.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                                Error, revise los datos ingresados
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!--forma de programacion por tiempo y cantidad de buses (Escala o Pescadito)-->
-            <div class="form-group row">
-                <div class="col-4"><label >Forma:</label></div>
-                <div class="col-8">
-                    <select class="form-control" [(ngModel)]="formaProg" (change)="formaProgramacion($event)" required #fprog="ngModel" >
-                        <option *ngFor="let forma of _formaProg" [ngValue]="forma.id">{{forma.nForma}}</option>
-                    </select>
-                    <div [hidden]="!fprog.touched || fprog.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                            Error, revise los datos ingresados
-                    </div>
+            <!--BOTONES-->
+            <div class="row">
+                <div class="col-xl-6">
+                    <button id="btn" type="text" pButton icon="fa-check" (click)="showProgBase(); tprog.reset(); fprog.reset(); fde.reset(); fha.reset(); descrip.reset();" label="Continuar" [disabled]="!tprog.valid || !fprog.valid || !fde.valid || !fha.valid || !descrip.valid "></button>
+                </div>
+                <div class="col-xl-6">
+                    <button id="btn" type="text" pButton icon="fa-close" (click)="cancelNewProgramacion(); tprog.reset(); fprog.reset(); fde.reset(); fha.reset(); descrip.reset();" label="Cancelar"></button>
                 </div>
             </div>
-
-            <!--FECHAS -->
-            <div class="form-group">
-                <label class="control-label" for="finicio">Del:</label>
-                <input class="form-control" id="finicio" name="finicio"  type="date" [(ngModel)]="progMaestro.PrFechaInicio" required #fde="ngModel" />
-                <span *ngIf="!fde.valid && fde.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >   
-                    <div [hidden]="!fde.errors.required"> Obligatorio </div>
-                </span>
-            </div>
-            <div class="form-group">
-                <label class="control-label" for="ffinal">Ingreso:</label>
-                <input class="form-control" id="ffinal" name="ffinal"  type="date" [(ngModel)]="progMaestro.PrFechaFin"  required #fha="ngModel" />
-                <span *ngIf="!fha.valid && fha.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                    <div [hidden]="!fha.errors.required"> Obligatorio </div>
-                </span>
-            </div>
-
-            <!--CANTIDAD DE BUSES ACTIVOS E INACTIVOS-->
-            <div class="form-group">
-                <label for="nrobuses" class="control-label">Buses:____Activos:{{bAct}}_ No Activos: {{bNAct}}</label>
-                <!--<input class="form-control" type="number" [(ngModel)]="progMaestro.PrCantidadBuses" id="nrobuses">-->
-            </div>
-
-            <!--NOMBRE PARA RECONOCER A LA PROGRAMACION  -->
-            <div class="form-group">
-                <label for="descripcion" class="control-label">Identificador:</label>
-                <input class="form-control" type="text" id="descripcion"[(ngModel)]="progMaestro.PrDescripcion" #descrip="ngModel" required />
-                    <span *ngIf="!descrip.valid && descrip.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;" >
-                        <div [hidden]="!descrip.errors.required"> obligatorio </div>
-                    </span>
-            </div>
-
-            <!--modal footer-->
-            <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <button type="text" pButton icon="fa-check" (click)="showProgBase(); tprog.reset(); fprog.reset(); fde.reset(); fha.reset(); descrip.reset();" 
-                            label="Continuar" [disabled]="!tprog.valid || !fprog.valid || !fde.valid || !fha.valid || !descrip.valid "></button>
-                    <button type="text" pButton icon="fa-close" (click)="cancelNewProgramacion(); tprog.reset(); fprog.reset(); fde.reset(); fha.reset(); descrip.reset();" label="Cancelar"></button>
-                </div>
-            </p-footer>
         </p-dialog> 
         <!--FIN BOTON NUEVO MODAL-->
 
         <!--modal del boton guardar (2DA VENTANA  TERMINAR GENERANDO LA PROGRAMACION) -->
-        <p-dialog header="Programacion Base"  [(visible)]="displayProgramacionBase" 
+        <p-dialog header="Programacion Base" [resizable]="false" [(visible)]="displayProgramacionBase" 
                     modal="modal" width="450" responsive="true" [closable]="false" >           
                     <!--lista de placas (programacion base) MANUAL -->
                     <p-pickList [source]="arrayPlacas" [target]="ordenSorteo" sourceHeader="Placa" 
@@ -128,7 +131,7 @@
 
 
         <!--MODAL PROGRAMACIONES-->
-        <p-dialog header="Programacion" [(visible)]="displayProgramacion" modal="modal" 
+        <p-dialog header="Programacion" [resizable]="false" [(visible)]="displayProgramacion" modal="modal" 
             width="500"  [closable]="false" resizable="true" *ngIf="nroColumn>=5">
             <div class="container "> 
                 
@@ -205,7 +208,7 @@
         </p-dialog>
         
         <!--MODAL CONFIRMAR ELIMINAR REGISTRO-->
-        <p-dialog [(visible)]="displayConfirmar" modal="modal" width="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayConfirmar" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 <p>{{mensaje}}</p>
                 <p-footer class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
                      <button type="button" pButton (click)="displayConfirmar=false"   label="Cancelar"></button>
@@ -214,7 +217,7 @@
         </p-dialog>
 
         <!--MODAL ACEPTAR NUEVA PROGRAMACION (CONFIRMAR)-->
-        <p-dialog [(visible)]="displayAceptarProgNueva" modal="modal" width="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayAceptarProgNueva" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 <p>{{mensaje}}</p>
                 <p-footer class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
                      <button type="button" pButton (click)="aceptarNuevaProg()" label="Aceptar"></button>
@@ -222,7 +225,7 @@
         </p-dialog>
 
         <!--ERROR AL INGRESAR DATOS 1ERA VENTANA MODAL-->
-        <p-dialog [(visible)]="displayErrorDatos" modal="modal" width="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayErrorDatos" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 <p>{{mensaje}}</p>
                 <p-footer class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
                      <button type="button" pButton (click)="errorDatos()" label="Aceptar"></button>
@@ -230,7 +233,7 @@
         </p-dialog>
 
         <!--ERROR EN LA TABLA DE PROGRAMACION, VENTANA MODAL-->
-        <p-dialog [(visible)]="displayErrorTablaProgramacion" modal="modal" width="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayErrorTablaProgramacion" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 <p>{{mensaje}}</p>
                 <p-footer class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
                      <button type="button" pButton (click)="errorTablaProgramacion()" label="Aceptar"></button>
@@ -238,7 +241,7 @@
         </p-dialog>
 
         <!--ERROR FALTAN PLACAS EN EL SORTEO, VENTANA MODAL-->
-        <p-dialog [(visible)]="displayFaltanPlacas" modal="modal" width="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayFaltanPlacas" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 <p>{{mensaje}}</p>
                 <p-footer class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
                      <button type="button" pButton (click)="faltanPlacas()" label="Aceptar"></button>
@@ -246,7 +249,7 @@
         </p-dialog>
 
         <!--MENSAJE SE ACABA DE DESCARGAR LA PROGRAMACION, VENTANA MODAL-->
-        <p-dialog [(visible)]="displayDescargaProg" modal="modal" width="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayDescargaProg" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 <p>{{mensaje}}</p>
                 <p-footer class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
                      <button type="button" pButton (click)="descargaProg()" label="Aceptar"></button>
@@ -255,3 +258,79 @@
       
 
 
+
+
+<!--
+
+
+        <p-dialog  [(visible)]="displayNuevaProgramacion" modal="modal" width="100%" responsive="true" [closable]="false">
+            <p-header> {{titleNuevoProgPrimerModal }} Programacion </p-header>
+
+          
+            <div class="form-group">
+                <div class="col-4"><label >Tipo:</label></div>
+                <div class="col-8">
+                    <select class="form-control" [(ngModel)]="tipoProg" (change)="tipoProgramacion($event)" required #tprog="ngModel">
+                        <option *ngFor="let tipo of _tipoProg" [ngValue]="tipo.id">{{tipo.nTipo}}</option>
+                    </select>
+                    <div [hidden]="!tprog.touched || tprog.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                            Error, revise los datos ingresados
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-4"><label >Forma:</label></div>
+                <div class="col-8">
+                    <select class="form-control" [(ngModel)]="formaProg" (change)="formaProgramacion($event)" required #fprog="ngModel" >
+                        <option *ngFor="let forma of _formaProg" [ngValue]="forma.id">{{forma.nForma}}</option>
+                    </select>
+                    <div [hidden]="!fprog.touched || fprog.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                            Error, revise los datos ingresados
+                    </div>
+                </div>
+            </div>
+
+     
+            <div class="form-group">
+                <label class="control-label" for="finicio">Del:</label>
+                <input class="form-control" id="finicio" name="finicio"  type="date" [(ngModel)]="progMaestro.PrFechaInicio" required #fde="ngModel" />
+                <span *ngIf="!fde.valid && fde.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >   
+                    <div [hidden]="!fde.errors.required"> Obligatorio </div>
+                </span>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="ffinal">Ingreso:</label>
+                <input class="form-control" id="ffinal" name="ffinal"  type="date" [(ngModel)]="progMaestro.PrFechaFin"  required #fha="ngModel" />
+                <span *ngIf="!fha.valid && fha.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
+                    <div [hidden]="!fha.errors.required"> Obligatorio </div>
+                </span>
+            </div>
+
+
+            <div class="form-group">
+                <label for="nrobuses" class="control-label">Buses:____Activos:{{bAct}}_ No Activos: {{bNAct}}</label>
+               <input class="form-control" type="number" [(ngModel)]="progMaestro.PrCantidadBuses" id="nrobuses">
+            </div>
+
+
+            <div class="form-group">
+                <label for="descripcion" class="control-label">Identificador:</label>
+                <input class="form-control" type="text" id="descripcion"[(ngModel)]="progMaestro.PrDescripcion" #descrip="ngModel" required />
+                    <span *ngIf="!descrip.valid && descrip.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;" >
+                        <div [hidden]="!descrip.errors.required"> obligatorio </div>
+                    </span>
+            </div>
+
+       
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="text" pButton icon="fa-check" (click)="showProgBase(); tprog.reset(); fprog.reset(); fde.reset(); fha.reset(); descrip.reset();" 
+                            label="Continuar" [disabled]="!tprog.valid || !fprog.valid || !fde.valid || !fha.valid || !descrip.valid "></button>
+                    <button type="text" pButton icon="fa-close" (click)="cancelNewProgramacion(); tprog.reset(); fprog.reset(); fde.reset(); fha.reset(); descrip.reset();" label="Cancelar"></button>
+                </div>
+            </p-footer>
+        </p-dialog> 
+
+-->

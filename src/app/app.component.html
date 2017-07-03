@@ -1,4 +1,5 @@
-<nav class="navbar navbar-toggleable-md navbar-inverse mi-navbar"  >
+<nav class="navbar navbar-toggleable-md navbar-inverse " style="background-color: #0174DF;" >
+  <!--BARRA BOTON-->
   <button 
           class="navbar-toggler navbar-toggler-right" 
           type="button"  
@@ -9,16 +10,18 @@
           aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
   </button>
-  
-  <a class="navbar-brand" href="#">Inicio</a> 
+
+  <!--ICONO NAVBAR
+  <a class="navbar-brand" href="#">-->
+  <a class="navbar-brand">
+      <img id="icono" src="./src/icons/Aviation_63-512.png" width="30" height="30" alt="">
+  </a> 
+
+  <!--LISTA NAVBAR-->
   <div class="navbar-collapse collapse" id="navbarNavDropdown">
     <ul class="navbar-nav">
-        <li class="nav-item active">
-            <a href="#" class="nav-link" routerLink="/ruta" routerLinkActive="active">
-                <span class="glyphicon glyphicon-icon-class-name">Ruta</span>
-            </a> 
-        </li>		 
-        <li class="nav-item active"><a href="#" class="nav-link" routerLink="/pcontrol" routerLinkActive="active">Puntos de Control</a> </li>						
+        <li class="nav-item active"><a href="#" class="nav-link" routerLink="/ruta" routerLinkActive="active">Ruta</a></li>		 
+        <li class="nav-item active"><a href="#" class="nav-link" routerLink="/pcontrol" routerLinkActive="active">Puntos de Control</a></li>						
         <li class="nav-item active"><a href="#" class="nav-link" routerLink="/prog" routerLinkActive="active">Programacion</a></li>		
         <li class="nav-item active"><a href="#" class="nav-link" routerLink="/tcontrol" routerLinkActive="active">Tarjeta de Control</a></li>		
         <li class="nav-item active"><a href="#" class="nav-link" routerLink="/regtime" routerLinkActive="active">Reg Tiempo</a></li>
@@ -28,6 +31,7 @@
         <li class="nav-item active"><a href="#" class="nav-link" routerLink="/login">Cerrar Sesion</a></li>
     </ul>
   </div>
+
 </nav>
 
 
@@ -44,8 +48,23 @@
 
 
 
+      <!--<img src="{{logo}}" width="30" height="30" alt="">-->
+      <!--<img src="{{heroImageUrl}}" width="30" height="30" alt="">-->
+  
+  <!--
+      <nav class="navbar navbar-light bg-faded">
+        <a class="navbar-brand" href="#">
+            <img src="/assets/brand/bootstrap-solid.svg" width="30" height="30" alt="">
+        </a>
+      </nav>
 
-
+      <nav class="navbar navbar-light bg-faded">
+        <a class="navbar-brand" href="#">
+            <img src="/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="">
+            Bootstrap
+        </a>
+      </nav>
+  -->
 
 
 <!--

@@ -1,8 +1,8 @@
-.row{
-    margin-top:0px;
-    margin-left:0px;
-    margin-right:0px;
-    margin-bottom:0px;
+row{
+    margin-top:10px;
+    margin-left:10px;
+    margin-right:10px;
+    margin-bottom:10px;
 }
 
 .col{
@@ -11,23 +11,83 @@
     margin-right:80px;
     margin-bottom:0px;
 }
-#contenedor{
-     margin-top:20px;
-    margin-left:30px;
-    margin-right:0px;
-    margin-bottom:0px;
+
+.contenedor{
+    margin-top:20px;
+    margin-left:40px;
+    margin-right:40px;
+    margin-bottom:60px;
 }
 
-#botonesMap{
-     margin-top:20px;
-    margin-left:30px;
+#mapa{
+    margin-top:0px;
+    margin-left:-10px;
+    margin-right:-10px;
+    margin-bottom:10px;
+}
+
+.titulo{
+    color: black;
+    margin-top:20px;
+    text-decoration: none;
+}
+
+#btnMap{
+ 
+    margin:0;
+    padding:0;
+
+    display: flex;
+    justify-content: center;
+    flex-grow: 5;
+}
+
+/* BOTONES PERSONALIZADOS MAPA */
+#btn{
+
+    margin : 0;
+    padding:0;
+    width:200%;
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    flex-grow: 5;
+}
+
+.table{
+    margin-top:20px;
+}
+
+/* BOTON MODAL NUEVO */
+.btn_modal{
+    width: 100%;
+    padding: 10px 50px;
+    margin:0;
+}
+
+    /*padding: 0px 10px;*/
+     /*width:120px; 
+    height:45px; 
+    font-size: 16px;
+    margin: 10px 10px;
+    text-align: center;
+    margin:0;
+     
+    padding:0;*/
+    /*text-decoration: none;
+    float: right;
+    display: block;*/
+    /*padding: 10px 20px;*/
+    
+       /*margin-top:0px;
+    margin-left:0px;
     margin-right:0px;
-    margin-bottom:0px;
-    /*position:absolute;
+    margin-bottom:-50px;
+    height: 100px;
+    width: 100%;
+    text-align: center;
+    flex-direction: row;
+    position:absolute;
     transition: .5s ease;
     top: 0%;
     left: 0%;*/
-}
-
-
-
