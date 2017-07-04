@@ -11,18 +11,18 @@
     <!--TABLAS-->
     <div class="row">
         <!--TABLA MAESTRO-->
-        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
             <div class=" table table-responsive">
-                <p-dataTable [value]="_allTarjControl" [rows]="5" [paginator]="true"  [globalFilter]="filtroGlobal" [responsive]="false" emptyMessage="Lista Vacia"
+                <p-dataTable [value]="_allTarjControl" [rows]="3" [paginator]="true"  [globalFilter]="filtroGlobal" [responsive]="false" emptyMessage="Lista Vacia"
                     scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectCabecera($event)">
                     
-                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                    <!--campos de la datatable-->
+                    <p-column styleClass="col-button" [style]="{'width':'6em'}">
                         <template let-col let-row="rowData" pTemplate="body">
                             <button type="button" pButton class="btn" (click)="editarC(row.TaCoId)" icon="fa-pencil-square-o" > </button>
                             <button type="button" pButton class="btn" (click)="eliminarC(row.TaCoId)" icon="fa-trash" > </button>
                         </template>
                     </p-column>
-                    <!--campos de la datatable-->
                     <p-column field="nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
                     <p-column field="PuCoId" header="Descripcion P. Control"  [style]="{'width':'17em'}"></p-column>
                     <!--<p-column field="rutaDescripcion" header="Puntos"  [style]="{'width':'9em'}"></p-column>-->
@@ -36,9 +36,9 @@
         </div>
 
         <!--TABLA DETALLE TARJETA CONTROL-->
-        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
             <div class=" table table-responsive">
-                <p-dataTable [value]="_allTarjDetalle" [rows]="10"   [globalFilter]="filtroGlobal" [responsive]="false"
+                <p-dataTable [value]="_allTarjDetalle" [rows]="4"   [globalFilter]="filtroGlobal" [responsive]="false"
                     scrollable="true" [paginator]="true" selectionMode="single" scrollWidth="100%" emptyMessage="Lista Vacia" >
                     <p-column field="nro" header="N°"  [style]="{'width':'3em','text-align':'center'}"></p-column>
                     <p-column field="TaCoDeDescripcion" header="Punto"  [style]="{'width':'10em'}"></p-column>

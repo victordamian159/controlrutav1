@@ -1,15 +1,19 @@
 *{
-    margin:auto;
+   /*margin:auto;*/
+   margin : 0;
     padding: auto;
     /*font-family: sans-serif;*/
     /*box-sizing: border-box;*/
 }
 
 .contenedor{
+    
     margin:auto;
-    width: 70%;
+    /*margin-top: 20%;*/
+    width: 75%;
     max-width: 500px;
     padding: 30px;
+    border: 1px solid rgba(0,0,0,0.2);
 }
 
 h2{
@@ -25,5 +29,19 @@ input{
     margin: 20px 0;
 }
 
+.alert{
+    font-size: 12px;
+}
 
-/* */
+/* TAMAÑO DEL CONTENEDOR SEGUN EL TAMAÑO DE LA PANTALLA*/
+@media(max-width:800px){
+    .contenedor{
+        width: 75%;
+    }
+}
+
+@media(max-width:480px){
+    .contenedor{
+        width: 95%;
+    }
+}

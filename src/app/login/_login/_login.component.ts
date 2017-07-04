@@ -21,19 +21,23 @@ export class LoginComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+
         /* reset login status      --  Restablecer el estado de inicio de sesión*/
         this.authenticationService.logout();/*DESCONECTANDO ANTES DE INICIAR UNA SESION */
-        /* get return url from route parameters or default to '/'
-            Obtener url de retorno de los parámetros de ruta o predeterminado para '/'  */
+
+        /* get return url from route parameters or default to '/' ===>  Obtener url de retorno de los parámetros de ruta o predeterminado para '/'  */
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/menu';
     }
 
     login() {
-        this.loading = true;
+        this.loading = true; /* CARGANDO EN VERDAD*/
         this.authenticationService.login(this.model.username, this.model.password)
             .subscribe(
-                 data => {this.router.navigate([this.returnUrl]); },
-                error => {this.alertService.error(error); this.loading = false;}
+                /* SI NO HAY ERROR PASA A DATA */
+                 data => {this.router.navigate([this.returnUrl]);},
+                
+                /* SI HAY ERROR MANDA AL SERVICIO DE ALERTA DE TIPO ERROR */
+                error => {this.alertService.error(error); this.loading = false; console.log(error);}
             );
     }
 

@@ -5,10 +5,11 @@ import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from
 export class AuthGuard implements CanActivate {
 
     constructor(private router: Router) { }
-    /* canActivate:  Interfaz de que una clase puede implementar
-                     para ser un guardia de decidir si una ruta 
-                     puede ser activado.*/
+    
+    /* canActivate:  Interfaz de que una clase puede implementar para ser un guardia de decidir si una ruta puede ser activado.*/
+    
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        
         /* SI ESTA CARGADO UN USUARIO CORRECTAMENTE TERMINA*/
         if (localStorage.getItem('currentUser')) {
             /* 
@@ -17,7 +18,7 @@ export class AuthGuard implements CanActivate {
                 ->  si se logra conectar entonces returna  true(verdadero)
             */
             console.log("inicio correctamente sesion =D");
-            console.log(localStorage.getItem('currentUser'));/*datos devueltos del usuario */
+            /*console.log(localStorage.getItem('currentUser'));    Datos devueltos del usuario y almacenados en memoria*/
             return true; /* TERMINA LA FUNCION Y DEVUELVE VERDADERO*/
         }
 
@@ -26,6 +27,7 @@ export class AuthGuard implements CanActivate {
             No ha iniciado sesión así que redirigir a la página de inicio 
             de sesión con la URL de retorno
         */
+
         this.router.navigate(['/login'], { queryParams: { returnUrl: state.url }});
         console.log("no inicio correctamente sesion )=");
         console.log(state.url);
