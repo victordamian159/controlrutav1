@@ -8,8 +8,22 @@
         <div class="col-xl-5 col-md-12 col-sm-12 col-xs-12">
             <!--FILTRO + BOTON NUEVO-->
             <div class="row ">
-                <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
-                <span class="text-xs-right"><button (click)="newPuntoControlMaestro()" pButton icon="fa-file-text-o" label="Nuevo"></button></span>
+                <div class="col-md-6">
+                    <div>Rutas:</div>
+                    <select class="form-control" >
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <!--<span class="text-xs-right">
+                        <button (click)="newPuntoControlMaestro()" pButton icon="fa-file-text-o" label="Nuevo"></button>
+                    </span>-->
+                    <div>Busqueda:</div>
+                    <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+                </div>
             </div>
             
             <!--TABLA CABECERA-->
@@ -17,6 +31,7 @@
                 <p-dataTable [value]="pCMaestroMostrar" [rows]="3" [paginator]="true" [pageLinks]="2" 
                     [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" selectionMode="single" 
                     [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">     
+
                     <p-column styleClass="col-button" [style]="{'width':'6em'}">
                         <template let-col let-pcMostrar="rowData" pTemplate="body">
                             <button type="button" pButton class="btn" (click)=  "editarMaestro(pcMostrar.PuCoId)" icon="fa-pencil-square-o" > </button>                  
@@ -27,6 +42,17 @@
                     <p-column field="PuCoDescripcion" header="Descripcion" [style]="{'width':'18em'}"></p-column>
                     <p-column field="PuCoTiempoBus" header="Tiempo" [style]="{'width':'5em','text-align':'center'}" ></p-column>
                     <p-column field="PuCoClase"     header="Clase" [style]="{'width':'10em','text-align':'center'}"></p-column>
+
+                    <p-footer>
+                        <!--<span class="text-xs-right"></span>-->
+                        <div class="ui-helper-clearfix" style="width:100%">
+                            <button type="button" (click)="newPuntoControlMaestro()" style="float:left" pButton icon="fa-file-text-o" label="Nuevo">
+                            </button>
+                        </div>
+                        <!--<div class="ui-helper-clearfix" style="width:100%">
+                            <button type="button" pButton icon="fa-plus" style="float:left" (click)="showDialogToAdd()" label="Add"></button>
+                        </div>-->
+                    </p-footer>
                 </p-dataTable>
             </div>
 
@@ -109,10 +135,14 @@
                 <label class="control-label" for="timeb">Tiempo de Recorrido:</label>
                 <input class="form-control" id="timeb" name="timebus"  type="text" [(ngModel)]="timeRec" 
                     pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})"  #time="ngModel" required/>
-                <!--<span *ngIf="!time.touched && time.valid" class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                    <div [hidden]="!time.errors.required">obligatorio</div>
-                    <div [hidden]="!time.errors.pattern">el dato ingresado no es hora</div>
-                </span>-->
+                <!--
+                    <span *ngIf="!time.touched && time.valid" class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                        <div [hidden]="!time.errors.required">obligatorio</div>
+                        <div [hidden]="!time.errors.pattern">el dato ingresado no es hora</div>
+                        <div [hidden]="!anio.errors.required"> Obligatorio </div>
+                        <div [hidden]="!anio.errors.length"> 4 Digitos </div>
+                    </span>
+                -->
                 <div [hidden]="!time.touched || time.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
                     Error en los datos ingresados
                 </div>

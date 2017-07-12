@@ -326,6 +326,9 @@ export class ProgComponent implements OnInit{
                     UsFechaReg : this.progMaestro.PrFecha
                 });
 
+                console.log(this.objProgVentanaUno);
+                console.log(this.progMaestro);
+
                 //guardando en el rest Programacion Maestro (pasarlo  a la 2da VEntana modal)
                 this.programacionService.saveProgramacion(this.objProgVentanaUno)
                     .subscribe( 

@@ -1,12 +1,29 @@
 <div class="contenedor">
     <!--TITULO-->
-    <div class="row"><h5>Tarjetas de Control</h5></div>
+    <div id="titulo">Tarjetas de Control</div>
     
-    <!--BUSCAR + BOTON NUEVO-->
+    
     <div class="row">
+        <!--RUTAS-->
+        <!--<div class="form-group ">
+            <label>Rutas:</label>
+        </div>    
+            -->
+            <select class="form-control" required [(ngModel)]="_ruId" (change)="rutaId($event)"   #PROG="ngModel">
+                <option *ngFor="let ruta of rutas" [value]="ruta.RuId">{{ruta.RuDescripcion}}</option>
+            </select> 
+            <!--<div [hidden]="!PROG.touched || PROG.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                Error, revise los datos ingresados
+            </div>-->
+
+        <!--BUSQUEDA + BOTON NUEVO-->
         <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
         <button type="text" (click)="nuevaAsignaTarjeta()" pButton label="Nuevo" data-toggle="modal" ></button>
+        
+        
     </div>
+
+    
     
     <!--TABLAS-->
     <div class="row">
@@ -38,7 +55,7 @@
         <!--TABLA DETALLE TARJETA CONTROL-->
         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
             <div class=" table table-responsive">
-                <p-dataTable [value]="_allTarjDetalle" [rows]="4"   [globalFilter]="filtroGlobal" [responsive]="false"
+                <p-dataTable [value]="_allTarjDetalle" [rows]="7"   [globalFilter]="filtroGlobal" [responsive]="false"
                     scrollable="true" [paginator]="true" selectionMode="single" scrollWidth="100%" emptyMessage="Lista Vacia" >
                     <p-column field="nro" header="N°"  [style]="{'width':'3em','text-align':'center'}"></p-column>
                     <p-column field="TaCoDeDescripcion" header="Punto"  [style]="{'width':'10em'}"></p-column>
@@ -62,7 +79,7 @@
                     <label>Puntos:</label>
                     <select class="form-control" [(ngModel)]="puntoControl" (change)="puntosControlId($event)" required #PC="ngModel">
                         <option *ngFor="let punto of _puntosControl" [ngValue]="punto" selected="selected">
-                            {{punto.RuDescripcion}}
+                            {{punto.PuCoDescripcion}}
                         </option>
                     </select>  
                     <div [hidden]="!PC.touched || PC.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">

@@ -23,7 +23,24 @@ import { AuthGuard } from './login/guards/auth.guard';
 
 //estableciencido las path para los componentes del aplicativo
 const app_routes: Routes = [
-      {path: 'ruta', component: RutaComponent,canActivate: [AuthGuard]},
+      {path: 'ruta', component: RutaComponent},
+      {path: 'pcontrol', component: PcontrolComponent},
+      {path: 'prog', component: ProgComponent},
+      {path: 'regtime', component: RegtimeComponent},
+      {path: 'tcontrol', component:TcontrolComponent},
+      {path: 'regpersonal', component:PersComponent},
+
+      {path: 'regbus', component:BusComponent}, 
+      {path: 'menu',   component:menuComponent}, /* ISNTRUCCIONES??*/
+      {path: 'regemp', component:EmpComponent }, 
+
+      {path: 'login', component:LoginComponent },
+      {path: 'regusersystem', component:RegisterComponent},
+      { path: '**', redirectTo: 'login' } /* __ ** : SI ESCRIBE CUALQUIER COSA MANDA AL LOGIN*/
+
+
+
+      /*{path: 'ruta', component: RutaComponent,canActivate: [AuthGuard]},
       {path: 'pcontrol', component: PcontrolComponent,canActivate: [AuthGuard]},
       {path: 'prog', component: ProgComponent,canActivate: [AuthGuard]},
       {path: 'regtime', component: RegtimeComponent,canActivate: [AuthGuard]},
@@ -31,12 +48,13 @@ const app_routes: Routes = [
       {path: 'regpersonal', component:PersComponent,canActivate: [AuthGuard] },
 
       {path: 'regbus', component:BusComponent, canActivate: [AuthGuard] }, 
-      {path: 'menu',   component:menuComponent,canActivate: [AuthGuard] }, /* ISNTRUCCIONES??*/
+      {path: 'menu',   component:menuComponent,canActivate: [AuthGuard] }, 
       {path: 'regemp', component:EmpComponent }, 
 
       {path: 'login', component:LoginComponent },
       {path: 'regusersystem', component:RegisterComponent},
-      { path: '**', redirectTo: 'login' } /*  ** : SI ESCRIBE CUALQUIER COSA MANDA AL LOGIN*/
+      { path: '**', redirectTo: 'login' } */
+
 
       /*FOR LOGGER */
       //{ path: '', component: HomeComponent, canActivate: [AuthGuard] },

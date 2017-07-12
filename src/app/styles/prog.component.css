@@ -44,3 +44,25 @@ tr:nth-child(even){
 .win_modal{
     padding: 10px 20px;
 }
+
+/*@media (max-width:480px){
+	.pdf{
+		width:200px !important;
+        margin:0;
+	}
+}
+
+@media (max-width:360px){
+	.pdf{
+		width:100px !important;
+        margin:0;
+	}
+}
+
+@media screen and (max-width: 40em) {
+    .ui-dialog.ui-dialog-responsive {
+        width: 90% !important;
+    }
+}
+
+*/

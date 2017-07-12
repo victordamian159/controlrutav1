@@ -19,7 +19,7 @@ export class RutaComponent implements OnInit{
 
     Ruta: any ={
         RuId : 0,
-        EmId : 1,
+        EmId : 0,
         RuDescripcion : "",
         RuFechaCreacion:  "",
         RuRegMunicipal : "",
@@ -143,6 +143,8 @@ export class RutaComponent implements OnInit{
         this.infoWindow = new google.maps.InfoWindow();
         this.activarAddMarker = 0; //addmarker desactivado
         
+        this.Ruta.EmId=1;
+        this.Ruta.RuId = 0;
          
         //CONTROLAR LA SELECCION DE FILAS EN LA GRILLA, DESACTIVAR HASTA Q SE TERMINE DE GUARDAR LA MODIFICACION O NUEVO REGISTRO
         this.modRegistro=1; //ACTIVANDO LA SELECCION DE REGISTRO MAESTRO --seleccionar regisrtos activado
@@ -993,10 +995,10 @@ export class RutaComponent implements OnInit{
      
     }
     
-     //cancelar una nueva ruta maestro (cabecera)
-     cancelRutaMaestro(){
-        this.displayNuevaRutaModal=false;
-        /* SE TIENE Q VACIAR EL OBJETO EN CASO DE HABER INGRESADO ALGUNOS DATOS
+    //cancelar una nueva ruta maestro (cabecera)
+    cancelRutaMaestro(){
+    this.displayNuevaRutaModal=false;
+    /* SE TIENE Q VACIAR EL OBJETO EN CASO DE HABER INGRESADO ALGUNOS DATOS
         this.Ruta ={
             RuId : 0,
             EmId : 1,
@@ -1007,8 +1009,9 @@ export class RutaComponent implements OnInit{
             RuActivo : true,
             UsId: 0,
             UsFechaReg: '0-0-0'
-        }*/
-     }
+        }
+    */
+    }
 
      //capturar toda la ruta por el id (para mostrar en la grilla MAESTRO CONSULTA A VARIAS TABLAS) 
     getAllRutaByEm(emId: number){

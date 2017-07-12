@@ -7,24 +7,28 @@
             <div class="row">
                 <h5 id=titulo>Bus</h5>
             </div>
+
             <div class="row">
                 <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
                 <span class="text-xs-right">  <button (click)="nuevoBus()" pButton icon="fa-file-text-o" label="Nuevo"></button>  </span>
             </div>
+
             <div class="row table table-responsive">
-                <p-dataTable [value]="_gbus" [rows]="3"  [globalFilter]="filtroGlobal" scrollable="true" emptyMessage="No Hay Registros" scrollWidth="100%" [paginator]="true" selectionMode="single" (onRowSelect)="onRowSelectBus($event)">
-                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                <p-dataTable [value]="_gbus" [rows]="4"  [globalFilter]="filtroGlobal" scrollable="true" emptyMessage="No Hay Registros" 
+                scrollWidth="100%" [paginator]="true" selectionMode="single" (onRowSelect)="onRowSelectBus($event)"  >
+                    
+                    <p-column styleClass="col-button" [style]="{'width':'5em'}">
                         <template let-col  let-objBus="rowData"  pTemplate="body">
-                                <button type="button" pButton class="btn" (click)=  "editarBus(objBus)" icon="fa-pencil-square-o" > </button>                  
+                                <button type="button" pButton class="btn" (click)= "editarBus(objBus.BuId)" icon="fa-pencil-square-o" > </button>                  
                                 <button type="button" pButton class="btn" (click)= "eliminarBus(objBus.BuId)" icon="fa-trash">  </button>
                         </template>
                     </p-column>
                     <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
-                    <p-column field="BuEmp" header="Empresa" [style]="{'width':'10em'}"></p-column>
+                    <p-column field="BuDescripcion" header="Descripcion" [style]="{'width':'15em'}"></p-column>
                     <p-column field="BuPlaca" header="Placa" [style]="{'width':'8em','text-align':'center'}" ></p-column>
-                    <p-column field="BuCombustible" header="Combustible" [style]="{'width':'8em','text-align':'center'}"></p-column>
-                    <p-column field="BuSOAT" header="SOAT" [style]="{'width':'12em'}"></p-column>
-                    <p-column field="BuModelo" header="Modelo" [style]="{'width':'10em','text-align':'center'}" ></p-column>
+                    <p-column field="BuMarca" header="Marca" [style]="{'width':'8em'}"></p-column>
+                    <p-column field="BuCapacidad" header="Cap." [style]="{'width':'4em','text-align':'center'}"></p-column>
+                   
                 </p-dataTable>
             </div>
         </div>
@@ -78,22 +82,20 @@
                         <!--AÑO  **-->
                         <div class="form-group">
                             <label class="control-label" for="anio">Año:</label>
-                            <input class="form-control" id="anio" name="anio"  type="text" [(ngModel)]="buanio" #anio="ngModel" 
-                                required length="4" />
-                            <span *ngIf="!anio.valid && anio.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;" >
-                                <div [hidden]="!anio.errors.required"> Obligatorio </div>
-                                <div [hidden]="!anio.errors.length"> 4 Digitos </div>
-                            </span>
-                            {{buanio}}
+                            <input class="form-control" id="anio" name="anio"  type="text" [(ngModel)]="bus.BuAnio" #anio="ngModel" length="4" pattern="([1-2]{1}[0-9]{1}[0-9]{1}[0-9]{1})" minlength="4" maxlength="4" required/>
+                            
+                            <div [hidden]="anio.valid || !anio.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;" >
+                                Error en el dato ingresado
+                            </div>
                         </div>
 
                         <!--MOTOR  **-->
                         <div class="form-group">
                             <label class="control-label" for="motor">Motor:</label>
-                            <input class="form-control" id="motor" name="motor"  type="text" [(ngModel)]="bumotor" required #motor="ngModel" />
-                            <span *ngIf="!motor.valid && motor.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                                <div [hidden]="!anio.errors.required"> Obligatorio </div>
-                            </span>
+                            <input class="form-control" id="motor" name="motor"  type="text" [(ngModel)]="bus.BuMotor" required #motor="ngModel" />
+                            <div [hidden]="motor.valid || !motor.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
+                                Error en el dato ingresado
+                            </div>
                         </div>
 
                         <!--DESCRIPCION-->
@@ -107,7 +109,7 @@
                         <div class="form-group">
                             <label class="control-label" for="comb">Combustible:</label>
                             <!--DROPDOWN-->
-                            <input class="form-control" id="comb" name="comb"  type="text" [(ngModel)]="bucombus" required #tipoCos="ngModel" />
+                            <input class="form-control" id="comb" name="comb"  type="text" [(ngModel)]="bus.BuTipoCombustible" required #tipoCos="ngModel" />
                             <span *ngIf="!tipoCos.valid && tipoCos.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
                                 <div [hidden]="!tipoCos.errors.required"> Obligatorio </div>
                             </span>
@@ -124,7 +126,7 @@
                         <!--CAPACIDAD-->
                         <div class="form-group">
                             <label class="control-label" for="cap">Capacidad:</label>
-                            <input class="form-control" id="cap" name="cap"  type="text" [(ngModel)]="bus.BuCapacidad" />
+                            <input class="form-control" id="cap" name="cap"  type="number" [(ngModel)]="bus.BuCapacidad" />
                         </div>
 
                         <!--MARCA-->
@@ -155,6 +157,7 @@
                         <div class="form-group">
                             <label class="control-label" for="mod">Modelo:</label>
                             <input class="form-control" id="mod" name="mod"  type="text" [(ngModel)]="bus.BuModelo" required #mod="ngModel" />
+                            
                             <span *ngIf="!mod.valid && mod.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
                                 <div [hidden]="!mod.errors.required"> Obligatorio </div>
                             </span>
@@ -162,8 +165,9 @@
 
                         <!--OPERATIVIDAD (SI ESTA APTO EL BUS PARA CIRCULAR O SE ENCUENTRA EN EL TALLER POR REPARACION) -->
                         <div class="form-group">
-                            <label class="control-label" for="oper">Operatividad:</label>
+                            <label class="control-label" for="oper">En Funcionamiento:</label>
                             <input class="form-control" id="oper" name="oper"  type="text" [(ngModel)]="bus.BuOperatividad" required #oper="ngModel" />
+                            
                             <span *ngIf="!oper.valid && oper.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
                                 <div [hidden]="!oper.errors.required"> Obligatorio </div>
                             </span>
@@ -171,8 +175,9 @@
 
                         <!--ACTIVO (SI ESTA O NO CIRCULANDO EN LA EMPRESA)-->
                         <div class="form-group">
-                            <label class="control-label" for="act">Activo:</label>
+                            <label class="control-label" for="act">En Circulacion:</label>
                             <input class="form-control" id="act" name="act"  type="text" [(ngModel)]="bus.BuActivo" required #act="ngModel" />
+                            
                             <span *ngIf="!act.valid && act.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
                                 <div [hidden]="!act.errors.required"> Obligatorio </div>
                             </span>
@@ -181,7 +186,7 @@
                         <!--FECHA INGRESO-->
                         <div class="form-group">
                             <label class="control-label" for="fingr">Ingreso:</label>
-                            <input class="form-control" id="fingr" name="fingr"  type="date" [(ngModel)]="bus.BuFIngr"  required #fingreso="ngModel" />
+                            <input class="form-control" id="fingr" name="fingr"  type="date" [(ngModel)]="bus.BuFechaIngreso"  required #fingreso="ngModel" />
                             <span *ngIf="!fingreso.valid && fingreso.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
                                 <div [hidden]="!fingreso.errors.required"> Obligatorio </div>
                             </span>
@@ -190,7 +195,7 @@
                         <!--FECHA SALIDA-->
                         <div class="form-group">
                             <label class="control-label" for="fsal">Salida:</label>
-                            <input class="form-control" id="fsal" name="fsal"  type="date" [(ngModel)]="bus.BuFSal"  />
+                            <input class="form-control" id="fsal" name="fsal"  type="date" [(ngModel)]="bus.BuFechaSalida"  />
                         </div>
                     </div>
                 </div>
@@ -198,8 +203,8 @@
 
             <!--PIE-->
             <div class="row">
-                <button id="btn" type="button" pButton label="Guardar" (click)="guardarbus()"></button>
-                <button id="btn" type="button" pButton label="Cancelar" (click)="cancelarbus()"></button>
+                <button id="btn" type="button" pButton label="Guardar"  (click)= "guardarbus(); placa.reset(); anio.reset(); motor.reset(); tipoCos.reset();  soat.reset(); mod.reset(); oper.reset(); act.reset(); fingreso.reset(); "></button>
+                <button id="btn" type="button" pButton label="Cancelar" (click)="cancelarbus(); placa.reset(); anio.reset(); motor.reset(); tipoCos.reset();  soat.reset(); mod.reset(); oper.reset(); act.reset(); fingreso.reset(); "></button>
             </div>
         </p-dialog>
 
