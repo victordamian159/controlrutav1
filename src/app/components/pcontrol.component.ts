@@ -166,7 +166,11 @@ export class PcontrolComponent implements OnInit{
         {nomb:"Dias Normal", val:'03'}
     ];
 
-    
+    /* OTRAS VARIABLES */
+    private _ruid:number;
+    private rutas:any=[];
+    private emID : number;
+
     constructor( 
         private pcontrolService: PuntoControlService,
         //public el: ElementRef 
@@ -181,8 +185,10 @@ export class PcontrolComponent implements OnInit{
             gestureHandling: 'greedy'
         };
 
+        this.emID = 1;
+
         //MAESTRO
-        this.getAllPuntoControlByEmRu(1,58); //consulta para la grilla 
+        //this.getAllPuntoControlByEmRu(1,58); //consulta para la grilla 
         this.activeAddMarker = 0; //addmarker desactivado
         //tambien cuando ya se a guardado los puntos en la BD
 
@@ -193,18 +199,37 @@ export class PcontrolComponent implements OnInit{
          this.desEditarPCDetMarker=true;
          this.desNuevosPuntos =true;
 
-         this.pcMaestro.RuId=58;
+         //this.pcMaestro.RuId=58;
 
          this._PuCoId=0;
+
+        this.getallrutasbyem(this.emID);
+    }
+
+   
+
+    /* CONSULTA RUTAS*/
+    getallrutasbyem(emId: number){
+        this.rutaService.getAllRutaByEm(emId).subscribe(
+            data => {this.rutas = data;},
+            err  => {this.errorMessage=err},
+            ()   => this.isLoading=false
+        );
+    }
+
+     /* FUNCION RUID COMBOBOX*/
+    _rutaid(event:Event){
+        console.log(this._ruid);
+        this.getAllPuntoControlByEmRu(this.emID,this._ruid);
     }
 
     //para mostrar en la grilla de programaciones  (MOSTRAR EN GRILLA)
     getAllPuntoControlByEmRu(emId: number, ruId: number){
         this.pcontrolService.getAllPuntoControlByEmRu(emId,ruId)
         .subscribe(
-            data => { this.pCArrayMaestroBD = data; this.mgPuntoControlMaestro();},
-                    err => {this.errorMessage = err}, 
-                    () =>this.isLoading = false
+                data => { this.pCArrayMaestroBD = data; this.mgPuntoControlMaestro();},
+                err  => { this.errorMessage = err}, 
+                ()   =>   this.isLoading = false
             );
         //console.log(this.pCArrayMaestroBD);
     }

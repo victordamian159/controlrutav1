@@ -68,12 +68,20 @@ export class TControlService{
 			.catch((error:any) => Observable.throw(error.json().error || 'Server error'));
 	}
 
-	//CONSULTA PROVICIONAL PARA MOSTRAR EN LA GRILLA
+	//CONSULTA PROVICIONAL PARA MOSTRAR EN LA GRILLA --- BORRAR
 	getAllTarjetas(){
 		return this.http
 			.get(this.baseUrl )
 			.map((r: Response) => r.json() )
 			.catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+	}
+
+	/* CONSULTA GRILLA PRINCIPAL */
+	getAllTarjetaControlByempuco(emId:number, puCoId:number){
+		return this.http
+				.get(this.baseUrl+ "getalltarjetacontrolbyempuco?emId="+emId+"&puCoId="+puCoId) 
+				.map((r: Response) => r.json() )             
+				.catch(this.handleError);
 	}
 
 //CABECERA

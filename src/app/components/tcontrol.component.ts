@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {TControlService} from '../service/tcontrol.service';
 import {PlacasService} from '../service/placas.service';
 import {RutaService} from '../service/ruta.service';
+import {PuntoControlService} from '../service/pcontrol.service'
 
 
 @Component({
@@ -39,6 +40,7 @@ export class TcontrolComponent implements OnInit{
     _prId:number;
     _prDeId:number;
     _ruId:number;
+    _pcId:number;
 
     //CAMPOS PARA LA CABECERA Y DETALLE 
     _TaCoId : number;
@@ -129,21 +131,25 @@ export class TcontrolComponent implements OnInit{
     mensaje : string; //MENSAJE EN PANTALLA PARA CONFIRMAR
 
     private rutas:any=[];
+    private ptsControl:any=[];
+    private emID : number;
 
     constructor(
                     private tcontrolservice: TControlService,
                     private placaService: PlacasService,
-                    private rutaService: RutaService
+                    private rutaService: RutaService,
+                    private pcontrolService : PuntoControlService
                 ){}
 
     ngOnInit(){
+        this.emID = 1;
         //console.log(this.placas);
-        this.getallplacasbusbyemsuem(1,0); //PLACAS
-        this.getallpuntocontrolbyemru(1,51); //PUNTOS DE CONTROL
-        this.getalltarjetacontrol(); 
+        this.getallplacasbusbyemsuem(this.emID,0); //PLACAS
+        this.getallpuntocontrolbyemru(this.emID,51); //PUNTOS DE CONTROL
+        /*this.getalltarjetacontrol(); */
         
-        this.getallprogramacionbyem(1,0); //PROGRAMACION X EMP
-        this.getAllRutaByEm(1);
+        this.getallprogramacionbyem(this.emID,0); //PROGRAMACION X EMP
+        this.getAllRutaByEm(this.emID);
       
         this.tarjeta._UsId = 1; //ARREGLAR ESOT PARA Q SEA GLOBAL, USUARIO
     }
@@ -155,14 +161,38 @@ export class TcontrolComponent implements OnInit{
     getAllRutaByEm(emId: number){
         this.rutaService.getAllRutaByEm(emId).subscribe(
             data => { this.rutas = data;},
-                    err => {this.errorMessage = err}, 
-                    () =>this.isLoading = false
-            );
+            err  => {this.errorMessage = err}, 
+            ()   => this.isLoading = false
+        );
     }
-
     rutaId(event:Event){
         console.log(this._ruId);
-        
+        this.getAllPControlBy(this.emID,this._ruId);
+    }
+
+    /* CONSULTAR TODOS LOS PUNTOS DE CONTROL EXISTENTES */
+    getAllPControlBy(emId: number, ruId:number){
+        this.pcontrolService.getAllPuntoControlByEmRu(emId, ruId).subscribe(
+            data => {this.ptsControl = data},
+            err  => {this.errorMessage = err},
+            ()   => this.isLoading = false
+        );
+    }
+    pControlId(event:Event){
+        console.log(this._pcId);
+        this.getalltarjetasbyemidpucoid(this.emID,this._pcId);
+    }
+
+    /* CONSULTA PARA GIRLLA PRINCIPAL */
+    getalltarjetasbyemidpucoid(emId:number, PuCoId : number){
+        this.tcontrolservice.getAllTarjetaControlByempuco(emId, PuCoId).subscribe(
+            data => {this.allTarjControl=data; 
+                     console.log(this.allTarjControl); 
+                     this.mgTarjetasControl();
+                    },
+            err  => {this.errorMessage=err},
+            ()   => this.isLoading=false
+        );
     }
 
     //CONSULTAR PROGRAMACION CABECERA, PARA OBTENER EL PRID NECESARIO PARA SACAR EL DETALLE
@@ -298,7 +328,7 @@ export class TcontrolComponent implements OnInit{
     }
 
 
-    //CONSULTA PROVICIONAL-- REEMPLAZAR POR OTRA QUE PASE RONALD PARA MOSTRAR GRILLA
+    /*CONSULTA PROVICIONAL-- REEMPLAZAR POR OTRA QUE PASE RONALD PARA MOSTRAR GRILLA
     getalltarjetacontrol(){
         this.tcontrolservice.getAllTarjetas().subscribe(
             data => {this.allTarjControl=data; 
@@ -307,7 +337,7 @@ export class TcontrolComponent implements OnInit{
             err  => {this.errorMessage=err},
             ()   => this.isLoading=false
         );
-    }
+    }*/
 
     //MOSTRAR PUNTOS DE CONTROL
     mgPuntosControl(){
@@ -334,17 +364,17 @@ export class TcontrolComponent implements OnInit{
         for(let TarjControl of this.allTarjControl){
             this._allTarjControl.push({
                 nro:0,
-                placa:0,
-                rutaDescripcion:"",
+                BuPlaca:TarjControl.BuPlaca,
+                BuDescripcion:TarjControl.BuDescripcion,
                 TaCoFecha:this._fecha(TarjControl.TaCoFecha),
                 TaCoHoraSalida:this._hora(TarjControl.TaCoHoraSalida),
-                TaCoCuota:TarjControl.TaCoCuota,
+                TaCoId:TarjControl.TaCoId
+                /*TaCoCuota:TarjControl.TaCoCuota,
                 BuId:TarjControl.BuId,
                 UsFechaReg:TarjControl.UsFechaReg,
-                TaCoId:TarjControl.TaCoId,
                 UsId:TarjControl.UsId,
                 RuId:TarjControl.RuId,
-                PuCoId:TarjControl.PuCoId
+                PuCoId:TarjControl.PuCoId*/
             });
             
         }
@@ -355,20 +385,22 @@ export class TcontrolComponent implements OnInit{
             this._allTarjControl[i].nro = i+1;
         }
 
-        //BUID POR NRO PLACA    this.placas 
-        while(j < this._allTarjControl.length){
-            while(k<this.placas.length && cen==0){
-                if(this._allTarjControl[j].BuId == this.placas[k].BuId){
-                    this._allTarjControl[j].placa=this.placas[k].BuPlaca; 
-                    cen=1;
-                }else if(this._allTarjControl[j].BuId != this.placas[k].BuId){
-                    k++;
+        /*
+            BUID POR NRO PLACA    this.placas 
+            while(j < this._allTarjControl.length){
+                while(k<this.placas.length && cen==0){
+                    if(this._allTarjControl[j].BuId == this.placas[k].BuId){
+                        this._allTarjControl[j].placa=this.placas[k].BuPlaca; 
+                        cen=1;
+                    }else if(this._allTarjControl[j].BuId != this.placas[k].BuId){
+                        k++;
+                    }
                 }
+                k=0;
+                cen=0;
+                j++;
             }
-            k=0;
-            cen=0;
-            j++;
-        }
+        */
        
   
     }
@@ -647,7 +679,7 @@ export class TcontrolComponent implements OnInit{
 
     _eliminarC(){
          this.tcontrolservice.deleteTarjetaControl(this._PuCoId).subscribe(
-            realizar =>{this.getalltarjetacontrol();
+            realizar =>{/*this.getalltarjetacontrol();*/
                         this.displayConfirmarEliminar = false;    
                     },
             err => {console.log(err);}

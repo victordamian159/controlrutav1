@@ -1,29 +1,35 @@
 <div class="contenedor">
     <!--TITULO-->
-    <div id="titulo">Tarjetas de Control</div>
+    <div class="row" id="titulo">
+        <div class="col-md-12">
+        Tarjetas de Control
+        </div>
+    </div>
     
-    
+    <!--BUSQUEDA + PUNTOS DE CONTROL-->
     <div class="row">
-        <!--RUTAS-->
-        <!--<div class="form-group ">
-            <label>Rutas:</label>
-        </div>    
-            -->
-            <select class="form-control" required [(ngModel)]="_ruId" (change)="rutaId($event)"   #PROG="ngModel">
+        <div class="col-xl-4 col-md-4 col-sm-4 col-xs-4">
+            <div>Rutas:</div>
+            <select class="form-control" required [(ngModel)]="_ruId" (change)="rutaId($event)"   #ruta="ngModel">
                 <option *ngFor="let ruta of rutas" [value]="ruta.RuId">{{ruta.RuDescripcion}}</option>
             </select> 
-            <!--<div [hidden]="!PROG.touched || PROG.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                Error, revise los datos ingresados
-            </div>-->
+        </div>
 
-        <!--BUSQUEDA + BOTON NUEVO-->
-        <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
-        <button type="text" (click)="nuevaAsignaTarjeta()" pButton label="Nuevo" data-toggle="modal" ></button>
-        
-        
+        <div class="col-xl-4 col-md-4 col-sm-4 col-xs-4">
+            <div>Puntos de Control:</div>
+            <select class="form-control" required [(ngModel)]="_pcId" (change)="pControlId($event)"   #pcontrol="ngModel">
+                <option *ngFor="let punto of ptsControl" [value]="punto.PuCoId">{{punto.PuCoDescripcion}}</option>
+            </select> 
+        </div>
+
+        <div class="col-xl-4 col-md-4 col-sm-4 col-xs-4">
+            <div>Busqueda:</div>
+            <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+        </div>
+       
+        <!--<button type="text" (click)="nuevaAsignaTarjeta()" pButton label="Nuevo" data-toggle="modal" ></button>-->
+         <!--<div [hidden]="!PROG.touched || PROG.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">Error, revise los datos ingresados</div>-->
     </div>
-
-    
     
     <!--TABLAS-->
     <div class="row">
@@ -40,14 +46,21 @@
                             <button type="button" pButton class="btn" (click)="eliminarC(row.TaCoId)" icon="fa-trash" > </button>
                         </template>
                     </p-column>
+
                     <p-column field="nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
-                    <p-column field="PuCoId" header="Descripcion P. Control"  [style]="{'width':'17em'}"></p-column>
-                    <!--<p-column field="rutaDescripcion" header="Puntos"  [style]="{'width':'9em'}"></p-column>-->
+                    <!--<p-column field="PuCoId" header="Descripcion P. Control"  [style]="{'width':'17em'}"></p-column>
+                    <p-column field="rutaDescripcion" header="Puntos"  [style]="{'width':'9em'}"></p-column>-->
                     <!--<p-column field="BuId" header="BuId"  [style]="{'width':'9em'}"></p-column>-->
-                    <p-column field="RuId" header="Descripcion Ruta"  [style]="{'width':'17em'}"></p-column>
-                    <p-column field="placa" header="Placa"  [style]="{'width':'8em','text-align':'center'}"></p-column>
+                    <p-column field="BuDescripcion" header="Descripcion Bus"  [style]="{'width':'17em'}"></p-column>
+                    <p-column field="BuPlaca" header="Placa"  [style]="{'width':'8em','text-align':'center'}"></p-column>
                     <p-column field="TaCoFecha" header="Fecha"  [style]="{'width':'9em','text-align':'center'}"></p-column>
                     <p-column field="TaCoHoraSalida" header="Salida"  [style]="{'width':'7em','text-align':'center'}"></p-column>
+                    
+                    <p-footer>
+                        <div class="ui-helper-clearfix" style="width:100%">
+                            <button type="button"  pButton icon="fa-plus" style="float:left" (click)="nuevaAsignaTarjeta()" label="Nuevo" ></button>
+                        </div>
+                    </p-footer>
                 </p-dataTable>
             </div>
         </div>

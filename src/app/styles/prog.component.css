@@ -45,6 +45,20 @@ tr:nth-child(even){
     padding: 10px 20px;
 }
 
+.contenedor{
+    margin-top:20px;
+    margin-left:20px;
+    margin-right:20px;
+    margin-bottom:60px;
+}
+
+.col{
+    margin-top:0px;
+    margin-left:80px;
+    margin-right:80px;
+    margin-bottom:0px;
+}
+
 /*@media (max-width:480px){
 	.pdf{
 		width:200px !important;
