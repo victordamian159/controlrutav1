@@ -5,9 +5,11 @@
 
     <!--BUSQUEDA-->
     <div class="row">
-        <div class="col-xl-3 col-md-6 col-sm-12 col-xs-12">
-            <div>Busqueda:</div>
+        <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
             <input class="form-control" placeholder="Buscar..." type="text"  id="gb1" #filtroGlobal />
+        </div>
+        <div class="col-xl-2 col-md-2 col-sm-6 col-xs-12">
+            <button type="button" (click)="nuevaRutaMaestro()" style="float:left" pButton icon="fa-file-text-o" label="Nuevo"></button>
         </div>
     </div>
 
@@ -17,13 +19,13 @@
         <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
             <div class="row">
                 <div class="table table-responsive">
-                    <p-dataTable [value]="rutasPresentar" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal" 
+                    <p-dataTable [value]="rutasPresentar" [rows]="4" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal" 
                         scrollable="true"  scrollWidth="100%" selectionMode="single"[(selection)]="selectedRutaPresentar" (onRowSelect)="onRowSelect($event)">
                             <!--COLUMNAS-->
                             <p-column styleClass="col-button" [style]="{'width':'3em'}">
                                 <template let-col let-Ruta="rowData" pTemplate="body" >
-                                    <button type="button" pButton (click)="editarRutaMaestro(Ruta.RuId)" icon="fa-pencil-square-o" class="btn"></button>
-                                    <button type="button" pButton (click)="eliminarRutaMaestro(Ruta.RuId)" icon="fa-trash" class="btn"></button>					
+                                    <button id="btnTable" type="button" pButton (click)="editarRutaMaestro(Ruta.RuId)" icon="fa-pencil-square-o" class="btn"></button>
+                                    <button id="btnTable" type="button" pButton (click)="eliminarRutaMaestro(Ruta.RuId)" icon="fa-trash" class="btn"></button>					
                                 </template>          
                             </p-column>
                             <p-column field="nro" header="N°" [style]="{'width':'4em','text-align':'center'}"></p-column>
@@ -32,8 +34,7 @@
 
                             <p-footer>
                                 <div class="ui-helper-clearfix" style="width:100%">
-                                    <button type="button" (click)="nuevaRutaMaestro()" style="float:left" pButton icon="fa-file-text-o" label="Nuevo">
-                                    </button>
+                                    
                                 </div>
                             </p-footer>
                     </p-dataTable>
@@ -66,16 +67,11 @@
             <div class="row">
                 <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12" >
                     <div id="btnMap">
-                        <button id="btn" type="button" pButton label="Borrar" (click)="clear()"[disabled]="disButBorrar"></button> 
-                        <button id="btn" type="button" pButton label="Editar" (click)="showmodalEditar()" [disabled]="disButEditar"></button>           
-                        <button id="btn" type="button" pButton label="Terminar" (click)="ultimalinea()" [disabled]="disButTerminarRuta" ></button>
-                    </div>
-                </div>
-                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12" >
-                    <div id="btnMap">
-                        <button id="btn" type="button" pButton  label="Guardar" (click)="guardarPuntosRutaDetalle()" [disabled]="disButSubirRuta"></button>
-                        <button id="btn" type="button" pButton  label="Deshacer" (click)="deshacer()" [disabled]="disButDeshacer"></button>
-                        <button id="btn" type="button" pButton  label="Nuevo" (click)="nuevaRutaDetalle()" [disabled]="disButNuevaRuta"></button>
+                        <button id="btn" [hidden]="actBtnNuevo" type="button" pButton  label="Nuevo" (click)="nuevaRutaDetalle()" [disabled]="disButNuevaRuta"></button>
+                        <button id="btn" [hidden]="actBtnEditar" type="button" pButton label="Editar" (click)="showmodalEditar()" [disabled]="disButEditar"></button>           
+                        <button id="btn" [hidden]="actBtnGuardar" type="button" pButton  label="Guardar" (click)="guardarPuntosRutaDetalle()" [disabled]="disButSubirRuta"></button>
+                        <button id="btn" [hidden]="actBtnAtras" type="button" pButton  label="Atras" (click)="deshacer()" [disabled]="disButDeshacer"></button>
+                        <button id="btn" [hidden]="actBtnBorrar" type="button" pButton label="Borrar" (click)="clear()"[disabled]="disButBorrar"></button>
                     </div>
                 </div>
             </div>

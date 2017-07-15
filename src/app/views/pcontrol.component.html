@@ -18,9 +18,6 @@
                 </div>
 
                 <div class="col-xl-4 col-md-4 col-sm-4 col-xs-4">
-                    <!--<span class="text-xs-right">
-                        <button (click)="newPuntoControlMaestro()" pButton icon="fa-file-text-o" label="Nuevo"></button>
-                    </span>-->
                     <div>Busqueda:</div>
                     <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
                 </div>
@@ -33,8 +30,8 @@
 
                     <p-column styleClass="col-button" [style]="{'width':'6em'}">
                         <template let-col let-pcMostrar="rowData" pTemplate="body">
-                            <button type="button" pButton class="btn" (click)=  "editarMaestro(pcMostrar.PuCoId)" icon="fa-pencil-square-o" > </button>                  
-                            <button type="button" pButton class="btn" (click)= "eliminarMaestro(pcMostrar.PuCoId)" icon="fa-trash">  </button>
+                            <button id="btnTable" type="button" pButton class="btn" (click)=  "editarMaestro(pcMostrar.PuCoId)" icon="fa-pencil-square-o" > </button>                  
+                            <button id="btnTable" type="button" pButton class="btn" (click)= "eliminarMaestro(pcMostrar.PuCoId)" icon="fa-trash">  </button>
                         </template>
                     </p-column>
                     <p-column field="nro"             header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
@@ -43,14 +40,10 @@
                     <p-column field="PuCoClase"     header="Clase" [style]="{'width':'10em','text-align':'center'}"></p-column>
 
                     <p-footer>
-                        <!--<span class="text-xs-right"></span>-->
                         <div class="ui-helper-clearfix" style="width:100%">
                             <button type="button" (click)="newPuntoControlMaestro()" style="float:left" pButton icon="fa-file-text-o" label="Nuevo">
                             </button>
                         </div>
-                        <!--<div class="ui-helper-clearfix" style="width:100%">
-                            <button type="button" pButton icon="fa-plus" style="float:left" (click)="showDialogToAdd()" label="Add"></button>
-                        </div>-->
                     </p-footer>
                 </p-dataTable>
             </div>
@@ -63,8 +56,8 @@
                     
                     <p-column styleClass="col-button" [style]="{'width':'6em'}">
                         <template let-col let-pcDetalle="rowData" pTemplate="body">                                        
-                            <button type="button" pButton class="btn" (click)="editarDetalle(pcDetalle.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
-                            <button type="button" pButton class="btn" (click)="eliminarDetalle(pcDetalle.PuCoDeId)" icon="fa-trash"> </button>
+                            <button id="btnTable"  type="button" pButton class="btn" (click)="editarDetalle(pcDetalle.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
+                            <button id="btnTable"  type="button" pButton class="btn" (click)="eliminarDetalle(pcDetalle.PuCoDeId)" icon="fa-trash"> </button>
                         </template>
                     </p-column>
                     <p-column field="PuCoDeOrden"      header="N°"   [style]="{'width':'4em','text-align':'center'}"  ></p-column>
@@ -99,10 +92,10 @@
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12" >
                     <div id="btnMap">
-                        <button id="btn" type="button" pButton icon="fa-save" label="Guardar" (click)="guardarpuntosDetalleRest()" [disabled]="desGuardarPCD_BD" [hidden]=true ></button>
-                        <button id="btn" type="button" pButton icon="fa-eraser" label="Borrar" (click)="BorrarPuntosDetalle()" [disabled]="desBorrarPCDet" [hidden]=true></button>
-                        <button id="btn" type="button" pButton icon="fa-file-o" label="Nuevo" (click)="nuevosPuntos()"    [disabled]="desNuevosPuntos" [hidden]=true></button>
-                        <button id="btn" type="button" pButton icon="fa-edit" label="Editar"  (click)="editarPuntosDetalleMapa()" [disabled]="desEditarPCDetMarker" [hidden]=true></button>
+                        <button id="btn" type="button" pButton icon="fa-save" label="Guardar" (click)="guardarpuntosDetalleRest()" [disabled]="desGuardarPCD_BD" [hidden]=false ></button>
+                        <button id="btn" type="button" pButton icon="fa-eraser" label="Borrar" (click)="BorrarPuntosDetalle()" [disabled]="desBorrarPCDet" [hidden]=false></button>
+                        <button id="btn" type="button" pButton icon="fa-file-o" label="Nuevo" (click)="nuevosPuntos()"    [disabled]="desNuevosPuntos" [hidden]=false></button>
+                        <button id="btn" type="button" pButton icon="fa-edit" label="Editar"  (click)="editarPuntosDetalleMapa()" [disabled]="desEditarPCDetMarker" [hidden]=false></button>
                     </div>
                 </div>
             </div>  

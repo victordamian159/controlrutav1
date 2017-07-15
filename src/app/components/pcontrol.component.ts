@@ -291,9 +291,6 @@ export class PcontrolComponent implements OnInit{
             }
         }
 
-        //indexArrayParaBD = j; indexArrayParaBD = this.pCArrayDetalleBD.indexOf(this.overlays[indexInOverlays].title);
-        //console.log("index: "+indexInOverlays);console.log("index: "+j);console.log(this.pCArrayDetalleBD);
-
         //ACTUALIZANDO EL ARRAY DE PUNTOS, LAS NUEVAS COORDENADAS Q SE CAMBIARON DE CADA PUNTO
         this.pCArrayDetalleBD[j].PuCoDeLatitud  = x;
         this.pCArrayDetalleBD[j].PuCoDeLongitud = y;
@@ -301,9 +298,14 @@ export class PcontrolComponent implements OnInit{
         //BORRANDO CIRCULO PARA ACTUALIZA RPOSICION
         this.overlays[indexInOverlays+1].setMap(null);
         this.overlays.splice(indexInOverlays+1, 1,
-            new google.maps.Circle({ strokeColor: '#FF0000', strokeOpacity: 0.8, strokeWeight: 2, fillColor: '#FF0000', fillOpacity: 0.35,
+            new google.maps.Circle({ 
                 center: {lat:x , lng:y},
-                radius:10
+                radius:100,
+                strokeColor: '#FF0000', 
+                strokeOpacity: 0.8, 
+                strokeWeight: 2, 
+                fillColor: '#FF0000', 
+                fillOpacity: 0.35,
             })
         );
 
@@ -369,7 +371,7 @@ export class PcontrolComponent implements OnInit{
             
             //agregando circulo
             this.overlays.push(new google.maps.Circle({
-                strokeColor: '#FF0000',strokeOpacity: 0.8,strokeWeight: 2,fillColor: '#FF0000',fillOpacity: 0.35,center: this.selectedPosition,radius:10
+                strokeColor: '#FF0000',strokeOpacity: 0.8,strokeWeight: 2,fillColor: '#FF0000',fillOpacity: 0.35,center: this.selectedPosition,radius:100
             }));
             this.j++;
         }else if(this.activeAddMarker == 0){ //addmarker desactivado
@@ -419,8 +421,7 @@ export class PcontrolComponent implements OnInit{
         this.idFilaSeleccionada = event.data.PuCoId;  //recupera la PuCoId de la fila seleccionada (para recuperar los puntos de control con la consulta)
         this.idRutaFilaSeleccionada = event.data.RuId; //recupera el RuId para poder sacar la ruta de la BD
         this.horaReg = event.data.PuCoTiempoBus; //HORA DE TODA LA RUTA
-        console.log("hora ruta: "+this.horaReg);
-
+    
          this.mayorOrdenPuntos();//PARA EL CASO DE EDITAR UNA LISTA EXISTENTE
 
          this.idDetalle = this.idFilaSeleccionada; //recupera el id cabecera para poder actualizar el detalle, funcion guardar if editado=1
@@ -434,8 +435,10 @@ export class PcontrolComponent implements OnInit{
 
         //RECUPERA PUNTOS DE CONTROL POR EL PuCoId 
         this.pcontrolService.getAllPuntoControlDetalleByPuCo(this.idFilaSeleccionada).subscribe(
-            data => {
-                        this.pCArrayDetalleBD=data; //ARRAY COORDENADAS PUNTOS DE CONTROL
+            data => {   
+                        //ARRAY COORDENADAS PUNTOS DE CONTROL
+                        this.pCArrayDetalleBD=data; 
+                        
                         //CASOS SI EXISTEN PUNTOS DE CONTROL
                         if(this.pCArrayDetalleBD.length != 0){
                             this.mgPuntosControlDetalle(); //CARGANDO GRILLA PUNTOSDETALLE
@@ -450,7 +453,7 @@ export class PcontrolComponent implements OnInit{
                             //HACER UNA VENTANA MODAL PARA ESTE MENSAJE
                             this.mensaje = "No Hay Puntos De Control, Lista Vacia";
                             this.displayNohayPuntos = true;
-                            //console.log("NO HAY PUNTOS DE CONTROL");
+                           
                             //ACTIVANDO BOTON NUEVOS PUNTOS DE CONTROL
                             this.desNuevosPuntos = false;
                             this.desEditarPCDetMarker = true;
@@ -477,11 +480,25 @@ export class PcontrolComponent implements OnInit{
     //CARGAR LA RUTA AL MAPA
     cargarRuta(){
         for(let n=0; n<this.puntosRuta.length; n++){
-            this.coordenadas.push({lat:this.puntosRuta[n].RuDeLatitud,lng:this.puntosRuta[n].RuDeLongitud});
+            this.coordenadas.push({
+                lat:this.puntosRuta[n].RuDeLatitud,
+                lng:this.puntosRuta[n].RuDeLongitud
+            });
         }
 
+        /*ULTIMA LINEA DE CIERRE #0B610B */ 
+        this.coordenadas.push({
+            lat:this.puntosRuta[0].RuDeLatitud,
+            lng:this.puntosRuta[0].RuDeLongitud
+        })
+
         this.overlays.push(
-            new google.maps.Polyline({path: this.coordenadas, strokeColor: '#FF0000',strokeOpacity : 0.5,strokeWeight :8 
+            new google.maps.Polyline({
+                path: this.coordenadas, 
+                /*strokeColor: '#FF0000',*/
+                strokeColor: '#21610B',
+                strokeOpacity : 0.5,
+                strokeWeight :8 
         }));
 
         //borrando las coordenadas para poder ingresar las coordenadas de los marcadores
@@ -510,7 +527,7 @@ export class PcontrolComponent implements OnInit{
                     //agregando circulo 
                     new google.maps.Circle({ strokeColor: '#FF0000', strokeOpacity: 0.8, strokeWeight: 2, fillColor: '#FF0000', fillOpacity: 0.35,
                         center: {lat:marker.PuCoDeLatitud , lng:marker.PuCoDeLongitud},
-                        radius:10
+                        radius:100
                     }));
             }//FIN FOR
         }else if(this.dragPunto == 1 && this.editando == 1){ // SI ARRASTRAR Y EDITANDO ACTIVADO
@@ -531,7 +548,7 @@ export class PcontrolComponent implements OnInit{
                 this.overlays.push(
                     new google.maps.Circle({ strokeColor: '#FF0000', strokeOpacity: 0.8, strokeWeight: 2, fillColor: '#FF0000', fillOpacity: 0.35,
                         center: {lat:marker.PuCoDeLatitud , lng:marker.PuCoDeLongitud},
-                        radius:10
+                        radius:100
                     })
                 );
 
@@ -633,24 +650,6 @@ export class PcontrolComponent implements OnInit{
     }
     //guardar nuevo Maestro puntos de control
     guardarPCMaestro(){      
-        
-        console.log(this.descr);
-
-        /*if(this._PuCoId == 0){ //NUEVO REGISTRO
-                //almacenado para los datos
-
-                this.pcMaestroBD.PuCoId = this.pcMaestro.PuCoId,
-                this.pcMaestroBD.PuCoDescripcion = this.descr, 
-                this.pcMaestroBD.RuId = this.pcMaestro.RuId,
-                this.pcMaestroBD.PuCoTiempoBus =  this.hora(this.timeRec),        //TIME
-                this.pcMaestroBD.PuCoClase = this.pcMaestro.PuCoClase, //COMBO
-                this.pcMaestroBD.UsId = this.pcMaestro.UsId,
-                this.pcMaestroBD.UsFechaReg = new Date()
-        }else if(this._PuCoId != 0){ //SE ESTA EDITANDO REGISTRO EXISTENTE
-                this.pcMaestro.PuCoTiempoBus =  this.hora(this.timeRec);
-                this.pcMaestroBD = this.pcMaestro;//PASANDO LOS VALORES DEL MODAL AL OBJETO Q SERA MANDANDO A LA BD
-        }*/
-
         this.pcMaestroBD={
             PuCoId : this.pcMaestro.PuCoId,
             PuCoDescripcion : this.descr, 
@@ -668,8 +667,6 @@ export class PcontrolComponent implements OnInit{
         }else if(this._PuCoId != 0){ 
             this.pcMaestroBD.PuCoId=this._PuCoId;
         }
-
-        console.log(this.pcMaestroBD);
 
         //mandando al rest
         this.pcontrolService.savePuntoControl(this.pcMaestroBD)
@@ -802,8 +799,6 @@ export class PcontrolComponent implements OnInit{
 
             let n = this.pcDetalle.PuCoDeOrden; // n = 4
             while( n <this.pCArrayDetalleBD.length){  //4 < 8
-                console.log("n : "+n); /*TENERLO PRESENTE, PARA CORREGIR EL ERROR QUE APARECE*/
-                console.log("this.pCArrayDetalleBD[n].PuCoDeOrden: "+(n+1));
                 this.pCArrayDetalleBD[n].PuCoDeOrden =   (n+1); 
                 n++;
             }
@@ -912,7 +907,6 @@ export class PcontrolComponent implements OnInit{
 
        //VERIFICANDO QUE LA SUMATORIA DE TIEMPO DE PC SEA LA MISMA QUE LA CABECERA
        if(this.horaReg == su){
-           /*console.log("IGUALES =D");*/
            //GUARDANDO NUEVA LISTA DE PUNTOS, Y LONG ES DIFERENTE DE CERO
             if(this.editando == 0 && this.pCArrayDetalleBD.length!=0){ //0 : nuevo registro
                 //console.log(this.pCArrayDetalleBD);
@@ -933,8 +927,6 @@ export class PcontrolComponent implements OnInit{
 
             //SE ESTA EDITANDO LISTADO EXISTENTE, LONG ES DIFERENTE DE CERO
             }else if(this.editando == 1 && this.pCArrayDetalleBD.length!=0){ //1 : editando registro existente
-                /*console.log(this.pCArrayDetalleBD);
-                console.log("se edito un registro existente");*/
                 //BORRANDO TODOS LOS REGISTROS DETALLE EN LA BD POR EL PUCOID Y PONER LOS NUEVOS ENCIMA
                 
                 this.pcontrolService.deletePuntoControlDetalleByRu(this.idDetalle).subscribe(
@@ -1091,8 +1083,8 @@ export class PcontrolComponent implements OnInit{
 
     //BOTON NUEVOS PUNTOS DE CONTROL (DETALLE)
     nuevosPuntos(){
-        this.desNuevosPuntos = true;
-        this.activeAddMarker = 1 ; //addmarker activado
+       this.desNuevosPuntos = true;
+       this.activeAddMarker = 1 ; //addmarker activado
        this.editando == 0; //NUEVOS PUNTOS DE CONTROL
        this.mensaje="Ingrese los Nuevos Puntos Sobre El Mapa";
        this.displayNuevosPuntos=true;
@@ -1104,22 +1096,14 @@ export class PcontrolComponent implements OnInit{
     }
      //CANCELAR EL MARCADOR QUE SE AGREGA EN EL MAPA ADDMARKER
     cancelarPuntoControlDetalle(){
-        
-        //console.log("cancelado");
         this.indexOverlays=this.overlays.length; //tamaño del array objetos
-        //console.log(this.indexOverlays);
 
         this.overlays[this.indexOverlays - 1].setMap(null); // ultimo marcador (CIRCULO)
         this.overlays[this.indexOverlays - 2].setMap(null); // penultimo marker (MARKER)
         this.overlays.splice(this.indexOverlays-2, 2); //QUITANDO 2 ELEMENTOS DESDE LA POSICION THIS.INDEXOBERLAYS -2 
-        //this.overlays.length = this.overlays.length;
         
         this.indexOverlays=this.overlays.length;
-        console.log("long array: "+this.indexOverlays);
         this.displayNuevoPunto = false;
-        
-        //borrar marker
-        //borrar registro del datable (con consulta)
     }
 
     //zoom + al mapa
@@ -1323,64 +1307,3 @@ var coords={
         lng : 0 
 }
 
-
-   //SUMANDO TODOS LOS TIEMPOS ENTRE CADA PUNTO PARA HACER EL CALCULO 
-        //console.log(timePc[i]); console.log(_arrTiempos[j][i]); console.log("i: "+i+" -- "+"j: "+j);
-     /*   
-        for(let i=0; i<3; i++){
-            while(j<_arrTiempos.length){
-                timePc[i]=timePc[i]+_arrTiempos[j][i];
-                j++;
-            }
-            j=0;
-        }
-        
-        console.log(timePc);
-        //CALCULANDO LOS MINUTOS Y SEGUNDOS 
-        let smax=60, res , mmax=60;
-        
-        //MINUTOS Y SEGUNDOS
-        res = this.calMinSeg(timePc[2],smax );
-        if(timePc[2] != res[1] || timePc[1] != res[0]){
-            timePc[2] = res[1]; //RESTO 
-            timePc[1] = timePc[1] + res[0]; //SUMANDO MINUTOS ADICIONALES
-        }else if(timePc[2] == res[1] && timePc[1] == res[0]){
-            //NO HACER NADA
-        }
-        
-        //HORAS
-        res = this.calMinSeg(timePc[1],mmax );
-        if(timePc[1] != res[0]){
-            timePc[1] = res[1]; 
-            timePc[0] = timePc[0] + res[0];
-        }else if(timePc[1] == res[0]){
-            //NO HACER NADA
-        }
-        su = this.cCeroHora(timePc.join(':'));
-        return su;
-        }
-
-        calMinSeg(dividendo:number, segminmax:number){
-            let tx=[0,0], r,c=1;
-            r=dividendo - segminmax;
-            //console.log("1ERO ----> r: "+r+" -- "+"dividendo: "+dividendo+"  --- "+"cociente :"+c);
-            if(r>=0){
-                while( r >= segminmax ){
-                    dividendo = r;
-                    r = dividendo - segminmax; 
-                    //console.log("* r: "+r+" -- "+"dividendo: "+dividendo+"  --- "+"cociente :"+c);
-                    dividendo = r;
-                    c++;
-                    //console.log("** r: "+r+" -- "+"dividendo: "+dividendo+"  --- "+"cociente :"+c);
-                }
-                if(r<segminmax){
-                    tx[0]=c;  tx[1]=r;   
-                }
-            }else if(r<0){
-                c=0;  tx[1]=r+segminmax; tx[0]=0;
-            }
-            //console.log("ULT   ----> r: "+r+" -- "+"dividendo: "+dividendo+"  --- "+"cociente :"+c);
-            console.log("resultado: "+tx);
-            return tx;
-        }
-    */

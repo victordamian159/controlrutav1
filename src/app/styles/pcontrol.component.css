@@ -25,6 +25,8 @@
      width:75px; 
     height:40px; 
     font-size: 12px;
+    background-color:#4CAF50;
+
 }
 
 #btnMap{
@@ -38,6 +40,10 @@
     font-size: 16px;
     text-align: center;
     list-style-type: none;*/
+}
+
+#btnTable{
+    background-color: #4CAF50;
 }
 
 #mapa{

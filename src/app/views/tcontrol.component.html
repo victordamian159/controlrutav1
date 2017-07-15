@@ -48,9 +48,6 @@
                     </p-column>
 
                     <p-column field="nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
-                    <!--<p-column field="PuCoId" header="Descripcion P. Control"  [style]="{'width':'17em'}"></p-column>
-                    <p-column field="rutaDescripcion" header="Puntos"  [style]="{'width':'9em'}"></p-column>-->
-                    <!--<p-column field="BuId" header="BuId"  [style]="{'width':'9em'}"></p-column>-->
                     <p-column field="BuDescripcion" header="Descripcion Bus"  [style]="{'width':'17em'}"></p-column>
                     <p-column field="BuPlaca" header="Placa"  [style]="{'width':'8em','text-align':'center'}"></p-column>
                     <p-column field="TaCoFecha" header="Fecha"  [style]="{'width':'9em','text-align':'center'}"></p-column>
@@ -176,8 +173,12 @@
 
         <!--BOTONES-->
         <div class="row">
-            <button class="btn_modal" type="button" pButton (click)="guardarTarjeta()" [disabled]="!PC.valid || !PROG.valid || !fprog.valid || !hsal.valid || !cuota.valid || this.actRadioButton" label="Guardar"></button>
-            <button class="btn_modal" type="button" pButton  (click)="cancelarTarjeta()" label="Cancelar"></button>
+            <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
+                <button class="btn_modal" type="button" pButton (click)="guardarTarjeta()" [disabled]="!PC.valid || !PROG.valid || !fprog.valid || !hsal.valid || !cuota.valid || this.actRadioButton" label="Guardar"></button>
+            </div>
+            <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
+                <button class="btn_modal" type="button" pButton  (click)="cancelarTarjeta()" label="Cancelar"></button>
+            </div>
         </div>
         
     </p-dialog>

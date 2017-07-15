@@ -175,7 +175,7 @@
 
                         <!--ACTIVO (SI ESTA O NO CIRCULANDO EN LA EMPRESA)-->
                         <div class="form-group">
-                            <label class="control-label" for="act">En Circulacion:</label>
+                            <label class="control-label" for="act"> Registro Activo:</label>
                             <input class="form-control" id="act" name="act"  type="text" [(ngModel)]="bus.BuActivo" required #act="ngModel" />
                             
                             <span *ngIf="!act.valid && act.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  

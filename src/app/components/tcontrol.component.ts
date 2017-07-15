@@ -166,29 +166,30 @@ export class TcontrolComponent implements OnInit{
         );
     }
     rutaId(event:Event){
-        console.log(this._ruId);
+        /*console.log(this._ruId);*/
         this.getAllPControlBy(this.emID,this._ruId);
     }
 
     /* CONSULTAR TODOS LOS PUNTOS DE CONTROL EXISTENTES */
     getAllPControlBy(emId: number, ruId:number){
         this.pcontrolService.getAllPuntoControlByEmRu(emId, ruId).subscribe(
-            data => {this.ptsControl = data},
+            data => {this.ptsControl = data;},
             err  => {this.errorMessage = err},
             ()   => this.isLoading = false
         );
     }
+
+    /* COMBO PUNTO CONTROL */
     pControlId(event:Event){
-        console.log(this._pcId);
         this.getalltarjetasbyemidpucoid(this.emID,this._pcId);
     }
 
     /* CONSULTA PARA GIRLLA PRINCIPAL */
     getalltarjetasbyemidpucoid(emId:number, PuCoId : number){
         this.tcontrolservice.getAllTarjetaControlByempuco(emId, PuCoId).subscribe(
-            data => {this.allTarjControl=data; 
-                     console.log(this.allTarjControl); 
-                     this.mgTarjetasControl();
+            data => {
+                      this.allTarjControl=data; 
+                      this.mgTarjetasControl();
                     },
             err  => {this.errorMessage=err},
             ()   => this.isLoading=false
@@ -244,8 +245,6 @@ export class TcontrolComponent implements OnInit{
                 prId:prog.prId
             });
         }
-        //console.log(this.programacion);
-        //console.log(this._programacion);
     }
 
     //GRILLA PROGRAMACION DETALLE  -  POR LA FECHA
@@ -327,19 +326,7 @@ export class TcontrolComponent implements OnInit{
         );
     }
 
-
-    /*CONSULTA PROVICIONAL-- REEMPLAZAR POR OTRA QUE PASE RONALD PARA MOSTRAR GRILLA
-    getalltarjetacontrol(){
-        this.tcontrolservice.getAllTarjetas().subscribe(
-            data => {this.allTarjControl=data; 
-                     //console.log(this.allTarjControl); 
-                     this.mgTarjetasControl();},
-            err  => {this.errorMessage=err},
-            ()   => this.isLoading=false
-        );
-    }*/
-
-    //MOSTRAR PUNTOS DE CONTROL
+    //MOSTRAR PUNTOS DE CONTROL COMBOBOX
     mgPuntosControl(){
         this._puntosControl=[];
         for(let puntos of this.puntosControl){
@@ -368,13 +355,8 @@ export class TcontrolComponent implements OnInit{
                 BuDescripcion:TarjControl.BuDescripcion,
                 TaCoFecha:this._fecha(TarjControl.TaCoFecha),
                 TaCoHoraSalida:this._hora(TarjControl.TaCoHoraSalida),
-                TaCoId:TarjControl.TaCoId
-                /*TaCoCuota:TarjControl.TaCoCuota,
-                BuId:TarjControl.BuId,
-                UsFechaReg:TarjControl.UsFechaReg,
-                UsId:TarjControl.UsId,
-                RuId:TarjControl.RuId,
-                PuCoId:TarjControl.PuCoId*/
+                TaCoId:TarjControl.TaCoId,
+                PuCoId:TarjControl.PuCoId
             });
             
         }
@@ -384,25 +366,6 @@ export class TcontrolComponent implements OnInit{
         for(let i=0; i<this._allTarjControl.length; i++){
             this._allTarjControl[i].nro = i+1;
         }
-
-        /*
-            BUID POR NRO PLACA    this.placas 
-            while(j < this._allTarjControl.length){
-                while(k<this.placas.length && cen==0){
-                    if(this._allTarjControl[j].BuId == this.placas[k].BuId){
-                        this._allTarjControl[j].placa=this.placas[k].BuPlaca; 
-                        cen=1;
-                    }else if(this._allTarjControl[j].BuId != this.placas[k].BuId){
-                        k++;
-                    }
-                }
-                k=0;
-                cen=0;
-                j++;
-            }
-        */
-       
-  
     }
 
     //CONSULTA TARJETAS DE CONTROL BY ID ---NO ESTA EN USO
@@ -470,18 +433,18 @@ export class TcontrolComponent implements OnInit{
         this.displayEditarTarjeta = false;
     }
 
-    //SELECCIONAR TARJETA CONTROL (CABECERA- GRILLA)
+    /*SELECCIONAR REGISTRO TARJETA CONTROL (CABECERA- GRILLA)*/
     onRowSelectCabecera(event){
         this.tarjeta._TaCoId=0; 
         this.tarjeta._TaCoId = event.data.TaCoId;
-        //console.log(this.tarjeta._TaCoId);  //console.log(this.progD_BD);  //console.log(this._tarjetaDetalle); //this.progD_BD=data;
 
         this.tcontrolservice.getAllTarjetaControlDetalleBytaCoId(this.tarjeta._TaCoId).subscribe(
-            data => { this._tarjetaDetalle = data;  this.mgTarjetaDetalle();  }
+            data => { this._tarjetaDetalle = data;  
+                      this.mgTarjetaDetalle();  }
         );
     }
 
-    //MOSTRAR RESULTADO DETALLE EN GRILLA
+    /*MOSTRAR RESULTADO DETALLE EN GRILLA*/
     mgTarjetaDetalle(){
         this._allTarjDetalle = [];
         for(let tDetalle of this._tarjetaDetalle){
@@ -500,118 +463,14 @@ export class TcontrolComponent implements OnInit{
                 UsId:tDetalle.UsId
             });
         }
-
         //ASIGNADO SU NUMERACION
         for(let i=0; i<this._allTarjDetalle.length; i++){
             this._allTarjDetalle[i].nro = i+1;
         }
-        console.log(this._allTarjDetalle);
-    }
-
-
-
-    //CONVERTIR STRING A DATE FORMULARIO A BD  HORAS
-    hora(fecha : string) : Date{
-        //FECHA               
-        let thoy:Date,  otra:Date, horaTarjeta:string;
-        thoy=new Date();
-        if(fecha.length<=5){ fecha = fecha+":00"; }
-        horaTarjeta=fecha;
-        let resultado=horaTarjeta.split(':');
-        otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));    
-        //console.log(otra);
-        return otra; 
-        
-    }
-
-    //CONVERTIR DATE A STRING DE BD A FORMULARIO HORAS
-    _hora(fecha : Date) :string{
-        let hora : string; let _hora : string; let _fecha = new Date(fecha);
-        _hora =  (_fecha.getHours()).toString();
-            hora = _hora + ":"+_fecha.getMinutes()+":"+_fecha.getSeconds();
-
-            hora = this.cCeroHora(hora);
-        return hora;
-    }
-
-
-    //COMPLETANDO CEROS EN CASO DE NECESITAR PARA HORAS Y FECHAS   2017/
-    cCeroHora(h:string) :string{
-            //DIVIDIRLO EN PARTES Y COMPLETAR LOS CEROS PARA QUE LOS ELEMENTOS SEAN TODOS PARES
-            let hora : string, _hora :string, resultado, i=0;
-            resultado = h.split(':');
-            while(i<resultado.length){
-                if(resultado[i].length%2!=0){
-                    resultado[i]="0"+resultado[i];
-                }
-                i++;
-            }
-            //CONCATENANDO
-            _hora=resultado[0]+":"+resultado[1]+":"+resultado[2];
-            /*
-                let thoy:Date,  otra:Date, horaTarjeta:string;
-                thoy=new Date();
-                if(fecha.length<=5){ fecha = fecha+":00"; }
-
-                horaTarjeta=fecha;
-                let resultado=horaTarjeta.split(':');
-
-                otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));    
-                console.log(otra);
-                return otra; 
-            */
-        return _hora;
-    }
-
-    cCeroFecha(f : string) :string{
-        let fecha:string, _fecha:string, resultado, i=0;
-        resultado = f.split('/');
-        while(i<resultado.length){
-            resultado[i]=resultado[i].trim(); //BORRANDO ESPACIOS EN BLANCO
-            if(resultado[i].length%2!=0){
-                resultado[i]="0"+resultado[i];
-            }
-            i++;
-        }
-        //CONCATENANDO
-        _fecha=resultado[0]+"/"+resultado[1]+"/"+resultado[2];
-        
-        return _fecha
-    }
-
-  
-    //CONVERTIR STRING A DATE PARA FECHA   ----   FORMULARIO A BD   2017/03/31  2017-03-31
-    fecha(fecha: string) : Date{
-        let thoy:Date , _thoy:Date, _fecha:string;
-        thoy = new Date();
-        _fecha = fecha;
-        let resultado=_fecha.split('-');
-        _thoy = new Date(  Number(resultado[0]),  Number(resultado[1])-1 ,  Number(resultado[2]));
-        return _thoy;
-    }
-
-    //CONVERTIR DATE A STRING PARA FECHA  - ---   BD A GRILLA
-    _fecha(fecha: Date) :string{
-        let fechaProg : string; let _fechaProg : string; let _fecha = new Date(fecha);  
-        _fechaProg=(_fecha.getFullYear()).toString() +" / "+ (_fecha.getMonth()+1 ).toString() +" / "+(_fecha.getDate()).toString() ;
-        _fechaProg=this.cCeroFecha(_fechaProg);
-        return  _fechaProg;
     }
 
   //AQUI SE GUARDA TANTO CABECERA COMO DETALLE Y SE EDITA LA TABLA PROGRAMACIONDETALLE EL CAMPO ASIGNADO
     guardarTarjeta(){
-        /*VALIDANDO DATOS INGRESADOS
-        let error=[
-            {nomb:"Puntos De Control", val:0},
-            {nomb:"Programacion", val:0},
-            {nomb:"Fecha de la Programacion", val:0},
-            {nomb:"Lista de Placas", val:0},
-            {nomb:"Estado", val:0},
-            {nomb:"Hora de Salida", val:0},
-            {nomb:"Cuota", val:0}
-        ];*/
-
-       
             //NUEVO REGISTRO
             if(this.tarjeta._TaCoId == 0){
                 //SUBIENDO DATOS AL OBJETO TARJETA this.tarjeta._prId = id;
@@ -669,32 +528,40 @@ export class TcontrolComponent implements OnInit{
         this.displayAsignarTarjeta = false;
     }
    
+    /* BOTON ELIMINAR REGISTRO*/
+    eliminarC(TaCoId :number){
+        console.log(TaCoId);
+        this._TaCoId = TaCoId;
 
-    eliminarC(PuCoId :number){
-        console.log(PuCoId);
-        this._PuCoId = PuCoId;
         this.displayConfirmarEliminar = true;
        this.mensaje ="¿Esta Seguro de Eliminar el Registro?";
     }
 
+    /* PROCEDURE ELIMINAR REGISTRO*/
     _eliminarC(){
-         this.tcontrolservice.deleteTarjetaControl(this._PuCoId).subscribe(
-            realizar =>{/*this.getalltarjetacontrol();*/
+         this.tcontrolservice.deleteTarjetaControl(this._TaCoId).subscribe(
+            realizar =>{
                         this.displayConfirmarEliminar = false;    
+                        this.getalltarjetasbyemidpucoid(this.emID,this._pcId);
                     },
             err => {console.log(err);}
         );
     }
+
+    /* BOTON CANCELAR ELIMINAR*/
     cancelar_eliminarC(){
         this._PuCoId = 0;
         this.displayConfirmarEliminar = false;
     }
+    
+    /* BOTON EDITAR REGISTRO CABECERA */
     editarC(taCoId: number){
         this.displayEditarTarjeta=true;
         //RECUPERAR EL OBJETO DESDE LA BD PARA EDITARLO
         this.tcontrolservice.getAllTarjetaControlById(taCoId).subscribe(
             data => {this.tarjeta=data; 
-                console.log(this.tarjeta);},
+                    /* REFRESCAR GRILLA */
+                    },
             err => {this.errorMessage = err},
             () => this.isLoading=false    
         );
@@ -704,7 +571,6 @@ export class TcontrolComponent implements OnInit{
 
     //SELECCIONAR PUNTOS DE CONTROL DEL COMBOBOX
     puntosControlId(event:Event){
-        //console.log(this.puntoControl);
         this.idPunto = this.puntoControl.PuCoId;
         let ruID = this.puntoControl.RuId;
 
@@ -717,18 +583,15 @@ export class TcontrolComponent implements OnInit{
 
     //SELECCIONAR PROGRAMACION COMBOBOX
     programacionId(event:Event){
-        /*console.log(this._prId);*/
         this.tarjeta._prId=this._prId;
     }
 
     //SELECCIONAR PLACA DE BUS COMOBOBOX
     placaObj(event : Event){
         this.val=0;
-        //console.log(this.placa);
         this._prDeId = this.placa.PrDeId;
         this.tarjeta._BuId=this.placa.BuId;
         this.val = this.placa.PrDeAsignadoTarjeta;
-        //console.log(this._prDeId+"_"+this.tarjeta._BuId+"_"+this.val);
     }
 
     editarDetalle(pucodeid:number){
@@ -743,6 +606,82 @@ export class TcontrolComponent implements OnInit{
         this.tarjeta._BuId=obj.BuId;
         this.val = obj.PrDeAsignadoTarjeta;
     }
+
+/* PONER EN UNA CLASE GLOBAL*/
+    //CONVERTIR STRING A DATE FORMULARIO A BD  HORAS
+    hora(fecha : string) : Date{
+        //FECHA               
+        let thoy:Date,  otra:Date, horaTarjeta:string;
+        thoy=new Date();
+        if(fecha.length<=5){ fecha = fecha+":00"; }
+        horaTarjeta=fecha;
+        let resultado=horaTarjeta.split(':');
+        otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));    
+        //console.log(otra);
+        return otra; 
+        
+    }
+
+    //CONVERTIR DATE A STRING DE BD A FORMULARIO HORAS
+    _hora(fecha : Date) :string{
+        let hora : string; let _hora : string; let _fecha = new Date(fecha);
+        _hora =  (_fecha.getHours()).toString();
+            hora = _hora + ":"+_fecha.getMinutes()+":"+_fecha.getSeconds();
+
+            hora = this.cCeroHora(hora);
+        return hora;
+    }
+
+    //COMPLETANDO CEROS EN CASO DE NECESITAR PARA HORAS Y FECHAS   2017/
+    cCeroHora(h:string) :string{
+            //DIVIDIRLO EN PARTES Y COMPLETAR LOS CEROS PARA QUE LOS ELEMENTOS SEAN TODOS PARES
+            let hora : string, _hora :string, resultado, i=0;
+            resultado = h.split(':');
+            while(i<resultado.length){
+                if(resultado[i].length%2!=0){
+                    resultado[i]="0"+resultado[i];
+                }
+                i++;
+            }
+            //CONCATENANDO
+            _hora=resultado[0]+":"+resultado[1]+":"+resultado[2];
+        return _hora;
+    }
+
+    cCeroFecha(f : string) :string{
+        let fecha:string, _fecha:string, resultado, i=0;
+        resultado = f.split('/');
+        while(i<resultado.length){
+            resultado[i]=resultado[i].trim(); //BORRANDO ESPACIOS EN BLANCO
+            if(resultado[i].length%2!=0){
+                resultado[i]="0"+resultado[i];
+            }
+            i++;
+        }
+        //CONCATENANDO
+        _fecha=resultado[0]+"/"+resultado[1]+"/"+resultado[2];
+        
+        return _fecha
+    }
+  
+    //CONVERTIR STRING A DATE PARA FECHA   ----   FORMULARIO A BD   2017/03/31  2017-03-31
+    fecha(fecha: string) : Date{
+        let thoy:Date , _thoy:Date, _fecha:string;
+        thoy = new Date();
+        _fecha = fecha;
+        let resultado=_fecha.split('-');
+        _thoy = new Date(  Number(resultado[0]),  Number(resultado[1])-1 ,  Number(resultado[2]));
+        return _thoy;
+    }
+
+    //CONVERTIR DATE A STRING PARA FECHA  - ---   BD A GRILLA
+    _fecha(fecha: Date) :string{
+        let fechaProg : string; let _fechaProg : string; let _fecha = new Date(fecha);  
+        _fechaProg=(_fecha.getFullYear()).toString() +" / "+ (_fecha.getMonth()+1 ).toString() +" / "+(_fecha.getDate()).toString() ;
+        _fechaProg=this.cCeroFecha(_fechaProg);
+        return  _fechaProg;
+    }
+
 }
 
 

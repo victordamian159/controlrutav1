@@ -51,6 +51,11 @@ row{
     display: flex;
     justify-content: center;
     flex-grow: 5;
+    background-color:#4CAF50;
+}
+
+#btnTable{
+    background-color: #4CAF50;
 }
 
 .table{
