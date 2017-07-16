@@ -25,10 +25,10 @@
             
             <!--TABLA CABECERA-->
             <div class="row table table-responsive">
-                <p-dataTable [value]="pCMaestroMostrar" [rows]="3" [paginator]="true" [pageLinks]="2" [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" selectionMode="single" 
+                <p-dataTable [value]="pCMaestroMostrar" [rows]="5" [paginator]="true" [pageLinks]="2" [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" selectionMode="single" 
                  emptyMessage="Lista vacia"  [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">     
 
-                    <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
                         <template let-col let-pcMostrar="rowData" pTemplate="body">
                             <button id="btnTable" type="button" pButton class="btn" (click)=  "editarMaestro(pcMostrar.PuCoId)" icon="fa-pencil-square-o" > </button>                  
                             <button id="btnTable" type="button" pButton class="btn" (click)= "eliminarMaestro(pcMostrar.PuCoId)" icon="fa-trash">  </button>
@@ -48,24 +48,26 @@
                 </p-dataTable>
             </div>
 
-            <!--TABLA DETALLE-->
-            <p>Puntos de Control</p>
-            <div class="row table table-responsive">
-                <p-dataTable [value]="pCDetalleMostrar" [rows]="4" [paginator]="true" [pageLinks]="4" emptyMessage="Seleccione Una Lista de Punto de Control" [rowsPerPageOptions]="[4,6]"
-                    [globalFilter]="filtroGlobal"  scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar"  (onRowSelect)="onRowSelectDetalle($event)">
+            <!--
+                TABLA DETALLE
+                <p>Puntos de Control</p>
+                <div class="row table table-responsive">
+                    <p-dataTable [value]="pCDetalleMostrar" [rows]="4" [paginator]="true" [pageLinks]="4" emptyMessage="Seleccione Una Lista de Punto de Control" [rowsPerPageOptions]="[4,6]"
+                        [globalFilter]="filtroGlobal"  scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar"  (onRowSelect)="onRowSelectDetalle($event)">
+                        
+                        <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                            <template let-col let-pcDetalle="rowData" pTemplate="body">                                        
+                                <button id="btnTable"  type="button" pButton class="btn" (click)="editarDetalle(pcDetalle.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
+                                <button id="btnTable"  type="button" pButton class="btn" (click)="eliminarDetalle(pcDetalle.PuCoDeId)" icon="fa-trash"> </button>
+                            </template>
+                        </p-column>
+                        <p-column field="PuCoDeOrden"      header="N°"   [style]="{'width':'4em','text-align':'center'}"  ></p-column>
+                        <p-column field="PuCoDeDescripcion" header="Lugar"  [style]="{'width':'12em'}"></p-column>
+                        <p-column field="PuCoDeHora"        header="Hora"      [style]="{'width':'6em'}"></p-column>
                     
-                    <p-column styleClass="col-button" [style]="{'width':'6em'}">
-                        <template let-col let-pcDetalle="rowData" pTemplate="body">                                        
-                            <button id="btnTable"  type="button" pButton class="btn" (click)="editarDetalle(pcDetalle.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
-                            <button id="btnTable"  type="button" pButton class="btn" (click)="eliminarDetalle(pcDetalle.PuCoDeId)" icon="fa-trash"> </button>
-                        </template>
-                    </p-column>
-                    <p-column field="PuCoDeOrden"      header="N°"   [style]="{'width':'4em','text-align':'center'}"  ></p-column>
-                    <p-column field="PuCoDeDescripcion" header="Lugar"  [style]="{'width':'12em'}"></p-column>
-                    <p-column field="PuCoDeHora"        header="Hora"      [style]="{'width':'6em'}"></p-column>
-                
-                </p-dataTable>
-            </div>
+                    </p-dataTable>
+                </div>
+            -->
         </div>
 
         <!--GRAFICOS -->
@@ -273,7 +275,7 @@
         </p-dialog>
 
         <!--CLICK SOBRE UN OBJETO-->
-        <p-dialog [(visible)]="displayOnObjec" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayAddMarker" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">

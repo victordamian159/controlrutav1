@@ -126,7 +126,7 @@ export class PcontrolComponent implements OnInit{
     displayListaPuntos: boolean = false; 
     displayElimRegCabecera: boolean = false;
     displayElimRegDetalle: boolean = false;
-    displayOnObjec : boolean =false;
+    displayAddMarker : boolean =false; /* CLICK SOBRE ALGUN OBJETO */
     displayMapaClick : boolean = false;
     displayErrorEditarPuntos : boolean = false;
     displayErrorEditar : boolean = false;
@@ -236,7 +236,8 @@ export class PcontrolComponent implements OnInit{
 
     //click sobre el mapa y abrir modal para add Marker
     handleMapClick(event){
-        //condicional para hacer click sobre el mapa y addmarker
+        /*CONDICIONAL CLICK SOBRE EL MAPA y addmarker*/
+
         if(this.activeAddMarker == 1){ //addmarker activado
             //mostrar modal addmarker
             this.selectedPosition = event.latLng;
@@ -256,8 +257,50 @@ export class PcontrolComponent implements OnInit{
             this.displayMapaClick=true;
             //console.log("No Puede Agregar Marcadores");
         }
-      
     }
+
+     //click sobre una forma (marcador, lineas u otras) //borrando puntos con click sobre ellos
+    handleOverClick(event){
+        let isMarker = event.overlay.getTitle != undefined;
+        let isCircle = event.overlay.getRadius != undefined;
+        let isPolyline = event.overlay.getPath != undefined;
+
+        if(this.activeAddMarker == 1){
+            /* CONDICIONAL MARCADOR O NO */
+            if(isMarker==true){
+                console.log("Marcador");
+                /* ABRIR VENTANA DE PARA EDITAR REGISTRO */
+            }else if(isCircle==true){
+                console.log("circulo");
+                /* AGREGAR MARCADOR */
+                this.overlays.push(new google.maps.Marker({
+                    position: {lat: event.originalEvent.latLng.lat(), 
+                                lng: event.originalEvent.latLng.lng()},
+                    title:"$",
+                    draggable: false             
+                }));
+            }else if(isPolyline==true){
+                console.log("Polyline");
+                /* AGREGAR MARCADOR */
+                this.overlays.push(new google.maps.Marker({
+                    position: {lat: event.originalEvent.latLng.lat(), 
+                               lng: event.originalEvent.latLng.lng()},
+                    title:"$",
+                    draggable: false             
+                }));
+            }
+        }else if(this.activeAddMarker == 0){
+            this.mensaje = "No Puede Agregar Punto de Control :("
+            this.displayAddMarker = true;
+        }        
+    }
+
+     //ACEPTAR PUEDE AGREGAR MARKER 
+    aceptarClickObjeto(){
+        this.mensaje="";
+        this.displayAddMarker=false;
+    }
+
 
     aceptarModalAgregarMarker(){
         this.mensaje="";
@@ -266,6 +309,7 @@ export class PcontrolComponent implements OnInit{
     //CLICK SOBRE EL OBJETO --- ESTA FUNCION PARECE Q NO FUNCIONA :/
     handleOverlayClick(event) {
         console.log("CLICK SOBRE EL OBJETO: handleOverlayClick");
+        console.log(event);
     }
 
     //FUNCION DRAG OBJETO (ARRASTRAR OBJETO)
@@ -321,28 +365,7 @@ export class PcontrolComponent implements OnInit{
         }
     }
 
-    //click sobre una forma (marcador, lineas u otras) //borrando puntos con click sobre ellos
-    handleOverClick(event){
-        //this._selectedPosition=event.latLng;
-        console.log(event);
-        console.log(event.originalEvent.latLng.lat());
-        console.log(event.originalEvent.latLng.lng());
-        
-        this.overlays.push(new google.maps.Marker({
-                    position: {lat: event.originalEvent.latLng.lat(), lng: event.originalEvent.latLng.lng()},
-                    title:"$",
-                    draggable: false             
-            }));
-
-        this.mensaje = "Acaba de Seleccionar Un Objeto sobre Mapa"
-        this.displayOnObjec = true;
-    }
-
-     //ACEPTAR CLICK SOBRE OBJETO
-    aceptarClickObjeto(){
-        this.mensaje="";
-        this.displayOnObjec=false;
-    }
+   
     //AGREGAR MARCADOR AL MAPA (PUNTOS DE CONTROL)
     addmarker(){
         //ACTIVANDO BOTONES SEGUN EL TAMAÑO DE OBJETOS Y DE PUNTOSCONTROL EN SU RESPECTIVO ARRAY
