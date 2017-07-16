@@ -115,9 +115,11 @@
                 <label class="control-label" for="descr">Descripcion:</label>
                 <input class="form-control" id="descr" name="descripcion"  type="text" 
                         [(ngModel)]="descr" #desc="ngModel" required/>
-                <!--<span *ngIf="!desc.valid && (desc.touched || desc.dirty )" class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                <!--
+                    <span *ngIf="!desc.valid && (desc.touched || desc.dirty )" class="alert alert-danger" style="display: inline-block; font-size: 80%;">
                     <div [hidden]="!desc.errors.required">obligatorio</div>
-                </span>-->
+                    </span>
+                -->
                 <div [hidden]="!desc.touched || desc.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
                     Error en los datos ingresados
                 </div>

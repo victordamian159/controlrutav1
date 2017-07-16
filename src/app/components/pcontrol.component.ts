@@ -220,10 +220,12 @@ export class PcontrolComponent implements OnInit{
      /* FUNCION RUID COMBOBOX*/
     _rutaid(event:Event){
         console.log(this._ruid);
+        this.pcMaestro.RuId=this._ruid;
+        /* CONSULTA PARA GRILLA PRINCIPAL */
         this.getAllPuntoControlByEmRu(this.emID,this._ruid);
     }
 
-    //para mostrar en la grilla de programaciones  (MOSTRAR EN GRILLA)
+    /* CONSULTA PARA GRILLA PRINCIPAL */
     getAllPuntoControlByEmRu(emId: number, ruId: number){
         this.pcontrolService.getAllPuntoControlByEmRu(emId,ruId)
         .subscribe(
@@ -264,6 +266,12 @@ export class PcontrolComponent implements OnInit{
         let isMarker = event.overlay.getTitle != undefined;
         let isCircle = event.overlay.getRadius != undefined;
         let isPolyline = event.overlay.getPath != undefined;
+        let lat:any, lng:any;
+
+        lat=0; lng=0;
+
+        lat = event.originalEvent.latLng.lat();
+        lng = event.originalEvent.latLng.lng();
 
         if(this.activeAddMarker == 1){
             /* CONDICIONAL MARCADOR O NO */
@@ -274,8 +282,9 @@ export class PcontrolComponent implements OnInit{
                 console.log("circulo");
                 /* AGREGAR MARCADOR */
                 this.overlays.push(new google.maps.Marker({
-                    position: {lat: event.originalEvent.latLng.lat(), 
-                                lng: event.originalEvent.latLng.lng()},
+                    /*position: {lat: event.originalEvent.latLng.lat(), 
+                                lng: event.originalEvent.latLng.lng()},*/
+                    position:{lat:lat, lng:lng},
                     title:"$",
                     draggable: false             
                 }));
@@ -283,8 +292,9 @@ export class PcontrolComponent implements OnInit{
                 console.log("Polyline");
                 /* AGREGAR MARCADOR */
                 this.overlays.push(new google.maps.Marker({
-                    position: {lat: event.originalEvent.latLng.lat(), 
-                               lng: event.originalEvent.latLng.lng()},
+                    /*position: {lat: event.originalEvent.latLng.lat(), 
+                               lng: event.originalEvent.latLng.lng()},*/
+                    position:{lat:lat, lng:lng},
                     title:"$",
                     draggable: false             
                 }));
@@ -690,7 +700,7 @@ export class PcontrolComponent implements OnInit{
         }else if(this._PuCoId != 0){ 
             this.pcMaestroBD.PuCoId=this._PuCoId;
         }
-
+        console.log(this.pcMaestroBD);
         //mandando al rest
         this.pcontrolService.savePuntoControl(this.pcMaestroBD)
         .subscribe(realizar => {this.getAllPuntoControlByEmRu(1,58); //RECARGANDO LA GRILLA
@@ -1296,25 +1306,25 @@ export class PcontrolComponent implements OnInit{
 
         //SUMANDO TODOS LOS TIEMPOS ENTRE CADA PUNTO PARA HACER EL CALCULO 
         let r;
-        console.log(_arrTiempos);
-        console.log("long: "+_arrTiempos.length);
+        //console.log(_arrTiempos);
+        //console.log("long: "+_arrTiempos.length);
         while(i<_arrTiempos.length-1){
-            console.log(_arrTiempos[i+1][1]+" <- - -> "+_arrTiempos[i][1]);
+            //console.log(_arrTiempos[i+1][1]+" <- - -> "+_arrTiempos[i][1]);
             if(_arrTiempos[i+1][1]>_arrTiempos[i][1]){
                 r=_arrTiempos[i+1][1]-_arrTiempos[i][1];
                 j = j + r;
-                console.log("> j: "+j);
+                //console.log("> j: "+j);
             }else if(_arrTiempos[i+1][1]<_arrTiempos[i][1]){
                 r = 60 - _arrTiempos[i][1];
                 j = j + r;
                 j = j + _arrTiempos[i+1][1];
-                console.log("< j: "+j);
+                //console.log("< j: "+j);
             }
-            console.log("i: "+i);
+            //console.log("i: "+i);
             i++;
             
         }
-        console.log("j: "+j);
+       //console.log("j: "+j);
         
 
         tx="00:03:45";
