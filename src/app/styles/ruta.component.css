@@ -26,6 +26,11 @@ row{
     margin-bottom: 20px;
 }
 
+
+.btn_Modal{
+    margin-top: 30px;
+}
+
 #mapa{
     margin-top:20px;
     margin-left:-10px;
@@ -84,7 +89,7 @@ row{
     margin:0;*/
     width:100%; 
     height:40px; 
-    font-size:13px;
+    font-size:15px;
     background-color:#4CAF50;
     text-align: center;
 }
@@ -96,6 +101,7 @@ row{
     background: #4CAF50; 
 }
 
+/* MODIFICANDO ESTILO PARA LOS INPUTS Y SU VALIDACION */
 .form-group{
     margin:0;
     padding-bottom:18px;
@@ -111,9 +117,7 @@ row{
     position: absolute;
 }
 
-.btn_Modal{
-    margin-top: 30px;
-}
+
 
     /*
     float: right;

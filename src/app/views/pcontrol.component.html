@@ -4,29 +4,29 @@
         <div id="titulo">Puntos de Control</div>
     </div>
 
+    <!--BUSQUEDA + RUTAS-->
+    <div class="row ">
+        <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
+            <div>Rutas:</div>
+            <select class="form-control" required [(ngModel)]="_ruid" (change)="_rutaid($event)" #rutaid="ngModel">
+                <option *ngFor="let ruta of rutas" [value]="ruta.RuId">{{ruta.RuDescripcion}}</option>
+            </select>
+        </div>
+
+        <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
+            <div>Busqueda:</div>
+            <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+        </div>
+
+        <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
+                <button id="btnNuevo" type="button" (click)="newPuntoControlMaestro()" style="float:left; margin-top: 27px;" pButton icon="fa-file-text-o" label="Nuevo Registro"></button>
+        </div>
+    </div>
+
     <!--CONTENIDO-->
     <div class="row">
         <!--TABLAS-->
         <div class="col-xl-5 col-md-12 col-sm-12 col-xs-12">
-            <!--BUSQUEDA + RUTAS-->
-            <div class="row ">
-                <div class="col-xl-4 col-md-4 col-sm-4 col-xs-6">
-                    <div>Rutas:</div>
-                    <select class="form-control" required [(ngModel)]="_ruid" (change)="_rutaid($event)" #rutaid="ngModel">
-                        <option *ngFor="let ruta of rutas" [value]="ruta.RuId">{{ruta.RuDescripcion}}</option>
-                    </select>
-                </div>
-
-                <div class="col-xl-4 col-md-4 col-sm-4 col-xs-6">
-                    <div>Busqueda:</div>
-                    <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
-                </div>
-
-                <div class="col-xl-4 col-md-4 col-sm-4 col-xs-12">
-                     <button type="button" (click)="newPuntoControlMaestro()" style="float:left; margin-top: 27px;" pButton icon="fa-file-text-o" label="Nuevo Registro"></button>
-                </div>
-            </div>
-            
             <!--TABLA CABECERA-->
             <div class="row table table-responsive">
                 <p-dataTable [value]="pCMaestroMostrar" [rows]="5" [paginator]="true" [pageLinks]="2" [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" selectionMode="single" 
@@ -52,8 +52,6 @@
                     -->
                 </p-dataTable>
             </div>
-
-          
         </div>
 
         <!--GRAFICOS -->
@@ -93,10 +91,12 @@
 </div>
 
     <!--VENTANAS MODALES-->
+
+        <!--CORREGIR-->
         <!--MODAL BOTON  NUEVO PC CABECERA, SEGUN EL CASO ES NUEVA TABLA O EDITARLA-->
         <p-dialog  [(visible)]="displayListaPuntos" [style]="{'font-size':'14px'}" [resizable]="false" [closable]="false" modal="modal" width="320" responsive="true" >
             <p-header>{{headertitle}}</p-header>
-            <!--DESCRIPCION-->
+            <!--DESCRIPCION  class="alert alert-danger"-->
             <div class="form-group">
                 <label class="control-label" for="descr">Descripcion:</label>
                 <input class="form-control" id="descr" name="descripcion"  type="text" 
@@ -106,7 +106,7 @@
                     <div [hidden]="!desc.errors.required">obligatorio</div>
                     </span>
                 -->
-                <div [hidden]="!desc.touched || desc.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                <div id="validation" [hidden]="!desc.touched || desc.valid ">
                     Error en los datos ingresados
                 </div>
             </div>
@@ -124,7 +124,7 @@
                         <div [hidden]="!anio.errors.length"> 4 Digitos </div>
                     </span>
                 -->
-                <div [hidden]="!time.touched || time.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                <div id="validation" [hidden]="!time.touched || time.valid ">
                     Error en los datos ingresados
                 </div>
             </div>
@@ -138,12 +138,13 @@
                         {{tipo.nomb}}
                     </option>
                 </select>
-                <div [hidden]="!tipotarj.touched || tipotarj.valid" class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                <div id="validation" [hidden]="!tipotarj.touched || tipotarj.valid">
                     Error en los datos ingresados
                 </div>
             </div>
 
-            <div class="row">
+            <!--BOTONES DE LA VENTANA-->
+            <div class="btn_Modal row container">
                 <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">
                     <button class="btn_modal" type="button" pButton  (click)="guardarPCMaestro(); desc.reset();  time.reset(); tipotarj.reset();" label="Guardar" [disabled]="!desc.valid || !time.valid || !tipotarj.valid"></button>
                 </div>
@@ -153,91 +154,106 @@
             </div>
         </p-dialog>  <!--final boton nuevo modal-->      
 
+        <!--CORREGIR-->
         <!--cuadro modal nuevo punto de control detalle ADDMARKER-->
         <p-dialog [(visible)]="displayNuevoPunto" [resizable]="false" modal="modal" width="300" responsive="true"  [closable]="false">
-            <div class="ui-grid ui-grid-pad ui-fluid" *ngIf="selectedPosition">
-                        
-                    <!--posicion en la lista de puntos-->
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-3"><label for="positionTitle">N°Pos:</label></div>
-                        <div class="ui-grid-col-6"><input type="text" pInputText id="posicionTitle" [disabled]="disabledInputPos" [(ngModel)]=pcDetalle.PuCoDeOrden/></div>
-                        <!--activar el input de orden de los puntos de control-->
-                        <div class="ui-grid-col-3"><button type="button" (click)="activarInputPos()" pButton label="#"></button></div>
-                    </div>
-                    <!--nombre punto control-->
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-3">
-                            <label for="title">Nombre:</label>
-                        </div>
-                        <div class="ui-grid-col-9">
-                            <input type="text" pInputText id="title" [(ngModel)]="pcDetalle.PuCoDeDescripcion">
-                        </div>
-                    </div>
-                        <!--tiempo -->                               
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-3">
-                            <label class="control-label" for="time">Tiempo:</label>
-                        </div>
-                        <div class="ui-grid-col-9">
-                            <input type="text" pInputText id="time" [(ngModel)]="pcDetalle.PuCoDeHora" step="1">
-                        </div>
-                    </div>
-            </div>
-            <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <button type="button" pButton label="Agregar"  (click)="guardarPuntoControlDetalle()" ></button>
-                    <button type="button" pButton label="Cancelar" (click)="cancelarPuntoControlDetalle()"></button>
+            <div *ngIf="selectedPosition">
+                <!--posicion en la lista de puntos-->
+                <div class="form-group row">
+                    <div class="ui-grid-col-3"><label for="positionTitle">N°Pos:</label></div>
+                    <div class="ui-grid-col-6"><input type="text" pInputText id="posicionTitle" [disabled]="disabledInputPos" [(ngModel)]=pcDetalle.PuCoDeOrden/></div>
+                    <!--activar el input de orden de los puntos de control-->
+                    <div class="ui-grid-col-3"><button type="button" (click)="activarInputPos()" pButton label="#"></button></div>
                 </div>
-            </p-footer>
+                
+                <!--nombre punto control-->
+                <div class="form-group row">
+                    <div class="ui-grid-col-3">
+                        <label for="title">Nombre:</label>
+                    </div>
+                    <div class="ui-grid-col-9">
+                        <input type="text" pInputText id="title" [(ngModel)]="pcDetalle.PuCoDeDescripcion">
+                    </div>
+                </div>
+
+                <!--tiempo -->                               
+                <div class="form-group row">
+                    <div class="ui-grid-col-3">
+                        <label class="control-label" for="time">Tiempo:</label>
+                    </div>
+                    <div class="ui-grid-col-9">
+                        <input type="text" pInputText id="time" [(ngModel)]="pcDetalle.PuCoDeHora" step="1">
+                    </div>
+                </div>
+            </div>
+            
+            <!--BOTONES VENTANA-->
+            <div class="btn_Modal row container">
+                <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">
+                    <button class="btn_modal" type="button" pButton label="Agregar"  (click)="guardarPuntoControlDetalle()" ></button>
+                 </div>
+                <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">    
+                    <button class="btn_modal" type="button" pButton label="Cancelar" (click)="cancelarPuntoControlDetalle()"></button>
+                </div>
+            </div>
         </p-dialog>
 
+        <!--CORREGIR-->
         <!--EDITAR PUNTO CONTROL DETALLE, SOLO LOS OBJETOS QUE SON NECESARIOS-->
         <p-dialog [(visible)]="displayEditarPunto" [resizable]="false" modal="modal" width="300" responsive="true"  [closable]="false">
-            <div class="ui-grid ui-grid-pad ui-fluid">
-                        
-                    <!--posicion en la lista de puntos-->
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-3"><label for="positionTitle">N°Pos:</label></div>
-                        <div class="ui-grid-col-6"><input type="text" pInputText id="posicionTitle"  [(ngModel)]=pcDetalle.PuCoDeOrden/></div>
-                        <!--<div class="ui-grid-col-6"><input type="text" pInputText id="posicionTitle" [disabled]="disabledInputPos" [(ngModel)]=pcDetalle.PuCoDeOrden/></div>-->
-                        <!--activar el input de orden de los puntos de control
-                        <div class="ui-grid-col-3"><button type="button" (click)="activarInputPos()" pButton label="#"></button></div>-->
-                    </div>
-                    <!--nombre punto control-->
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-3">
-                            <label for="title">Nombre:</label>
-                        </div>
-                        <div class="ui-grid-col-9">
-                            <input type="text" pInputText id="title" [(ngModel)]="pcDetalle.PuCoDeDescripcion">
-                        </div>
-                    </div>
-                        <!--tiempo -->                               
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-3">
-                            <label class="control-label" for="time">Tiempo:</label>
-                        </div>
-                        <div class="ui-grid-col-9">
-                            <input type="text" pInputText id="time" [(ngModel)]="pcDetalle.PuCoDeHora" step="1">
-                        </div>
-                    </div>
+            <!--posicion en la lista de puntos-->
+            <div class="form-group row">
+                <div class="ui-grid-col-3"><label for="positionTitle">N°Pos:</label></div>
+                <div class="ui-grid-col-6"><input type="text" pInputText id="posicionTitle"  [(ngModel)]=pcDetalle.PuCoDeOrden/></div>
+                <!--<div class="ui-grid-col-6"><input type="text" pInputText id="posicionTitle" [disabled]="disabledInputPos" [(ngModel)]=pcDetalle.PuCoDeOrden/></div>-->
+                <!--activar el input de orden de los puntos de control
+                <div class="ui-grid-col-3"><button type="button" (click)="activarInputPos()" pButton label="#"></button></div>-->
             </div>
-            <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <button type="button" pButton label="Editar"  (click)="editandoRegistroDetalle()" ></button>
-                    <button type="button" pButton label="Cancelar" (click)="cancelarEditandoRegistroDetalle()"></button>
+
+            <!--nombre punto control-->
+            <div class="form-group row">
+                <div class="ui-grid-col-3">
+                    <label for="title">Nombre:</label>
                 </div>
-            </p-footer>
+                <div class="ui-grid-col-9">
+                    <input type="text" pInputText id="title" [(ngModel)]="pcDetalle.PuCoDeDescripcion">
+                </div>
+            </div>
+
+            <!--tiempo -->                               
+            <div class="form-group row">
+                <div class="ui-grid-col-3">
+                    <label class="control-label" for="time">Tiempo:</label>
+                </div>
+                <div class="ui-grid-col-9">
+                    <input type="text" pInputText id="time" [(ngModel)]="pcDetalle.PuCoDeHora" step="1">
+                </div>
+            </div>
+
+            <!--BOTONES VENTANA-->
+            <div class="btn_Modal row container">
+                <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">
+                    <button class="btn_modal" type="button" pButton label="Editar"  (click)="editandoRegistroDetalle()" ></button>
+                </div>
+                <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">
+                    <button class="btn_modal" type="button" pButton label="Cancelar" (click)="cancelarEditandoRegistroDetalle()"></button>
+                </div>
+            </div>
         </p-dialog>
 
+<!--VENTANAS MODALES DE CONFIRMACION-->
 
         <!--VENTANA MODALES DE CONFIRMACION ELIMINAR EDITAR ACEPTAR--> 
         <p-dialog [(visible)]="displayElimRegCabecera" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <button type="button" pButton label="Eliminar" (click)="_eliminarMaestro()"></button>
-                    <button type="button" pButton label="Cancelar" (click)="cancel_eliminarMaestro()"></button>
+                <div class="btn_Modal row container">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <button class="btn_modal" type="button" pButton label="Eliminar" (click)="_eliminarMaestro()"></button>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12"> 
+                        <button class="btn_modal" type="button" pButton label="Cancelar" (click)="cancel_eliminarMaestro()"></button>
+                    </div>
                 </div>
             </p-footer>
         </p-dialog>
@@ -245,9 +261,13 @@
         <p-dialog [(visible)]="displayElimRegDetalle" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <button type="button" pButton label="Eliminar" (click)="_eliminarDetalle()"></button>
-                    <button type="button" pButton label="Cancelar" (click)="cancel_eliminarDetalle()"></button>
+                <div class="btn_Modal row container">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <button class="btn_modal" type="button" pButton label="Eliminar" (click)="_eliminarDetalle()"></button>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12"> 
+                        <button class="btn_modal" type="button" pButton label="Cancelar" (click)="cancel_eliminarDetalle()"></button>
+                    </div>
                 </div>
             </p-footer>
         </p-dialog>
@@ -256,8 +276,10 @@
         <p-dialog [(visible)]="displayValidarDatoCabecera" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <button type="button" pButton label="Aceptar" (click)="aceptarErrorValidacionCabecera()"></button>
+                <div class="btn_Modal row container">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarErrorValidacionCabecera()"></button>
+                    </div>
                 </div>
             </p-footer>
         </p-dialog>
@@ -266,8 +288,10 @@
         <p-dialog [(visible)]="displayAddMarker" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <button type="button" pButton label="Aceptar" (click)="aceptarClickObjeto()"></button>
+                <div class="btn_Modal row container">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarClickObjeto()"></button>
+                    </div>
                 </div>
             </p-footer>
         </p-dialog>
@@ -276,8 +300,10 @@
         <p-dialog [(visible)]="displayMapaClick" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <button type="button" pButton label="Aceptar" (click)="aceptarModalAgregarMarker()"></button>
+                <div class="btn_Modal row container">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarModalAgregarMarker()"></button>
+                    </div>
                 </div>
             </p-footer>
         </p-dialog>
@@ -286,8 +312,11 @@
         <p-dialog [(visible)]="displayErrorEditarPuntos" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <button type="button" pButton label="Aceptar" (click)="aceptarEditarPuntos()"></button>
+                AQUI
+                <div class="btn_Modal row container">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarEditarPuntos()"></button>
+                    </div>
                 </div>
             </p-footer>
         </p-dialog>
@@ -296,8 +325,10 @@
         <p-dialog [(visible)]="displayErrorEditar" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <button type="button" pButton label="Aceptar" (click)="aceptarErrorEditar()"></button>
+                <div class="btn_Modal row container">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarErrorEditar()"></button>
+                    </div>
                 </div>
             </p-footer>
         </p-dialog>
@@ -306,8 +337,10 @@
         <p-dialog [(visible)]="displayNohayPuntos" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <button type="button" pButton label="Aceptar" (click)="aceptarNoHayPuntos()"></button>
+                <div class="btn_Modal row container">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarNoHayPuntos()"></button>
+                    </div>
                 </div>
             </p-footer>
         </p-dialog>
@@ -316,8 +349,10 @@
         <p-dialog [(visible)]="displayNuevosPuntos" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <button type="button" pButton label="Aceptar" (click)="aceptarNuevosPuntos()"></button>
+                <div class="btn_Modal row container">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarNuevosPuntos()"></button>
+                    </div>
                 </div>
             </p-footer>
         </p-dialog>
@@ -326,8 +361,10 @@
         <p-dialog [(visible)]="displayGuardarPuntosDetalle" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <button type="button" pButton label="Aceptar" (click)="aceptarGuardarPuntosDetalle()"></button>
+                <div class="btn_Modal row container">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarGuardarPuntosDetalle()"></button>
+                    </div>
                 </div>
             </p-footer>
         </p-dialog>
@@ -336,8 +373,10 @@
         <p-dialog [(visible)]="displayVerificarTiempoPc" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <button type="button" pButton label="Aceptar" (click)="verificarTiemposPc()"></button>
+                <div class="btn_Modal row container">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <button class="btn_modal" type="button" pButton label="Aceptar" (click)="verificarTiemposPc()"></button>
+                    </div>
                 </div>
             </p-footer>
         </p-dialog>
