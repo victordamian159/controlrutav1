@@ -86,7 +86,8 @@ export class RutaComponent implements OnInit{
     cen=0;//centinela para la busqueda
     edit_RutaTerminada=0;   //NO SE PUEDE EDITAR RUTA
     edit_RutaNoTerminada=0;
-    RutaTerminada=0;
+
+    RutaTerminada=0; /* RutaTerminada=0 (RUTA NO TERMINADA), RutaTerminada=1 (RUTA TERMINADA) */
     infoWindow: any;
 
     /* DISPLAY VENTANAS MODALES */
@@ -996,17 +997,20 @@ export class RutaComponent implements OnInit{
             this.cen=0;
             this.activarAddMarker = 1; //ADDMARKER ACTIVADO
             
-            //CONDICIONAL PARA RUTATERMINADA O EN EDICION 8 CASOS DIFERENTES
-            //PARA CASO DE RUTATERMINADA=1
-            if(this.editando==0 && this.RutaTerminada==1){//no se esta editando 
+            /*CONDICIONAL PARA RUTATERMINADA O EN EDICION 8 CASOS 
+              DIFERENTES ACTIVANDO DESACTIVANDO BOTONES*/
+            
+            //PARA CASO DE RUTA TERMINADA + NO SE ESTA EDITANDO RUTA
+            if(this.editando==0 && this.RutaTerminada==1){
                 //DESHABILITADO Y HABILITANDO BOTONES
                 this.disButBorrar=true;
                 this.disButTerminarRuta=true;
                 this.disButSubirRuta=true;
                 this.disButDeshacer=true;
                 this.disButNuevaRuta=false;
-
-            }else if(this.editando==1 && this.RutaTerminada==1){//se esta editando 
+            
+            //RUTA TERMINADA + SE ESTA EDITANDO RUTA 
+            }else if(this.editando==1 && this.RutaTerminada==1){
                 //DESHABILITADO Y HABILITANDO BOTONES
                 this.disButBorrar=false;
                 this.disButTerminarRuta=false;
@@ -1015,6 +1019,7 @@ export class RutaComponent implements OnInit{
                 this.disButNuevaRuta=true;
 
                 this.activarAddMarker=1; //addmarker activado 
+            
             }else if(this.editando==0 && this.RutaTerminada==0){
                 console.log("NO PROGRAMADO");
             }else if(this.editando==1 && this.RutaTerminada==0){
@@ -1212,9 +1217,19 @@ export class RutaComponent implements OnInit{
             this.puntosRuta = [];
             this.rutaService.deleteRutaDetalleByRu(this.indiceRowTabla).subscribe(
                 realizar => {console.log("RUTA VACIA");
-                             this.modRegistro=1; //ACTIVANDO SELECCION DE ROWS GRILLA modRegistro=1
+
+                             //ACTIVANDO SELECCION DE ROWS GRILLA modRegistro=1
+                             this.modRegistro=1; 
+                             
                              /* DESACTIVANDO AGREGAR NODOS */
                              this.activarAddMarker=0;
+
+                             /* ACTIVANDO DESACTIVANDO BOTONES */
+                             this.disButBorrar = true;
+                             this.disButEditar  = true;
+                             this.disButSubirRuta = true;
+                             this.disButDeshacer = true;
+                             this.disButNuevaRuta = true;
                             },
                 err => {console.log(err);}
             );
@@ -1248,11 +1263,19 @@ export class RutaComponent implements OnInit{
                     realizar => {
                                 /*this.mgRutaDetalle();*/
                                 this.clear();
+
                                 /*ACTIVANDO SELECCION DE ROWS GRILLA modRegistro=1*/
                                 this.modRegistro=1 ;    
+                                
                                 /* DESACTIVANDO AGREGAR NODOS */
                                 this.activarAddMarker=0;
 
+                                /* ACTIVANDO DESACTIVANDO BOTONES */
+                                this.disButBorrar = true;
+                                this.disButEditar  = true;
+                                this.disButSubirRuta = true;
+                                this.disButDeshacer = true;
+                                this.disButNuevaRuta = true;
                             },
                     err => {this.errorMessage=err}
             );
@@ -1267,20 +1290,12 @@ export class RutaComponent implements OnInit{
              cen=0;
         }
 
-        //ACTIVAR Y DESACTIVAR BOTONES AL GUARDAR EL DETALLE
-        if(cen==1){
-            this.disButBorrar = true;
-            this.disButEditar  = true;
-            //this.disButTerminarRuta = true;
-            this.disButSubirRuta = true;
-            this.disButDeshacer = true;
-            this.disButNuevaRuta = true;
-            //this.disButCancelar FALTA PROGRAMACION, NO TIENE USO
+        //this.disButCancelar FALTA PROGRAMACION, NO TIENE USO
         //ACTIVAR Y DESACTIVAR BOTONES AL NO PODER GUARDAR EL DETALLE
-        }else if(cen==0){
+        if(cen==0){
+            console.log("cen = "+cen);
             this.disButBorrar = false;
             this.disButEditar  = true;
-            //this.disButTerminarRuta = true;
             this.disButSubirRuta = true;
             this.disButDeshacer = false;
             this.disButNuevaRuta = true;

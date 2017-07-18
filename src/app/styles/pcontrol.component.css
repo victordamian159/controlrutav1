@@ -21,14 +21,16 @@
     margin-top:20px;
 }
 
+/* ESTILOS BOTONES DEL MAPA*/
 #btn{
-     width:75px; 
+    width:75px; 
     height:40px; 
-    font-size: 12px;
+    font-size:13px;
     background-color:#4CAF50;
-
+    text-align: center;
 }
 
+/*ESTILO DEL CONTENEDOR DE BOTONES DEL MAPA */
 #btnMap{
     margin:0;
     padding:0;
