@@ -151,13 +151,24 @@
             </p-footer>
          </p-dialog>
 
-         <!--CONDICIONAL ELIMINAR-->
+         <!--CONDICIONAL ELIMINAR CABECERA-->
          <p-dialog [(visible)]="displayConfirmar" [resizable]="false" modal="modal" width="100%" responsive="true">
              <p>{{Mensaje}}</p>
              <p-footer>
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
                     <button type="button" pButton icon="fa-close" (click)="displayConfirmar=false" label="No"></button>
                     <button type="button" pButton icon="fa-check" (click)="eliminarRuta()" label="Si"></button>
+                </div>
+            </p-footer>
+         </p-dialog>
+
+         <!--CONDICIONAL ELIMINAR RUTA DETALLE-->
+         <p-dialog [(visible)]="displayConfBorrarRuta" [resizable]="false" modal="modal" width="100%" responsive="true">
+             <p>{{Mensaje}}</p>
+             <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <button type="button" pButton icon="fa-close" (click)="cancelarBorrarRutaBd()" label="No"></button>
+                    <button type="button" pButton icon="fa-check" (click)="borrarRutaDetalleBd()" label="Si"></button>
                 </div>
             </p-footer>
          </p-dialog>
@@ -223,7 +234,7 @@
                 </p-footer>
             </p-dialog>
 
-
+            
 <!--
 
     COPIAS

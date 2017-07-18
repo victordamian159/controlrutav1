@@ -98,6 +98,7 @@ export class RutaComponent implements OnInit{
     displayNuevaRuta : boolean = false;
     displayTerminarForSave : boolean = false;
     displayTermineRuta : boolean = false;
+    displayConfBorrarRuta : boolean = false;
 
     /* OCULTAR BOTONES MAPA */
     actBtnBorrar:boolean;
@@ -620,10 +621,7 @@ export class RutaComponent implements OnInit{
     //agregar marcador en el mapa
     addMarker(){
         if(this.activarAddMarker == 1){//addMarker esta activada
-                this.i=0;
-                console.log(this.coordenadas);
-                console.log(this.coordenadas.length);
-                console.log(this.puntosRuta);
+                this.i=0; /*PARA TITLE DEL NODO */
 
                 //decidiendo el titulo(index) para marker
                 if(this.i == 0 || this.i==1 ){
@@ -841,24 +839,21 @@ export class RutaComponent implements OnInit{
                                 this.cargarRuta();
 
                                 if(this.puntosRuta.length>0){
-                                    this.disButEditar=false; //boton habilitado
-                                    this.disButBorrar=true;
+                                    this.disButEditar=false; /*boton habilitado*/
+                                    this.disButBorrar=false; /*boton habilitado*/
                                     this.disButNuevaRuta=true;
                                     this.disButSubirRuta=true;
                                     this.disButDeshacer=true;
-                                    this.disButTerminarRuta=true;
 
                                     //RUTA RECUPERADA (SI)
                                     this.rutaRecuperada=1;
                                 }else if(this.puntosRuta.length==0){
                                     //HABILITANDO BOTONES EN EL FORMULARIO
-                                    //this.disButEditar=false; //boton habilitado
-                                    this.disButBorrar=true;  //boton deshabilitado
-                                    this.disButEditar=true; //boton deshabilitado
-                                    this.disButNuevaRuta=false; //boton habilitado 
+                                    this.disButBorrar=true;  /*boton deshabilitado*/
+                                    this.disButEditar=true; /*boton deshabilitado*/
+                                    this.disButNuevaRuta=false; /*boton habilitado*/ 
                                     this.disButSubirRuta=true;
                                     this.disButDeshacer=true;
-                                    this.disButTerminarRuta=true;
 
                                     //RUTA RECUPERADA (NO)
                                     this.rutaRecuperada=0;
@@ -924,48 +919,81 @@ export class RutaComponent implements OnInit{
 
     //VACIAR TODOS LOS PUNTOS DEL MAPA PARA REINIAR TODO 
     clear(){
-        this.overlays=[];
-        this.coordenadas=[];
-        this.RutaTerminada=0;
-        this.puntosRuta=[];
-        this.i=0;
-        this.RutaTerminada=0;
-        this.j=0;
-        this.k=0;
-        this.l=0;
-        this.m=1;
-        this.n=0;
-        this.x0=0;
-        this.y0=0;
-        this.end=0;
-        this.cen=0;
-        this.activarAddMarker = 1; //ADDMARKER ACTIVADO
-        
-        //CONDICIONAL PARA RUTATERMINADA O EN EDICION 8 CASOS DIFERENTES
-        //PARA CASO DE RUTATERMINADA=1
-        if(this.editando==0 && this.RutaTerminada==1){//no se esta editando 
-            //DESHABILITADO Y HABILITANDO BOTONES
-            this.disButBorrar=true;
-            this.disButTerminarRuta=true;
-            this.disButSubirRuta=true;
-            this.disButDeshacer=true;
-            this.disButNuevaRuta=false;
+        /* CONDICIONAL PARA SABER SI ES UNA RUTA O SU TRAZA */
+        if(this.overlays.length!=1){
+        console.log("limpiando variables");
+            this.overlays=[];
+            this.coordenadas=[];
+            this.RutaTerminada=0;
+            this.puntosRuta=[];
+            this.i=0;
+            this.RutaTerminada=0;
+            this.j=0;
+            this.k=0;
+            this.l=0;
+            this.m=1;
+            this.n=0;
+            this.x0=0;
+            this.y0=0;
+            this.end=0;
+            this.cen=0;
+            this.activarAddMarker = 1; //ADDMARKER ACTIVADO
+            
+            //CONDICIONAL PARA RUTATERMINADA O EN EDICION 8 CASOS DIFERENTES
+            //PARA CASO DE RUTATERMINADA=1
+            if(this.editando==0 && this.RutaTerminada==1){//no se esta editando 
+                //DESHABILITADO Y HABILITANDO BOTONES
+                this.disButBorrar=true;
+                this.disButTerminarRuta=true;
+                this.disButSubirRuta=true;
+                this.disButDeshacer=true;
+                this.disButNuevaRuta=false;
 
-        }else if(this.editando==1 && this.RutaTerminada==1){//se esta editando 
-            //DESHABILITADO Y HABILITANDO BOTONES
-            this.disButBorrar=false;
-            this.disButTerminarRuta=false;
-            this.disButSubirRuta=false;
-            this.disButDeshacer=false;
-            this.disButNuevaRuta=true;
+            }else if(this.editando==1 && this.RutaTerminada==1){//se esta editando 
+                //DESHABILITADO Y HABILITANDO BOTONES
+                this.disButBorrar=false;
+                this.disButTerminarRuta=false;
+                this.disButSubirRuta=false;
+                this.disButDeshacer=false;
+                this.disButNuevaRuta=true;
 
-            this.activarAddMarker=1; //addmarker activado 
-        }else if(this.editando==0 && this.RutaTerminada==0){
-            console.log("NO PROGRAMADO");
-        }else if(this.editando==1 && this.RutaTerminada==0){
-            console.log("NO PROGRAMADO");
+                this.activarAddMarker=1; //addmarker activado 
+            }else if(this.editando==0 && this.RutaTerminada==0){
+                console.log("NO PROGRAMADO");
+            }else if(this.editando==1 && this.RutaTerminada==0){
+                console.log("NO PROGRAMADO");
+            }
+        }else if(this.overlays.length==1){
+        console.log("borrando ruta de la BD D=");
+            this.displayConfBorrarRuta=true;
+            this.Mensaje="¿Esta seguro de borrar la ruta?";
         }
-       
+    }
+    cancelarBorrarRutaBd(){
+        this.Mensaje="";
+        this.displayConfBorrarRuta=false;
+    }
+    borrarRutaDetalleBd(){
+        this.rutaService.deleteRutaDetalleByRu(this.indiceRowTabla).subscribe(
+            realizar =>{
+                            /* console.log("SE BORRO RECTA DE RUTA");*/
+                            this.Mensaje="";
+                            this.displayConfBorrarRuta=false;
+                            this.overlays=[];/* BORRARNDO OBJETOS  */
+                            this.clear();/* LIMPIANDO VARIABLES */
+                            
+                            /* DESAHABILITANDO BOTONES */
+                            this.disButBorrar=true;
+                            this.disButEditar=true;
+                            this.disButDeshacer=true;
+                            this.disButNuevaRuta=true;
+                            this.disButSubirRuta=true;
+
+                            /* DESACTIVANDO ADDMARKER */
+                            this.activarAddMarker=0;
+                        },
+            err => {console.log(err);}
+        );
     }
 
     //LLAMAR A RUTA SERVICE PARA USAR LOS PROCEDIMIENTOS ALMACENADOS
