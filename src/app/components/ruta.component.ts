@@ -389,8 +389,9 @@ export class RutaComponent implements OnInit{
         }
 }
 
-    //evento arrastrar final  -- ARRASTRAR LOS MARCADORES
+    /*EVENTO ARRASTRAR FINAL  -- ARRASTRAR LOS MARCADORES(NODOS)*/
     handleDragEnd(event){
+        console.log("arrastrando nodos");
         //CONVIRTIENDO TITLE MARKER A NUMERICO
         this.indexmovil = Number(event.overlay.getTitle());
 
@@ -401,52 +402,105 @@ export class RutaComponent implements OnInit{
         //BUSCANDO EL INDICE DEL MARCADOR ARRASTRADO
         this.indexObjec = this.overlays.indexOf(event.overlay);  
 
-        /*eliminando lineas de los marcadores arrastrados 12 casos (6 TERMINADA RUTA & 6 NO TERMINADA RUTA)*/
+        /*ELIMINANDO LINEAS ENTRE LOS NODOS ARRASTRADOS 12 CASOS (6 TERMINADA RUTA & 6 NO TERMINADA RUTA)*/
+        console.log(this.overlays.length);
+        console.log(this.overlays);
+               /* 
+                    BORRANDO LINEA  
+                    this.overlays[this.overlays.length - 1].setMap(null);
+                    REDUCIENDO EN UNO EL TAMAÑO DEL ARRAY OVERLAYS 
+                    this.overlays.length = this.overlays.length - 1;
+               */
 
         //CASO EDITAR RUTA NO TERMINADA
         if(this.edit_RutaNoTerminada == 1  && this.overlays.length > 1 && this.RutaTerminada == 0){
-             //1er marker sin terminar ruta CASO SI RUTA NO ESTA TERMINADA
-                //nueva posicion del marcador
+            /* CUANDO ES EL PRIMER NODO, PRIMER NODO DE RUTA NO TERMINADA */
+            if(this.indexObjec == 0){
+                    //se guardan la nuev aposicion en los puntos para trazar la ruta
+                this.puntosRuta[0].RuDeLatitud = this.x;
+                this.puntosRuta[0].RuDeLongitud = this.y;
+
+                /*borrar y reponer el la linea en la nueva posicion
+                this.overlays[2].setMap(null);*/
+
+                this.overlays.splice(2,1,(new google.maps.Polyline({
+                        path:[{lat:this.puntosRuta[0].RuDeLatitud, lng: this.puntosRuta[0].RuDeLongitud},
+                            {lat:this.puntosRuta[1].RuDeLatitud, lng: this.puntosRuta[1].RuDeLongitud} ],
+                        geodesic: true, 
+                        strokeColor: '#FF0000',  
+                        strokeOpacity: 0.5, 
+                        strokeWeight :2 , 
+                        editable: false, 
+                        draggable : false 
+                })));
+
+            /* CUANDO ES EL ULTIMO NODO, ULTIMO NODO LA RUTA NO ESTA TERMINADA */
+            }else if(this.indexObjec == (this.overlays.length - 2) ){
+                //ultimo marker sin terminar ruta
+                this.puntosRuta[this.puntosRuta.length - 1].RuDeLatitud = this.x;
+                this.puntosRuta[this.puntosRuta.length - 1].RuDeLongitud = this.y;
+
+            
+                /* REPONIENDO LA LINEA CON LAS COORDENADAS DEL MARCADOR ARRASTRADO */
+                this.overlays.splice(this.overlays.length - 1,1,(new google.maps.Polyline({
+                        path:[{ lat:this.puntosRuta[this.puntosRuta.length - 2].RuDeLatitud, 
+                                lng: this.puntosRuta[this.puntosRuta.length -2].RuDeLongitud},
+                                
+                                { lat:this.puntosRuta[this.puntosRuta.length - 1].RuDeLatitud, 
+                                lng: this.puntosRuta[this.puntosRuta.length -1].RuDeLongitud} ],
+                        geodesic: true, 
+                        strokeColor: '#FF0000', 
+                        strokeOpacity: 0.5, 
+                        strokeWeight :2 , 
+                        editable: false, 
+                        draggable : false 
+                })));
+            /* 2 LINEAS ENTRE EL NODO ARRASTRADO */
+            }else if(0<this.indexObjec && this.indexObjec<this.overlays.length - 2){
+                // MENSAJE EN MODAL
+                let index:number=Number(this.overlays[this.indexObjec].title);
                 
-                if(this.indexObjec == 0){
-                     //se guardan la nuev aposicion en los puntos para trazar la ruta
-                    this.puntosRuta[0].Latitud = this.x;
-                    this.puntosRuta[0].Longitud = this.y;
+                /* SALVANDO PUNTOS */
+                this.puntosRuta[index].RuDeLatitud = this.x;
+                this.puntosRuta[index].RuDeLongitud = this.y;
+                
+                this.overlays[this.indexObjec+1].setMap(null);
+                this.overlays[this.indexObjec+3].setMap(null);
 
-                    //borrar y reponer el la linea en la nueva posicion
-                    this.overlays[2].setMap(null);
+                this.overlays.splice((this.indexObjec +3),1,(new google.maps.Polyline({
+                        path:[  //punto fijo (final recta)
+                                {lat:this.puntosRuta[index].RuDeLatitud, lng: this.puntosRuta[index].RuDeLongitud},   
+                                //punto movil (inicio recta)
+                                {lat:this.puntosRuta[index+1].RuDeLatitud, lng: this.puntosRuta[index+1].RuDeLongitud}],
+                        geodesic: true, 
+                        strokeColor: '#FF0000',  
+                        strokeOpacity: 0.5,  
+                        strokeWeight :2 , 
+                        editable: false, 
+                        draggable : false 
+                })));
 
-                    this.overlays.splice(2,1,(new google.maps.Polyline({
-                            path:[{lat:this.puntosRuta[0].Latitud, lng: this.puntosRuta[0].Longitud},
-                                {lat:this.puntosRuta[1].Latitud, lng: this.puntosRuta[1].Longitud} ],
-                            geodesic: true, strokeColor: '#FF0000',  strokeOpacity: 0.5, strokeWeight :2 , editable: false, draggable : false 
-                    })));
-                    
-                }else if(this.indexObjec == (this.overlays.length - 2) ){
-                    //ultimo marker sin terminar ruta
-                    this.puntosRuta[this.puntosRuta.length - 1].Latitud = this.x;
-                    this.puntosRuta[this.puntosRuta.length - 1].Longitud = this.y;
+                this.overlays.splice(this.indexObjec +1,1,(new google.maps.Polyline({
+                        path:[ //punto movil
+                                {lat:this.puntosRuta[index].RuDeLatitud, lng: this.puntosRuta[index].RuDeLongitud},
+                                //punto fijo
+                                {lat:this.puntosRuta[index -1].RuDeLatitud, lng: this.puntosRuta[index -1].RuDeLongitud} ],
+                        geodesic: true, 
+                        strokeColor: '#FF0000',  
+                        strokeOpacity: 0.5,  
+                        strokeWeight :2 , 
+                        editable: false, 
+                        draggable : false 
+                })));
 
-                    this.overlays[this.overlays.length - 1].setMap(null);
-                    this.overlays.length = this.overlays.length - 1;
-
-                    this.overlays.splice(this.overlays.length - 1,1,(new google.maps.Polyline({
-                            path:[{lat:this.puntosRuta[this.puntosRuta.length - 2].Latitud, lng: this.puntosRuta[this.puntosRuta.length -2].Longitud},
-                                  {lat:this.puntosRuta[this.puntosRuta.length - 1].Latitud, lng: this.puntosRuta[this.puntosRuta.length -1].Longitud} ],
-                            geodesic: true, strokeColor: '#FF0000', strokeOpacity: 0.5, strokeWeight :2 , editable: false, draggable : false 
-                    })));
-                }else {
-                    // MENSAJE EN MODAL
-                    console.log(" TERMINE LA RUTA PARA EDITAR");
-                }
-               // 2 polyline 
-                // 1 polyline izq
-                // 1 polyline der
-                // 0 polyline
+            }
+            // 1 polyline izq
+            // 1 polyline der
+            // 0 polyline
         
-        //CASOS SI RUTA ESTA TERMINADA
+        /*CASOS SI RUTA ESTA TERMINADA (CERRADA), 4 CASOS -> REVISAR SI HAY MAS*/ 
         }else if(this.edit_RutaTerminada == 1  && this.overlays.length > 1 && this.RutaTerminada == 1){
-            //1er marker si terminada ruta
+            /*PRIMER NODO, RUTA TERMINADA*/
             if(this.indexObjec == 0){
                 //se guardan la nuev aposicion en los puntos para trazar la ruta
                 this.puntosRuta[0].RuDeLatitud=this.x ;
@@ -482,7 +536,6 @@ export class RutaComponent implements OnInit{
                     //se guarda la ultima posicion en array para trazar los puntos ruta (SE ACTUALIZA EL ULTIMO PUNTO CON LAS NUEVAS COORDENADAS)
                     this.puntosRuta[this.puntosRuta.length - 1].RuDeLatitud = this.x;
                     this.puntosRuta[this.puntosRuta.length - 1].RuDeLongitud = this.y;
-                    //console.log("longitud overlays ultimo marker: "+this.overlays.length);
                     //se borran las lineas ya trazadas
                     this.overlays[this.overlays.length - 1].setMap(null);//LINEA QUE CIERRA RUTA
                     this.overlays[this.overlays.length - 2].setMap(null);//LINEA SEGUNDA AL ULTIMO MARCADOR
@@ -503,10 +556,10 @@ export class RutaComponent implements OnInit{
                             geodesic: true, strokeColor: '#FF0000',  strokeOpacity: 0.5,  strokeWeight :2 , editable: false, draggable : false 
                     })));
                     
-            // 2 polyline a los lados ruta terminada
+            /* 2 LINEAS A LOS LADOS DEL NODO, RUTA TERMINADA*/
             }else if(  this.indexObjec>=3 && (this.indexObjec < this.overlays.length-4) ){
-                 //RECUPERANDO EL INDICE (TITLE) DEL MARCADOR PARA RECUPERAR LAS COORDENADAS DEL MARCADOR ANTERIOR Y SIGUIENTE
-                 this.o = Number(this.overlays[this.indexObjec].title);// o : indice (title) del marcador dentro del array de puntos
+                //RECUPERANDO EL INDICE (TITLE) DEL MARCADOR PARA RECUPERAR LAS COORDENADAS DEL MARCADOR ANTERIOR Y SIGUIENTE
+                this.o = Number(this.overlays[this.indexObjec].title);// o : indice (title) del marcador dentro del array de puntos
 
                 this.puntosRuta[this.o].RuDeLatitud  = this.x;
                 this.puntosRuta[this.o].RuDeLongitud = this.y;
@@ -514,9 +567,6 @@ export class RutaComponent implements OnInit{
                //ENCONTRAR LA POSICION DEL PUNTODECONTROL EN EL ARRAY OVERLAYS
                //CAMBIAR LA CONDICIONAL PARA USAR EL TITLE DEL MARKER Y EL CAMPO ORDEN DEL OBJETO PUNTOCONTROL(DETALLE)
                 if( (this.puntosRuta[this.o].RuDeLatitud == this.overlays[this.indexObjec].position.lat())  ){
-                    //console.log(this.puntosRuta[this.o]);
-                    //console.log(this.overlays[this.indexObjec]);
-
                     this.overlays[this.indexObjec+1].setMap(null);
                     this.overlays[this.indexObjec+3].setMap(null);
                     
@@ -543,9 +593,9 @@ export class RutaComponent implements OnInit{
                 }else{
                     console.log("nose encontro punto :c");
                 }
-                
+            //MOVIENDO EL SEGUNDO MARCADOR (OTRO CASO)
             }else if(this.indexObjec == 1  && (this.overlays[this.indexObjec+1] != null && this.overlays[this.indexObjec+2]!= null)){
-               //MOVIENDO EL SEGUNDO MARCADOR (OTRO CASO)
+               
                 //cargando los nuevos puntos 
                 this.puntosRuta[this.indexObjec ].RuDeLatitud = this.x;
                 this.puntosRuta[this.indexObjec ].RuDeLongitud = this.y;
@@ -553,15 +603,13 @@ export class RutaComponent implements OnInit{
                 this.overlays[this.indexObjec+1].setMap(null);
                 this.overlays[this.indexObjec+3].setMap(null);
 
-                //console.log("indice ingresado: "+this.indexObjec);
-
-                //poniendo nuevas polyline en esos lugares
-                //linea antes del index marcador
-                console.log(this.indexObjec);
+                //poniendo nuevas polyline en esos lugares, linea antes del index marcador
+    
                 this.overlays.splice(this.indexObjec +1,1,(new google.maps.Polyline({
                         path:[  
-                                //punto movil (inicio recta)
-                                //{lat:Number(this.overlays[this.indexObjec - 2].position.lat()), lng: Number(this.overlays[this.indexObjec - 2].position.lng())},
+                                /*punto movil (inicio recta)
+                                {lat:Number( this.overlays[this.indexObjec - 2].position.lat()), 
+                                 lng: Number(this.overlays[this.indexObjec - 2].position.lng())},*/
                                 {lat:this.puntosRuta[0].RuDeLatitud, lng: this.puntosRuta[0].RuDeLongitud},
                                 {lat:this.puntosRuta[this.indexObjec].RuDeLatitud, lng: this.puntosRuta[this.indexObjec].RuDeLongitud}
                              ],
@@ -579,22 +627,17 @@ export class RutaComponent implements OnInit{
                 })));
             }
          }
-    }//fin handleDragEnd
+    }/*FIN HANDLEDRAGEND*/
      
 
     //CLICK SOBRE EL MAPA -- EN ESTE CASO PARA AGREGAR MARCADORES SOBRE EL MAPA
     handleMapClick(event) {
         let coords:any;
-        /*console.log("agregar nodos: "+this.activarAddMarker);
-        coords=event.latLng;
-        console.log(coords.lat());
-        console.log(coords.lng());*/
+        /*console.log("agregar nodos: "+this.activarAddMarker);coords=event.latLng;console.log(coords.lat());console.log(coords.lng());*/
 
         if(this.activarAddMarker == 1){//addmarker activado
             this.selectedPosition = event.latLng;
-            /*this.coordenadas.push(  
-                Coords = {x:this.selectedPosition.lat(), 
-                          y:this.selectedPosition.lng()})*/
+            /*this.coordenadas.push( Coords = {x:this.selectedPosition.lat(),  y:this.selectedPosition.lng()})*/
             this.coordenadas.push({x:this.selectedPosition.lat(), 
                                    y:this.selectedPosition.lng()})
             this.addMarker();         
@@ -606,7 +649,7 @@ export class RutaComponent implements OnInit{
 
         }else if(this.activarAddMarker == 0){//addmarker desactivado
             //MENSAJE EN MODAL
-            this.Mensaje="No Se Puede Agregar Nodos Sobre El Mapa";
+            this.Mensaje="No se puede agregar nodos sobre el mapa";
             this.displayAddMakerDesactivado=true;
             //console.log("no se puede hacer click sobre el mapa, addmarker desactivado");
         }
@@ -620,7 +663,8 @@ export class RutaComponent implements OnInit{
 
     //agregar marcador en el mapa
     addMarker(){
-        if(this.activarAddMarker == 1){//addMarker esta activada
+        /* SE PUEDE AGREGAR NODOS, ACTIVADO */
+        if(this.activarAddMarker == 1){
                 this.i=0; /*PARA TITLE DEL NODO */
 
                 //decidiendo el titulo(index) para marker
@@ -636,32 +680,25 @@ export class RutaComponent implements OnInit{
                 if(this.editando == 1){ 
                     console.log("editando ruta que esta en la bd :c");
                     this.overlays.push(new google.maps.Marker({
-                                /*position:{lat: this.coordenadas[this.i].x,  
-                                          lng: this.coordenadas[this.i].y}, */
+                                /*position:{lat: this.coordenadas[this.i].x, lng: this.coordenadas[this.i].y}, */
                                 position:{lat: this.coordenadas[this.coordenadas.length-1].x,  
                                           lng: this.coordenadas[this.coordenadas.length-1].y},
                                 title:this.markerTitle, 
-                                draggable: true,}));
+                                draggable: false,}));
                 
                 /* NUEVA RUTA,  (RUTA NO RECUPERADA DE LA BD)*/
                 }else if(this.editando == 0){
                     console.log("editando ruta que no esta en la bd :c");
                     this.overlays.push(new google.maps.Marker({
-                                /*position:{lat: this.coordenadas[this.i].x,  
-                                          lng: this.coordenadas[this.i].y}, */
+                                /*position:{lat: this.coordenadas[this.i].x, lng: this.coordenadas[this.i].y}, */
                                 position:{lat: this.coordenadas[this.coordenadas.length-1].x,  
                                           lng: this.coordenadas[this.coordenadas.length-1].y},
                                 title:this.markerTitle, 
                                 draggable: false,}));
                 }
-                
-                
-                //listando posiciones de los marcadores
+
                 
                 //SALVANDO LAS COORDENADAS DE LOS NODOS AL ARRAY PARA LA BD
-                /*this.puntosRuta.push({RuDeLatitud:this.coordenadas[this.i].x,
-                                      RuDeLongitud:this.coordenadas[this.i].y});*/
-                
                 this.puntosRuta.push({RuDeLatitud:this.coordenadas[this.coordenadas.length-1].x,
                                       RuDeLongitud:this.coordenadas[this.coordenadas.length-1].y});
                 
@@ -686,10 +723,11 @@ export class RutaComponent implements OnInit{
                 this.disButDeshacer=false;
                 this.disButSubirRuta=false;
                 this.disButTerminarRuta=false;
-
-        }else if(this.activarAddMarker == 0){//addmarker esta desactivado
+        
+        /* NO SE PUEDE AGREGAR NODOS, DESACTIVADO */
+        }else if(this.activarAddMarker == 0){
             //ABRIR UNA VENTA QUE DIGA QUE NO SE PUEDE AGREGAR MARCADORES
-            console.log("No Se Puede Agregar Marcadores");
+            console.log("No se puede agregar nodos sobre el mapa");
                 this.overlays=[];
                 this.coordenadas=[];
                 this.RutaTerminada=0;
@@ -744,7 +782,7 @@ export class RutaComponent implements OnInit{
     deshacer(){
         console.log("RutaTerminada: "+this.RutaTerminada);
 
-        //ruta no terminada y objetos mayor a 1
+        /*RUTA NO TERMINADA Y HAY MUCHOS OBJETOS*/
         if(this.overlays.length>1 && this.RutaTerminada==0){
             this.k=this.puntosRuta.length;
             this.j=this.overlays.length;
@@ -754,7 +792,7 @@ export class RutaComponent implements OnInit{
             this.coordenadas.pop();
             this.i=this.i-1;
             this.overlays.length=this.overlays.length-2;
-        //ruta no terminada y solo hay marcador 
+        /*RUTA NO ESTA TERMINADA Y SOLO HAY UN NODO */
         }else if(this.overlays.length==1 && this.RutaTerminada==0){
              this.k=0;
              this.j=0;
@@ -763,32 +801,31 @@ export class RutaComponent implements OnInit{
              this.overlays.pop();
              this.puntosRuta.pop();
              this.coordenadas.pop();
-        //la ruta esta terminada
+        //la ruta esta terminada, BORRANDO ULTIMA LINEA (LA RUTA SE VUELVE NO TERMINADA)
         }else if(this.RutaTerminada==1){
             this.l=this.overlays.length;
-            this.overlays[this.l-1].setMap(null);
-            this.overlays.length=this.overlays.length-1;
+            this.overlays[this.l-1].setMap(null); /*BORRANDO ULTIMA LINEA*/
+            this.overlays.length=this.overlays.length-1;/* REDUCIENDO TAMAÑO EN UNO */
             this.RutaTerminada=0; /* VOLVIENDO A RUTA NO TERMINADA, SE BORRO ULTIMA LINEA */
+            this.edit_RutaNoTerminada=1; /* EDITANDO RUTA NO TERMINADA, PARA ARRASTRAR NODOS RUTA NO TERMINADA */
             this.activarAddMarker=1;/* ACTIVANDO AGREGAR MARCADOR */
         //ver si es necesario cuando el numero de objetos en el mapa sea cero
         }
 
         /* ACTIVANDO DESACTIVANDO BOTONES */
-        /* MAPA VACIO*/
+        /* MAPA VACIO (NO HAY ALGUN OBJETO LINEA Y NODO)*/
         if(this.overlays.length==0){
             this.disButEditar=true;
             this.disButDeshacer=true;
             this.disButNuevaRuta=false;
             this.disButSubirRuta=false;
-            //this.disButTerminarRuta=true;
             this.disButBorrar=true;
-        /* MAPA NO VACIO*/
+        /* MAPA NO VACIO (HAY ALGUN OBJETO LINEA Y NODO)*/
         }else if(this.overlays.length!=0){
             this.disButEditar=false;
             this.disButDeshacer=false;
             this.disButNuevaRuta=true;
             this.disButSubirRuta=false;
-            //this.disButTerminarRuta=false;
         }
     }
 
@@ -797,7 +834,6 @@ export class RutaComponent implements OnInit{
         //activar draggable de todos los marcadores
         this.displayfromEditar = true;
         this.activarAddMarker=1;/* ACTIVANDO AGREGAR MARCADORES */
-        console.log("add markers: "+this.activarAddMarker);
     }
 
     //CLICK SOBRE UNA FILA DE LA GRILLA
