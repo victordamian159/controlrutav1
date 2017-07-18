@@ -203,8 +203,12 @@
 
             <!--PIE-->
             <div class="row">
-                <button id="btn" type="button" pButton label="Guardar"  (click)= "guardarbus(); placa.reset(); anio.reset(); motor.reset(); tipoCos.reset();  soat.reset(); mod.reset(); oper.reset(); act.reset(); fingreso.reset(); "></button>
-                <button id="btn" type="button" pButton label="Cancelar" (click)="cancelarbus(); placa.reset(); anio.reset(); motor.reset(); tipoCos.reset();  soat.reset(); mod.reset(); oper.reset(); act.reset(); fingreso.reset(); "></button>
+                <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
+                    <button id="btn" type="button" pButton label="Guardar"  (click)= "guardarbus(); placa.reset(); anio.reset(); motor.reset(); tipoCos.reset();  soat.reset(); mod.reset(); oper.reset(); act.reset(); fingreso.reset(); "></button>
+                </div>
+                <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
+                    <button id="btn" type="button" pButton label="Cancelar" (click)="cancelarbus(); placa.reset(); anio.reset(); motor.reset(); tipoCos.reset();  soat.reset(); mod.reset(); oper.reset(); act.reset(); fingreso.reset(); "></button>
+                </div>
             </div>
         </p-dialog>
 
