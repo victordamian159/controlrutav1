@@ -69,7 +69,27 @@ row{
     margin:0;
 }
 
-    /*padding: 0px 10px;*/
+.form-group{
+    margin:0;
+    padding-bottom:18px;
+    padding-top:10px; 
+}
+
+/* TEXTO VALIDACION BAJO EL INPUT */
+#validation{
+    /*font-size: 80%; */
+    color:red; 
+    margin:0; 
+    padding:0;
+    position: absolute;
+}
+
+.btn_Modal{
+    margin-top: 30px;
+}
+
+    /*padding: 0px 10px;
+    style="display: inline-block; font-size: 80%; color:red; margin:0; padding:0;"*/
      /*width:120px; 
     height:45px; 
     font-size: 16px;

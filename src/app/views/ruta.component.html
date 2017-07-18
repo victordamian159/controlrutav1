@@ -16,7 +16,7 @@
     <!--CUERPO-->
     <div class="row">
         <!--TABLA MAESTRO RUTA-->
-        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="col-xl-6 col-md-12 col-sm-12 col-xs-12">
             <div class="row">
                 <div class="table table-responsive">
                     <p-dataTable [value]="rutasPresentar" [rows]="5" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal" 
@@ -43,7 +43,7 @@
         </div>
 
         <!--MAPA-->
-        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="col-xl-6 col-md-12 col-sm-12 col-xs-12">
             <!--MAPA-->
             <div class="row">
                 <div class="col-xl-12">
@@ -89,9 +89,9 @@
             <div class="form-group row">
                 <label for="descripcion" class="col-4 col-form-label">Descripcion: </label>
                 <div class="col-8">
-                    <textarea class="form-control" id="descripcion" row="4" [(ngModel)]="Ruta.RuDescripcion" name="descripcion"  required #desc="ngModel" ></textarea>
-                    <span *ngIf="!desc.valid && desc.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                        <div [hidden]="!desc.errors.required"> obligatorio </div>
+                    <input type="text" class="form-control" id="descripcion" [(ngModel)]="Ruta.RuDescripcion" name="descripcion"  required #desc="ngModel"/>
+                    <span *ngIf="!desc.valid && desc.touched"  >  
+                        <div id="validation" [hidden]="!desc.errors.required" > obligatorio </div>
                     </span>
                 </div>
             </div>
@@ -101,8 +101,8 @@
                 <label for="fechacreacion" class="col-4 col-form-label">Fecha Creacion:</label>
                 <div class="col-8">
                     <input type="date" class="form-control" id="fechacreacion" min="1980-01-01" [(ngModel)]="Ruta.RuFechaCreacion" name="fcreacion" required #fcrea="ngModel" />
-                    <span *ngIf="!fcrea.valid && fcrea.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                        <div [hidden]="!fcrea.errors.required"> obligatorio </div>
+                    <span *ngIf="!fcrea.valid && fcrea.touched"  >  
+                        <div id="validation" [hidden]="!fcrea.errors.required"> obligatorio </div>
                     </span>
                 </div>
             </div>
@@ -112,29 +112,30 @@
                 <label for="regmunicipal" class="col-4 col-form-label">Nro. Registro:</label>
                 <div class="col-8">
                     <input type="text" class="form-control" id="regmunicipal" [(ngModel)]="Ruta.RuRegMunicipal" name="regmunicipal" required #freg="ngModel" />
-                    <span *ngIf="!freg.valid && freg.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                        <div [hidden]="!freg.errors.required"> obligatorio </div>
+                    <span *ngIf="!freg.valid && freg.touched"   >  
+                        <div id="validation" [hidden]="!freg.errors.required"> obligatorio </div>
                     </span>
                 </div>
             </div>
 
             <!--LONGITUD DE LA RUTA EN KILOMETROS-->
-            <div class="form-group row">
+            <div class="form-group row" >
                 <label for="kilometro" class="col-4 col-form-label">Kilometro: </label>
                 <div class="col-8">
                     <input type="number" class="form-control" id="kilometro" [(ngModel)]="Ruta.RuKilometro" name="kilometro" required #fkil="ngModel" pattern="[0-9]{2}"/>
-                    <span *ngIf="!fkil.valid && fkil.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                        <div [hidden]="!fkil.errors.required"> obligatorio </div>
-                        <div [hidden]="!fkil.errors.pattern">Solo 2 Digitos</div>
+                    <span *ngIf="!fkil.valid && fkil.touched"  >  
+                        <div id="validation" [hidden]="!fkil.errors.required"> obligatorio </div>
+                        <div id="validation" [hidden]="!fkil.errors.pattern" >Solo 2 Digitos</div>
                     </span>
                 </div>
             </div>
                     
-            <div class="row">
-                <div class="col-xl-6 col-md-6 col-sm-12 col-xm-12">
+            <!--BOTONES-->
+            <div class="btn_Modal row">
+                <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
                     <button class="btn_modal" type="button" pButton icon="fa-spin"  (click)="saveRutaMaestro(); desc.reset(); freg.reset(); fcrea.reset(); fkil.reset(); " [disabled]="!desc.valid || !freg.valid || !fcrea.valid || !fkil.valid"  label="Guardar"></button>
                 </div>
-                <div class="col-xl-6 col-md-6 col-sm-12 col-xm-12">
+                <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
                     <button class="btn_modal" type="button" pButton icon="fa-close" (click)="cancelRutaMaestro(); desc.reset(); freg.reset(); fcrea.reset(); fkil.reset(); " label="Cancelar"></button>
                 </div>
             </div>
@@ -234,6 +235,25 @@
                 </p-footer>
             </p-dialog>
 
+            <!--ERROR, LA RUTA NO PERMITIDA PARA GUARDAR-->
+            <p-dialog [(visible)]="displayrutaNoPermitida" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
+                {{Mensaje}}
+                <p-footer>
+                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                        <button type="button" pButton label="Aceptar" (click)="rutaNoPermitida()"></button>
+                    </div>
+                </p-footer>
+            </p-dialog>
+
+            <!--ATENCION, LA RUTA NO ESTA PERMITIDA -->
+            <p-dialog [(visible)]="displaytrazaNoValida" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
+                {{Mensaje}}
+                <p-footer>
+                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                        <button type="button" pButton label="Aceptar" (click)="trazaNoValida()"></button>
+                    </div>
+                </p-footer>
+            </p-dialog>
             
 <!--
 

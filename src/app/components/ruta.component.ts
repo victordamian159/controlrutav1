@@ -45,11 +45,11 @@ export class RutaComponent implements OnInit{
     puntosRutaDetalleArray:any[]=[];
     puntosRutaDetalle:any;
 
-    //capturando fecha actual 
+    /*capturando fecha actual 
     date:any;
     anio:string;
     mes:string;
-    dia:string;
+    dia:string;*/
 
     private rutas:any=[];
     private isLoading: boolean = false;  
@@ -74,7 +74,7 @@ export class RutaComponent implements OnInit{
     m=1;
     n=0;//index para igualar los arrays puntosRuta & puntosTrazaRuta
     o=0;//para buscar el indice necesitado 
-    p=0;//pa
+    cen_2:number//pa
     q=0;//para hacer el cambio de false a true en los marcadores
     x0=0;
     y0=0;
@@ -99,6 +99,8 @@ export class RutaComponent implements OnInit{
     displayTerminarForSave : boolean = false;
     displayTermineRuta : boolean = false;
     displayConfBorrarRuta : boolean = false;
+    displayrutaNoPermitida : boolean = false;
+    displaytrazaNoValida : boolean = false;
 
     /* OCULTAR BOTONES MAPA */
     actBtnBorrar:boolean;
@@ -179,6 +181,9 @@ export class RutaComponent implements OnInit{
          
         //CONTROLAR LA SELECCION DE FILAS EN LA GRILLA, DESACTIVAR HASTA Q SE TERMINE DE GUARDAR LA MODIFICACION O NUEVO REGISTRO
         this.modRegistro=1; //ACTIVANDO LA SELECCION DE REGISTRO MAESTRO --seleccionar regisrtos activado
+    
+        /* CENTINELA, ATENCION TRAZA NO PERMITIDA (SOLO 2 NODOS Y 1 LINEA) */
+        this.cen_2=0;
     }
 
     /*CLICK SOBRE OBJETO*/
@@ -403,14 +408,6 @@ export class RutaComponent implements OnInit{
         this.indexObjec = this.overlays.indexOf(event.overlay);  
 
         /*ELIMINANDO LINEAS ENTRE LOS NODOS ARRASTRADOS 12 CASOS (6 TERMINADA RUTA & 6 NO TERMINADA RUTA)*/
-        console.log(this.overlays.length);
-        console.log(this.overlays);
-               /* 
-                    BORRANDO LINEA  
-                    this.overlays[this.overlays.length - 1].setMap(null);
-                    REDUCIENDO EN UNO EL TAMAÑO DEL ARRAY OVERLAYS 
-                    this.overlays.length = this.overlays.length - 1;
-               */
 
         //CASO EDITAR RUTA NO TERMINADA
         if(this.edit_RutaNoTerminada == 1  && this.overlays.length > 1 && this.RutaTerminada == 0){
@@ -780,19 +777,20 @@ export class RutaComponent implements OnInit{
   
     //borrar el ultimo marcador al trazar la ruta o la ultima linea que cierra la ruta 
     deshacer(){
-        console.log("RutaTerminada: "+this.RutaTerminada);
 
         /*RUTA NO TERMINADA Y HAY MUCHOS OBJETOS*/
-        if(this.overlays.length>1 && this.RutaTerminada==0){
+        if(this.overlays.length>3 && this.RutaTerminada==0){
             this.k=this.puntosRuta.length;
             this.j=this.overlays.length;
+
             this.overlays[this.j-1].setMap(null);
             this.overlays[this.j-2].setMap(null);
-            this.puntosRuta.pop();
+            
+            this.puntosRuta.pop();/* BORRANDO ULTIMO PUNTO COORDENADA*/
             this.coordenadas.pop();
-            this.i=this.i-1;
-            this.overlays.length=this.overlays.length-2;
-        /*RUTA NO ESTA TERMINADA Y SOLO HAY UN NODO */
+            this.i=this.i-1; /* REDUCIENDO TITLE DEL NODO */
+            this.overlays.length=this.overlays.length-2;/* REDUCIENDO EL TAMAÑO DEL ARRAY OVERLAYS */
+        /*RUTA NO TERMINADA Y SOLO HAY UN NODO */
         }else if(this.overlays.length==1 && this.RutaTerminada==0){
              this.k=0;
              this.j=0;
@@ -801,7 +799,7 @@ export class RutaComponent implements OnInit{
              this.overlays.pop();
              this.puntosRuta.pop();
              this.coordenadas.pop();
-        //la ruta esta terminada, BORRANDO ULTIMA LINEA (LA RUTA SE VUELVE NO TERMINADA)
+        //RUTA TERMINADA, BORRANDO ULTIMA LINEA (LA RUTA SE VUELVE NO TERMINADA)
         }else if(this.RutaTerminada==1){
             this.l=this.overlays.length;
             this.overlays[this.l-1].setMap(null); /*BORRANDO ULTIMA LINEA*/
@@ -810,6 +808,23 @@ export class RutaComponent implements OnInit{
             this.edit_RutaNoTerminada=1; /* EDITANDO RUTA NO TERMINADA, PARA ARRASTRAR NODOS RUTA NO TERMINADA */
             this.activarAddMarker=1;/* ACTIVANDO AGREGAR MARCADOR */
         //ver si es necesario cuando el numero de objetos en el mapa sea cero
+        }else if(this.overlays.length<=3){
+
+            if(this.overlays.length==3 && this.cen_2==0){
+                this.Mensaje="Atencion, la ruta no es valida";
+                this.displaytrazaNoValida=true;
+                this.cen_2=1; /* CAMBIANDO PARA PERMITIR CONTINUAR BORRANDO NODOS Y LINEA */
+            }else if(this.cen_2==1){
+                this.overlays[1].setMap(null);
+                this.overlays[2].setMap(null);
+                
+                this.puntosRuta.pop();/* BORRANDO ULTIMO PUNTO COORDENADA*/
+                this.i=this.i-1; /* REDUCIENDO TITLE DEL NODO */
+                this.overlays.length=this.overlays.length-2; /* REDUCIENDO EL TAMAÑO DEL ARRAY OVERLAYS */
+            }
+            
+
+            
         }
 
         /* ACTIVANDO DESACTIVANDO BOTONES */
@@ -819,14 +834,20 @@ export class RutaComponent implements OnInit{
             this.disButDeshacer=true;
             this.disButNuevaRuta=false;
             this.disButSubirRuta=false;
-            this.disButBorrar=true;
+            this.disButBorrar=false;
         /* MAPA NO VACIO (HAY ALGUN OBJETO LINEA Y NODO)*/
         }else if(this.overlays.length!=0){
-            this.disButEditar=false;
+            this.disButEditar=true;
             this.disButDeshacer=false;
             this.disButNuevaRuta=true;
             this.disButSubirRuta=false;
+            this.disButBorrar=false;
         }
+    }
+
+    trazaNoValida(){
+        this.Mensaje="";
+        this.displaytrazaNoValida=false;
     }
 
     //APERTURA EL CUADRO PARA DECIDIR SI SE EDITA O NO LA RUTA TRAZADA
@@ -1181,6 +1202,7 @@ export class RutaComponent implements OnInit{
 
     /*GUARDAR RUTADETALLE EN LA BD*/
     guardarPuntosRutaDetalle(){
+        let cen:number;
         this.puntosRutaDetalleArray = [];
 
         //  CONDICIONAL SABER SI EXISTEN OBJETOS EN EL ARRAY OVERLAYS, SABER SI SE GUARDA UNA RUTA VACIA O NO
@@ -1198,7 +1220,7 @@ export class RutaComponent implements OnInit{
             );
         
         /* SE ESTA GUARDANDO UN TRIANGULO O UN RUTA */
-        }else if(this.overlays.length!=0  && this.overlays.length>6){ 
+        }else if(this.overlays.length!=0  && this.overlays.length>=5){ 
             /* CERRANDO RUTA */
             this.ultimalinea();
 
@@ -1239,16 +1261,36 @@ export class RutaComponent implements OnInit{
             this.displayGuardarCorrecto=true;
        
             //this.modRegistro==1 //ACTIVANDO LA SELECCION DEL FILAS GRILLA MAESTRO (RUTA TRAZA GUARDADA EN LA BD)
+        }else if(this.overlays.length<5){
+            this.displayrutaNoPermitida=true;
+             this.Mensaje="Error, no se puede guardar la ruta";
+             cen=0;
         }
 
         //ACTIVAR Y DESACTIVAR BOTONES AL GUARDAR EL DETALLE
-        this.disButBorrar = true;
-        this.disButEditar  = true;
-        this.disButTerminarRuta = true;
-        this.disButSubirRuta = true;
-        this.disButDeshacer = true;
-        this.disButNuevaRuta = true;
-        //this.disButCancelar FALTA PROGRAMACION, NO TIENE USO
+        if(cen==1){
+            this.disButBorrar = true;
+            this.disButEditar  = true;
+            //this.disButTerminarRuta = true;
+            this.disButSubirRuta = true;
+            this.disButDeshacer = true;
+            this.disButNuevaRuta = true;
+            //this.disButCancelar FALTA PROGRAMACION, NO TIENE USO
+        //ACTIVAR Y DESACTIVAR BOTONES AL NO PODER GUARDAR EL DETALLE
+        }else if(cen==0){
+            this.disButBorrar = false;
+            this.disButEditar  = true;
+            //this.disButTerminarRuta = true;
+            this.disButSubirRuta = true;
+            this.disButDeshacer = false;
+            this.disButNuevaRuta = true;
+        }
+    }
+
+    /* MODAL, NO SE PUEDE GUARDAR RUTA NO PERMITIDA| */
+    rutaNoPermitida(){
+        this.Mensaje=""
+        this.displayrutaNoPermitida=false;
     }
 
     aceptarGuardarCorrectamente(){
