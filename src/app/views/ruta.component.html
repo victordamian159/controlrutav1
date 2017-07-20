@@ -5,10 +5,10 @@
 
     <!--BUSQUEDA-->
     <div class="row">
-        <div class="col-xl-5 col-md-5 col-sm-6 col-xs-12">
+        <div class="col-xl-4 col-md-4 col-sm-8 col-xs-12">
             <input class="form-control" placeholder="Buscar..." type="text"  id="gb1" #filtroGlobal />
         </div>
-        <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="col-xl-2 col-md-2 col-sm-4 col-xs-12">
             <button id="btnNuevo" type="button" (click)="nuevaRutaMaestro()" style="float:left" pButton icon="fa-file-text-o" label="Nuevo Registro"></button>
         </div>
     </div>
@@ -31,12 +31,7 @@
                             <p-column field="nro" header="N°" [style]="{'width':'4em','text-align':'center'}"></p-column>
                             <p-column field="RuDescripcion" header="Descripcion" [style]="{'width':'18em'}" ></p-column>
                             <p-column field="RuFechaCreacion" header="Creacion" [style]="{'width':'8em','text-align':'center'}" ></p-column>
-
-                            <p-footer>
-                                <div class="ui-helper-clearfix" style="width:100%">
-                                    
-                                </div>
-                            </p-footer>
+                            <!--<div class="ui-helper-clearfix" style="width:100%"></div>-->
                     </p-dataTable>
                 </div>
             </div>
@@ -77,7 +72,7 @@
             </div>
         </div><!--END MAP-->
     </div>
-</div><!--END CONTAINER PRINCIPAL-->
+</div><!--END PRINCIPAL-->
 
 
 
@@ -87,7 +82,7 @@
 
             <!--DESCRIPCION-->
             <div class="form-group row">
-                <label for="descripcion" class="col-4 col-form-label">Descripcion: </label>
+                <label for="descripcion" class="col-4 col-form-label">Nombre: </label>
                 <div class="col-8">
                     <input type="text" class="form-control" id="descripcion" [(ngModel)]="Ruta.RuDescripcion" name="descripcion"  required #desc="ngModel"/>
                     <span *ngIf="!desc.valid && desc.touched"  >  
@@ -131,7 +126,7 @@
             </div>
                     
             <!--BOTONES-->
-            <div class="btn_Modal row container">
+            <div class="btn_Modal row">
                 <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
                     <button class="btn_modal" type="button" pButton icon="fa-spin"  (click)="saveRutaMaestro(); desc.reset(); freg.reset(); fcrea.reset(); fkil.reset(); " [disabled]="!desc.valid || !freg.valid || !fcrea.valid || !fkil.valid"  label="Guardar"></button>
                 </div>
@@ -144,146 +139,146 @@
          <!--modal boton editar (PARA DECIDIR SI SE EDITA O NO)-->
          <p-dialog  [(visible)]="displayfromEditar" [resizable]="false" modal="modal" width="100%" responsive="true">
             <p>¿Desea editar la Ruta?</p>
-            <p-footer>
+            
                 <!--<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">-->
-                <div class="btn_Modal row container">
+                <div class="btn_Modal row">
                     <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
-                        <button class="btn_modal" type="button" pButton icon="fa-close" (click)="displayfromEditar=false" label="No"></button>
+                        <button class="btn_modal" type="button" pButton icon="fa-check" (click)="editar()" label="Aceptar"></button>
                     </div>
                     <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
-                        <button class="btn_modal" type="button" pButton icon="fa-check" (click)="editar()" label="Si"></button>
+                        <button class="btn_modal" type="button" pButton icon="fa-close" (click)="displayfromEditar=false" label="Cancelar"></button>
                     </div>
                 </div>
-            </p-footer>
+            
          </p-dialog>
 
          <!--CONDICIONAL ELIMINAR CABECERA-->
          <p-dialog [(visible)]="displayConfirmar" [resizable]="false" modal="modal" width="100%" responsive="true">
              <p>{{Mensaje}}</p>
-             <p-footer>
+             
                 <!--<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">-->
-                <div class="btn_Modal row container">
+                <div class="btn_Modal row">
                     <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
-                        <button class="btn_modal" type="button" pButton icon="fa-close" (click)="displayConfirmar=false" label="No"></button>
+                        <button class="btn_modal" type="button" pButton icon="fa-check" (click)="eliminarRuta()" label="Aceptar"></button>
                     </div>
                     <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
-                        <button class="btn_modal" type="button" pButton icon="fa-check" (click)="eliminarRuta()" label="Si"></button>
+                        <button class="btn_modal" type="button" pButton icon="fa-close" (click)="displayConfirmar=false" label="Cancelar"></button>
                     </div>
                 </div>
-            </p-footer>
+            
          </p-dialog>
 
          <!--CONDICIONAL ELIMINAR RUTA DETALLE-->
          <p-dialog [(visible)]="displayConfBorrarRuta" [resizable]="false" modal="modal" width="100%" responsive="true">
              <p>{{Mensaje}}</p>
-             <p-footer>
+             
                 <!--<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">-->
-                <div class="btn_Modal row container">
+                <div class="btn_Modal row">
                     <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
-                        <button class="btn_modal" type="button" pButton icon="fa-close" (click)="cancelarBorrarRutaBd()" label="No"></button>
+                        <button class="btn_modal" type="button" pButton icon="fa-check" (click)="borrarRutaDetalleBd()" label="Aceptar"></button>
                     </div>
                     <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
-                        <button class="btn_modal" type="button" pButton icon="fa-check" (click)="borrarRutaDetalleBd()" label="Si"></button>
+                        <button class="btn_modal" type="button" pButton icon="fa-close" (click)="cancelarBorrarRutaBd()" label="Cancelar"></button>
                     </div>
                 </div>
-            </p-footer>
+            
          </p-dialog>
 
     <!--MODAL PARA MENSAJES PARA EL USUARIO-->
             <!--NO SE PUEDE AGREGAR NODOS  SOBRE EL MAPA-->
             <p-dialog [(visible)]="displayAddMakerDesactivado" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 {{Mensaje}}
-                <p-footer>
-                    <div class="btn_Modal row container">
-                        <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                
+                    <div class="btn_Modal row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                             <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarAddMarkerDesactivado()"></button>
                         </div>
                     </div>
-                </p-footer>
+                
             </p-dialog>
 
              <!--NO HAY GRAFICA DE LA RUTA-->
             <p-dialog [(visible)]="displaySinGrafica" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 {{Mensaje}}
-                <p-footer>
-                    <div class="btn_Modal row container">
-                        <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                
+                    <div class="btn_Modal row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                             <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarSinGrafica()"></button>
                         </div>
                     </div>
-                </p-footer>
+                
             </p-dialog>
 
              <!--SE GUARDO LA RUTA CORRECTAMENTE-->
             <p-dialog [(visible)]="displayGuardarCorrecto" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 {{Mensaje}}
-                <p-footer>
-                    <div class="btn_Modal row container">
-                        <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                
+                    <div class="btn_Modal row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                             <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarGuardarCorrectamente()"></button>
                         </div>
                     </div>
-                </p-footer>
+                
             </p-dialog>
 
             <!--NUEVA RUTA-->
             <p-dialog [(visible)]="displayNuevaRuta" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 {{Mensaje}}
-                <p-footer>
-                    <div class="btn_Modal row container">
-                        <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                
+                    <div class="btn_Modal row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                             <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarNuevaRuta()"></button>
                        </div>
                     </div>
-                </p-footer>
+                
             </p-dialog>
 
             <!--DEBE TERMINAR LA RUTA PARA SELECCIONAR OTRA FILA-->
             <p-dialog [(visible)]="displayTerminarForSave" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 {{Mensaje}}
-                <p-footer>
-                    <div class="btn_Modal row container">
-                        <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                
+                    <div class="btn_Modal row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                             <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarTerminarRuta()"></button>
                        </div>
                     </div>
-                </p-footer>
+                
             </p-dialog>
 
             <!--DEBE TERMINAR (TRAZAR) LA RUTA PARA GUARDAR-->
             <p-dialog [(visible)]="displayTermineRuta" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 {{Mensaje}}
-                <p-footer>
-                    <div class="btn_Modal row container">
-                        <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                
+                    <div class="btn_Modal row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                             <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarTermineRuta()"></button>
                        </div>
                     </div>
-                </p-footer>
+                
             </p-dialog>
 
             <!--ERROR, LA RUTA NO PERMITIDA PARA GUARDAR-->
             <p-dialog [(visible)]="displayrutaNoPermitida" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 {{Mensaje}}
-                <p-footer>
-                    <div class="btn_Modal row container">
-                        <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                
+                    <div class="btn_Modal row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                             <button class="btn_modal" type="button" pButton label="Aceptar" (click)="rutaNoPermitida()"></button>
                        </div>
                     </div>
-                </p-footer>
+                
             </p-dialog>
 
             <!--ATENCION, LA RUTA NO ESTA PERMITIDA -->
             <p-dialog [(visible)]="displaytrazaNoValida" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 {{Mensaje}}
-                <p-footer>
-                    <div class="btn_Modal row container">
-                        <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                
+                    <div class="btn_Modal row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                             <button class="btn_modal" type="button" pButton label="Aceptar" (click)="trazaNoValida()"></button>
                         </div>
                     </div>
-                </p-footer>
+                
             </p-dialog>
             
 <!--
@@ -291,11 +286,11 @@
     COPIAS
     col-xl-6 col-md-6 col-sm-12 col-xm-12
 
-     <p-footer>
+     
                 <div class="ui-dialog-buttonpane ui-widget-content">
             
                 </div>
-            </p-footer>
+            
              </div>
             </div>
             <div class="col-xl-6 col-xl-6 col-sm-12 col-xs-12">

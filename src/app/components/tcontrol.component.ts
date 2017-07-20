@@ -8,7 +8,8 @@ import {PuntoControlService} from '../service/pcontrol.service'
 @Component({
     selector: 'app-tcontrol',
     templateUrl:'../views/tcontrol.component.html',
-    styleUrls:['../styles/tcontrol.component.css']
+    /*styleUrls:['./styles.css']*/
+    styleUrls:['../styles/tcontrol.component.css'] 
 })
 
 export class TcontrolComponent implements OnInit{
@@ -16,12 +17,16 @@ export class TcontrolComponent implements OnInit{
     private isLoading: boolean = false;  
 
     /* DISPLAY VENTANAS MODAL*/
-    displayAsignarTarjeta : boolean = false;
-    displayEditarTarjeta : boolean = false;
-    displayConfirmarEliminar : boolean = false;
-    displayErrorDatosProgxFecha : boolean = false;
-    displayNoProgEnFecha : boolean = false;
+        displayAsignarTarjeta : boolean = false;
+        displayEditarTarjeta : boolean = false;
+        displayConfirmarEliminar : boolean = false;
+        displayErrorDatosProgxFecha : boolean = false;
+        displayNoProgEnFecha : boolean = false;
+        displayErrorNoHayPCModalNuevo : boolean = false;
+        displayHayPCModalNuevo : boolean = false;
+        displayNoTarjetasAsignadas : boolean = false;
 
+    /* OTRAS VARIABLES */
     val:number;
     actRadioButton:boolean=true;
 
@@ -145,7 +150,9 @@ export class TcontrolComponent implements OnInit{
         this.emID = 1;
         //console.log(this.placas);
         this.getallplacasbusbyemsuem(this.emID,0); //PLACAS
-        this.getallpuntocontrolbyemru(this.emID,51); //PUNTOS DE CONTROL
+
+        //this.getallpuntocontrolbyemru(this.emID,51); PUNTOS DE CONTROL
+
         /*this.getalltarjetacontrol(); */
         
         this.getallprogramacionbyem(this.emID,0); //PROGRAMACION X EMP
@@ -165,6 +172,17 @@ export class TcontrolComponent implements OnInit{
             ()   => this.isLoading = false
         );
     }
+
+    /*/CONSULTA RECUPERAR PUNTOS DE CONTROL  (1,0)
+    getallpuntocontrolbyemru(emId:number, ruId:number){
+        this.tcontrolservice.getAllPuntoControlByEmRu(emId,ruId).subscribe(
+            data => {this.puntosControl=data; 
+                    console.log(this.puntosControl);
+                this.mgPuntosControl();}
+        );
+    }*/
+
+    /* FUNCION ASOCIADA A COMBO DE RUTAS */
     rutaId(event:Event){
         /*console.log(this._ruId);*/
         this.getAllPControlBy(this.emID,this._ruId);
@@ -173,7 +191,9 @@ export class TcontrolComponent implements OnInit{
     /* CONSULTAR TODOS LOS PUNTOS DE CONTROL EXISTENTES */
     getAllPControlBy(emId: number, ruId:number){
         this.pcontrolService.getAllPuntoControlByEmRu(emId, ruId).subscribe(
-            data => {this.ptsControl = data;},
+            data => {this.ptsControl = data; 
+                     this.puntosControl= this.ptsControl;
+                     this.mgPuntosControl();},
             err  => {this.errorMessage = err},
             ()   => this.isLoading = false
         );
@@ -188,12 +208,25 @@ export class TcontrolComponent implements OnInit{
     getalltarjetasbyemidpucoid(emId:number, PuCoId : number){
         this.tcontrolservice.getAllTarjetaControlByempuco(emId, PuCoId).subscribe(
             data => {
-                      this.allTarjControl=data; 
-                      this.mgTarjetasControl();
+                      this.allTarjControl=data;
+
+                      /* CONDICIONAL SI HAY TARJETAS ASIGNADAS MANDAR UN MENSAJE SI ES IGUAL A CERO */
+                      if(this.allTarjControl.length>0){
+                          this.mgTarjetasControl();
+                      }else if(this.allTarjControl.length==0){
+                          this.mensaje="No hay tarjetas de control asignadas";
+                          this.displayNoTarjetasAsignadas=true;
+                      }
                     },
             err  => {this.errorMessage=err},
             ()   => this.isLoading=false
         );
+    }
+
+    /* NO HAY TARJETAS DE CONTROL ASIGNADAS */
+    aceptarNoAsigTarjeta(){
+        this.mensaje="";
+        this.displayNoTarjetasAsignadas=false;
     }
 
     //CONSULTAR PROGRAMACION CABECERA, PARA OBTENER EL PRID NECESARIO PARA SACAR EL DETALLE
@@ -245,19 +278,24 @@ export class TcontrolComponent implements OnInit{
                 prId:prog.prId
             });
         }
+        /* AGREGAR LA FECHA DE INICIO 
+           Y FINAL DE LA PROGRAMACION */
     }
 
     //GRILLA PROGRAMACION DETALLE  -  POR LA FECHA
     mgprogDetalle(){ 
         this._progDetalle=[];
-        
+        console.log("this.progDetalle :"+this.progDetalle);
+
         //i: PARA RECORRER EL ARRAY, SI Y NO: CUANTOS SE ENCONTRARON Y NO SE ENCONTRARON
         
         let i = 0; let j=0;  let si=0; let no=0; let cen = 0; let programacion=[];
 
         while (i<this.placas.length){
+            /* BUSQUEDA */
             while (j<this.progDetalle.length && cen==0){
-                if      (this.progDetalle[i].BuId == this.placas[j].BuId){ 
+                /* CONDICIONAL BUSQUEDA */
+                if (this.progDetalle[i].BuId == this.placas[j].BuId){ 
                     //SI SON IGUALES CARGANDO EN OTRO ARRAY PARA PASAR A LA SIGUIENTE ETAPA
                     programacion.push({
                         BuId: this.progDetalle[i].BuId,
@@ -271,7 +309,7 @@ export class TcontrolComponent implements OnInit{
                     //this.progDetalle[i].BuId = this.placas[j].BuPlaca;
                     cen = 1; 
                 }else if(this.progDetalle[i].BuId != this.placas[j].BuId){
-                      
+                    /* CONTRARIO CONDICIONAL  */
                 }
                 j++;  
             }
@@ -291,10 +329,12 @@ export class TcontrolComponent implements OnInit{
                     PrDeOrden:progD.PrDeOrden,
                     PrDeId:progD.PrDeId,
                     PrDeAsignadoTarjeta:progD.PrDeAsignadoTarjeta
-                    //PrDeFecha:progD.PrDeFecha,
-                    //UsFechaReg:progD.UsFechaReg,
-                    //UsId:progD.UsId,
-                    //PrDeBase:progD.PrDeBase,
+                    /*
+                        PrDeFecha:progD.PrDeFecha,
+                        UsFechaReg:progD.UsFechaReg,
+                        UsId:progD.UsId,
+                        PrDeBase:progD.PrDeBase,
+                    */
                 });
             }
         }
@@ -308,22 +348,35 @@ export class TcontrolComponent implements OnInit{
                 ;}
         );
     }
-    //CONSULTA RECUPERAR PUNTOS DE CONTROL  (1,0)
-    getallpuntocontrolbyemru(emId:number, ruId:number){
-        this.tcontrolservice.getAllPuntoControlByEmRu(emId,ruId).subscribe(
-            data => {this.puntosControl=data; 
-                this.mgPuntosControl();}
-        );
-    }
+
+
 
     //CONSULTA PUNTOSDETALLE PARA INICIAR LA TARJETA CON EL PUNTO
     getallpuntocontroldetallebypuco(puCoId:number){
         this.tcontrolservice.getAllPuntoControlDetalleByPuCo(puCoId).subscribe(
             data => {
                         this.puntosControlDet=data; 
-                        //console.log(this.puntosControlDet);
+                        if(this.puntosControlDet.length==0){
+                            this.mensaje="No Hay Puntos de Control";
+                            this.displayErrorNoHayPCModalNuevo=true;
+                        }else if(this.puntosControlDet.length>0){
+                            this.mensaje="Puntos de Control Correcto";
+                            this.displayHayPCModalNuevo=true;
+                        }
                     }
         );
+    }
+
+    /* LISTA DE PC ESTA VACIO, MODAL NUEVA ASIGNACION DE TARJETA */
+    aceptarErrorNoHayPC(){
+        this.mensaje="";
+        this.displayErrorNoHayPCModalNuevo=false;
+    }
+
+    /* LISTA DE PC CORRECTO, MODAL NUEVA ASIGNACION DE TARJETA */
+    aceptarHayPC(){
+        this.mensaje="";
+        this.displayHayPCModalNuevo=false;
     }
 
     //MOSTRAR PUNTOS DE CONTROL COMBOBOX
@@ -407,14 +460,17 @@ export class TcontrolComponent implements OnInit{
     //ABRIR MODAL ASIGNAR NUEVA TARJETA CONTROL
     nuevaAsignaTarjeta(){
         this.tarjeta._TaCoId=0; //PONIENDO TACOID A CERO PARA INDICAR Q ES NUEVO REGISTRO
-        console.log("nueva tarjeta =D");
         this.displayAsignarTarjeta = true;
-        this.tcontrolservice.newTarjetaControl() //CABECERA
+        
+        /* PROCEDURE NUEVA TARJETA CABECERA */
+        this.tcontrolservice.newTarjetaControl() 
             .subscribe(
                 data =>{this._tarjeta=data;                      
                        // console.log(this._tarjeta);
                 }
             );
+        
+        /* PROCEDURE NUEVA TARJETA DETALLE */
         this.tcontrolservice.newTarjetaControlDetalle()
             .subscribe(
                 data =>{this._tarjetaDetalle=data; 
@@ -440,6 +496,7 @@ export class TcontrolComponent implements OnInit{
 
         this.tcontrolservice.getAllTarjetaControlDetalleBytaCoId(this.tarjeta._TaCoId).subscribe(
             data => { this._tarjetaDetalle = data;  
+                      console.log(this._tarjetaDetalle);
                       this.mgTarjetaDetalle();  }
         );
     }
@@ -469,7 +526,8 @@ export class TcontrolComponent implements OnInit{
         }
     }
 
-  //AQUI SE GUARDA TANTO CABECERA COMO DETALLE Y SE EDITA LA TABLA PROGRAMACIONDETALLE EL CAMPO ASIGNADO
+    /*AQUI SE GUARDA TANTO CABECERA COMO DETALLE Y SE EDITA 
+      LA TABLA PROGRAMACION DETALLE EL CAMPO ASIGNADO*/
     guardarTarjeta(){
             //NUEVO REGISTRO
             if(this.tarjeta._TaCoId == 0){
@@ -486,7 +544,8 @@ export class TcontrolComponent implements OnInit{
                         otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));    
                         this.tarjeta._TaCoHoraSalida=otra;
                     }
-                        
+                    
+                    /* OBJETO A MANDAR AL SERVIDOR */
                     this._tarjeta ={
                         TaCoId : this.tarjeta._TaCoId,
                         PuCoId : this.tarjeta._PuCoId,
@@ -500,16 +559,21 @@ export class TcontrolComponent implements OnInit{
                         UsFechaReg :new Date(),
                         TaCoNroVuelta : this.tarjeta._TaCoNroVuelta = 1
                     }
-                    console.log(this._tarjeta);
-                    console.log(this.val);
 
+                    console.log(this._tarjeta); /* OBJETO A MANDAR AL SERVIDOR */
+                    console.log(this.val);      /* VALOR ASIGNACION 0 , 1 , 2 */
+
+                    /* */
                     if(this.val==1 || this.val==0){
                         this.tcontrolservice.asignarTarjetaControl(this._tarjeta).
                         subscribe(data => {},   
                             err => {this.errorMessage=err}
                         );
+                    
+                    /* */
                     }else if(this.val==2){
-                        //ACTUALIZAR PROGRAAMCION DETALLE EN EL CAMPO ASIGNADO, SALE COMO ausente
+                        /*ACTUALIZAR PROGRAAMCION DETALLE EN EL CAMPO ASIGNADO, 
+                          SALE COMO ausente SI NO VINO NO SE LE ASIGNA TARJETA*/
                         console.log("ausente");
                         this._tarjeta ={
                             PrDeId : this._prDeId,
@@ -569,7 +633,8 @@ export class TcontrolComponent implements OnInit{
         //this.tarjeta._TaCoCuota = 9;
     }
 
-    //SELECCIONAR PUNTOS DE CONTROL DEL COMBOBOX
+    /*SELECCIONAR PUNTOS DE CONTROL DEL COMBOBOX, 
+      HACE CONSULTA PARA GRILLA PRINCIPAL*/
     puntosControlId(event:Event){
         this.idPunto = this.puntoControl.PuCoId;
         let ruID = this.puntoControl.RuId;
@@ -586,7 +651,7 @@ export class TcontrolComponent implements OnInit{
         this.tarjeta._prId=this._prId;
     }
 
-    //SELECCIONAR PLACA DE BUS COMOBOBOX
+    //SELECCIONAR PLACA DE BUS COMBOBOX
     placaObj(event : Event){
         this.val=0;
         this._prDeId = this.placa.PrDeId;

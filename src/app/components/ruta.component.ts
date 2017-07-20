@@ -945,8 +945,8 @@ export class RutaComponent implements OnInit{
             this.overlays.push(
                 new google.maps.Polyline({
                 path: this.coordenadas,
-                strokeColor: '#0101FF',
-                strokeOpacity : 0.5,
+                strokeColor: '#00796B',
+                strokeOpacity : 1,
                 strokeWeight :12 
             }));
 

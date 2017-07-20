@@ -1,1 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
+/* You can add global styles to this file, 
+and also import other style files */
+
+/* AQUI SE AGREGAN ESTILOS GLOBALES */
+/* APARIENCIA BOTONES DE LA VENTANA NUEVO */
+.btn_modal{
+    width:100%; 
+    height:40px; 
+    font-size:15px;
+    background-color:#4CAF50;
+    text-align: center;
+}

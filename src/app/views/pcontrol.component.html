@@ -1,32 +1,40 @@
 <div class="contenedor">
     <!--TITULO-->
-    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-        <div id="titulo">Puntos de Control</div>
-    </div>
+    <div id="titulo">Puntos de Control</div>
+
 
     <!--BUSQUEDA + RUTAS-->
     <div class="row ">
-        <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
-            <div>Rutas:</div>
-            <select class="form-control" required [(ngModel)]="_ruid" (change)="_rutaid($event)" #rutaid="ngModel">
-                <option *ngFor="let ruta of rutas" [value]="ruta.RuId">{{ruta.RuDescripcion}}</option>
-            </select>
-        </div>
-
-        <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
-            <div>Busqueda:</div>
+        
+        <!--BUSQUEDA SOBRE DATATABLE-->
+        <div class="col-xl-3 col-md-6 col-sm-12 col-xs-12">
             <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
         </div>
 
-        <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
-                <button id="btnNuevo" type="button" (click)="newPuntoControlMaestro()" style="float:left; margin-top: 27px;" pButton icon="fa-file-text-o" label="Nuevo Registro"></button>
+        <!--BOTON NUEVO REGISTRO-->
+        <div class="col-xl-3 col-md-6 col-sm-12 col-xs-12">
+            <button id="btnNuevo" type="button" (click)="newPuntoControlMaestro()" pButton icon="fa-file-text-o" label="Nuevo Registro"></button>
+        </div>
+
+        <!--COMBO RUTAS-->
+        <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
+            <select class="form-control" required [(ngModel)]="_ruid" (change)="_rutaid($event)" #rutaid="ngModel">
+                <option *ngFor="let ruta of rutas" [value]="ruta.RuId">{{ruta.RuDescripcion}}</option>
+            </select>
         </div>
     </div>
 
     <!--CONTENIDO-->
     <div class="row">
         <!--TABLAS-->
-        <div class="col-xl-5 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-xl-6 col-md-12 col-sm-12 col-xs-12">
+            <!--div class="row">
+                <br>
+            </div>
+            <div class="row">
+                
+            </div>-->
+
             <!--TABLA CABECERA-->
             <div class="row table table-responsive">
                 <p-dataTable [value]="pCMaestroMostrar" [rows]="5" [paginator]="true" [pageLinks]="2" [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" selectionMode="single" 
@@ -55,7 +63,7 @@
         </div>
 
         <!--GRAFICOS -->
-        <div class="col-xl-7 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-xl-6 col-md-12 col-sm-12 col-xs-12">
             <!--MAPA-->
             <div class="row ">
                 <div class="col-xl-12">
@@ -65,7 +73,7 @@
                             #gmap
                             [options]="options" 
                             [overlays]="overlays"
-                            [style]="{'width':'100%','height':'460px'}" 
+                            [style]="{'width':'100%','height':'380px'}" 
                             (onMapClick)="handleMapClick($event)"
                             (onOverlayClick)="handleOverClick($event)"
                             (onOverlayDragEnd)="handleDragEnd($event)">

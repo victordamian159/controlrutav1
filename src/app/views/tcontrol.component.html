@@ -1,46 +1,46 @@
+<!--FORMULARIO-->
 <div class="contenedor">
     <!--TITULO-->
-    <div class="row" id="titulo">
-        <div class="col-md-12">
-        Tarjetas de Control
-        </div>
-    </div>
-    
-    <!--BUSQUEDA + PUNTOS DE CONTROL-->
+    <div id="titulo"> Tarjetas de Control </div>
+   
+    <!--BUSQUEDA + BTNNUEVO + COMBO RUTA + COMBO PCONTROL-->
     <div class="row">
-        <div class="col-xl-4 col-md-4 col-sm-4 col-xs-4">
-            <div>Rutas:</div>
+        <!--COMBO RUTAS-->
+        <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
             <select class="form-control" required [(ngModel)]="_ruId" (change)="rutaId($event)"   #ruta="ngModel">
+                <!--<option value="" disabled selected hidden>Please Choose...</option>-->
                 <option *ngFor="let ruta of rutas" [value]="ruta.RuId">{{ruta.RuDescripcion}}</option>
             </select> 
         </div>
 
-        <div class="col-xl-4 col-md-4 col-sm-4 col-xs-4">
-            <div>Puntos de Control:</div>
+        <!--COMBO PUNTOS CONTROL-->
+        <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
             <select class="form-control" required [(ngModel)]="_pcId" (change)="pControlId($event)"   #pcontrol="ngModel">
+                <!--<option value="" disabled selected hidden>Please Choose...</option>-->
                 <option *ngFor="let punto of ptsControl" [value]="punto.PuCoId">{{punto.PuCoDescripcion}}</option>
             </select> 
         </div>
 
-        <div class="col-xl-4 col-md-4 col-sm-4 col-xs-4">
-            <div>Busqueda:</div>
+        <!--BUSQUEDA-->
+        <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
             <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
         </div>
-       
-        <!--<button type="text" (click)="nuevaAsignaTarjeta()" pButton label="Nuevo" data-toggle="modal" ></button>-->
-         <!--<div [hidden]="!PROG.touched || PROG.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">Error, revise los datos ingresados</div>-->
+
+        <!--NUEVO REGISTRO style="float:left"-->
+        <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+            <button class="form-control" id="btnNuevo" type="button"  pButton icon="fa-file-text-o" (click)="nuevaAsignaTarjeta()" label="Asignar Tarjeta" ></button>
+        </div>
     </div>
-    
-    <!--TABLAS-->
+
+    <!--TABLA CABECERA-->
     <div class="row">
-        <!--TABLA MAESTRO-->
-        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+        <!--<div class="col-xl-12 col-md-12 col-sm-12 col-xs-12"></div>-->
             <div class=" table table-responsive">
-                <p-dataTable [value]="_allTarjControl" [rows]="3" [paginator]="true"  [globalFilter]="filtroGlobal" [responsive]="false" emptyMessage="Lista Vacia"
+                <p-dataTable [value]="_allTarjControl" [rows]="5" [paginator]="true"  [globalFilter]="filtroGlobal" [responsive]="false" emptyMessage="Lista Vacia"
                     scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectCabecera($event)">
                     
                     <!--campos de la datatable-->
-                    <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
                         <template let-col let-row="rowData" pTemplate="body">
                             <button type="button" pButton class="btn" (click)="editarC(row.TaCoId)" icon="fa-pencil-square-o" > </button>
                             <button type="button" pButton class="btn" (click)="eliminarC(row.TaCoId)" icon="fa-trash" > </button>
@@ -53,93 +53,96 @@
                     <p-column field="TaCoFecha" header="Fecha"  [style]="{'width':'9em','text-align':'center'}"></p-column>
                     <p-column field="TaCoHoraSalida" header="Salida"  [style]="{'width':'7em','text-align':'center'}"></p-column>
                     
-                    <p-footer>
-                        <div class="ui-helper-clearfix" style="width:100%">
-                            <button type="button"  pButton icon="fa-plus" style="float:left" (click)="nuevaAsignaTarjeta()" label="Nuevo" ></button>
+                    <!--
+                        <p-footer>
+                            <div class="ui-helper-clearfix" style="width:100%">
+                                <button type="button"  pButton icon="fa-plus" style="float:left" (click)="nuevaAsignaTarjeta()" label="Nuevo" ></button>
+                            </div>
                         </div>
-                    </p-footer>
+                    -->
                 </p-dataTable>
             </div>
-        </div>
+        
+    </div>    
 
-        <!--TABLA DETALLE TARJETA CONTROL-->
-        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+    <!--TABLA DETALLE TARJETA CONTROL-->
+    <div class="row">
+        <!--<div class="col-xl-12 col-md-12 col-sm-12 col-xs-12"></div>-->
             <div class=" table table-responsive">
-                <p-dataTable [value]="_allTarjDetalle" [rows]="7"   [globalFilter]="filtroGlobal" [responsive]="false"
+                <p-dataTable [value]="_allTarjDetalle" [rows]="14"   [globalFilter]="filtroGlobal" [responsive]="false"
                     scrollable="true" [paginator]="true" selectionMode="single" scrollWidth="100%" emptyMessage="Lista Vacia" >
-                    <p-column field="nro" header="N°"  [style]="{'width':'3em','text-align':'center'}"></p-column>
+                    <p-column field="nro" header="N°"  [style]="{'width':'2em','text-align':'center'}"></p-column>
                     <p-column field="TaCoDeDescripcion" header="Punto"  [style]="{'width':'10em'}"></p-column>
-                    <p-column field="TaCoDeHora" header="Control"  [style]="{'width':'7em','text-align':'center'}"></p-column>
-                    <p-column field="TaCoDeTiempo" header="Tiempo"  [style]="{'width':'7em','text-align':'center'}"></p-column>
+                    <p-column field="TaCoDeHora" header="Control"  [style]="{'width':'4em','text-align':'center'}"></p-column>
+                    <p-column field="TaCoDeTiempo" header="Tiempo"  [style]="{'width':'4em','text-align':'center'}"></p-column>
                 </p-dataTable>
             </div>
-        </div>
+       
     </div>
 </div>
 
     
-
-    <!--modal boton nuevo-->
-    <p-dialog header="Asignando Nueva Tarjeta" [resizable]="false" [(visible)]="displayAsignarTarjeta" modal="modal" width="100%" height="100%" [closable]= false>
-        <!--CUADRO-->
-        <div class="row"  style="overflow-y: auto; height:300px; ">
-            <div class="col-xl-4 col-md-6 col-sm-12 col-xs-12">
-                <!--PUNTOS DE CONTROL EXISTENTES COMBOBOX-->
-                <div class="form-group ">
-                    <label>Puntos:</label>
+<!--VENTANAS-->
+    <!--modal boton Nuevo-->
+    <p-dialog header="Asignando Nueva Tarjeta" [resizable]="false" [(visible)]="displayAsignarTarjeta"
+            modal="modal" width="370" [closable]= false>
+        <!--CONTENIDO
+        <div class="contenedor" style="overflow-y: auto; height:350px; ">-->
+        <div class="cont_modal">
+            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <label>Listado de Puntos de Control:</label>
                     <select class="form-control" [(ngModel)]="puntoControl" (change)="puntosControlId($event)" required #PC="ngModel">
                         <option *ngFor="let punto of _puntosControl" [ngValue]="punto" selected="selected">
                             {{punto.PuCoDescripcion}}
                         </option>
                     </select>  
-                    <div [hidden]="!PC.touched || PC.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                    <div id="validation" [hidden]="!PC.touched || PC.valid ">
                         Error, revise los datos ingresados
                     </div>
                 </div>
-                <!--LISTA PROGRAMACION EN LA BD COMBOBOX-->
-                <div class="form-group ">
-                    <label>Programas:</label>
-                    <select class="form-control" required [(ngModel)]="_prId" (change)="programacionId($event)"   #PROG="ngModel">
-                        <!--<option *ngFor="let prog of _programacion" [ngValue]="prog.prId">{{prog.prDescripcion}}</option>-->
-                        <option *ngFor="let prog of _programacion" [value]="prog.prId">{{prog.prDescripcion}}</option>
-                    </select> 
-                    <div [hidden]="!PROG.touched || PROG.valid " class="alert alert-danger" style="display: inline-block; font-size: 80%;">
-                        Error, revise los datos ingresados
-                    </div>
-                </div>
-                <!--HORA SALIDA-->  
+
                 <div class="form-group">
-                    <!--<label class="control-label" for="hora" for="hora" class="col-1 col-form-label">Salida:</label>-->
-                    <label >Salida:</label>
+                    <label>Programaciones:</label>
+                    <select class="form-control" required [(ngModel)]="_prId" (change)="programacionId($event)"   #PROG="ngModel">
+                        <option *ngFor="let prog of _programacion" [value]="prog.prId">
+                            {{prog.prDescripcion}}
+                        </option>
+                    </select> 
+                    <div id="validation" [hidden]="!PROG.touched || PROG.valid ">
+                        Error, revise los datos ingresados
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label >Hora Salida:</label>
                     <input class="form-control" type="time"[(ngModel)]="tarjeta._TaCoHoraSalida"  step="1"  required #hsal="ngModel" />
-                    <span *ngIf="!hsal.valid && (hsal.touched || hsal.dirty)" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                        <div [hidden]="!hsal.errors.required"> obligatorio </div>
+                    <span *ngIf="!hsal.valid && (hsal.touched || hsal.dirty)"  >  
+                        <div id="validation" [hidden]="!hsal.errors.required"> obligatorio </div>
                     </span>   
                 </div>                
             </div>
-            <div class="col-xl-4 col-md-6 col-sm-12 col-xs-12">
-                <!-- CUOTA-->
+
+            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12"> 
                 <div class="form-group">    
-                    <label>Cuota:</label>
+                    <label>Cuota por vuelta:</label>
                     <input class="form-control" type="number" value="0" [(ngModel)]="tarjeta._TaCoCuota" required #cuota="ngModel" />
-                    <span *ngIf="!cuota.valid && (cuota.touched || cuota.dirty)" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                        <div [hidden]="!cuota.errors.required"> obligatorio </div>
+                    <span *ngIf="!cuota.valid && (cuota.touched || cuota.dirty)"  >  
+                        <div id="validation" [hidden]="!cuota.errors.required"> obligatorio </div>
                     </span>   
                 </div>    
-                <!--INGRESAR FECHA PARA BUSCAR SU PROGRAMACION EXISTENTE--> 
-                <div class="form-group  ">
-                    <label>Fecha:</label>
+                
+                <div class="form-group">
+                    <label>Fecha de la Programacion:</label>
                     <input class="form-control" name="fecha" type="date" [(ngModel)]="tarjeta._TaCoFecha" required #fprog="ngModel" />
                     <button type="button" (click)="buscarxFecha()" pButton icon="fa-search" [disabled]="!fprog.valid"></button>
-                    <div [hidden]="fprog.valid || !fprog.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;">
+                    <div id="validation" [hidden]="fprog.valid || !fprog.touched">
                             Error, revise los datos ingresados
                     </div> 
                 </div>
-                <!--ESTADO RADIOBUTTON  CREO Q MEJOR CAMBIARLO A COMBOBOX-->
-                <div class="form-group ">
-                    <!--<div class="col-3"><label for="cuota" class="col-1 col-form-label">Estado:</label></div>-->
-                    <label>Estado:</label>
-                    <!--<div class="col-9" >-->
+                
+                <div class="form-group">
+                    <label>Estado de la Tarjeta:</label>
                     <div class="row">
                         <label class="radio-inline"><p-radioButton  value="0" label="No Asignado" [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton></label>
                         <label class="radio-inline"><p-radioButton  value="1" label="Asignado"    [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton></label>
@@ -147,42 +150,30 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-4 col-md-12 col-sm-12 col-xs-12">
-                <!--TABLA PROGRAMCION DEL DIA BUSCADO-->
+
+            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                 <div class=" form-group ">
-                    <!--
-                    <div class="col-3">
-                        <label class="col-2 col-form-label">Placas:</label>
-                    </div>
-                    -->
-                    <label>Placas:</label>
-                    <!--<div class="col-10"></div>-->
-                    
+                    <label>Orden de las Placas:</label>
                     <p-dataTable [value]="_progDetalle" scrollable="true" scrollHeight="100px" selectionMode="single" 
                                 (onRowSelect)="onRowPlaca($event)" emptyMessage="Lista Vacia" >
-                            <p-column field="BuId" [style]="{'width':'3em'}" ></p-column>
-                            <p-column field="nroPlaca" [style]="{'width':'6em'}" ></p-column>
+                        <p-column field="BuId" [style]="{'width':'3em'}" ></p-column>
+                        <p-column field="nroPlaca" [style]="{'width':'6em'}" ></p-column>
                     </p-dataTable>
-                    
-                    
                 </div>
             </div>
         </div>
-    
-        <!--<div class="row">modal footer  VACIO  PC PROG fprog hsal cuota</div>-->
 
         <!--BOTONES-->
-        <div class="row">
-            <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
-                <button class="btn_modal" type="button" pButton (click)="guardarTarjeta()" [disabled]="!PC.valid || !PROG.valid || !fprog.valid || !hsal.valid || !cuota.valid || this.actRadioButton" label="Guardar"></button>
+        <div class=" btn_Modal row ">
+            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                <button class="btn_modal" type="text" pButton icon="fa-check" (click)="guardarTarjeta();  PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset();" [disabled]="!PC.valid || !PROG.valid || !fprog.valid || !hsal.valid || !cuota.valid || this.actRadioButton" label="Guardar"></button>
             </div>
-            <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
-                <button class="btn_modal" type="button" pButton  (click)="cancelarTarjeta()" label="Cancelar"></button>
+            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelarTarjeta();  PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset(); " label="Cancelar"></button>
             </div>
         </div>
-        
     </p-dialog>
-
+    
     <!--EDITAR TARJETA DE CONTROL-->
      <p-dialog [(visible)]="displayEditarTarjeta" [resizable]="false" modal="modal" width="100%" [closable]= false>
          <!--PUNTOS DE CONTROL EXISTENTES-->
@@ -216,42 +207,94 @@
             </div>
 
         <!--PIE BOTONES DEL FORM-->
-            <p-footer>
-                <div class="ui-dialog-buttonpane ui-helper-clearfix" >    
-                    <button type="button" pButton  (click)="guardarTarjeta()" label="Guardar"></button>
-                    <button type="button" pButton  (click)="cancelarEditarTarjeta()" label="Cancelar"></button>
+            <div class=" btn_Modal row ">
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">    
+                    <button class="btn_modal" type="button" pButton  (click)="guardarTarjeta()" label="Guardar"></button>
                 </div>
-            </p-footer>
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                    <button class="btn_modal" type="button" pButton  (click)="cancelarEditarTarjeta()" label="Cancelar"></button>
+                </div>
+            </div>
      </p-dialog>  
+
+
+
 
      <!--MODAL CONFIRMAR ELIMINAR REG-->
      <p-dialog [(visible)] = "displayConfirmarEliminar" [resizable]="false" modal="modal" width="100%" [closable]=false>
             {{mensaje}}
-            <p-footer>
-                <div class="ui-dialog-buttonpane ui-helper-clearfix" > 
-                    <button type="button" pButton (click)="cancelar_eliminarC()" label="Cancelar"></button>
-                    <button type="button" pButton (click)="_eliminarC()" label = "Eliminar"></button>
+            <div class=" btn_Modal row ">
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                    <button class="btn_modal" type="text" pButton (click)="cancelar_eliminarC()" label="Cancelar"></button>
                 </div>
-            </p-footer>
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                    <button class="btn_modal" type="text" pButton (click)="_eliminarC()" label = "Eliminar"></button>
+                </div>
+            </div>
      </p-dialog>  
 
+<!--MENSAJES PARA EL USUARIO-->
      <!--MODAL ERROR FALTAN SELECCIONAR RUTA O PUNTOS D ECONTROL PA BUSCAR X FECHA-->
      <p-dialog [(visible)] = "displayErrorDatosProgxFecha" [resizable]="false" modal="modal" width="100%" [closable]=false>
             {{mensaje}}
-            <p-footer>
-                <div class="ui-dialog-buttonpane ui-helper-clearfix" > 
-                    <button type="button" pButton (click)="errorBuscarxFecha()" label=" Aceptar"></button>
+            <div class=" btn_Modal row ">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                    <button class="btn_modal" type="text" pButton (click)="errorBuscarxFecha()" label=" Aceptar"></button>
                 </div>
-            </p-footer>
+            </div>
      </p-dialog>  
 
      <!--MODAL ERROR NO HAY DATOS FECHA EN FECHA-->
      <p-dialog [(visible)] = "displayNoProgEnFecha" [resizable]="false" modal="modal" width="100%" [closable]=false>
             {{mensaje}}
-            <p-footer>
-                <div class="ui-dialog-buttonpane ui-helper-clearfix" > 
-                    <button type="button" pButton (click)="errorBusquedaProg()" label=" Aceptar"></button>
+            <div class=" btn_Modal row ">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                    <button class="btn_modal" type="text" pButton (click)="errorBusquedaProg()" label=" Aceptar"></button>
                 </div>
-            </p-footer>
+            </div>
      </p-dialog>  
 
+     <!--MODAL VALIDO LISTA DE PUNTOS DE CONTROL DETALLE-->
+     <p-dialog [(visible)] = "displayHayPCModalNuevo" [resizable]="false" modal="modal" width="100%" [closable]=false>
+            {{mensaje}}
+            <div class=" btn_Modal row ">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                    <button class="btn_modal" type="text" pButton (click)="aceptarHayPC()" label=" Aceptar"></button>
+                </div>
+            </div>
+     </p-dialog>  
+
+     <!--MODAL NO VALIDO LISTA DE PUNTOS DE CONTROL DETALLE-->
+     <p-dialog [(visible)] = "displayErrorNoHayPCModalNuevo" [resizable]="false" modal="modal" width="100%" [closable]=false>
+            {{mensaje}}
+            <div class=" btn_Modal row ">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                    <button class="btn_modal" type="text" pButton (click)="aceptarErrorNoHayPC()" label=" Aceptar"></button>
+                </div>
+            </div>
+     </p-dialog>  
+
+     <!--MODAL NO HAY TARJETAS DE CONTROL ASIGNADAS-->
+     <p-dialog [(visible)] = "displayNoTarjetasAsignadas" [resizable]="false" modal="modal" width="100%" [closable]=false>
+            {{mensaje}}
+            <div class=" btn_Modal row ">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                    <button class="btn_modal" type="text" pButton (click)="aceptarNoAsigTarjeta()" label=" Aceptar"></button>
+                </div>
+            </div>
+     </p-dialog>  
+
+
+
+
+
+
+
+
+<!--<button type="text" (click)="nuevaAsignaTarjeta()" pButton label="Nuevo" data-toggle="modal" ></button>-->
+         <!--<div [hidden]="!PROG.touched || PROG.valid ">Error, revise los datos ingresados</div>-->
+
+<!--<div class="col-3"><label for="cuota" class="col-1 col-form-label">Estado:</label></div>-->
+<!--<option *ngFor="let prog of _programacion" [ngValue]="prog.prId">{{prog.prDescripcion}}</option>-->
+<!--<label class="control-label" for="hora" for="hora" class="col-1 col-form-label">Salida:</label>-->
+        <!--<div class="row">modal footer  VACIO  PC PROG fprog hsal cuota</div>-->
