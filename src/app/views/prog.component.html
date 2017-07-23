@@ -1,46 +1,43 @@
 <div class="contenedor">
     <!--TITUTO-->
-    <div style="text-align:center" >Tabla Programaciones</div>
+    <div class="titulo" >Tabla Programaciones</div>
     
     <!--BUSQUEDA-->
     <div class="row">
-        <div class="col-xl-3 col-md-3 col-sm-12 col-xs-12">
+        <div class="col-xl-3 col-md-3 col-sm-8 col-xs-12">
             <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
         </div>
-        <div class="col-xl-3 col-md-3 col-sm-12 col-xs-12">
-           <button id="btnNuevo" type="text" style="float:left" (click)="NuevaProgCabecera()" pButton  label="Nuevo"></button>
+        <div class="col-xl-3 col-md-3 col-sm-4 col-xs-12">
+           <button class="form-control" id="btnNuevo" type="button" icon="fa-file-text-o" (click)="NuevaProgCabecera()" pButton  label="Nueva Programacion"></button>
         </div>
     </div>
 
     <!--TABLA PROGRAMACION MAESTRO-->
     <div class="row">
         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-            <p-dataTable [value]="programacionMaestroArrayHTML" [rows]="5" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,15,20]" [globalFilter]="filtroGlobal"
-                scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">
-                
-                <!--CAMPOS DE LA TABLA-->
-                <p-column styleClass="col-button" [style]="{'width':'4em'}">
-                    <!--<template pTempalte="header"><button type="button" pButton icon="fa-refresh">  </button></template>-->
-                    <template let-col let-progrRowMaestro="rowData" pTemplate="body">
-                        <button type="button" pButton class="btn" (click)="editarCabecera(progrRowMaestro)" icon="fa-pencil-square-o" ></button>
-                        <button type="button" pButton class="btn" (click)="eliminarRegistroGrilla(progrRowMaestro.prId)" icon="fa-trash" ></button>
-                    </template>
-                </p-column>
-                <p-column field="nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
-                <p-column field="tipo" header="Tipo"  [style]="{'width':'8em','text-align':'center'}"></p-column>
-                <p-column field="prDescripcion" header="Nombre"  [style]="{'width':'14em','text-align':'center'}"></p-column>
-                <p-column field="PrCantidadBuses" header="Cant."  [style]="{'width':'4em','text-align':'center'}"></p-column>
-                <p-column field="PrFechaInicio" header="Desde" [style]="{'width':'8em','text-align':'center'}"></p-column>
-                <p-column field="PrFechaFin" header="Hasta" [style]="{'width':'8em','text-align':'center'}"></p-column>
-                <p-column field="dias" header="Dias"  [style]="{'width':'4em','text-align':'center'}"></p-column>
-
-                <!--<p-footer>
-                    <div class="ui-helper-clearfix" style="width:100%">
-                        <button type="button"  pButton icon="fa-plus" style="float:left" (click)="nuevaAsignaTarjeta()" label="Nuevo" ></button>
-                        <span class="text-xs-right"></span>
-                    </div>
-                </p-footer>-->
-            </p-dataTable>
+            <div class="row">
+                <div class="table table-responsive">
+                    <p-dataTable [value]="programacionMaestroArrayHTML" [rows]="5" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,15,20]" [globalFilter]="filtroGlobal"
+                        scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">
+                        
+                        <!--CAMPOS DE LA TABLA-->
+                        <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                            <!--<template pTempalte="header"><button type="button" pButton icon="fa-refresh">  </button></template>-->
+                            <template let-col let-progrRowMaestro="rowData" pTemplate="body">
+                                <button type="button" pButton id="btnTable" (click)="editarCabecera(progrRowMaestro)" icon="fa-pencil-square-o" ></button>
+                                <button type="button" pButton id="btnTable" (click)="eliminarRegistroGrilla(progrRowMaestro.prId)" icon="fa-trash" ></button>
+                            </template>
+                        </p-column>
+                        <p-column field="nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
+                        <p-column field="tipo" header="Tipo"  [style]="{'width':'8em','text-align':'center'}"></p-column>
+                        <p-column field="prDescripcion" header="Nombre"  [style]="{'width':'14em','text-align':'center'}"></p-column>
+                        <p-column field="PrCantidadBuses" header="Cant."  [style]="{'width':'4em','text-align':'center'}"></p-column>
+                        <p-column field="PrFechaInicio" header="Desde" [style]="{'width':'8em','text-align':'center'}"></p-column>
+                        <p-column field="PrFechaFin" header="Hasta" [style]="{'width':'8em','text-align':'center'}"></p-column>
+                        <p-column field="dias" header="Dias"  [style]="{'width':'4em','text-align':'center'}"></p-column>
+                    </p-dataTable>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -49,61 +46,112 @@
             <!--TITULO-->
             <p-header> {{titleNuevoProgPrimerModal }} Programacion </p-header>
             
-            <!--CUERPO
-            <div class="win_modal"  style="overflow-y: auto; height:380px; width: 100%;">-->
-            <div class="win_modal">
-                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                    <!--NOMBRE PARA RECONOCER A LA PROGRAMACION  -->
-                    <div class="form-group">
-                        <label for="descripcion" class="control-label">Nombre:</label>
-                        <input class="form-control" type="text" id="descripcion"[(ngModel)]="progMaestro.PrDescripcion" #descrip="ngModel" required />
-                        <span *ngIf="!descrip.valid && descrip.touched" >
-                            <div id="validation" [hidden]="!descrip.errors.required"> obligatorio </div>
-                        </span>
-                    </div>
+            <!--CUERPO-->
+            <div class="row">
+                <div class="cont_modal">
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <!--NOMBRE PARA RECONOCER A LA PROGRAMACION  -->
+                            <div class="row">
+                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label for="descripcion" class="control-label">Nombre de la Programacion:</label>
+                                        <input class="form-control" type="text" id="descripcion"[(ngModel)]="progMaestro.PrDescripcion" #descrip="ngModel" required />
+                                    
+                                        <span *ngIf="!descrip.valid && descrip.touched" >
+                                            <div id="validation" [hidden]="!descrip.errors.required"> Obligatorio </div>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
 
-                    <!--FECHAS -->
-                    <div class="form-group">
-                        <label>Del:</label>
-                        <input class="form-control" name="finicio"  type="date" [(ngModel)]="progMaestro.PrFechaInicio" required #fde="ngModel" />
-                        <span *ngIf="!fde.valid && fde.touched"  >   
-                            <div id="validation" [hidden]="!fde.errors.required"> Obligatorio </div>
-                        </span>
-                    </div>
-                    <div class="form-group">
-                        <label >Hasta:</label>
-                        <input class="form-control" name="ffinal"  type="date" [(ngModel)]="progMaestro.PrFechaFin"  required #fha="ngModel" />
-                        <span *ngIf="!fha.valid && fha.touched"  >  
-                            <div id="validation" [hidden]="!fha.errors.required"> Obligatorio </div>
-                        </span>
-                    </div>
-                </div>
+                            <!--FECHAS -->
+                            <div class="row">
+                                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label>Del:</label>
+                                        <input class="form-control" name="finicio"  type="date" [(ngModel)]="progMaestro.PrFechaInicio" required #fde="ngModel" />
+                                        <span *ngIf="!fde.valid && fde.touched"  >   
+                                            <div id="validation" [hidden]="!fde.errors.required"> Obligatorio </div>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label >Hasta:</label>
+                                        <input class="form-control" name="ffinal"  type="date" [(ngModel)]="progMaestro.PrFechaFin"  required #fha="ngModel" />
+                                        <span *ngIf="!fha.valid && fha.touched"  >  
+                                            <div id="validation" [hidden]="!fha.errors.required"> Obligatorio </div>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                
+                            <!--CANTIDAD DE BUSES ACTIVOS E INACTIVOS-->
+                            <div class="row">
+                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="row" >
+                                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                            <div class="row">
+                                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <label class="control-label">Buses:</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                    <!--CANTIDAD DE BUSES ACTIVOS E INACTIVOS-->
-                    <div class="form-group">
-                        <label for="nrobuses" class="control-label">Buses:____Activos:{{bAct}}_ No Activos: {{bNAct}}</label>
-                    </div>
-
-                    <!--TIPO DE PROGRAMACION MANUAL O AUTOMATICO-->
-                    <div class="form-group">
-                        <label >Tipo:</label>
-                        <select class="form-control" [(ngModel)]="tipoProg" (change)="tipoProgramacion($event)" required #tprog="ngModel">
-                            <option *ngFor="let tipo of _tipoProg" [ngValue]="tipo.id">{{tipo.nTipo}}</option>
-                        </select>
-                        <div id="validation" [hidden]="!tprog.touched || tprog.valid ">
-                                Error, revise los datos ingresados
-                        </div>
-                    </div>
-
-                    <!--FORMA DE PROGRAMACION POR TIEMPO Y CANTIDAD DE BUSES (Escala o Pescadito)-->
-                    <div class="form-group">
-                        <label >Forma:</label>
-                        <select class="form-control" [(ngModel)]="formaProg" (change)="formaProgramacion($event)" required #fprog="ngModel" >
-                            <option *ngFor="let forma of _formaProg" [ngValue]="forma.id">{{forma.nForma}}</option>
-                        </select>
-                        <div id="validation" [hidden]="!fprog.touched || fprog.valid ">
-                                Error, revise los datos ingresados
+                                    <div class="row" >
+                                        <div class="col-xl-6 col-md-6 col-sm-6 col-xs-5">
+                                            <label class="control-label">Activos:{{bAct}}</label>
+                                        </div>
+                                        <div class="col-xl-6 col-md-6 col-sm-6 col-xs-7">
+                                            <label class="control-label">No Activos:{{bNAct}}</label>
+                                        </div>                                            
+                                    </div>
+                                    
+                                    <!--
+                                        <div class="row" >
+                                            <div class="col-xl-3 col-md-3 col-sm-3 col-xs-3">
+                                                <label class="control-label">Buses:</label>
+                                            </div>
+                                            <div class="col-xl-4 col-md-4 col-sm-4 col-xs-4">
+                                                <label class="control-label">Activos:{{bAct}}</label>
+                                            </div>
+                                            <div class="col-xl-5 col-md-5 col-sm-5 col-xs-5">
+                                                <label class="control-label">No Activos:{{bNAct}}</label>
+                                            </div>                                            
+                                        </div>
+                                    -->
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                                    <!--TIPO DE PROGRAMACION MANUAL O AUTOMATICO-->
+                                    <div class="form-group">
+                                        <label >Tipo:</label>
+                                        <select class="form-control" [(ngModel)]="tipoProg" (change)="tipoProgramacion($event)" required #tprog="ngModel">
+                                            <option *ngFor="let tipo of _tipoProg" [ngValue]="tipo.id">{{tipo.nTipo}}</option>
+                                        </select>
+                                        <div id="validation" [hidden]="!tprog.touched || tprog.valid ">
+                                                Error, revise los datos ingresados
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                                    <!--FORMA DE PROGRAMACION POR TIEMPO Y CANTIDAD DE BUSES (Escala o Pescadito)-->
+                                    <div class="form-group">
+                                        <label >Forma:</label>
+                                        <select class="form-control" [(ngModel)]="formaProg" (change)="formaProgramacion($event)" required #fprog="ngModel" >
+                                            <option *ngFor="let forma of _formaProg" [ngValue]="forma.id">{{forma.nForma}}</option>
+                                        </select>
+                                        <div id="validation" [hidden]="!fprog.touched || fprog.valid ">
+                                                Error, revise los datos ingresados
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -119,7 +167,6 @@
                 </div>
             </div>
         </p-dialog> 
-        <!--FIN BOTON NUEVO MODAL-->
 
         <!--modal del boton guardar (2DA VENTANA  TERMINAR GENERANDO LA PROGRAMACION) -->
         <p-dialog header="Programacion Base" [resizable]="false" [(visible)]="displayProgramacionBase" 
@@ -146,10 +193,9 @@
                             <button class="btn_modal" type="button" pButton icon="fa-check" (click)="generarProgramacionSegundoModal()" label="Generar Programacion"></button>
                         </div>
                     </div>
-        </p-dialog> <!--fin boton modal guardar-->
+        </p-dialog> 
 
-
-        <!--MODAL PROGRAMACIONES-->
+        <!--MODAL VISTA PROGRAMACIONES (CLICK SOBRE UN REGISTRO)-->
         <p-dialog header="Programacion"  [(visible)]="displayProgramacion" modal="modal" 
          width="400" height="600"  [closable]="false" [resizable]="false" *ngIf="nroColumn>=5">
             <div class="container "> 
@@ -236,48 +282,71 @@
         <!--MODAL CONFIRMAR ELIMINAR REGISTRO-->
         <p-dialog [(visible)]="displayConfirmar" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 <p>{{mensaje}}</p>
-                <p-footer class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                     <button type="button" pButton (click)="displayConfirmar=false"   label="Cancelar"></button>
-                     <button type="button" pButton (click)="borrarRegistro()" label="Aceptar"></button>
-                </p-footer>
+                <div class="btn_Modal row">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <button class="btn_modal" type="button" pButton (click)="displayConfirmar=false"   label="Cancelar"></button>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <button class="btn_modal" type="button" pButton (click)="borrarRegistro()" label="Aceptar"></button>
+                    </div>
+                </div>
         </p-dialog>
 
         <!--MODAL ACEPTAR NUEVA PROGRAMACION (CONFIRMAR)-->
         <p-dialog [(visible)]="displayAceptarProgNueva" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
-                <p>{{mensaje}}</p>
-                <p-footer class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                     <button type="button" pButton (click)="aceptarNuevaProg()" label="Aceptar"></button>
-                </p-footer>
+            <p>{{mensaje}}</p>
+            <div class="btn_Modal row">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                    <button class="btn_modal" type="button" pButton (click)="aceptarNuevaProg()" label="Aceptar"></button>
+                </div>
+            </div>
         </p-dialog>
 
         <!--ERROR AL INGRESAR DATOS 1ERA VENTANA MODAL-->
         <p-dialog [(visible)]="displayErrorDatos" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 <p>{{mensaje}}</p>
-                <p-footer class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                     <button type="button" pButton (click)="errorDatos()" label="Aceptar"></button>
-                </p-footer>
+                <div class="btn_Modal row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        <button class="btn_modal" type="button" pButton (click)="errorDatos()" label="Aceptar"></button>
+                    </div>
+                </div>
         </p-dialog>
 
         <!--ERROR EN LA TABLA DE PROGRAMACION, VENTANA MODAL-->
         <p-dialog [(visible)]="displayErrorTablaProgramacion" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 <p>{{mensaje}}</p>
-                <p-footer class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                     <button type="button" pButton (click)="errorTablaProgramacion()" label="Aceptar"></button>
-                </p-footer>
+                <div class="btn_Modal row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        <button class="btn_modal" type="button" pButton (click)="errorTablaProgramacion()" label="Aceptar"></button>
+                    </div>
+                </div>
         </p-dialog>
 
         <!--ERROR FALTAN PLACAS EN EL SORTEO, VENTANA MODAL-->
         <p-dialog [(visible)]="displayFaltanPlacas" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 <p>{{mensaje}}</p>
-                <p-footer class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                     <button type="button" pButton (click)="faltanPlacas()" label="Aceptar"></button>
-                </p-footer>
+                <div class="btn_Modal row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        <button class="btn_modal" type="button" pButton (click)="faltanPlacas()" label="Aceptar"></button>
+                    </div>
+                </div>
         </p-dialog>
 
         <!--MENSAJE SE ACABA DE DESCARGAR LA PROGRAMACION, VENTANA MODAL-->
         <p-dialog [(visible)]="displayDescargaProg" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 <p>{{mensaje}}</p>
-                <p-footer class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                     <button type="button" pButton (click)="descargaProg()" label="Aceptar"></button>
-                </p-footer>
+                <div class="btn_Modal row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        <button class="btn_modal" type="button" pButton (click)="descargaProg()" label="Aceptar"></button>
+                    </div>
+                </div>
         </p-dialog>
+
+<!--<p-footer>
+    <div class="ui-helper-clearfix" style="width:100%">
+        <button type="button"  pButton icon="fa-plus" style="float:left" (click)="nuevaAsignaTarjeta()" label="Nuevo" ></button>
+        <span class="text-xs-right"></span>
+    </div>
+</p-footer>
+<div class="win_modal"  style="overflow-y: auto; height:380px; width: 100%;">
+-->

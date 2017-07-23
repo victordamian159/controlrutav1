@@ -152,6 +152,9 @@ export class TControlService{
                          .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
                          .catch((error:any) => Observable.throw(error.json().error || 'Server error')); //...errors if any
 	}
+
+
+	//asignarTarjetaControl(tarjetaControl:Object[]){
 	asignarTarjetaControl(tarjetaControl:Object[]){
 		return this.http.post(this.baseUrl+ "asignartarjeta/", tarjetaControl) // ...using post request
 						.map((res:Response) => res.json()) // ...and calling .json() on the response to return data

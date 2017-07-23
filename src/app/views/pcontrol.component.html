@@ -52,11 +52,11 @@
                     <p-column field="PuCoClase"     header="Clase" [style]="{'width':'10em','text-align':'center'}"></p-column>
 
                     <!--
-                        <p-footer>
+                        
                             <div class="ui-helper-clearfix" style="width:100%">
                                 <button type="button" (click)="newPuntoControlMaestro()" style="float:left" pButton icon="fa-file-text-o" label="Nuevo Registro"></button>
                             </div>
-                        </p-footer>
+                        
                     -->
                 </p-dataTable>
             </div>
@@ -254,7 +254,7 @@
         <!--VENTANA MODALES DE CONFIRMACION ELIMINAR EDITAR ACEPTAR--> 
         <p-dialog [(visible)]="displayElimRegCabecera" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
-            <p-footer>
+            
                 <div class="btn_Modal row container">
                     <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
                         <button class="btn_modal" type="button" pButton label="Eliminar" (click)="_eliminarMaestro()"></button>
@@ -263,12 +263,12 @@
                         <button class="btn_modal" type="button" pButton label="Cancelar" (click)="cancel_eliminarMaestro()"></button>
                     </div>
                 </div>
-            </p-footer>
+            
         </p-dialog>
 
         <p-dialog [(visible)]="displayElimRegDetalle" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
-            <p-footer>
+            
                 <div class="btn_Modal row container">
                     <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
                         <button class="btn_modal" type="button" pButton label="Eliminar" (click)="_eliminarDetalle()"></button>
@@ -277,148 +277,115 @@
                         <button class="btn_modal" type="button" pButton label="Cancelar" (click)="cancel_eliminarDetalle()"></button>
                     </div>
                 </div>
-            </p-footer>
+            
         </p-dialog>
 
         <!-- MOSTRAR EN LA PANTALLA EL MENSAJE DE VALIDACION DE DATOS-->
         <p-dialog [(visible)]="displayValidarDatoCabecera" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
-            <p-footer>
+            
                 <div class="btn_Modal row container">
                     <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
                         <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarErrorValidacionCabecera()"></button>
                     </div>
                 </div>
-            </p-footer>
+            
         </p-dialog>
 
         <!--CLICK SOBRE UN OBJETO-->
         <p-dialog [(visible)]="displayAddMarker" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
-            <p-footer>
+            
                 <div class="btn_Modal row container">
                     <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
                         <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarClickObjeto()"></button>
                     </div>
                 </div>
-            </p-footer>
+            
         </p-dialog>
 
         <!--CLICK SOBRE MAPA-->
         <p-dialog [(visible)]="displayMapaClick" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
-            <p-footer>
+            
                 <div class="btn_Modal row container">
                     <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
                         <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarModalAgregarMarker()"></button>
                     </div>
                 </div>
-            </p-footer>
+            
         </p-dialog>
 
         <!--ERROR NO SE PUEDE ELIMINAR LOS PUNTOS DE CONTROL DETALLE-->
         <p-dialog [(visible)]="displayErrorEditarPuntos" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
-            <p-footer>
-                AQUI
+            
                 <div class="btn_Modal row container">
                     <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
                         <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarEditarPuntos()"></button>
                     </div>
                 </div>
-            </p-footer>
+            
         </p-dialog>
 
         <!--ERROR NO SE PUEDE EDITAR EL REGISTRO DE LOS PUNTOS DE CONTROL DETALLE (NOMBRE Y TIEMPO)-->
         <p-dialog [(visible)]="displayErrorEditar" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
-            <p-footer>
+            
                 <div class="btn_Modal row container">
                     <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
                         <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarErrorEditar()"></button>
                     </div>
                 </div>
-            </p-footer>
+            
         </p-dialog>
 
         <!--ERROR NO HAY PUNTOS DE CONTROL DETALLE SOBRE EL MAPA-->
         <p-dialog [(visible)]="displayNohayPuntos" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
-            <p-footer>
+            
                 <div class="btn_Modal row container">
                     <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
                         <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarNoHayPuntos()"></button>
                     </div>
                 </div>
-            </p-footer>
+            
         </p-dialog>
 
         <!--NUEVOS PUNTOS DE CONTROL DETALLE SOBRE EL MAPA-->
         <p-dialog [(visible)]="displayNuevosPuntos" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
-            <p-footer>
+            
                 <div class="btn_Modal row container">
                     <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
                         <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarNuevosPuntos()"></button>
                     </div>
                 </div>
-            </p-footer>
+            
         </p-dialog>
 
             <!--GUARDAR PUNTOS DE CONTROL DETALLE SOBRE EL MAPA-->
         <p-dialog [(visible)]="displayGuardarPuntosDetalle" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
-            <p-footer>
+            
                 <div class="btn_Modal row container">
                     <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
                         <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarGuardarPuntosDetalle()"></button>
                     </div>
                 </div>
-            </p-footer>
+            
         </p-dialog>
 
             <!--VENTANA CONFIRMAR VERIFICAR TIEMPOS PUNTOS DE CONTROL-->
         <p-dialog [(visible)]="displayVerificarTiempoPc" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
-            <p-footer>
+            
                 <div class="btn_Modal row container">
                     <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
                         <button class="btn_modal" type="button" pButton label="Aceptar" (click)="verificarTiemposPc()"></button>
                     </div>
                 </div>
-            </p-footer>
+            
         </p-dialog>
 
 
-<!--
-    <p-header>{{headertitle}} : {{pcMaestro.PuCoId}}</p-header>
-    
-    PIE DE PAGINA
-        <div class="row align-items-end justify-content-center">
-            <footer class="text-center">
-                <p>Software De Control de Transporte Publico <br>
-                Industrias Qu@nSoft</p>
-            </footer>
-        </div>
-    -->
-                
-      <!--
-                TABLA DETALLE
-                <p>Puntos de Control</p>
-                <div class="row table table-responsive">
-                    <p-dataTable [value]="pCDetalleMostrar" [rows]="4" [paginator]="true" [pageLinks]="4" emptyMessage="Seleccione Una Lista de Punto de Control" [rowsPerPageOptions]="[4,6]"
-                        [globalFilter]="filtroGlobal"  scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar"  (onRowSelect)="onRowSelectDetalle($event)">
-                        
-                        <p-column styleClass="col-button" [style]="{'width':'6em'}">
-                            <template let-col let-pcDetalle="rowData" pTemplate="body">                                        
-                                <button id="btnTable"  type="button" pButton class="btn" (click)="editarDetalle(pcDetalle.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
-                                <button id="btnTable"  type="button" pButton class="btn" (click)="eliminarDetalle(pcDetalle.PuCoDeId)" icon="fa-trash"> </button>
-                            </template>
-                        </p-column>
-                        <p-column field="PuCoDeOrden"      header="N°"   [style]="{'width':'4em','text-align':'center'}"  ></p-column>
-                        <p-column field="PuCoDeDescripcion" header="Lugar"  [style]="{'width':'12em'}"></p-column>
-                        <p-column field="PuCoDeHora"        header="Hora"      [style]="{'width':'6em'}"></p-column>
-                    
-                    </p-dataTable>
-                </div>
-            -->

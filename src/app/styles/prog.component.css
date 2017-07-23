@@ -41,6 +41,18 @@ tr:nth-child(even){
     margin:0;
 }
 
+/* COLOR BOTONES DE FILA DEL DATATABLE */
+#btnTable{
+    background-color: #4CAF50;
+}
+
+/*APARIENCIA BOTON NUEVO (ARRIBA DE GRILLA PRINCIPAL)*/
+#btnNuevo{
+    padding:4px;
+    width: 100%;
+    background: #4CAF50; 
+}
+
 .win_modal{
     padding: 10px 20px;
     height:380px;
@@ -50,19 +62,21 @@ tr:nth-child(even){
 
 .contenedor{
     margin-top:20px;
-    margin-left:20px;
-    margin-right:20px;
+    margin-left:40px;
+    margin-right:40px;
     margin-bottom:60px;
 }
 
-.col{
+/*.col{
     margin-top:0px;
     margin-left:80px;
     margin-right:80px;
     margin-bottom:0px;
+}*/
+
+.table{
+    margin-top:20px;
 }
-
-
 
 /*APARIENCIA BOTON NUEVO (ARRIBA DE GRILLA PRINCIPAL)*/
 #btnNuevo{
@@ -98,12 +112,29 @@ tr:nth-child(even){
     position: absolute;
 }
 
+#titulo{
+    color: black;
+    margin-top:20px;
+    margin-bottom:20px;
+    text-decoration: none;
+    text-align: center;
+    font-size:15px;
+}
+
 /* MODIFICANDO ESTILO PARA LOS INPUTS Y SU VALIDACION */
 .form-group{
     margin:0;
     padding-bottom:18px;
     padding-top:10px; 
 }
+
+.cont_modal{
+    overflow-y: auto; 
+    overflow-x: hidden;
+    height:350px;
+    width: 100%;
+}
+
 /*@media (max-width:480px){
 	.pdf{
 		width:200px !important;

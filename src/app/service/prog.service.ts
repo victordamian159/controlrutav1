@@ -70,16 +70,30 @@ export class ProgramacionService{
             .catch((error:any) => Observable.throw(error.json().error || 'server error') );
     }
 
-    //guardar programacion detalle PROGRAMACION BASE  (CORREGIR LOS PARAMETROS)
-  
+    //guardar programacion detalle PROGRAMACION BASE (PARAMETROS)
     saveProgramacionDetalle(programacionDetalle : Object[],_emId : Number,_prId : Number, _aleatorio:Boolean){
         return this.http.post(this.baseUrl+"programacionbase/"+_emId+"/"+_prId+"/"+_aleatorio+"/", programacionDetalle)
             .map((res:Response) => res.json() )
             .catch((error:any) => Observable.throw(error.json().error || 'server error'));
     }
 
-    
-    /*
+    //CHOFER AUSENTE ACTUALIZAR PROGRAMACION DETALLE
+	actualizarProgDetalleAusente(obj : Object[]){
+		return this.http.post(this.baseUrl2+ "update/", obj) // ...using post request
+						.map((res:Response) => res.json()) // ...and calling .json() on the response to return data
+						.catch((error:any) => Observable.throw(error.json().error || 'Server error')); 
+	}
+
+//ERROR
+    handleError (error:any){
+        let errorMsg = error.message;
+        console.error(errorMsg);
+        return Observable.throw(errorMsg);
+    }
+}
+
+
+/*
         //.get(this.baseUrl+"getallprogramacionbyem?emId="+emId+"&anio="+anio)
 
       saveProgramacionDetalle(programacionDetalle : Object[],_emId : Number,_prId : Number, _aleatorio:Boolean){
@@ -97,11 +111,3 @@ export class ProgramacionService{
                 .catch((error:any) => Observable.throw(error.json().error || 'server error'));
         }
     */
-
-//ERROR
-    handleError (error:any){
-        let errorMsg = error.message;
-        console.error(errorMsg);
-        return Observable.throw(errorMsg);
-    }
-}
