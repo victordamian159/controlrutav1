@@ -128,6 +128,26 @@
                         Error, revise los datos ingresados
                     </div>
                 </div>
+                <!--Cuota por vuelta-->
+                <div class="form-group">    
+                    <label>Cuota por vuelta:</label>
+                    <input class="form-control" type="number" value="0" [(ngModel)]="tarjeta._TaCoCuota" required #cuota="ngModel" />
+                    <span *ngIf="!cuota.valid && (cuota.touched || cuota.dirty)"  >  
+                        <div id="validation" [hidden]="!cuota.errors.required"> obligatorio </div>
+                    </span>   
+                </div>    
+                <!--Hora Salida:-->
+                <div class="form-group">
+                    <label >Hora Salida:</label>
+                    <input class="form-control" type="time"[(ngModel)]="tarjeta._TaCoHoraSalida"  step="1"  required #hsal="ngModel" />
+                    <span *ngIf="!hsal.valid && (hsal.touched || hsal.dirty)"  >  
+                        <div id="validation" [hidden]="!hsal.errors.required"> obligatorio </div>
+                    </span>   
+                </div>                
+            </div>
+
+            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12"> 
+                
                 <!--Programaciones-->
                 <div class="form-group">
                     <label>Programaciones:</label>
@@ -140,25 +160,6 @@
                         Error, revise los datos ingresados
                     </div>
                 </div>
-                <!--Hora Salida:-->
-                <div class="form-group">
-                    <label >Hora Salida:</label>
-                    <input class="form-control" type="time"[(ngModel)]="tarjeta._TaCoHoraSalida"  step="1"  required #hsal="ngModel" />
-                    <span *ngIf="!hsal.valid && (hsal.touched || hsal.dirty)"  >  
-                        <div id="validation" [hidden]="!hsal.errors.required"> obligatorio </div>
-                    </span>   
-                </div>                
-            </div>
-
-            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12"> 
-                <!--Cuota por vuelta-->
-                <div class="form-group">    
-                    <label>Cuota por vuelta:</label>
-                    <input class="form-control" type="number" value="0" [(ngModel)]="tarjeta._TaCoCuota" required #cuota="ngModel" />
-                    <span *ngIf="!cuota.valid && (cuota.touched || cuota.dirty)"  >  
-                        <div id="validation" [hidden]="!cuota.errors.required"> obligatorio </div>
-                    </span>   
-                </div>    
                 <!--Programacion por Fecha-->
                 <div class="form-group">
                     <label>Programacion por Fecha:</label>
@@ -178,11 +179,7 @@
                 <div class="form-group">
                     <label>Estado de la Tarjeta:</label>
                     <div class="row">
-                        <!--
-                        <label class="radio-inline"><p-radioButton class="radioButton" value="0" label="No Asignado" [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton></label>
-                        <label class="radio-inline"><p-radioButton class="radioButton" value="1" label="Asignar"    [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton></label>
-                        <label class="radio-inline"><p-radioButton class="radioButton" value="2" label="Ausente" [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton></label>
-                        -->
+                       
                         <p-radioButton class="radioButton" value="0" label="No Asignado" [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton>
                         <p-radioButton class="radioButton" value="1" label="Asignar"     [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton>
                         <p-radioButton class="radioButton" value="2" label="Ausente"     [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton>
@@ -233,18 +230,7 @@
                         Error, revise los datos ingresados
                     </div>
                 </div>
-                <!--LISTA PROGRAMACION ELEGIDA-->
-                <div class="form-group">
-                    <label>Programaciones:</label>
-                    <select class="form-control" required [(ngModel)]="_prId" (change)="programacionId($event)"   #PROG="ngModel">
-                        <option *ngFor="let prog of _programacion" [value]="prog.prId">
-                            {{prog.prDescripcion}}
-                        </option>
-                    </select> 
-                    <div id="validation" [hidden]="!PROG.touched || PROG.valid ">
-                        Error, revise los datos ingresados
-                    </div>
-                </div>
+                
                 <!--LISTA HORA DE SALIDA, TIEMPO INTERMEDIOS-->
                 <div class="form-group">
                     <label >Hora Salida:</label>
@@ -267,6 +253,19 @@
                         <div id="validation" [hidden]="!cuota.errors.required"> obligatorio </div>
                     </span>   
                 </div>    
+
+                <!--LISTA PROGRAMACION ELEGIDA-->
+                <div class="form-group">
+                    <label>Programaciones:</label>
+                    <select class="form-control" required [(ngModel)]="_prId" (change)="programacionId($event)"   #PROG="ngModel">
+                        <option *ngFor="let prog of _programacion" [value]="prog.prId">
+                            {{prog.prDescripcion}}
+                        </option>
+                    </select> 
+                    <div id="validation" [hidden]="!PROG.touched || PROG.valid ">
+                        Error, revise los datos ingresados
+                    </div>
+                </div>
 
                 <!--PROGRAMACION POR FECHA-->
                 <div class="form-group">

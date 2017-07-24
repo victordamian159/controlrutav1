@@ -259,7 +259,10 @@ export class TcontrolComponent implements OnInit{
         this.tcontrolservice.getAllProgramacionDetalleByPrFecha(PrId, Date).subscribe(
             data => {
                         this.progDetalle=data;
+
+                        console.log(this.progDetalle);
                         if(this.progDetalle.length>0 ){
+                            //this.getallplacasbusbyemsuem(this.emID,0);
                             this.mgprogDetalle(); /*GRILLA PROG POR FECHA*/
                         }else if(this.progDetalle.length==0 ){
                             this.mensaje="No hay programacion en la fecha indicada";
@@ -301,9 +304,12 @@ export class TcontrolComponent implements OnInit{
         this._progDetalle=[];
         //i: PARA RECORRER EL ARRAY, SI Y NO: CUANTOS SE ENCONTRARON Y NO SE ENCONTRARON
         
-        let i = 0; let j=0;  let si=0; let no=0; let cen = 0; let programacion=[];
+        let i = 0; let j=0;  let si=0; let no=0; let cen = 0, cen2=0; let programacion=[]; let longProg = this.progDetalle.length;
+        //console.log("i :"+i+" -- "+"j: "+j); console.log(this.progDetalle[i].BuId+ " == "+ this.placas[j].BuId);
 
-        while (i<this.placas.length){
+
+        /* BUSCANDO POR PLACAS */
+        while (i<this.placas.length && cen2==0){
             /* BUSQUEDA */
             while (j<this.progDetalle.length && cen==0){
                 /* CONDICIONAL BUSQUEDA */
@@ -312,13 +318,11 @@ export class TcontrolComponent implements OnInit{
                     programacion.push({
                         BuId: this.progDetalle[i].BuId,
                         nroPlaca: this.placas[j].BuPlaca,
-                        //UsId:this.progDetalle[i].UsId,
                         PrId:this.progDetalle[i].PrId,
                         PrDeOrden:this.progDetalle[i].PrDeOrden,
                         PrDeId: this.progDetalle[i].PrDeId,
                         PrDeAsignadoTarjeta:this.progDetalle[i].PrDeAsignadoTarjeta
                     });
-                    //this.progDetalle[i].BuId = this.placas[j].BuPlaca;
                     cen = 1; 
                 }else if(this.progDetalle[i].BuId != this.placas[j].BuId){
                     /* CONTRARIO CONDICIONAL  */
@@ -328,6 +332,10 @@ export class TcontrolComponent implements OnInit{
             j=0;
             i++;
             cen = 0;
+            /* VERIFICANDO QUE SE ENCONTRARON TODAS BUID */
+            if(longProg==programacion.length){
+                cen2=1;
+            }
         }
 
         //AQUI SE ACTUALIZA EL BUID POR SU PLACA
@@ -362,7 +370,6 @@ export class TcontrolComponent implements OnInit{
     getallplacasbusbyemsuem(emId : number, suemId : number){
         this.placaService.getAllPlacasBusByEmSuEm(1,0).subscribe(
             data => {this.placas = data; 
-                //console.log(this.placas)
                 ;}
         );
     }
@@ -700,8 +707,6 @@ export class TcontrolComponent implements OnInit{
    
     /* -> GUARDAR MULTIPLES TARJETAS*/
     guardarMultiTarjetas(){
-        console.log("multitarjetas EN PROGRAMACION");
-
         /* PARA ACTUALIZAR PROGRAMACIONDETALLE */
         let progUpdate : any = {PrDeId : 0, PrDeAsignadoTarjeta : 0}
         let arrHSalida=[];/* ARRAY HORAS SALIDA PARA LA MISMA PLACA */
@@ -754,15 +759,13 @@ export class TcontrolComponent implements OnInit{
 
             for(let i=0; i<this.nroTarjetas; i++){
                 this.tcontrolservice.asignarTarjetaControl(arrObj[i]).subscribe(
-                    data => {}, 
+                    data => {this.displayAsigMultiTarj=false}, 
                     err => {this.errorMessage=err}
                 );
             }
             this.updateProgDetalle(progUpdate);
         }
-
-        console.log(arrHSalida);
-        console.log(arrObj);
+        /*console.log(arrHSalida); console.log(arrObj);*/
     }
 
     /* CALCULANDO HORAS DE SALIDA, PARA MULTITARJETAS, ESTA FUNCION DEVUELVE UN ARRAY  */
