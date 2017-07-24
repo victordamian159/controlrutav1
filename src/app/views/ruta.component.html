@@ -9,7 +9,7 @@
             <input class="form-control" placeholder="Buscar..." type="text"  id="gb1" #filtroGlobal />
         </div>
         <div class="col-xl-2 col-md-2 col-sm-4 col-xs-12">
-            <button id="btnNuevo" type="button" (click)="nuevaRutaMaestro()" style="float:left" pButton icon="fa-file-text-o" label="Nuevo Registro"></button>
+            <button id="btnNuevo" type="button" (click)="nuevaRutaMaestro()" style="float:left" pButton icon="fa-file-text-o" label="Nueva Ruta"></button>
         </div>
     </div>
 
@@ -39,6 +39,7 @@
 
         <!--MAPA-->
         <div class="col-xl-6 col-md-12 col-sm-12 col-xs-12">
+
             <!--MAPA-->
             <div class="row">
                 <div class="col-xl-12">
@@ -70,6 +71,7 @@
                     </div>
                 </div>
             </div>
+
         </div><!--END MAP-->
     </div>
 </div><!--END PRINCIPAL-->
@@ -91,9 +93,9 @@
                 </div>
             </div>
 
-            <!--FECHA CREACION-->
+            <!--FECHA FUNDACION-->
             <div class="form-group row">
-                <label for="fechacreacion" class="col-4 col-form-label">Fecha Creacion:</label>
+                <label for="fechacreacion" class="col-4 col-form-label">Fecha Fundacion:</label>
                 <div class="col-8">
                     <input type="date" class="form-control" id="fechacreacion" min="1980-01-01" [(ngModel)]="Ruta.RuFechaCreacion" name="fcreacion" required #fcrea="ngModel" />
                     <span *ngIf="!fcrea.valid && fcrea.touched"  >  

@@ -26,12 +26,8 @@ export class ProgComponent implements OnInit{
     nroDiasFilaSelect: number;
     titleNuevoProgPrimerModal:string;  
     mensaje:string;     //MENSAJE CONFIRMACION MODAL 
-    //private fi; //FECHA INICIO
-    //private ff; //FECHA FIN
 
-    //formaProgramacion:string = 'Escala'; //almacena el string del item seleccionado
-    //tipoProgramacion: string='Manual'; //tipo manual o automatico
-
+    /* PARA ABRIR O CERRAR MODALES */
     displayNuevaProgramacion: boolean = false;
     displayProgramacionBase: boolean = false;
     displayProgramacion: boolean = false;
@@ -41,6 +37,7 @@ export class ProgComponent implements OnInit{
     displayErrorTablaProgramacion : boolean=false; // ERROR EN LA TABLA DE PROGRAMACION
     displayFaltanPlacas : boolean = false;
     displayDescargaProg : boolean = false;
+    displayEditProgC : boolean = false;
 
     selectedPlacas: string[] = [];
     disabledbutton: boolean = false;
@@ -57,10 +54,10 @@ export class ProgComponent implements OnInit{
     programacionMaestroArrayMemoria :any[]=[]; //array para la grilla HTML
     programacionMaestroArrayHTML :any[] = [];  //array para la grilla HTML
 
-    //objeto maestro (solo para la memoria)
+    /*PARA NGMODEL DEL MODAL 1 */ 
     progMaestro: any={
         PrId:0,     //oculto
-        EmId:1,     //oculto
+        EmId:0,     //oculto
         PrCantidadBuses:0,
         PrDescripcion:"",
         PrFecha:"",     //oculto
@@ -71,6 +68,8 @@ export class ProgComponent implements OnInit{
         UsId:0,        //oculto
         UsFechaReg:""   //oculto
     }
+    private _progrMaestro:any; /* SALVA OBJETO PROGCABECERA DE GETPROGRAMACIONBYID() */
+    private progDescripcion:string; /* PARA EDITAR PROGRAMACION */
     
     //objeto maestro para Mandar al rest
     objProgVentanaUno : any; // objeto para almacenar datos 1era ventana modal para mandarlo o borrar del sistema al cancelar o guardar
@@ -129,6 +128,7 @@ export class ProgComponent implements OnInit{
         this.ordenSorteo = [];
         this.getAllPlacasBusByEmSuEm(1,0);
         this.getAllProgramacionByEm(1,0);
+        this.progMaestro.EmId = 1;
     }
  
     tipoProgramacion($event){
@@ -153,7 +153,6 @@ export class ProgComponent implements OnInit{
                     i++;    
                 }
                 cen=0; j=0;
-                //console.log(i);
             }
             console.log(array);
             //APLICANDO ALGORITMO, BUSCANDO INDICES CON ARRAY DE PLACAS
@@ -162,10 +161,7 @@ export class ProgComponent implements OnInit{
                 _arrayplacas.push(arrayplacas[array[i]]);
                 i++;
             }
- 
             this.ordenSorteo=_arrayplacas; 
-            //console.log(this.arrayPlacas); 
-            //console.log(this.ordenSorteo);
         }else if(this.tipoProg==0){
             console.log("manual");
         }
@@ -187,7 +183,7 @@ export class ProgComponent implements OnInit{
             .subscribe(data => {this.objProgVentanaDos = data});
     }
     
-    //CONSULTA PROGRAMACION DETALLE -->     NO SE ESTA USANDO
+    /*CONSULTA PROGRAMACION DETALLE*/
     getallprogramaciondetallebyprid(_prid:number){
         this.programacionService.getAllProgramacionDetalleByPrId(_prid).subscribe(
             data => {
@@ -198,6 +194,20 @@ export class ProgComponent implements OnInit{
             () => this.isLoading=false
         );
     }
+
+    /* CONSULTA PROGRAMACION CABECERA POR SU ID */
+    getProgramacionById(prid : number){
+        this.programacionService.getProgramacionById(prid).subscribe(
+            data => {
+                    this._progrMaestro = data;
+                    this.progDescripcion = this._progrMaestro.PrDescripcion;
+                    console.log(this._progrMaestro);
+            },
+            err => {this.errorMessage=err},
+            () => this.isLoading=false
+        );
+    }
+
 
     //ABRIR 1ERA VENTANA MODAL(BOTON NUEVO)
     NuevaProgCabecera(){
@@ -244,17 +254,8 @@ export class ProgComponent implements OnInit{
             //NO SE HACE NADA
         }
 
-         //capturando fecha actual
-        {
-            /*
-                this.date = new Date();
-                this.dia = this.date.getDate();
-                this.mes = this.date.getMonth();
-                this.anio = this.date.getFullYear();
-                this.progMaestro.PrFecha = this.anio+"-"+this.mes+"-"+this.dia;
-            */  
-            this.progMaestro.PrFecha = new Date();
-        }
+        this.progMaestro.PrFecha = new Date();
+        
 
         //TIPO PROGRAMACION MANUAL O AUTOMATICO .  CORREGIR PROGRAMACION TRUE O FALSE
         if(this.tipoProg == 0){
@@ -329,7 +330,7 @@ export class ProgComponent implements OnInit{
                 console.log(this.objProgVentanaUno);
                 console.log(this.progMaestro);
 
-                //guardando en el rest Programacion Maestro (pasarlo  a la 2da VEntana modal)
+                /*guardando en el rest Programacion Maestro (pasarlo  a la 2da VEntana modal)*/
                 this.programacionService.saveProgramacion(this.objProgVentanaUno)
                     .subscribe( 
                         data => {this.progMaestro=data;  //RECUPERANDO OBJETO PARA SACAR EL PRID
@@ -652,22 +653,14 @@ export class ProgComponent implements OnInit{
             //MOSTRAR EN UNA VENTANA MODAL
             this.mensaje="Faltan Placas Por Ingresar a la Lista Del Sorteo";
             this.displayFaltanPlacas=true;
-            //console.log("falta placas por ingresar :c");
+           
         //SE INGRESARON TODAS LAS PLACAS AL SORTEO
         }else if(this.progMaestro.PrCantidadBuses == this.ordenSorteo.length){
             //si las cantidades son iguales la programacion puede terminar
             this.displayProgramacionBase=false; //cerrar 2da ventana Prog Base
             this.progMaestro.PrCantidadBuses=0;
-
-            //FECHA ACTUAL
-            {
-                /*this.date = new Date();
-                this.dia = this.date.getDate();
-                this.mes = this.date.getMonth();
-                this.anio = this.date.getFullYear();
-                this.progDetalle.PrDeFecha = this.anio+"-"+this.mes+"-"+this.dia;*/
-                this.progDetalle.PrDeFecha = new Date();
-            }
+            this.progDetalle.PrDeFecha = new Date();
+            
 
             
             //CARGAR EN ARRAY DE OBJETOS PARA MANDAR A LA BD
@@ -693,7 +686,7 @@ export class ProgComponent implements OnInit{
                         }, 
                     err => {this.errorMessage = err}
             );
-            //console.log("se agrego programacion detalle --> SE GENERO LA PROGRAMACION =D");
+            
             this.ordenSorteo=[];
 
             //PROGRAMACION AUTOMATICA O MANUAL
@@ -704,8 +697,8 @@ export class ProgComponent implements OnInit{
                 //NO SE HACE NADA
             }
 
-        }//final condicional IF
-    }//final funcion generarProgramacionSegundoModal
+        }
+    }
     
     //MENSAJE FALTAN PLACAS
     faltanPlacas(){
@@ -737,7 +730,7 @@ export class ProgComponent implements OnInit{
 
         //ELIMINAR LA PROGRAMACION (CABECERA) QUE NO TIENE PROGDETALLE, CONSULTAR A this.getAllProgramacionByEm(1,0)
         console.log(this.progRest[this.progRest.length-1].prId);
-        //this.eliminarMaestro(this.progRest[this.progRest.length-1].prId)
+        
 
         this.programacionService.deleteProgramacionByid(this.progRest[this.progRest.length-1].prId).subscribe(
             realizar => {this.getAllProgramacionByEm(1,0)},
@@ -748,7 +741,6 @@ export class ProgComponent implements OnInit{
 
     //datos para grilla HTML Maestro (consulta especialmente hecha para mostrar en el res)
     mostrargrillaProgramacionMaestro(){
-        //this.extrayendoDatosTablaMaestroRest(); //extraer los campos de la nueva consulta para la grilla
         this.programacionMaestroArrayHTML=[];
         //progRest es la variable q almacena las programaciones recuperadas desde el Rest de internet
         for(let programacionMaestro of this.progRest){
@@ -766,7 +758,7 @@ export class ProgComponent implements OnInit{
                 prDescripcion : programacionMaestro.prDescripcion,
                 prId : programacionMaestro.prId
             });
-        }// fin funcion for
+        }
 
         //ENUMERAR REGISTRO
         for(let i=0; i<this.programacionMaestroArrayHTML.length; i++){
@@ -774,19 +766,15 @@ export class ProgComponent implements OnInit{
         }
 
         //MANUAL O AUTOMATICO PROGRAMACION
-        //console.log("long: "+this.programacionMaestroArrayHTML.length);
         for(let i=0; i<this.programacionMaestroArrayHTML.length; i++){
-
             if(this.programacionMaestroArrayHTML[i].PrTipo=='01'){
                 this.programacionMaestroArrayHTML[i].tipo="Manual";
 
             }else if(this.programacionMaestroArrayHTML[i].PrTipo=='02'){
                 this.programacionMaestroArrayHTML[i].tipo="Automatico";
             }
-
         }
-        //console.log(this.programacionMaestroArrayHTML);
-    }//FIN FUNCION MOSTRAR GRILLA CABECERA
+    }
 
     //CARGAR COLUMNAS Y ARRAY DE PROGRAMACION
 
@@ -847,6 +835,7 @@ export class ProgComponent implements OnInit{
         this.programacionService.getAllProgramacionDetalleByPrId(this.idFilaSeleccionada).subscribe(
             data => {
                         this.progBDDetalle = data; 
+                        console.log(this.progBDDetalle);
                         this.tablaProgramaciones();
                     },
             err => {this.errorMessage=err},
@@ -854,17 +843,7 @@ export class ProgComponent implements OnInit{
         );
     }
 
-    //ACOMODANDO FORMATO PARA MANDAR A LA FUNCION CALENDARIO
-    /*
-        formatoCalendario(fi:string, ff:string){
-            let _fi,_ff,aux;
-            _fi=fi.split("/"); _ff=ff.split("/");
-            //INVIRTIENDO POSICION fi
-            aux=_fi[0]; _fi[0]=_fi[2]; _fi[2]=aux;
-            aux=_ff[0]; _ff[0]=_ff[2]; _ff[2]=aux;
-            _fi=_fi.join("-"); _ff=_ff.join("-");
-        }
-    */
+   
     formatoCal(fi:string) : string{
         let _fi,aux;
         _fi=fi.split("/");
@@ -981,10 +960,52 @@ export class ProgComponent implements OnInit{
         this.displayErrorTablaProgramacion=false;
     }
     
-    //EDITAR CABECERA
-    editarCabecera(reg : Object){
-        console.log(reg);
+    /*EDITAR CABECERA*/
+    editarCabecera(reg){
+        this.displayEditProgC=true;
+        this.getProgramacionById(reg.prId);
     }
+
+    /* GUARDAR EDITAR REGISTRO PROGRAMACION */
+    guardarProgramacionC(){
+        let obj:any;
+        /* CARGANDO OBJETO */
+        obj = {
+            EmId:this._progrMaestro.EmId,
+            PrAleatorio:this._progrMaestro.PrAleatorio,
+            PrCantidadBuses:this._progrMaestro.PrCantidadBuses,
+            PrDescripcion:this.progDescripcion,
+            PrFecha:new Date(this._progrMaestro.PrFecha),
+            PrFechaFin:new Date(this._progrMaestro.PrFechaFin),
+            PrFechaInicio:new Date(this._progrMaestro.PrFechaInicio),
+            PrId:Number(this._progrMaestro.PrId),
+            PrTipo:this._progrMaestro.PrTipo,
+            UsFechaReg:new Date(),
+            UsId:this._progrMaestro.UsId
+        }
+        this.displayEditProgC=false;
+        console.log(obj);
+        this.programacionService.saveProgramacion(obj)
+            .subscribe( 
+                data => {this.progMaestro=data;  //RECUPERANDO OBJETO PARA SACAR EL PRID
+                         console.log(this.progMaestro.PrId);
+                         this.progDescripcion="";
+                         this.mostrargrillaProgramacionMaestro() ;
+                         this.getAllProgramacionByEm(1,0);
+                         this.displayEditProgC = false;
+                }, 
+                err => {this.errorMessage = err}
+        );
+    }
+
+     /* CANCELAR EDITAR PROGRAMACION CABECERA */
+    canEditarProgC(){
+        this.displayEditProgC=false;
+        this._progrMaestro = null;
+        this.progDescripcion="";
+        console.log(this._progrMaestro);
+    }
+
     //BOTON ELIMINAR REGISTRO 
     eliminarRegistroGrilla(_PrId : number){
         //console.log("eliminar "+_PrId);
@@ -1010,89 +1031,7 @@ export class ProgComponent implements OnInit{
         this.displayProgramacion=false;
     }
 
-     //CONVERTIR STRING A DATE FORMULARIO A BD  HORAS
-    hora(fecha : string) : Date{
-        //FECHA               
-        let thoy:Date,  otra:Date, horaTarjeta:string;
-        thoy=new Date();
-        if(fecha.length<=5){ fecha = fecha+":00"; }
-        horaTarjeta=fecha;
-        let resultado=horaTarjeta.split(':');
-        otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));    
-        //console.log(otra);
-        return otra; 
-        
-    }
-
-    //CONVERTIR DATE A STRING DE BD A FORMULARIO HORAS
-    _hora(fecha : Date) :string{
-        let hora : string; let _hora : string; let _fecha = new Date(fecha);
-        _hora =  (_fecha.getHours() - 1).toString();// restando 1 hora (CORREGIR EN EL BACKEND)
-            hora = _hora + ":"+_fecha.getMinutes()+":"+_fecha.getSeconds();
-
-            hora = this.cCeroHora(hora);
-        return hora;
-    }
-
-
-    //COMPLETANDO CEROS EN CASO DE NECESITAR PARA HORAS Y FECHAS   2017/
-    cCeroHora(h:string) :string{
-            //DIVIDIRLO EN PARTES Y COMPLETAR LOS CEROS PARA QUE LOS ELEMENTOS SEAN TODOS PARES
-            let hora : string, _hora :string, resultado, i=0;
-            resultado = h.split(':');
-            while(i<resultado.length){
-                if(resultado[i].length%2!=0){
-                    resultado[i]="0"+resultado[i];
-                }
-                i++;
-            }
-            //CONCATENANDO
-            _hora=resultado[0]+":"+resultado[1]+":"+resultado[2];
-        return _hora;
-    }
-
-    cCeroFecha(f : string) :string{
-        let fecha:string, _fecha:string, resultado, i=0;
-        resultado = f.split('/');
-            while(i<resultado.length){
-                resultado[i]=resultado[i].trim(); //BORRANDO ESPACIOS EN BLANCO
-                if(resultado[i].length%2!=0){
-                    resultado[i]="0"+resultado[i];
-                }
-                i++;
-            }
-            //CONCATENANDO
-            _fecha=resultado[0]+"/"+resultado[1]+"/"+resultado[2];
-        
-        return _fecha
-    }
-
-    cCeroFechaForEditar(f : string) :string{
-        let fecha:string, _fecha:string, resultado, i=0;
-        resultado = f.split('/');
-            while(i<resultado.length){
-                resultado[i]=resultado[i].trim(); //BORRANDO ESPACIOS EN BLANCO
-                if(resultado[i].length%2!=0){
-                    resultado[i]="0"+resultado[i];
-                }
-                i++;
-            }
-            //CONCATENANDO
-            _fecha=resultado[0]+"-"+resultado[1]+"-"+resultado[2];
-        
-        return _fecha
-    }
     
-    //CONVERTIR DATE A STRING PARA FECHA  - ---   BD A GRILLA
-    _fecha(fecha: Date) :string{
-        let fechaProg : string; let _fechaProg : string; let _fecha = new Date(fecha); 
-        _fechaProg=(_fecha.getDate()).toString() +" / "+ (_fecha.getMonth() +1 ).toString() +" / "+ (_fecha.getFullYear()).toString();
-        //_fechaProg=(_fecha.getFullYear()).toString() +" / "+ (_fecha.getMonth() +1 ).toString() +" / "+(_fecha.getDate()).toString() ;
-        
-        _fechaProg=this.cCeroFecha(_fechaProg);
-        return  _fechaProg;
-    }
-
     //DESCARGAR LA PROGRAMACION EN FORMATO PDF 
     descargarProgramacion(){
         //VARIABLES 
@@ -1232,6 +1171,90 @@ export class ProgComponent implements OnInit{
         }
         return arrplacasprog;
     }
+
+/* CARGAR GLOBAL */ 
+     //CONVERTIR STRING A DATE FORMULARIO A BD  HORAS
+    hora(fecha : string) : Date{
+        //FECHA               
+        let thoy:Date,  otra:Date, horaTarjeta:string;
+        thoy=new Date();
+        if(fecha.length<=5){ fecha = fecha+":00"; }
+        horaTarjeta=fecha;
+        let resultado=horaTarjeta.split(':');
+        otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));    
+        return otra; 
+    }
+
+    //CONVERTIR DATE A STRING DE BD A FORMULARIO HORAS
+    _hora(fecha : Date) :string{
+        let hora : string; let _hora : string; let _fecha = new Date(fecha);
+        _hora =  (_fecha.getHours() - 1).toString();// restando 1 hora (CORREGIR EN EL BACKEND)
+            hora = _hora + ":"+_fecha.getMinutes()+":"+_fecha.getSeconds();
+
+            hora = this.cCeroHora(hora);
+        return hora;
+    }
+
+
+    //COMPLETANDO CEROS EN CASO DE NECESITAR PARA HORAS Y FECHAS   2017/
+    cCeroHora(h:string) :string{
+            //DIVIDIRLO EN PARTES Y COMPLETAR LOS CEROS PARA QUE LOS ELEMENTOS SEAN TODOS PARES
+            let hora : string, _hora :string, resultado, i=0;
+            resultado = h.split(':');
+            while(i<resultado.length){
+                if(resultado[i].length%2!=0){
+                    resultado[i]="0"+resultado[i];
+                }
+                i++;
+            }
+            //CONCATENANDO
+            _hora=resultado[0]+":"+resultado[1]+":"+resultado[2];
+        return _hora;
+    }
+
+    cCeroFecha(f : string) :string{
+        let fecha:string, _fecha:string, resultado, i=0;
+        resultado = f.split('/');
+            while(i<resultado.length){
+                resultado[i]=resultado[i].trim(); //BORRANDO ESPACIOS EN BLANCO
+                if(resultado[i].length%2!=0){
+                    resultado[i]="0"+resultado[i];
+                }
+                i++;
+            }
+            //CONCATENANDO
+            _fecha=resultado[0]+"/"+resultado[1]+"/"+resultado[2];
+        
+        return _fecha
+    }
+
+    cCeroFechaForEditar(f : string) :string{
+        let fecha:string, _fecha:string, resultado, i=0;
+        resultado = f.split('/');
+            while(i<resultado.length){
+                resultado[i]=resultado[i].trim(); //BORRANDO ESPACIOS EN BLANCO
+                if(resultado[i].length%2!=0){
+                    resultado[i]="0"+resultado[i];
+                }
+                i++;
+            }
+            //CONCATENANDO
+            _fecha=resultado[0]+"-"+resultado[1]+"-"+resultado[2];
+        
+        return _fecha
+    }
+    
+    //CONVERTIR DATE A STRING PARA FECHA  - ---   BD A GRILLA
+    _fecha(fecha: Date) :string{
+        let fechaProg : string; let _fechaProg : string; let _fecha = new Date(fecha); 
+        _fechaProg=(_fecha.getDate()).toString() +" / "+ (_fecha.getMonth() +1 ).toString() +" / "+ (_fecha.getFullYear()).toString();
+        //_fechaProg=(_fecha.getFullYear()).toString() +" / "+ (_fecha.getMonth() +1 ).toString() +" / "+(_fecha.getDate()).toString() ;
+        
+        _fechaProg=this.cCeroFecha(_fechaProg);
+        return  _fechaProg;
+    }
+
+
 }
 
  /*var num = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25];

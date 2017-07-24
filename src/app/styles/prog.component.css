@@ -34,12 +34,12 @@ tr:nth-child(even){
     width: 100%;
 }
 
-/* BOTON MODAL NUEVO */
+/* BOTON MODAL NUEVO 
 #btn{
     width: 100%;
     padding: 10px 50px;
     margin:0;
-}
+}*/
 
 /* COLOR BOTONES DE FILA DEL DATATABLE */
 #btnTable{
@@ -130,7 +130,7 @@ tr:nth-child(even){
 
 .cont_modal{
     overflow-y: auto; 
-    overflow-x: hidden;
+    overflow-x: visible;
     height:350px;
     width: 100%;
 }

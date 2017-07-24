@@ -22,6 +22,7 @@ export class ProgramacionService{
     }
 
 //PROGRAMACION MAESTRO
+    /* BUSCAR PROGRAMACION CABECERA POR SU ID */
     getProgramacionById(PrId: number){
         return this.http
             .get(this.baseUrl+ PrId)
@@ -29,6 +30,7 @@ export class ProgramacionService{
             .catch( (error: any) => Observable.throw(error.json().error || 'server error'));
     }
 
+    /* NUEVA PROGRAMACION CABECERA */
     newProgramacion(){
         return this.http
             .get(this.baseUrl + 'new')
