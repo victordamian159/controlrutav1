@@ -56,7 +56,7 @@
                                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="form-group">
                                         <label for="descripcion" class="control-label">Nombre de la Programacion:</label>
-                                        <input class="form-control" type="text" id="descripcion"[(ngModel)]="progMaestro.PrDescripcion" #descrip="ngModel" required />
+                                        <input class="form-control" type="text" id="descripcion"[(ngModel)]="progMaestro.PrDescripcion" #descrip="ngModel"  maxlength="30" required />
                                     
                                         <span *ngIf="!descrip.valid && descrip.touched" >
                                             <div id="validation" [hidden]="!descrip.errors.required"> Obligatorio </div>
@@ -156,7 +156,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <!--BOTONES-->
             <div class="btn_Modal row">
                 <div class="col-xl-6 col-md-6 col-sm-12 col-sx-12">
@@ -330,7 +330,7 @@
                     <!--NOMBRE PARA RECONOCER A LA PROGRAMACION  -->
                     <div class="form-group">
                         <label for="descripcion" class="control-label">Nombre de la Programacion:</label>
-                        <input class="form-control" type="text" id="descripcion"[(ngModel)]="progDescripcion" #descrip="ngModel" required />
+                        <input class="form-control" type="text" id="descripcion"[(ngModel)]="progDescripcion" #desc="ngModel" required />
                     
                         <span *ngIf="!descrip.valid && descrip.touched" >
                             <div id="validation" [hidden]="!descrip.errors.required"> Obligatorio </div>

@@ -195,7 +195,7 @@ export class ProgComponent implements OnInit{
         );
     }
 
-    /* CONSULTA PROGRAMACION CABECERA POR SU ID */
+    /* CONSULTA PROGRAMACION CABECERA POR SU ID - USANDO EN EDITAR PROGRAMACION */
     getProgramacionById(prid : number){
         this.programacionService.getProgramacionById(prid).subscribe(
             data => {
@@ -211,27 +211,35 @@ export class ProgComponent implements OnInit{
 
     //ABRIR 1ERA VENTANA MODAL(BOTON NUEVO)
     NuevaProgCabecera(){
-        this.nuevaProgramacionMaestroRest();
-        this.displayNuevaProgramacion=true;
+        this.nuevaProgramacionMaestroRest(); /* PROCEDURE */
+        this.displayNuevaProgramacion=true; /* ABRIR VENTANA */
         this.ordenSorteo=[]; //SORTEO DE PLACAS
         this.titleNuevoProgPrimerModal = 'Nueva';
         this.extrayendoPlacasBus(); 
         this.unidadesEstado(); //CALCULA EL NRO DE UNIDADES ACTIVAS Y NO ACTIVAS
+
+        /* FECHA ACTUAL */
+        let fechaAct = new Date(), año = fechaAct.getFullYear() , mes = fechaAct.getMonth(), dia = fechaAct.getDate();
+        let finicio = dia + "/"+ (mes+1) + "/"+ año ; /* DESCRIPCION */
+        let ffinal  = dia + "/"+ (mes+2) + "/"+ año; /* DESCRIPCION */
+        let _finicio = (año + "-"+ "0"+(mes+1) + "-"+ dia).toString(); /* DESCRIPCION */
+        let _ffinal  = (año + "-"+ "0"+(mes+2) + "-"+ dia).toString(); /* DESCRIPCION */
+
         //PONER EN CERO VALORES DE OBJETOS 
         this.progMaestro = {
             PrId:0,     //oculto
             EmId:1,     //oculto
             PrCantidadBuses:0,
-            PrDescripcion:"",
+            PrDescripcion:"Prog -> "+finicio+"__"+ffinal,
             PrFecha:"",     //oculto
-            PrFechaInicio:"",
-            PrFechaFin:"",
+            PrFechaInicio:_finicio,
+            PrFechaFin:_ffinal,
             PrTipo:"",      
             PrAleatorio:true,
             UsId:0,        //oculto
             UsFechaReg:""   //oculto
-        
         }
+       console.log(this.progMaestro);
         this.tipoProg=null; //PROGRAMACION POR DEFECTO: MANUAL
         this.formaProg=null;
     }
@@ -296,22 +304,21 @@ export class ProgComponent implements OnInit{
         //MENSAJE A PANTALLA SI HAY O NO ERROR
         if(cen == 0 ){
                //cargando lo ingresado en una variable //PrFecha y UsFechaReg, ¿Cual es la diferencia?
+               
                 this.objProgVentanaUno = {
                     PrId : this.progMaestro.PrId, //number
                     EmId : this.progMaestro.EmId, //number
                     PrCantidadBuses : this.bAct, //number
                     PrDescripcion : this.progMaestro.PrDescripcion, //string
                     PrFecha : this.progMaestro.PrFecha, //string
-
                     PrFechaInicio : this.fecha(this.progMaestro.PrFechaInicio), //string
                     PrFechaFin : this.fecha(this.progMaestro.PrFechaFin), //string
-                    
                     PrTipo : this.progMaestro.PrTipo, //string escala pescadito
                     PrAleatorio : this.progMaestro.PrAleatorio, //string manual automatico(aleatorio)
                     UsId : this.progMaestro.UsId, //number
                     UsFechaReg : this.progMaestro.PrFecha //string
                 }
-
+                console.log(this.objProgVentanaUno);
                 //guardando en array para poder mostrarlo en la grilla
                 this.programacionMaestroArrayMemoria.push({
                     PrId : this.progMaestro.PrId,
@@ -327,16 +334,15 @@ export class ProgComponent implements OnInit{
                     UsFechaReg : this.progMaestro.PrFecha
                 });
 
-                console.log(this.objProgVentanaUno);
-                console.log(this.progMaestro);
+                
+                
 
                 /*guardando en el rest Programacion Maestro (pasarlo  a la 2da VEntana modal)*/
                 this.programacionService.saveProgramacion(this.objProgVentanaUno)
                     .subscribe( 
                         data => {this.progMaestro=data;  //RECUPERANDO OBJETO PARA SACAR EL PRID
-                            this.mostrargrillaProgramacionMaestro() ;
-                            this.getAllProgramacionByEm(1,0);
-
+                                 this.mostrargrillaProgramacionMaestro() ;
+                                 this.getAllProgramacionByEm(1,0);
                         }, 
                         err => {this.errorMessage = err}
                 );
@@ -720,6 +726,8 @@ export class ProgComponent implements OnInit{
     //CERRAR PROG 1ER MODAL
     cancelNewProgramacion(){
          this.displayNuevaProgramacion=false;
+         this.progMaestro={};
+         console.log(this.progMaestro);
     }
 
     //CERRAR 2 MODALES (1ER Y 2DO MODAL ) cerrar ventanas new programacion (2do Modal)
@@ -984,7 +992,6 @@ export class ProgComponent implements OnInit{
             UsId:this._progrMaestro.UsId
         }
         this.displayEditProgC=false;
-        console.log(obj);
         this.programacionService.saveProgramacion(obj)
             .subscribe( 
                 data => {this.progMaestro=data;  //RECUPERANDO OBJETO PARA SACAR EL PRID
