@@ -227,7 +227,7 @@ export class RutaComponent implements OnInit{
         //revisar la parte de consulta this.getAllRutaByEm(1) (buscar una variable en vez del numero 1)
         this._RuId = _RuId;
         this.displayConfirmar = true;
-        this.Mensaje = "¿Esta Seguro de Eliminar el Grafico de la Ruta ?";
+        this.Mensaje = "¿Esta Seguro de Eliminar la Ruta?";
     }
 
     //FUNCION PARA EL BOTON ELEIMINAR ROW CABECERA
@@ -1069,10 +1069,22 @@ export class RutaComponent implements OnInit{
         
         this.rutaService.newRuta().subscribe(
             data => {
-                this.Ruta2 = data;
-                //LIMPIANDO LOS OBJETOS EN EL FORMULARIO PARA PODER INGRESAR NUEVOS DATOS
-                    this.Ruta ={RuId : 0, EmId : 1, RuDescripcion : "", RuFechaCreacion: "", RuRegMunicipal : "",
-                                RuKilometro : 0, RuActivo : true, UsId: 0,UsFechaReg: ""}
+                this.Ruta2 = data; 
+                let dia, mes, año, fecha:any;fecha=new Date();
+                dia=fecha.getDate(); mes=fecha.getMonth(); año=fecha.getFullYear(); let _fecha:any[]=[]; _fecha[0]=año; _fecha[1]=(mes+1); _fecha[2]=dia; 
+                let fActual=_fecha.join("/");  fActual=this. cCeroFecha(fActual); _fecha=fActual.split("/"); fActual=_fecha.join("-"); fActual=fActual.toString();
+
+                /* IGUALANDO OBJETO DEL FORM A DATOS DE NUEVO REGISTRO */
+                this.Ruta ={
+                    RuId : this.Ruta2.RuId, 
+                    EmId : this.emID, 
+                    RuDescripcion : this.Ruta2.RuDescripcion, 
+                    RuFechaCreacion: fActual, 
+                    RuRegMunicipal : this.Ruta2.RuRegMunicipal,
+                    RuKilometro : this.Ruta2.RuKilometro, 
+                    RuActivo : this.Ruta2.RuActivo, 
+                    UsId: 0,UsFechaReg: this.Ruta2.UsId
+                }
             });
     }
   

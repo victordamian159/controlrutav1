@@ -1,4 +1,4 @@
-<!--FORMULARIO-->
+<!--PRINCIPAL TABLAS-->
 <div class="contenedor">
     <!--TITULO-->
     <div id="titulo"> Tarjetas de Control </div>
@@ -30,7 +30,7 @@
 
         <!--NUEVO REGISTRO style="float:left"-->
         <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
-            <button class="form-control" id="btnNuevo" type="button"  pButton icon="fa-file-text-o" (click)="nroAsigTarjetas()" label="Asignar Tarjeta" ></button>
+            <button class="form-control" id="btnNuevo" type="button"  pButton icon="fa-file-text-o" [disabled]="_ruId==0" (click)="nroAsigTarjetas()" label="Asignar Tarjeta" ></button>
         </div>
     </div>
 
@@ -42,9 +42,9 @@
                     scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectCabecera($event)">
                     
                     <!--campos de la datatable-->
-                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                    <p-column styleClass="col-button" [style]="{'width':'3em','height':'4em'}">
                         <template let-col let-row="rowData" pTemplate="body">
-                            <button type="button" pButton id="btnTable" (click)="editarC(row.TaCoId)" icon="fa-pencil-square-o" > </button>
+                            <!--<button type="button" pButton id="btnTable" (click)="editarC(row.TaCoId)" icon="fa-pencil-square-o" > </button>-->
                             <button type="button" pButton id="btnTable" (click)="eliminarC(row.TaCoId)" icon="fa-trash" > </button>
                         </template>
                     </p-column>
@@ -55,13 +55,7 @@
                     <p-column field="TaCoFecha" header="Fecha"  [style]="{'width':'9em','text-align':'center'}"></p-column>
                     <p-column field="TaCoHoraSalida" header="Salida"  [style]="{'width':'7em','text-align':'center'}"></p-column>
                     
-                    <!--
-                        <p-footer>
-                            <div class="ui-helper-clearfix" style="width:100%">
-                                <button type="button"  pButton icon="fa-plus" style="float:left" (click)="nuevaAsignaTarjeta()" label="Nuevo" ></button>
-                            </div>
-                        </div>
-                    -->
+                    
                 </p-dataTable>
             </div>
         
@@ -71,12 +65,12 @@
     <div class="row">
         <!--<div class="col-xl-12 col-md-12 col-sm-12 col-xs-12"></div>-->
             <div class=" table table-responsive">
-                <p-dataTable [value]="_allTarjDetalle" [rows]="14"   [globalFilter]="filtroGlobal" [responsive]="false"
+                <p-dataTable [value]="_allTarjDetalle" [rows]="7"   [globalFilter]="filtroGlobal" [responsive]="false"
                     scrollable="true" [paginator]="true" selectionMode="single" scrollWidth="100%" emptyMessage="Lista Vacia" >
                     <p-column field="nro" header="N°"  [style]="{'width':'2em','text-align':'center'}"></p-column>
-                    <p-column field="TaCoDeDescripcion" header="Punto"  [style]="{'width':'10em'}"></p-column>
-                    <p-column field="TaCoDeHora" header="Control"  [style]="{'width':'4em','text-align':'center'}"></p-column>
-                    <p-column field="TaCoDeTiempo" header="Tiempo"  [style]="{'width':'4em','text-align':'center'}"></p-column>
+                    <p-column field="TaCoDeDescripcion" header="Punto"  [style]="{'width':'9em'}"></p-column>
+                    <p-column field="TaCoDeHora" header="Control"  [style]="{'width':'5em','text-align':'center'}"></p-column>
+                    <p-column field="TaCoDeTiempo" header="Tiempo"  [style]="{'width':'5em','text-align':'center'}"></p-column>
                 </p-dataTable>
             </div>
        
@@ -84,7 +78,7 @@
 </div>
 
     
-<!--VENTANAS-->
+<!--VENTANAS FORMULARIO-->
 
     <!--ELEGIR EL NRO DE TARJETAS DE CONTROL-->
     <p-dialog  [resizable]="false" [(visible)]="displayNroTarjetas" modal="modal" width="370" [closable]= false>
@@ -103,7 +97,7 @@
         <!--BOTONES-->
         <div class=" btn_Modal row ">
             <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                <button class="btn_modal" type="text" pButton icon="fa-fast-forward" (click)="funcNroTarjetas();" [disabled]="false" label="Continuar"></button>
+                <button class="btn_modal" type="text" pButton icon="fa-fast-forward" (click)="funcNroTarjetas();" [disabled]="!nroTarj.valid" label="Continuar"></button>
             </div>
             <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
                 <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelNroAsigTarjetas();" label="Cancelar"></button>
@@ -146,8 +140,7 @@
                 </div>                
             </div>
 
-            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12"> 
-                
+            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">      
                 <!--Programaciones-->
                 <div class="form-group">
                     <label>Programaciones:</label>
@@ -203,10 +196,13 @@
 
         <!--BOTONES-->
         <div class=" btn_Modal row ">
-            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
+                <button class="btn_modal" type="text" pButton icon="fa-fast-backward" (click)="btnAtrasMultiTarj(); PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset();" label="Atras"></button>
+            </div>
+            <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                 <button class="btn_modal" type="text" pButton icon="fa-save" (click)="guardarTarjeta();  PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset();" [disabled]="!PC.valid || !PROG.valid || !fprog.valid || !hsal.valid || !cuota.valid || this.actRadioButton" label="Guardar"></button>
             </div>
-            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                 <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelarTarjeta();  PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset(); " label="Cancelar"></button>
             </div>
         </div>
@@ -306,7 +302,7 @@
                 <button class="btn_modal" type="text" pButton icon="fa-fast-backward" (click)="btnAtrasMultiTarj(); PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset();" label="Atras"></button>
             </div>
             <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
-                <button class="btn_modal" type="text" pButton icon="fa-save" (click)="guardarMultiTarjetas(); PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset();" [disabled]="false" label="Guardar"></button>
+                <button class="btn_modal" type="text" pButton icon="fa-save" (click)="guardarMultiTarjetas(); PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset();" [disabled]="!PC.valid || !PROG.valid || !hsal.valid || !cuota.valid || !fprog.valid || this.actRadioButton" label="Guardar"></button>
             </div>
             <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                 <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelarMultiTarjeta(); PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset();" label="Cancelar"></button>
@@ -314,96 +310,7 @@
         </div>
     </p-dialog>
 
-    <!--EDITAR TARJETA DE CONTROL SELECCIONADA-->
-     <p-dialog header="Editando Tarjeta Asignada" [(visible)]="displayEditarTarjeta" [resizable]="false" modal="modal" width="100%" [closable]= false>
-           <div class="container"> 
-                <div class="row">
-                    <div class="cont_modal">
-                        <div class="row">
-                            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                                <!--Listado de Puntos de Control-->
-                                <div class="form-group">
-                                    <label>Listado de Puntos de Control:</label>
-                                    <select class="form-control" [(ngModel)]="puntoControl" (change)="puntosControlId($event)" required #PC="ngModel">
-                                        <option *ngFor="let punto of _puntosControl" [ngValue]="punto" selected="selected">
-                                            {{punto.PuCoDescripcion}} / {{punto.PuCoTiempoBus}}
-                                        </option>
-                                    </select>  
-                                    <div id="validation" [hidden]="!PC.touched || PC.valid ">
-                                        Error, revise los datos ingresados
-                                    </div>
-                                </div>
-                                <!--Programaciones-->
-                                <div class="form-group">
-                                    <label>Programaciones:</label>
-                                    <select class="form-control" required [(ngModel)]="_prId" (change)="programacionId($event)"   #PROG="ngModel">
-                                        <option *ngFor="let prog of _programacion" [value]="prog.prId">
-                                            {{prog.prDescripcion}}
-                                        </option>
-                                    </select> 
-                                    <div id="validation" [hidden]="!PROG.touched || PROG.valid ">
-                                        Error, revise los datos ingresados
-                                    </div>
-                                </div>
-                                <!--Hora Salida:-->
-                                <div class="form-group">
-                                    <label >Hora Salida:</label>
-                                    <input class="form-control" type="time"[(ngModel)]="tarjeta._TaCoHoraSalida"  step="1"  required #hsal="ngModel" />
-                                    <span *ngIf="!hsal.valid && (hsal.touched || hsal.dirty)"  >  
-                                        <div id="validation" [hidden]="!hsal.errors.required"> obligatorio </div>
-                                    </span>   
-                                </div>                
-                            </div>
-
-                            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12"> 
-                                <!--Cuota por vuelta-->
-                                <div class="form-group">    
-                                    <label>Cuota por vuelta:</label>
-                                    <input class="form-control" type="number" value="0" [(ngModel)]="tarjeta._TaCoCuota" required #cuota="ngModel" />
-                                    <span *ngIf="!cuota.valid && (cuota.touched || cuota.dirty)"  >  
-                                        <div id="validation" [hidden]="!cuota.errors.required"> obligatorio </div>
-                                    </span>   
-                                </div>    
-                                <!--Programacion por Fecha-->
-                                <div class="form-group">
-                                    <label>Programacion por Fecha:</label>
-                                    <div class="row">
-                                        <div class="col-xl-9 col-md-9 col-sm-12 col-xs-12">
-                                            <input class="form-control" name="fecha" type="date" [(ngModel)]="tarjeta._TaCoFecha" required #fprog="ngModel" />
-                                        </div>
-                                        <div class="col-xl-3 col-md-3 col-sm-12 col-xs-12">
-                                            <button class="btn_modal" type="button" (click)="buscarxFecha()" pButton icon="fa-search" [disabled]="!fprog.valid"></button>
-                                        </div>
-                                    </div>
-                                    <div id="validation" [hidden]="fprog.valid || !fprog.touched">
-                                            Error, revise los datos ingresados
-                                    </div> 
-                                </div>
-                                <!--Estado de la Tarjeta-->
-                                <div class="form-group">
-                                    <label>Estado de la Tarjeta:</label>
-                                    <div class="row">
-                                        <p-radioButton class="radioButton" value="0" label="No Asignado" [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton>
-                                        <p-radioButton class="radioButton" value="1" label="Asignar"     [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton>
-                                        <p-radioButton class="radioButton" value="2" label="Ausente"     [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-           </div>
-            <!--PIE BOTONES DEL FORM-->
-            <div class=" row ">
-                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">    
-                    <button class="btn_modal" type="button" icon="fa-save" pButton  (click)="guardarTarjeta()" label="Guardar"></button>
-                </div>
-                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                    <button class="btn_modal" type="button" icon="fa-close" pButton  (click)="cancelarEditarTarjeta()" label="Cancelar"></button>
-                </div>
-            </div>
-     </p-dialog>  
-
+   
 
 <!--MENSAJES PARA EL USUARIO-->
 
@@ -412,10 +319,10 @@
             {{mensaje}}
             <div class=" btn_Modal row ">
                 <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                    <button class="btn_modal" type="text" pButton (click)="cancelar_eliminarC()" label="Cancelar"></button>
+                    <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelar_eliminarC()" label="Cancelar"></button>
                 </div>
                 <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                    <button class="btn_modal" type="text" pButton (click)="_eliminarC()" label = "Eliminar"></button>
+                    <button class="btn_modal" type="text" pButton icon="fa-trash-o" (click)="_eliminarC()" label = "Eliminar"></button>
                 </div>
             </div>
      </p-dialog>  
@@ -425,7 +332,7 @@
             {{mensaje}}
             <div class=" btn_Modal row ">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                    <button class="btn_modal" type="text" pButton (click)="errorBuscarxFecha()" label=" Aceptar"></button>
+                    <button class="btn_modal" type="text" pButton icon="fa-check" (click)="errorBuscarxFecha()" label=" Aceptar"></button>
                 </div>
             </div>
      </p-dialog>  
@@ -435,7 +342,7 @@
             {{mensaje}}
             <div class=" btn_Modal row ">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                    <button class="btn_modal" type="text" pButton (click)="errorBusquedaProg()" label=" Aceptar"></button>
+                    <button class="btn_modal" type="text" pButton icon="fa-check" (click)="errorBusquedaProg()" label=" Aceptar"></button>
                 </div>
             </div>
      </p-dialog>  
@@ -445,7 +352,7 @@
             {{mensaje}}
             <div class=" btn_Modal row ">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                    <button class="btn_modal" type="text" pButton (click)="aceptarHayPC()" label=" Aceptar"></button>
+                    <button class="btn_modal" type="text" pButton icon="fa-check" (click)="aceptarHayPC()" label=" Aceptar"></button>
                 </div>
             </div>
      </p-dialog>  
@@ -455,7 +362,7 @@
             {{mensaje}}
             <div class=" btn_Modal row ">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                    <button class="btn_modal" type="text" pButton (click)="aceptarErrorNoHayPC()" label=" Aceptar"></button>
+                    <button class="btn_modal" type="text" pButton icon="fa-check" (click)="aceptarErrorNoHayPC()" label=" Aceptar"></button>
                 </div>
             </div>
      </p-dialog>  
@@ -465,7 +372,7 @@
             {{mensaje}}
             <div class=" btn_Modal row ">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                    <button class="btn_modal" type="text" pButton (click)="aceptarNoAsigTarjeta()" label=" Aceptar"></button>
+                    <button class="btn_modal" type="text" pButton icon="fa-check" (click)="aceptarNoAsigTarjeta()" label=" Aceptar"></button>
                 </div>
             </div>
      </p-dialog>  
@@ -494,4 +401,94 @@
         <input class="form-control" type="number"  id="cuota"  [(ngModel)]="tarjeta._TaCoCuota">
     </div>     
 </div>-->
+
+ <!--EDITAR TARJETA DE CONTROL SELECCIONADA
+     <p-dialog header="Editando Tarjeta Asignada" [(visible)]="displayEditarTarjeta" [resizable]="false" modal="modal" width="100%" [closable]= false>
+            <div class="container"> 
+                <div class="row">
+                    <div class="cont_modal">
+                        <div class="row">
+                            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                               
+                                <div class="form-group">
+                                    <label>Listado de Puntos de Control:</label>
+                                    <select class="form-control" [(ngModel)]="puntoControl" (change)="puntosControlId($event)" required #PC="ngModel">
+                                        <option *ngFor="let punto of _puntosControl" [ngValue]="punto" selected="selected">
+                                            {{punto.PuCoDescripcion}} / {{punto.PuCoTiempoBus}}
+                                        </option>
+                                    </select>  
+                                    <div id="validation" [hidden]="!PC.touched || PC.valid ">
+                                        Error, revise los datos ingresados
+                                    </div>
+                                </div>
+                             
+                                <div class="form-group">
+                                    <label>Programaciones:</label>
+                                    <select class="form-control" required [(ngModel)]="_prId" (change)="programacionId($event)"   #PROG="ngModel">
+                                        <option *ngFor="let prog of _programacion" [value]="prog.prId">
+                                            {{prog.prDescripcion}}
+                                        </option>
+                                    </select> 
+                                    <div id="validation" [hidden]="!PROG.touched || PROG.valid ">
+                                        Error, revise los datos ingresados
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label >Hora Salida:</label>
+                                    <input class="form-control" type="time"[(ngModel)]="tarjeta._TaCoHoraSalida"  step="1"  required #hsal="ngModel" />
+                                    <span *ngIf="!hsal.valid && (hsal.touched || hsal.dirty)"  >  
+                                        <div id="validation" [hidden]="!hsal.errors.required"> obligatorio </div>
+                                    </span>   
+                                </div>                
+                            </div>
+
+                            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12"> 
+                               
+                                <div class="form-group">    
+                                    <label>Cuota por vuelta:</label>
+                                    <input class="form-control" type="number" value="0" [(ngModel)]="tarjeta._TaCoCuota" required #cuota="ngModel" />
+                                    <span *ngIf="!cuota.valid && (cuota.touched || cuota.dirty)"  >  
+                                        <div id="validation" [hidden]="!cuota.errors.required"> obligatorio </div>
+                                    </span>   
+                                </div>    
+                                
+                                <div class="form-group">
+                                    <label>Programacion por Fecha:</label>
+                                    <div class="row">
+                                        <div class="col-xl-9 col-md-9 col-sm-12 col-xs-12">
+                                            <input class="form-control" name="fecha" type="date" [(ngModel)]="tarjeta._TaCoFecha" required #fprog="ngModel" />
+                                        </div>
+                                        <div class="col-xl-3 col-md-3 col-sm-12 col-xs-12">
+                                            <button class="btn_modal" type="button" (click)="buscarxFecha()" pButton icon="fa-search" [disabled]="!fprog.valid"></button>
+                                        </div>
+                                    </div>
+                                    <div id="validation" [hidden]="fprog.valid || !fprog.touched">
+                                            Error, revise los datos ingresados
+                                    </div> 
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Estado de la Tarjeta:</label>
+                                    <div class="row">
+                                        <p-radioButton class="radioButton" value="0" label="No Asignado" [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton>
+                                        <p-radioButton class="radioButton" value="1" label="Asignar"     [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton>
+                                        <p-radioButton class="radioButton" value="2" label="Ausente"     [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">    
+                    <button class="btn_modal" type="button" icon="fa-save" pButton  (click)="guardarTarjeta()" label="Guardar"></button>
+                </div>
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                    <button class="btn_modal" type="button" icon="fa-close" pButton  (click)="cancelarEditarTarjeta()" label="Cancelar"></button>
+                </div>
+            </div>
+     </p-dialog>-->
 

@@ -51,7 +51,7 @@ export class ProgramacionService{
     }
 //PROGRAMACION DETALLE
 
-    //recuperar programacion por ID de programacion MAESTRO
+    //recuperar PROGRAMACIONDETALLE por ID de programacion MAESTRO
     getAllProgramacionDetalleByPrId(PrId:number){
         return this.http
             .get(this.baseUrl2+'prid/'+PrId)
@@ -79,7 +79,7 @@ export class ProgramacionService{
             .catch((error:any) => Observable.throw(error.json().error || 'server error'));
     }
 
-    //CHOFER AUSENTE ACTUALIZAR PROGRAMACION DETALLE
+    //CHOFER AUSENTE ACTUALIZAR PROGRAMACION DETALLE - ACTUALIZA CAMPO PRDEASIGNADO
 	actualizarProgDetalleAusente(obj : Object[]){
 		return this.http.post(this.baseUrl2+ "update/", obj) // ...using post request
 						.map((res:Response) => res.json()) // ...and calling .json() on the response to return data

@@ -30,7 +30,7 @@
                             </p-column>
                             <p-column field="nro" header="N°" [style]="{'width':'4em','text-align':'center'}"></p-column>
                             <p-column field="RuDescripcion" header="Descripcion" [style]="{'width':'18em'}" ></p-column>
-                            <p-column field="RuFechaCreacion" header="Creacion" [style]="{'width':'8em','text-align':'center'}" ></p-column>
+                            <p-column field="RuFechaCreacion" header="Fundacion" [style]="{'width':'8em','text-align':'center'}" ></p-column>
                             <!--<div class="ui-helper-clearfix" style="width:100%"></div>-->
                     </p-dataTable>
                 </div>
@@ -42,7 +42,7 @@
 
             <!--MAPA-->
             <div class="row">
-                <div class="col-xl-12">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                     <div id="mapa">
                         <!--<div class="form"><h5 id="mymaparuta">Trazar la ruta</h5></div>-->
                         <p-growl [value]="msgs"></p-growl>
@@ -130,7 +130,7 @@
             <!--BOTONES-->
             <div class="btn_Modal row">
                 <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
-                    <button class="btn_modal" type="button" pButton icon="fa-spin"  (click)="saveRutaMaestro(); desc.reset(); freg.reset(); fcrea.reset(); fkil.reset(); " [disabled]="!desc.valid || !freg.valid || !fcrea.valid || !fkil.valid"  label="Guardar"></button>
+                    <button class="btn_modal" type="button" pButton icon="fa-save"  (click)="saveRutaMaestro(); desc.reset(); freg.reset(); fcrea.reset(); fkil.reset(); " [disabled]="!desc.valid || !freg.valid || !fcrea.valid || !fkil.valid"  label="Guardar"></button>
                 </div>
                 <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
                     <button class="btn_modal" type="button" pButton icon="fa-close" (click)="cancelRutaMaestro(); desc.reset(); freg.reset(); fcrea.reset(); fkil.reset(); " label="Cancelar"></button>
@@ -193,7 +193,7 @@
                 
                     <div class="btn_Modal row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarAddMarkerDesactivado()"></button>
+                            <button class="btn_modal" type="button" pButton icon="fa-check" label="Aceptar" (click)="aceptarAddMarkerDesactivado()"></button>
                         </div>
                     </div>
                 
@@ -205,7 +205,7 @@
                 
                     <div class="btn_Modal row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarSinGrafica()"></button>
+                            <button class="btn_modal" type="button" pButton icon="fa-check" label="Aceptar" (click)="aceptarSinGrafica()"></button>
                         </div>
                     </div>
                 
@@ -217,7 +217,7 @@
                 
                     <div class="btn_Modal row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarGuardarCorrectamente()"></button>
+                            <button class="btn_modal" type="button" pButton icon="fa-check" label="Aceptar" (click)="aceptarGuardarCorrectamente()"></button>
                         </div>
                     </div>
                 
@@ -229,7 +229,7 @@
                 
                     <div class="btn_Modal row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarNuevaRuta()"></button>
+                            <button class="btn_modal" type="button" pButton icon="fa-check" label="Aceptar" (click)="aceptarNuevaRuta()"></button>
                        </div>
                     </div>
                 
@@ -241,7 +241,7 @@
                 
                     <div class="btn_Modal row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarTerminarRuta()"></button>
+                            <button class="btn_modal" type="button" pButton icon="fa-check" label="Aceptar" (click)="aceptarTerminarRuta()"></button>
                        </div>
                     </div>
                 
@@ -253,7 +253,7 @@
                 
                     <div class="btn_Modal row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <button class="btn_modal" type="button" pButton label="Aceptar" (click)="aceptarTermineRuta()"></button>
+                            <button class="btn_modal" type="button" pButton icon="fa-check" label="Aceptar" (click)="aceptarTermineRuta()"></button>
                        </div>
                     </div>
                 
@@ -265,7 +265,7 @@
                 
                     <div class="btn_Modal row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <button class="btn_modal" type="button" pButton label="Aceptar" (click)="rutaNoPermitida()"></button>
+                            <button class="btn_modal" type="button" pButton icon="fa-check" label="Aceptar" (click)="rutaNoPermitida()"></button>
                        </div>
                     </div>
                 
@@ -277,7 +277,7 @@
                 
                     <div class="btn_Modal row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <button class="btn_modal" type="button" pButton label="Aceptar" (click)="trazaNoValida()"></button>
+                            <button class="btn_modal" type="button" pButton icon="fa-check" label="Aceptar" (click)="trazaNoValida()"></button>
                         </div>
                     </div>
                 

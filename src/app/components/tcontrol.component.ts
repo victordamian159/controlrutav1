@@ -160,15 +160,10 @@ export class TcontrolComponent implements OnInit{
 
     ngOnInit(){
         this.emID = 1;
-        //console.log(this.placas);
         this.getallplacasbusbyemsuem(this.emID,0); //PLACAS
-
-        //this.getallpuntocontrolbyemru(this.emID,51); PUNTOS DE CONTROL
-
-        /*this.getalltarjetacontrol(); */
-        this.nroTarjetas=1;/* NRO DE TARJETAS ASIGNADAS POR DEFECTO */
+        this._ruId=0; /* INICIANDO RUID A CERO PARA DESACTIVAR EL BOTON ASIGNAR TARJETA */
         this.arrNTarjCabecera=[]; /*INICIANDO ARRAY A VACIO DE NUEVAS TARJETAS */
-        this.getallprogramacionbyem(this.emID,0); //PROGRAMACION X EMP
+        this.getallprogramacionbyem(this.emID,0); //PROGRAMACION X EMP Y POR AÑO(ACLARAR ESTO)
         this.getAllRutaByEm(this.emID);
       
         this.tarjeta._UsId = 1; //ARREGLAR ESOT PARA Q SEA GLOBAL, USUARIO
@@ -185,15 +180,6 @@ export class TcontrolComponent implements OnInit{
             ()   => this.isLoading = false
         );
     }
-
-    /*/CONSULTA RECUPERAR PUNTOS DE CONTROL  (1,0)
-    getallpuntocontrolbyemru(emId:number, ruId:number){
-        this.tcontrolservice.getAllPuntoControlByEmRu(emId,ruId).subscribe(
-            data => {this.puntosControl=data; 
-                    console.log(this.puntosControl);
-                this.mgPuntosControl();}
-        );
-    }*/
 
     /* FUNCION ASOCIADA A COMBO DE RUTAS */
     rutaId(event:Event){
@@ -215,6 +201,7 @@ export class TcontrolComponent implements OnInit{
 
     /* COMBO PUNTO CONTROL */
     pControlId(event:Event){
+        console.log(this._pcId);
         this.getalltarjetasbyemidpucoid(this.emID,this._pcId);
     }
 
@@ -248,8 +235,7 @@ export class TcontrolComponent implements OnInit{
         this.tcontrolservice.getAllProgramacionByEm(emId, anio).subscribe(
             data => {
                         this.programacion=data; 
-                        //console.log(this.programacion);
-                        this.mgprogramacion();
+                        this.mcobprogramacion();
                     }
         );
     }
@@ -259,8 +245,6 @@ export class TcontrolComponent implements OnInit{
         this.tcontrolservice.getAllProgramacionDetalleByPrFecha(PrId, Date).subscribe(
             data => {
                         this.progDetalle=data;
-
-                        console.log(this.progDetalle);
                         if(this.progDetalle.length>0 ){
                             //this.getallplacasbusbyemsuem(this.emID,0);
                             this.mgprogDetalle(); /*GRILLA PROG POR FECHA*/
@@ -278,35 +262,30 @@ export class TcontrolComponent implements OnInit{
         this.displayNoProgEnFecha = false;
     }
 
-    //GRILLA PROGRAMACION CABECERA
-    mgprogramacion(){
+    //COMBO PROGRAMACION CABECERA (CARGA ARRAY PARA MOSTRAR OPCIONES EN EL COMBOBOX)
+    mcobprogramacion(){
         this._programacion=[];
         for(let prog of this.programacion){
             this._programacion.push({
                 EmConsorcio:prog.EmConsorcio,
                 PrAleatorio:prog.PrAleatorio,
                 PrCantidadBuses:prog.PrCantidadBuses,
-                PrFecha:prog.PrFecha,
-                PrFechaFin:prog.PrFechaFin,
-                PrFechaInicio:prog.PrFechaInicio,
+                PrFecha:this._fecha(prog.PrFecha),
+                PrFechaFin:this._fecha(prog.PrFechaFin),
+                PrFechaInicio:this._fecha(prog.PrFechaInicio),
                 PrTipo:prog.PrTipo,
                 dias:prog.dias,
-                prDescripcion:prog.prDescripcion,
+                prDescripcion:prog.prDescripcion.substr(0,4) +" de "+this._fecha(prog.PrFechaInicio)+" a  "+this._fecha(prog.PrFechaFin) ,
                 prId:prog.prId
             });
         }
-        /* AGREGAR LA FECHA DE INICIO 
-           Y FINAL DE LA PROGRAMACION */
     }
 
     //GRILLA PROGRAMACION DETALLE  -  POR LA FECHA
     mgprogDetalle(){ 
         this._progDetalle=[];
         //i: PARA RECORRER EL ARRAY, SI Y NO: CUANTOS SE ENCONTRARON Y NO SE ENCONTRARON
-        
         let i = 0; let j=0;  let si=0; let no=0; let cen = 0, cen2=0; let programacion=[]; let longProg = this.progDetalle.length;
-        //console.log("i :"+i+" -- "+"j: "+j); console.log(this.progDetalle[i].BuId+ " == "+ this.placas[j].BuId);
-
 
         /* BUSCANDO POR PLACAS */
         while (i<this.placas.length && cen2==0){
@@ -447,11 +426,31 @@ export class TcontrolComponent implements OnInit{
     //CONSULTA TARJETAS DE CONTROL BY ID ---NO ESTA EN USO
     getalltarjetacontrolbyid(tacoid:number){
         this.tcontrolservice.getAllTarjetaControlById(tacoid).subscribe(
-            data => {this._allTarjetas = data; 
-                     console.log(this._allTarjetas);},
+                     data => {/*this._allTarjetas = data;  console.log(this._allTarjetas);*/
+                                this.tarjeta=data; 
+                                console.log(this.tarjeta);
+                                this.displayEditarTarjeta=true;
+                                /* CARGANDO OBJETOS VENTANA EDITAR */
+                                /* REFRESCAR GRILLA */
+                             },
                      err => {this.errorMessage=err},
                         () => this.isLoading=false
         );
+        /* 
+            //RECUPERAR EL OBJETO DESDE LA BD PARA EDITARLO
+            this.tcontrolservice.getAllTarjetaControlById(taCoId).subscribe(
+                data => {this.tarjeta=data; 
+                        this.displayEditarTarjeta=true;
+                        
+                        },
+                err => {this.errorMessage = err},
+                () => this.isLoading=false    
+            );
+
+            //CARGAR LOS OBJETOS
+            //this.tarjeta._TaCoCuota = 9;
+        
+        */
     }
 
     buscarxFecha(){
@@ -482,38 +481,36 @@ export class TcontrolComponent implements OnInit{
 
     //ABRIR MODAL ASIGNAR NUEVA TARJETA CONTROL
     nuevaAsignaTarjeta(){
-        this.tarjeta._TaCoId=0; //PONIENDO TACOID A CERO PARA INDICAR Q ES NUEVO REGISTRO
+        //this.tarjeta._TaCoId=0; PONIENDO TACOID A CERO PARA INDICAR Q ES NUEVO REGISTRO
+        let horaAct=new Date(), hora=horaAct.getHours(), min=horaAct.getMinutes(), seg=horaAct.getSeconds(), _horaAct:string; 
+        _horaAct=hora.toString() +":"+ min.toString() +":"+ seg.toString();
+        _horaAct=this.cCeroHora(_horaAct);
 
         /* PROCEDURE NUEVA TARJETA CABECERA UNA O MULTIPLE */
-        this.tcontrolservice.newTarjetaControl() 
-            .subscribe(
-                data =>{this._tarjeta=data;                  
-                        /* SI ES UNA O MULTIPLES TARJETAS 
-                        if(this.nroTarjetas>1){
-                            for(let i=0; i<this.nroTarjetas; i++){
-                                this.arrNTarjCabecera[i]=this._tarjeta;
-                            }
-                        }*/
-                }
-            );
-        
-        /* PROCEDURE NUEVA TARJETA DETALLE  UNA O MULTIPLE */
-        this.tcontrolservice.newTarjetaControlDetalle()
-            .subscribe(
-                data =>{this._tarjetaDetalle=data; 
-                       /* SI ES UNA O MULTIPLES TARJETAS */
-                       if(this.nroTarjetas>1){
-                            for(let i=0; i<this.nroTarjetas; i++){
-                                this.arrNTarjDetalle[i]=this._tarjetaDetalle;
+        this.tcontrolservice.newTarjetaControl() .subscribe(
+                data =>{ 
+                            this._tarjeta=data;
+                            this.tarjeta={
+                                _TaCoId : this._tarjeta.TaCoId,
+                                _PuCoId : this._tarjeta.PuCoId,
+                                _RuId : this._tarjeta.RuId,
+                                _BuId :this._tarjeta.BuId,
+                                _PrId :this._tarjeta.PrId,
+                                _TaCoNroVuelta:this._tarjeta.TaCoNroVuelta,
+                                _TaCoFecha :"",
+                                _TaCoHoraSalida :_horaAct,
+                                _TaCoCuota :this._tarjeta.TaCoCuota,
+                                _UsId :this._tarjeta.UsId,
+                                _UsFechaReg :this._tarjeta.UsFechaReg
                             }
                        }
-                }
-            );
+        );
     }
 
     /* VENTANA ELEGIR ENTRE ASIGNAR UNA O VARIAS TARJETAS A LA VEZ*/
     nroAsigTarjetas(){
         this.mensaje="Elija el N° de Tarjetas";
+        this.nroTarjetas=1;
         this.displayNroTarjetas=true;
     }
 
@@ -532,20 +529,21 @@ export class TcontrolComponent implements OnInit{
                 /* ABRIENDO MODAL UNA SOLA TARJETA */
                 this.displayAsignarTarjeta=true;
                 this.displayNroTarjetas=false;
-
+                console.log(this.nroTarjetas);
                 this.nroTarjetas=1; /* DEJANDO EN VALOR POR DEFECTO */
                 this.nuevaAsignaTarjeta();/* INICIANDO NUEVO OBJETO CABECERA - DETALLE */
 
             }else if(this.nroTarjetas>1){
                 /* ABRIENDO MODAL VARIAS TARJETAS */
                 console.log("En Programacion");
+                console.log(this.nroTarjetas);
                 this.titulo="Asignando Multiples Tarjetas :  "+this.nroTarjetas;
 
                 /* ABRIENDO MODAL MULTITARJETA */
                 this.displayAsigMultiTarj=true;
                 this.displayNroTarjetas=false;
 
-                /* CREANDO MULTIPLES TARJETAS VACIAS SEGUN NROTARJETAS - PROCEDURE CABECERAS Y DETALLES */
+                /* CREANDO MULTIPLES TARJETAS VACIAS SEGUN NROTARJETAS - PROCEDURE CABECERA */
                 this.nuevaAsignaTarjeta();
 
             }else if(this.nroTarjetas==0){
@@ -555,17 +553,22 @@ export class TcontrolComponent implements OnInit{
                 this.nroTarjetas=1; /* DEJANDO EN VALOR POR DEFECTO */
             }
         }
+
     } 
 
     /* BOTON ATRAS (REGRESA AL MODAL NRO DE TARJETAS A 
        ASIGNAR), MODAL ASIGNAR MULTITARJETA NROTARJ QUEDA IGUAL */
     btnAtrasMultiTarj(){
+        console.log(this.nroTarjetas);
         this.mensaje="Elija el N° de Tarjetas";
-        this.displayNroTarjetas=true;
         if(this.nroTarjetas==1){
             this.displayAsignarTarjeta=false;
+            this.displayNroTarjetas=true;
+            this.nroTarjetas=1;
         }else if(this.nroTarjetas>1){
             this.displayAsigMultiTarj=false;
+            this.displayNroTarjetas=true;
+            this.nroTarjetas=1;
         }
         /* BORRANDO OBJETOS Y VARIABLES CREADOS*/
         this.borrarObjetos();
@@ -593,6 +596,9 @@ export class TcontrolComponent implements OnInit{
         this.arrNTarjCabecera=[];
         this._tarjetaDetalle={};
         this.arrNTarjDetalle=[];
+        this._progDetalle=[]; /* VACIANDO PROGRAMACION EN LA FECHA INDICADA */
+        this.val=null; /* BORRANDO VALOR DE VARIABLE(PASADA A OBJETO) - ESTADO DE TARJETA */
+        this.actRadioButton=true; /* DESACTIVANDO RADIO BUTTONS ESTA DE TARJETA */
     }
 
     cancelarEditarTarjeta(){
@@ -606,7 +612,6 @@ export class TcontrolComponent implements OnInit{
 
         this.tcontrolservice.getAllTarjetaControlDetalleBytaCoId(this.tarjeta._TaCoId).subscribe(
             data => { this._tarjetaDetalle = data;  
-                      /*console.log(this._tarjetaDetalle);*/
                       this.mgTarjetaDetalle();  }
         );
     }
@@ -641,25 +646,10 @@ export class TcontrolComponent implements OnInit{
       -> AQUI SE GUARDA TANTO CABECERA COMO DETALLE Y SE EDITA  LA 
          TABLA PROGRAMACION DETALLE EL CAMPO ASIGNADO*/
     guardarTarjeta(){
-        let progUpdate : any = {
-            PrDeId : 0,
-            PrDeAsignadoTarjeta : 0
-        }
+        let progUpdate : any = {PrDeId : 0,PrDeAsignadoTarjeta : 0}
 
-        /*HORA SALIDA UNA SOLA TARJETA*/              
-        {
-            let thoy:Date,  otra:Date, horaTarjeta:string;
-            thoy=new Date();          
-            //COMPLETANDO LOS SEGUNDOS SI ES NECESARIO
-            if(this.tarjeta._TaCoHoraSalida.length<=5){
-                this.tarjeta._TaCoHoraSalida = this.tarjeta._TaCoHoraSalida+":00"; 
-            }
-            horaTarjeta=this.tarjeta._TaCoHoraSalida;
-            let resultado=horaTarjeta.split(':');
-            otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));    
-            this.tarjeta._TaCoHoraSalida=otra;
-        }
-        
+        this.tarjeta._TaCoHoraSalida=this.corrigiendoHora(this.tarjeta._TaCoHoraSalida);
+
         /* OBJETO A MANDAR AL SERVIDOR --- SUBIENDO DATOS AL OBJETO TARJETA this.tarjeta._prId = id;*/
         this._tarjeta ={
             TaCoId : this.tarjeta._TaCoId,
@@ -675,33 +665,29 @@ export class TcontrolComponent implements OnInit{
             TaCoNroVuelta : this.tarjeta._TaCoNroVuelta = 1
         }
 
-        //NUEVO REGISTRO
+        /*NUEVA TARJETA*/
         if(this._tarjeta.TaCoId == 0){
-            /* NO ASIGNADO VAL=0 , ASIGNADO VAL=1 */ /*this.val  ->  VALOR ASIGNACION 0 , 1 , 2 */
-            if(this.val==1 || this.val==0){
-                /* OBJ UPDATE PROGDETALLE */
-                progUpdate ={ PrDeId : this._prDeId, PrDeAsignadoTarjeta : this.val}   
-                /* PROCEDURE ASIGNAR TARJETA (UNA SOLA) */
-                this.tcontrolservice.asignarTarjetaControl(this._tarjeta).
-                subscribe(data => { this.updateProgDetalle(progUpdate);/* PROCEDURE UPDATE PROGDETALLE */   }, 
-                    err => {this.errorMessage=err}
-                );
-            /* AUSENTE VAL=2 */
-            }else if(this.val==2){
-                /* CAMBIANDO CAMPOS DE OBJETO PARA ACTUALIZAR LA PROGRAMACIONDETALLE */
-                progUpdate ={PrDeId : this._prDeId, PrDeAsignadoTarjeta : this.val }
+            progUpdate ={ PrDeId : this._prDeId, PrDeAsignadoTarjeta : this.val} 
 
+            /* ASIGNADO TARJETA VAL=1  */
+            if(this.val==1){
+                /* PROCEDURE ASIGNAR TARJETA (UNA SOLA) */
+                this.tcontrolservice.asignarTarjetaControl(this._tarjeta).subscribe(
+                    data => { this.updateProgDetalle(progUpdate);/* PROCEDURE UPDATE PROGDETALLE */   
+                              console.log(this.emID); console.log(this._pcId);
+                              this.getalltarjetasbyemidpucoid(this.emID,this._pcId); }, 
+                    err  => {this.errorMessage=err}
+                );
+            /* NO ASIGNADO VAL=0*/
+            }else if(this.val==0){
                 /*ACTUALIZAR PROGRAAMCION DETALLE EN EL CAMPO ASIGNADO, SALE COMO ausente SI NO VINO NO SE LE ASIGNA TARJETA*/
                 this.updateProgDetalle(progUpdate);
-
+            /* AUSENTE VAL=2 */
+            }else if(this.val==2){
+                /*ACTUALIZAR PROGRAAMCION DETALLE EN EL CAMPO ASIGNADO, SALE COMO ausente SI NO VINO NO SE LE ASIGNA TARJETA*/
+                this.updateProgDetalle(progUpdate);
             }        
-
-        //EDITANDO REGISTRO
-        }else if(this._tarjeta.TaCoId != 0){
-            console.log("editando reg");
-            console.log(this.tarjeta);
         }
-        console.log(this._tarjeta);
         this.displayAsignarTarjeta = false;
     }
    
@@ -710,7 +696,7 @@ export class TcontrolComponent implements OnInit{
         /* PARA ACTUALIZAR PROGRAMACIONDETALLE */
         let progUpdate : any = {PrDeId : 0, PrDeAsignadoTarjeta : 0}
         let arrHSalida=[];/* ARRAY HORAS SALIDA PARA LA MISMA PLACA */
-        let arrObj = [];
+        let arrObj = []; /* ARRAY OBJETOS A MANDAR AL SERVIDOR */
         
         /* OBJETO A MANDAR AL SERVIDOR */
         this._tarjeta ={
@@ -754,8 +740,7 @@ export class TcontrolComponent implements OnInit{
             }
 
             /* PROCEDURE ASIGNAR TARJETA (RESIVE UN ARRAY, NORMAL FUNCIONA EN CASO DE UN SOLO OBJETO)) */
-            progUpdate ={ PrDeId : this._prDeId, 
-                          PrDeAsignadoTarjeta : 1}  /*  */ 
+            progUpdate ={ PrDeId : this._prDeId,  PrDeAsignadoTarjeta : 1}  /*  */ 
 
             for(let i=0; i<this.nroTarjetas; i++){
                 this.tcontrolservice.asignarTarjetaControl(arrObj[i]).subscribe(
@@ -765,9 +750,23 @@ export class TcontrolComponent implements OnInit{
             }
             this.updateProgDetalle(progUpdate);
         }
-        /*console.log(arrHSalida); console.log(arrObj);*/
+
     }
 
+    /* COMPLETAR LA HORA EN CASO NECESARIO (PUEDEN BORRAR LOS SEGUNDOS) */
+    corrigiendoHora(hora:string):Date{
+         let thoy:Date,  otra:Date, horaTarjeta:string;
+            thoy=new Date();          
+            //COMPLETANDO LOS SEGUNDOS SI ES NECESARIO
+            if(hora.length<=5){
+                hora = hora+":00"; 
+            }
+            horaTarjeta=hora;
+            let resultado=horaTarjeta.split(':');
+            otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));    
+            console.log(otra);
+        return otra;
+    }
     /* CALCULANDO HORAS DE SALIDA, PARA MULTITARJETAS, ESTA FUNCION DEVUELVE UN ARRAY  */
     calHorasSalida(hInicio:string ,tvuelta:string ,hIntermedio:string, nroTarjetas:number) {
         /* VARIABLES, ARRAYS DE TIEMPOS*/
@@ -861,11 +860,20 @@ export class TcontrolComponent implements OnInit{
         }
         return arrH;
     }
-
-    /* PROCEDURE ACTUALIZAR PROGRAMACIONDETALLE */
+                                                        /* NO ASIGNADO VAL=0 , ASIGNADO VAL=1 */ /* AUSENTE VAL=2 */
+    /* PROCEDURE ACTUALIZAR PROGRAMACIONDETALLE      progUpdate ={PrDeId : this._prDeId, PrDeAsignadoTarjeta : this.val */
     updateProgDetalle(progUpdate : Object[]){
         this.tcontrolservice.actualizarProgDetalleAusente(progUpdate).subscribe
-                            (data => {console.log("CHOFER ESTUVO AUSENTE");}, 
+                            (data => {
+                                        if(this.val==0){
+                                            console.log("La tarjeta no fue asignada");
+                                        }else if(this.val==1){
+                                            console.log("La tarjeta fue asignada");
+                                        }else if(this.val==2){
+                                            console.log("El chofer esta ausente");
+                                        }
+                                        this.borrarObjetos();
+                                    }, 
                               err => {this.errorMessage=err});
     }
 
@@ -897,26 +905,15 @@ export class TcontrolComponent implements OnInit{
     
     /* BOTON EDITAR REGISTRO CABECERA */
     editarC(taCoId: number){
+        this.getalltarjetacontrolbyid(taCoId);
         
-        //RECUPERAR EL OBJETO DESDE LA BD PARA EDITARLO
-        this.tcontrolservice.getAllTarjetaControlById(taCoId).subscribe(
-            data => {this.tarjeta=data; 
-                    this.displayEditarTarjeta=true;
-                    /* CARGANDO OBJETOS VENTANA EDITAR */
-                     console.log(this.tarjeta);
-                    /* REFRESCAR GRILLA */
-                    },
-            err => {this.errorMessage = err},
-            () => this.isLoading=false    
-        );
-        //CARGAR LOS OBJETOS
-        //this.tarjeta._TaCoCuota = 9;
     }
 
     /*SELECCIONAR PUNTOS DE CONTROL DEL COMBOBOX, 
       HACE CONSULTA PARA GRILLA PRINCIPAL*/
     puntosControlId(event:Event){
         /* AL HACER CLIC SOBRE EL COMBO DEVUELVE UN OBJETO SEGUN OPCION SELECCIONADA  -> this.puntoControl */
+        this._pcId=this.puntoControl.PuCoId;
         this.idPunto = this.puntoControl.PuCoId;
         let ruID = this.puntoControl.RuId;
         this.tVueltaBus=this.puntoControl.PuCoTiempoBus
@@ -931,6 +928,18 @@ export class TcontrolComponent implements OnInit{
     /* SELECCIONAR PROGRAMACION COMBOBOX -> PROG ID */
     programacionId(event:Event){
         this.tarjeta._prId=this._prId;
+        let i=0,cen=0,fechIni:any;
+        while(i<this._programacion.length &&cen==0){
+            //console.log(i);
+            if(this._prId==this._programacion[i].prId){
+                cen=1;
+            }else if(this._prId!=this._programacion[i].prId){
+                i++; cen=0;
+            }
+        }
+        fechIni=this._programacion[i].PrFechaInicio.split("/");
+        fechIni=fechIni.join("-");
+        this.tarjeta._TaCoFecha=fechIni;
     }
 
     //SELECCIONAR PLACA DE BUS COMBOBOX

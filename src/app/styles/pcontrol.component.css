@@ -50,6 +50,9 @@
 
 #btnTable{
     background-color: #4CAF50;
+        /*width: 50%;
+        float: left;
+        position: absolute;*/
 }
 
 #mapa{
@@ -106,4 +109,12 @@ row{
     margin-left:10px;
     margin-right:10px;
     margin-bottom:10px;
+}
+
+.cont_modal{
+    overflow-y: visible; 
+    overflow-x: hidden;
+    /*height:350px;
+    height:100%;*/
+    width: 100%;
 }

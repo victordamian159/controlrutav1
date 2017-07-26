@@ -104,8 +104,7 @@ export class TControlService{
 
     //GUARDAR TARJETA DE CONTROL
     saveTarjetaControl(tarjetaControl:Object){
-		//si en caso se quiere enviar mas de un objeto
-		//let data=JSON.stringify({ Album: tramiteMov, User: tramiteMov, UserToken: tramiteMov })
+		/*si en caso se quiere enviar mas de un objeto ->let data=JSON.stringify({ Album: tramiteMov, User: tramiteMov, UserToken: tramiteMov })*/
 		return this.http.post(this.baseUrl+ "save/", tarjetaControl) // ...using post request
                          .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
                          .catch((error:any) => Observable.throw(error.json().error || 'Server error')); //...errors if any

@@ -220,17 +220,16 @@ export class ProgComponent implements OnInit{
 
         /* FECHA ACTUAL */
         let fechaAct = new Date(), año = fechaAct.getFullYear() , mes = fechaAct.getMonth(), dia = fechaAct.getDate();
-        let finicio = dia + "/"+ (mes+1) + "/"+ año ; /* DESCRIPCION */
-        let ffinal  = dia + "/"+ (mes+2) + "/"+ año; /* DESCRIPCION */
-        let _finicio = (año + "-"+ "0"+(mes+1) + "-"+ dia).toString(); /* DESCRIPCION */
-        let _ffinal  = (año + "-"+ "0"+(mes+2) + "-"+ dia).toString(); /* DESCRIPCION */
+        
+        let _finicio = (año + "-"+ "0"+(mes+1) + "-"+ dia).toString(); /* F INICIO  CORREGIR EL FORMATO*/
+        let _ffinal  = (año + "-"+ "0"+(mes+2) + "-"+ dia).toString(); /* F FINAL CORREGIR EL FORMATO*/
 
         //PONER EN CERO VALORES DE OBJETOS 
         this.progMaestro = {
             PrId:0,     //oculto
             EmId:1,     //oculto
             PrCantidadBuses:0,
-            PrDescripcion:"Prog -> "+finicio+"__"+ffinal,
+            PrDescripcion:"Programacion",
             PrFecha:"",     //oculto
             PrFechaInicio:_finicio,
             PrFechaFin:_ffinal,
@@ -239,7 +238,6 @@ export class ProgComponent implements OnInit{
             UsId:0,        //oculto
             UsFechaReg:""   //oculto
         }
-       console.log(this.progMaestro);
         this.tipoProg=null; //PROGRAMACION POR DEFECTO: MANUAL
         this.formaProg=null;
     }
