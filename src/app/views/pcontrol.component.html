@@ -74,11 +74,11 @@
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12" >
                     <div id="btnMap">
-                        <button id="btn" type="button" pButton icon="fa-file-o" label="Nuevo" (click)="nuevosPuntos()"    [disabled]="desNuevosPuntos" [hidden]=false></button>
-                        <button id="btn" type="button" pButton icon="fa-save" label="Guardar" (click)="guardarpuntosDetalleRest()" [disabled]="desGuardarPCD_BD" [hidden]=false ></button>
-                        <button id="btn" type="button" pButton icon="fa-edit" label="Editar"  (click)="editarPuntosDetalleMapa()" [disabled]="desEditarPCDetMarker" [hidden]=false></button>
-                        <button id="btn" type="button" pButton icon="fa-eraser" label="Borrar" (click)="BorrarPuntosDetalle()" [disabled]="desBorrarPCDet" [hidden]=false></button>
-                        <button id="btn" type="button" pButton icon="fa-close" label="Cancelar"  [hidden]=false ></button>
+                        <button id="btn" type="button" pButton icon="fa-file-o" label="Nuevo" (click)="nuevosPuntos()"    [disabled]="desNuevosPuntos" [hidden]="ocNuevo"></button>
+                        <button id="btn" type="button" pButton icon="fa-save" label="Guardar" (click)="guardarpuntosDetalleRest()" [disabled]="desGuardarPCD_BD" [hidden]="ocGuardar" ></button>
+                        <button id="btn" type="button" pButton icon="fa-edit" label="Editar"  (click)="editarPuntosDetalleMapa()" [disabled]="desEditarPCDetMarker" [hidden]="ocEditar"></button>
+                        <button id="btn" type="button" pButton icon="fa-eraser" label="Borrar" (click)="BorrarPuntosDetalle()" [disabled]="desBorrarPCDet" [hidden]="ocBorrar"></button>
+                        <button id="btn" type="button" pButton icon="fa-close" label="Cancelar"  [hidden]="ocCancelar" ></button>
                     </div>
                 </div>
             </div>  

@@ -858,6 +858,7 @@ export class ProgComponent implements OnInit{
         _fi=_fi.join("-"); 
         return _fi;
     }
+    
     //TABLA PROGRAMACIONES, VERIFICA SI LA PROGRAMACION ESTA COMPLETA
     tablaProgramaciones(){
         //PARA COLUMNAS, CUENTA EL NUMERO DE DIAS DE LA PROGRAMACION
@@ -912,9 +913,6 @@ export class ProgComponent implements OnInit{
                     this.extrayendoPlacasBus(); //EXTRAER PLACAS PARA LA PROGRAMACION
                     
                 }else if(this.arrayPlacas.length>0){console.log("ya se extrayeron las placas");}
-
-                //this.extrayendoPlacasBus(); //
-                //console.log(this.arrayPlacas);
 
                 //ACTUALIZANDO EL ARRAY a5, cambiando BUID por su respectiva PLACA---BUSQUEDA
                 i=0; let cen=0; j=0; k=0; //0: EXISTE  1:NO EXISTE

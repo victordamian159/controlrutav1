@@ -17,17 +17,11 @@ declare var google: any;
 
 export class PcontrolComponent implements OnInit{
 
-    /*date: any;
-    anio:string;
-    mes:string;
-    dia:string;*/
-
     //trazar la ruta
     puntosRuta : any[]=[];
 //maestro
     descr:string;
     timeRec:string;
-
 
     pcMaestro: any ={ 
         PuCoId : 0,
@@ -41,7 +35,8 @@ export class PcontrolComponent implements OnInit{
     // para mostrar grilla con el FOR
     pcMaestroEditar:any;
     pcMaestroBD : any;
-//detalle puntos de control
+
+    //detalle puntos de control
     pcDetalle={
         PuCoDeId        : 0,
         PuCoId          : 0,
@@ -66,6 +61,7 @@ export class PcontrolComponent implements OnInit{
         UsFechaReg      : "",
         PuCoDeOrden     : 0
     };
+
     idFilaSeleccionada: number;  /* ONSELECT ROW GRILLA PRINCIPAL*/
     idRutaFilaSeleccionada : number; /* ONSELECT ROW GRILLA PRINCIPAL*/
     horaReg : string; /* ONSELECT ROW GRILLA PRINCIPAL*/
@@ -120,6 +116,7 @@ export class PcontrolComponent implements OnInit{
     _selectedPosition:any;
     draggable:boolean;
 
+    /*  VENTANAS MODAL */
     displayNuevoPunto:boolean =false;
     displayValidarDatoCabecera=false;
     displayEditarPunto = false;
@@ -150,12 +147,20 @@ export class PcontrolComponent implements OnInit{
     //PARA SABER SI SE ESTA EDITANDO UN REGISTRO O NO, USARLO PARA ALGUN FORMULARIO
     editando    =   0;   // 0: nuevo registro    1: se esta editando un registro         
     dragPunto  =   0;    // 0: no arrastrar      1: arrastrar 
+
     //ACTIVANDO Y DESACTIVANDO BOTONES DEL MAPA
     desGuardarPCD_BD:boolean;
     desBorrarPCDet:boolean;
     desDeshacerPCDet:boolean;
     desEditarPCDetMarker:boolean;
     desNuevosPuntos : boolean;
+
+    /* OCULTANDO BOTONES */
+    ocGuardar:boolean;
+    ocBorrar:boolean;
+    ocCancelar:boolean;
+    ocEditar:boolean;
+    ocNuevo:boolean;
 
     tipoTarjeta={nomb:"", val:""};
 
@@ -188,9 +193,9 @@ export class PcontrolComponent implements OnInit{
 
         this.emID = 1;  /* ID EMPRESA */
         this._ruid =0; /* INICIANDO RUID PARA DESHABILITAR EL BOTON NUEVO PUNTO */
-
-        //MAESTRO
-        //this.getAllPuntoControlByEmRu(1,58); //consulta para la grilla 
+        this._PuCoId=0; /* USADO PARA ACTIVAR Y DESACTIVAR EL BOTON NUEVO PUNTO CONTROL*/
+        this.getallrutasbyem(this.emID); /* RUTAS DE LA EMPRESA */
+   
         this.activeAddMarker = 0; //addmarker desactivado
         //tambien cuando ya se a guardado los puntos en la BD
 
@@ -201,11 +206,12 @@ export class PcontrolComponent implements OnInit{
          this.desEditarPCDetMarker=true;
          this.desNuevosPuntos =true;
 
-         //this.pcMaestro.RuId=58;
-
-         this._PuCoId=0;
-
-        this.getallrutasbyem(this.emID);
+         /* INICIAR HIDDEN BOTONES */
+         this.ocNuevo=false;
+         this.ocGuardar=true;
+         this.ocEditar=false;
+         this.ocCancelar=true;
+         this.ocBorrar=false;
     }
 
    
@@ -725,7 +731,7 @@ export class PcontrolComponent implements OnInit{
                     j++;
                 }else if(this.pCArrayDetalleBD[j].PuCoDeId ==  this._PuCoDeId){
                     cen = 0;
-                    console.log("encontrado =D: "+ j);
+                    /*console.log("encontrado =D: "+ j);*/
                 }
             }
             this.pCArrayDetalleBD.splice(j,1); //ELIMINANDO UN SOLO ELEMENTO DESDE LA POSICION J
@@ -866,6 +872,7 @@ export class PcontrolComponent implements OnInit{
         this.newPCDetalle(); // crear un nuevo punto (REST)
 
        //CASO NUEVOS PUNTOS DE CONTROL DE CERO O CUANDO SE PRESIONA EL BOTON BORRAR (TODO LOS PUNTOS)
+
        //NUEVO REGISTRO Y EL ARRAY PARA LA BD ESTA VACIO                   EXISTE AL MENOS UN NUEVO PUNTO
        if(this.editando == 0 ){
             if(this.disabledInputPos == true){ //activado el  textbox (se puede ingresar una posicion manualmente)
@@ -953,7 +960,7 @@ export class PcontrolComponent implements OnInit{
            this.pCArrayDetalleBD = []; //reiniciando el array como VACIO
 
            //REINICIANDO VARIABLES  HACER UN MENSAJE EN VENTANA MODAL
-           console.log("se guardo una ruta vacia");
+           console.log("Se guardo una lista vacia");
        }
         
         this.mgPuntosControlDetalle();  //RECARGAR LA LISTA DE PUNTOS DE CONTROL EN LA GRILLA CORRESPONDIENTE
@@ -1040,86 +1047,86 @@ export class PcontrolComponent implements OnInit{
         );
     }
 
-    //mandar al servicio Rest los puntos, es para confirmar que se tiene los correctos
+    //GUARDANDO EN LA BD
     guardarpuntosDetalleRest(){
-       let su:string;
-       this.actualizarOrdenPC();
+       this.ocNuevo=false;/* MOSTRAR BTNNUEVO*/
+       this.ocGuardar=false;/* OCULTAR BTNGUARDAR*/
+       let cen:boolean, error:string="no error";
+       let su:string; this.actualizarOrdenPC();
        su = this.sumatoriaTiempoPC(this.pCArrayDetalleBD); //COMPROBAR SI ESTA BIEN LOS TIEMPOS
-       /*console.log("HORA TOTAL PUNTOS CO: "+su); console.log("HORA TOTAL  RUTA    : "+this.horaReg);*/
-
        su=this.horaReg;/* REVISAR ESTA PARTE*/
 
-       //VERIFICANDO QUE LA SUMATORIA DE TIEMPO DE PC SEA LA MISMA QUE LA CABECERA
+
+       /* LA SUMATORIA DE TIEMPOS ESTA BIEN */
        if(this.horaReg == su){
-           //GUARDANDO NUEVA LISTA DE PUNTOS, Y LONG ES DIFERENTE DE CERO
-            if(this.editando == 0 && this.pCArrayDetalleBD.length!=0){ //0 : nuevo registro
-                //console.log(this.pCArrayDetalleBD);
 
-                this.pcontrolService.savePuntoControlDetalle(this.pCArrayDetalleBD).
-                subscribe(realizar => {this.mgPuntosControlDetalle();},
-                                    err => {this.errorMessage=err});
+            //GUARDANDO NUEVOS PUNTOS editando=0(NUEVO REGISTRO)
+            if(this.editando == 0 && this.pCArrayDetalleBD.length!=0){ 
+                /* PROCEDURE */
+                this.pcontrolService.savePuntoControlDetalle(this.pCArrayDetalleBD).subscribe(
+                        realizar => {this.mgPuntosControlDetalle();},
+                             err => {this.errorMessage=err}
+                    );
+            //
 
-                //DESACTIVANDO ACTIVANDO BOTONES MAPA
-                this.desBorrarPCDet = true;
-                this.desDeshacerPCDet= true;
-                this.desEditarPCDetMarker = true;
-                this.desGuardarPCD_BD = true;
-                this.desNuevosPuntos = true;
 
-                //DESACTIVANDO EVENTOS
-                //this.activeAddMarker = 0 //addmarker DESactivado
 
-            //SE ESTA EDITANDO LISTADO EXISTENTE, LONG ES DIFERENTE DE CERO
-            }else if(this.editando == 1 && this.pCArrayDetalleBD.length!=0){ //1 : editando registro existente
-                //BORRANDO TODOS LOS REGISTROS DETALLE EN LA BD POR EL PUCOID Y PONER LOS NUEVOS ENCIMA
-                
+            //SE ESTA EDITANDO LISTADO EXISTENTE (editando == 1), AY PUNTOSCONTROL
+            }else if(this.editando == 1 && this.pCArrayDetalleBD.length!=0){ 
+        
+                /* CORREGIR ESTA PARTE, NO DEBE BORRAR EL REGISTRO SOLO VACIARLO */
                 this.pcontrolService.deletePuntoControlDetalleByRu(this.idDetalle).subscribe(
-                        realizar => {console.log("se borro todo para guardar de nuevo"); }, err => {console.log(err);}
+                        realizar => {
+                                        cen=realizar;
+                                        console.log(cen);
+                                        if(cen == true){
+                                            //ACTUALIZANDO EL PuCoDeId a CERO
+                                            for(let x=0; x<this.pCArrayDetalleBD.length; x++){
+                                                this.pCArrayDetalleBD[x].PuCoDeId = 0;
+                                            }
+
+                                            //GUARDANDO LOS NUEVOS REGISTROS EN LA BD
+                                            this.pcontrolService.savePuntoControlDetalle(this.pCArrayDetalleBD).subscribe(
+                                                    realizar => {this.mgPuntosControlDetalle();},
+                                                        err => {this.errorMessage=err}
+                                            );
+                                            console.log("se guardo correctamente");
+                                        }else{
+                                            console.log("no se puede guardar los puntos de control :c");
+                                        }
+                                    }, 
+                             err => {console.log(err); console.log("Error, No se pudo Guardar los puntos");},
+                             () => {console.log("se borro todo");}
                 );
+
                 
-
-                //ACTUALIZANDO EL PuCoDeId a CERO
-                for(let x=0; x<this.pCArrayDetalleBD.length; x++){
-                    this.pCArrayDetalleBD[x].PuCoDeId = 0;
-                }
-
-                //GUARDANDO LOS NUEVOS REGISTROS EN LA BD
-                this.pcontrolService.savePuntoControlDetalle(this.pCArrayDetalleBD).
-                subscribe(realizar => {this.mgPuntosControlDetalle();},
-                                    err => {this.errorMessage=err});
-                console.log("guardado editado en rest");
                 
-                //DESACTIVANDO ACTIVANDO BOTONES MAPA
-                this.desBorrarPCDet = true;
-                this.desDeshacerPCDet= true;
-                this.desEditarPCDetMarker = true;
-                this.desGuardarPCD_BD = true;
-                this.desNuevosPuntos = true;
+            //
 
 
-            //SE BORRO TODOS LOS PUNTOS DE UN LISTADO EXISTENTE
-            }else if(this.pCArrayDetalleBD.length == 0 && this.editando == 1){ //GUARDANDO ARRAY VACIO & 1 : editando registro existente
-                console.log(this.pCArrayDetalleBD);
+
+            //(GUARDANDO ARRAY VACIO)  editando=1(editando reg existente en bd) CORREGIR ESTO
+            }else if(this.pCArrayDetalleBD.length == 0 && this.editando == 1){ 
+
                 //MANDAR UN MENSAJE MODAL 
                 console.log("se edito un registro existente");
+
                 //BORRANDO TODOS LOS REGISTROS DETALLE EN LA BD POR EL PUCOID Y PONER LOS NUEVOS ENCIMA
-                
                 this.pcontrolService.deletePuntoControlDetalleByRu(this.idDetalle).subscribe(
                         realizar => {
                                         console.log("SE BORRO TODO LOS PUNTOS DEL MAPA");
-                                        //this.cargarRuta();
                                     },  
                         err => {console.log(err);}
                 );
 
-                //DESACTIVANDO ACTIVANDO BOTONES MAPA
+            }
+
+             //DESACTIVANDO ACTIVANDO BOTONES MAPA
                 this.desBorrarPCDet = true;
                 this.desDeshacerPCDet= true;
                 this.desEditarPCDetMarker = true;
                 this.desGuardarPCD_BD = true;
                 this.desNuevosPuntos = true;
-
-            }
 
             this.mensaje="Se Guardo los Puntos Correctamente";
             this.displayGuardarPuntosDetalle=true;
@@ -1129,9 +1136,9 @@ export class PcontrolComponent implements OnInit{
             this.editando=0;//0: NUEVO REGISTRO (UNO NO EXISTENTE)      1: EDITANDO REGISTRO EXISTENTE
             this.dragPunto=0 //MARKER NO DRAGGABLE
             this.activeAddMarker = 0; //0: desactivado,   1: activado //DESACTIVANDO ADDMARKER
-
+       
+       /* LA SUMATORIA DE TIEMPOS NO ESTA BIEN */
        }else if(this.horaReg != su){
-           /*console.log("DIFERENTES D=");*/
            this.mensaje="Verifique los Tiempos: "+this.horaReg+" --"+su;
            this.displayVerificarTiempoPc = true;
        }
@@ -1224,7 +1231,11 @@ export class PcontrolComponent implements OnInit{
 
     //BOTON NUEVOS PUNTOS DE CONTROL (DETALLE)
     nuevosPuntos(){
-       this.desNuevosPuntos = true;
+       this.desNuevosPuntos = true;  /* DESACTIVANDO BOTON */
+       this.ocNuevo=true;
+       this.ocGuardar=false;
+
+
        this.activeAddMarker = 1 ; //addmarker activado
        this.editando == 0; //NUEVOS PUNTOS DE CONTROL
        this.mensaje="Ingrese los Nuevos Puntos Sobre El Mapa";
@@ -1275,17 +1286,18 @@ export class PcontrolComponent implements OnInit{
         this.cargarRuta();
         this.cargarmarker();
 
-        //EVALUAR SI SE MANDA A UNA VENTANA MODAL AVISO
-        //console.log("ingresar marcadores despues de: "+this.ordenMayor);
+
 
         //DESACTIVANDO Y ACTIVANDO BOTONES
         this.desGuardarPCD_BD=false;
         this.desBorrarPCDet=false;
-        //this.desDeshacerPCDet=false;
         this.desEditarPCDetMarker=true;
 
-        //EDITAR EL ARRAY DE PUNTOS QUE SON SUBIDOS A LA BD Y EL overlays
-        //ACTIVAR DRAGGABLE DE MARKERS (REEMPLAZANDO EXISTENTES)
+        /* OCULTAR BOTONES */
+        this.ocEditar=true;
+        this.ocGuardar=false;
+
+        //EDITAR EL ARRAY DE PUNTOS QUE SON SUBIDOS A LA BD Y EL overlays //ACTIVAR DRAGGABLE DE MARKERS (REEMPLAZANDO EXISTENTES)
     }
 
     //REINICIAR VARIABLES Y ARRAYS DE OBJETOS
@@ -1447,40 +1459,4 @@ var coords={
         lat : 0,
         lng : 0 
 }
-
-/* 
-
-    //RECUPERA PUNTOS DE CONTROL POR EL PuCoId 
-            this.pcontrolService.getAllPuntoControlDetalleByPuCo(this.idFilaSeleccionada).subscribe(
-                data => {   
-                            //ARRAY COORDENADAS PUNTOS DE CONTROL
-                            this.pCArrayDetalleBD=data; 
-                            
-                            //CASOS SI EXISTEN PUNTOS DE CONTROL
-                            if(this.pCArrayDetalleBD.length != 0){
-                                this.mgPuntosControlDetalle(); //CARGANDO GRILLA PUNTOSDETALLE
-                                this.cargarmarker(); //CARGAR LOS MARCADORES
-                                //DESACTIVANDO BOTON 
-                                this.desNuevosPuntos=true;
-                                this.desDeshacerPCDet=true;
-                                //this.editando = 1; //se esta editando el array de puntos (existen puntos en la BD) 
-
-                            //CASO NO HAY PUNTOS DE CONTROL EN LA BD
-                            }else if(this.pCArrayDetalleBD.length == 0){
-                                //HACER UNA VENTANA MODAL PARA ESTE MENSAJE
-                                this.mensaje = "No Hay Puntos De Control, Lista Vacia";
-                                this.displayNohayPuntos = true;
-                            
-                                //ACTIVANDO BOTON NUEVOS PUNTOS DE CONTROL
-                                this.desNuevosPuntos = false;
-                                this.desEditarPCDetMarker = true;
-                                this.mgPuntosControlDetalle(); 
-                                this.editando = 0; //NUEVO REGISTRO, NO EXISTEN PUTNOS EN LA BD
-                            }
-                        },
-                err => {this.errorMessage = err},
-                () => this.isLoading = false
-            );
-
-*/
 
