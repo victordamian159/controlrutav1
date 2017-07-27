@@ -48,14 +48,11 @@
                             <button type="button" pButton id="btnTable" (click)="eliminarC(row.TaCoId)" icon="fa-trash" > </button>
                         </template>
                     </p-column>
-
                     <p-column field="nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
                     <p-column field="BuDescripcion" header="Descripcion Bus"  [style]="{'width':'17em'}"></p-column>
                     <p-column field="BuPlaca" header="Placa"  [style]="{'width':'8em','text-align':'center'}"></p-column>
                     <p-column field="TaCoFecha" header="Fecha"  [style]="{'width':'9em','text-align':'center'}"></p-column>
                     <p-column field="TaCoHoraSalida" header="Salida"  [style]="{'width':'7em','text-align':'center'}"></p-column>
-                    
-                    
                 </p-dataTable>
             </div>
         
@@ -63,17 +60,16 @@
 
     <!--TABLA DETALLE TARJETA CONTROL-->
     <div class="row">
-        <!--<div class="col-xl-12 col-md-12 col-sm-12 col-xs-12"></div>-->
             <div class=" table table-responsive">
-                <p-dataTable [value]="_allTarjDetalle" [rows]="7"   [globalFilter]="filtroGlobal" [responsive]="false"
+                <p-dataTable [value]="_allTarjDetalle" [rows]="7"   [responsive]="false"
                     scrollable="true" [paginator]="true" selectionMode="single" scrollWidth="100%" emptyMessage="Lista Vacia" >
+
                     <p-column field="nro" header="N°"  [style]="{'width':'2em','text-align':'center'}"></p-column>
                     <p-column field="TaCoDeDescripcion" header="Punto"  [style]="{'width':'9em'}"></p-column>
                     <p-column field="TaCoDeHora" header="Control"  [style]="{'width':'5em','text-align':'center'}"></p-column>
                     <p-column field="TaCoDeTiempo" header="Tiempo"  [style]="{'width':'5em','text-align':'center'}"></p-column>
                 </p-dataTable>
             </div>
-       
     </div>
 </div>
 

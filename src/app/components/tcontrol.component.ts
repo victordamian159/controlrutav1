@@ -611,7 +611,7 @@ export class TcontrolComponent implements OnInit{
         this.tarjeta._TaCoId = event.data.TaCoId; /* ACTUALIZA EL CAMPO PARA PODER USARLO SI ES CASO SE QUIERA EDITAR EL REGISTRO */ 
 
         this.tcontrolservice.getAllTarjetaControlDetalleBytaCoId(this.tarjeta._TaCoId).subscribe(
-            data => { this._tarjetaDetalle = data;  
+            data => { this._tarjetaDetalle = data; console.log(this._tarjetaDetalle);  
                       this.mgTarjetaDetalle();  }
         );
     }
@@ -620,7 +620,7 @@ export class TcontrolComponent implements OnInit{
     mgTarjetaDetalle(){
         this._allTarjDetalle = [];
         for(let tDetalle of this._tarjetaDetalle){
-        this._allTarjDetalle.push({
+            this._allTarjDetalle.push({
                 nro:0,
                 PuCoDeId:tDetalle.PuCoDeId, 
                 TaCoDeDescripcion:tDetalle.TaCoDeDescripcion, 
@@ -639,6 +639,7 @@ export class TcontrolComponent implements OnInit{
         for(let i=0; i<this._allTarjDetalle.length; i++){
             this._allTarjDetalle[i].nro = i+1;
         }
+        console.log(this._allTarjDetalle);
     }
 
     
@@ -648,7 +649,7 @@ export class TcontrolComponent implements OnInit{
     guardarTarjeta(){
         let progUpdate : any = {PrDeId : 0,PrDeAsignadoTarjeta : 0}
 
-        this.tarjeta._TaCoHoraSalida=this.corrigiendoHora(this.tarjeta._TaCoHoraSalida);
+        /*this.tarjeta._TaCoHoraSalida=this.corrigiendoHora(this.tarjeta._TaCoHoraSalida);*/
 
         /* OBJETO A MANDAR AL SERVIDOR --- SUBIENDO DATOS AL OBJETO TARJETA this.tarjeta._prId = id;*/
         this._tarjeta ={
@@ -667,7 +668,8 @@ export class TcontrolComponent implements OnInit{
 
         /*NUEVA TARJETA*/
         if(this._tarjeta.TaCoId == 0){
-            progUpdate ={ PrDeId : this._prDeId, PrDeAsignadoTarjeta : this.val} 
+            progUpdate ={ PrDeId : this._prDeId, 
+                    PrDeAsignadoTarjeta : this.val} 
 
             /* ASIGNADO TARJETA VAL=1  */
             if(this.val==1){
@@ -753,7 +755,7 @@ export class TcontrolComponent implements OnInit{
 
     }
 
-    /* COMPLETAR LA HORA EN CASO NECESARIO (PUEDEN BORRAR LOS SEGUNDOS) */
+    /* COMPLETAR LA HORA EN CASO NECESARIO (PUEDEN BORRAR LOS SEGUNDOS) 
     corrigiendoHora(hora:string):Date{
          let thoy:Date,  otra:Date, horaTarjeta:string;
             thoy=new Date();          
@@ -766,7 +768,8 @@ export class TcontrolComponent implements OnInit{
             otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));    
             console.log(otra);
         return otra;
-    }
+    }*/
+
     /* CALCULANDO HORAS DE SALIDA, PARA MULTITARJETAS, ESTA FUNCION DEVUELVE UN ARRAY  */
     calHorasSalida(hInicio:string ,tvuelta:string ,hIntermedio:string, nroTarjetas:number) {
         /* VARIABLES, ARRAYS DE TIEMPOS*/
