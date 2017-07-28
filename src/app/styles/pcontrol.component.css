@@ -112,9 +112,18 @@ row{
 }
 
 .cont_modal{
-    overflow-y: visible; 
+    overflow-y: auto; 
+    overflow-x: auto;
+    height:320px;
+    width: 100%;
+
+    /*overflow-y: visible; 
     overflow-x: hidden;
-    /*height:350px;
-    height:100%;*/
+    height:350px;
+    height:100%;
+    width: 100%;*/
+}
+
+.form-control{
     width: 100%;
 }

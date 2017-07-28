@@ -649,7 +649,7 @@ export class TcontrolComponent implements OnInit{
     guardarTarjeta(){
         let progUpdate : any = {PrDeId : 0,PrDeAsignadoTarjeta : 0}
 
-        /*this.tarjeta._TaCoHoraSalida=this.corrigiendoHora(this.tarjeta._TaCoHoraSalida);*/
+        this.tarjeta._TaCoHoraSalida=this.corrigiendoHora(this.tarjeta._TaCoHoraSalida);
 
         /* OBJETO A MANDAR AL SERVIDOR --- SUBIENDO DATOS AL OBJETO TARJETA this.tarjeta._prId = id;*/
         this._tarjeta ={
@@ -673,6 +673,7 @@ export class TcontrolComponent implements OnInit{
 
             /* ASIGNADO TARJETA VAL=1  */
             if(this.val==1){
+                console.log(this._tarjeta);
                 /* PROCEDURE ASIGNAR TARJETA (UNA SOLA) */
                 this.tcontrolservice.asignarTarjetaControl(this._tarjeta).subscribe(
                     data => { this.updateProgDetalle(progUpdate);/* PROCEDURE UPDATE PROGDETALLE */   
@@ -755,7 +756,7 @@ export class TcontrolComponent implements OnInit{
 
     }
 
-    /* COMPLETAR LA HORA EN CASO NECESARIO (PUEDEN BORRAR LOS SEGUNDOS) 
+    /* COMPLETAR LA HORA EN CASO NECESARIO (PUEDEN BORRAR LOS SEGUNDOS) */
     corrigiendoHora(hora:string):Date{
          let thoy:Date,  otra:Date, horaTarjeta:string;
             thoy=new Date();          
@@ -768,8 +769,8 @@ export class TcontrolComponent implements OnInit{
             otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));    
             console.log(otra);
         return otra;
-    }*/
-
+    }
+    
     /* CALCULANDO HORAS DE SALIDA, PARA MULTITARJETAS, ESTA FUNCION DEVUELVE UN ARRAY  */
     calHorasSalida(hInicio:string ,tvuelta:string ,hIntermedio:string, nroTarjetas:number) {
         /* VARIABLES, ARRAYS DE TIEMPOS*/

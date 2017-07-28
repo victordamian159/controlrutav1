@@ -245,61 +245,65 @@ export class ProgComponent implements OnInit{
     //1ERA VENTANA MODAL aqui recien se guarda la tabla MAESTRO en el REST 
     showProgBase(){
         let i = 0, cen = 0;
-        let error = [
-            {id:1, nom: 'Tipo de Programacion', val: 0 },
-            {id:2, nom: 'Forma de Programacion', val: 0 },
-            {id:3, nom: 'Fecha de Programacion', val: 0 },
-            {id:4, nom: 'Identificador de Programacion', val: 0 }
-        ]
+        {
+            let error = [
+                {id:1, nom: 'Tipo de Programacion', val: 0 },
+                {id:2, nom: 'Forma de Programacion', val: 0 },
+                {id:3, nom: 'Fecha de Programacion', val: 0 },
+                {id:4, nom: 'Identificador de Programacion', val: 0 }
+            ]
 
-        //PROGRAMACION AUTOMATICA O MANUAL
-        if(this.tipoProg == 1){ //AUTOMATICA
-            this._arrayPlacas=this.arrayPlacas;
-            this.arrayPlacas = [];
-        }else if(this.tipoProg == 0){ //MANUAL
-            //NO SE HACE NADA
-        }
-
-        this.progMaestro.PrFecha = new Date();
-        
-
-        //TIPO PROGRAMACION MANUAL O AUTOMATICO .  CORREGIR PROGRAMACION TRUE O FALSE
-        if(this.tipoProg == 0){
-            this.progMaestro.PrAleatorio = false; error[0].val = 1; //MANUAL
-            }else if(this.tipoProg == 1){
-            this.progMaestro.PrAleatorio = false;  error[0].val = 1; //AUTOMATICO
-        }
-        
-        //FORMA PROGRAMACION ESCALA O PESCADITO
-        if(this.formaProg == 0){
-            this.progMaestro.PrTipo="01"; error[1].val = 1;
-            }else if(this.formaProg == 1){
-            this.progMaestro.PrTipo="02"; error[1].val = 1;
-        }
-
-        //VALIDANDO FECHA
-        if( this.validandoFechas(this.progMaestro.PrFechaInicio, this.progMaestro.PrFechaFin ) == 1 ){
-                error[2].val = 1;   //FECHA CORRECTA
-            }else if(this.validandoFechas(this.progMaestro.PrFechaInicio, this.progMaestro.PrFechaFin ) == 0){
-                error[2].val = 0;   //FECHA NO CORRECTA
-        }
-         
-        //VALIDANDO IDENTIFICADOR DE PROGRAMACION
-        if(this.progMaestro.PrDescripcion != ''){
-                error[3].val = 1;
-            }else if(this.progMaestro.PrDescripcion == ''){
-                error[3].val = 0;
-        }
-
-        //RECORRIENDO ARRAY ERRORES OBJETOS PARA COMPROBAR NO HAY PROBLEMAS, POR LO MENOS UNO
-        while(i < error.length  && cen == 0){
-            if(error[i].val == 0){
-                cen = 1;
+            //PROGRAMACION AUTOMATICA O MANUAL
+            if(this.tipoProg == 1){ //AUTOMATICA
+                this._arrayPlacas=this.arrayPlacas;
+                this.arrayPlacas = [];
+            }else if(this.tipoProg == 0){ //MANUAL
+                //NO SE HACE NADA
             }
-            i++;
+
+            this.progMaestro.PrFecha = new Date();
+            
+
+            //TIPO PROGRAMACION MANUAL O AUTOMATICO .  CORREGIR PROGRAMACION TRUE O FALSE
+            if(this.tipoProg == 0){
+                this.progMaestro.PrAleatorio = false; error[0].val = 1; //MANUAL
+                }else if(this.tipoProg == 1){
+                this.progMaestro.PrAleatorio = false;  error[0].val = 1; //AUTOMATICO
+            }
+            
+            //FORMA PROGRAMACION ESCALA O PESCADITO
+            if(this.formaProg == 0){
+                this.progMaestro.PrTipo="01"; error[1].val = 1;
+                }else if(this.formaProg == 1){
+                this.progMaestro.PrTipo="02"; error[1].val = 1;
+            }
+
+            //VALIDANDO FECHA
+            if( this.validandoFechas(this.progMaestro.PrFechaInicio, this.progMaestro.PrFechaFin ) == 1 ){
+                    error[2].val = 1;   //FECHA CORRECTA
+                }else if(this.validandoFechas(this.progMaestro.PrFechaInicio, this.progMaestro.PrFechaFin ) == 0){
+                    error[2].val = 0;   //FECHA NO CORRECTA
+            }
+            
+            //VALIDANDO IDENTIFICADOR DE PROGRAMACION
+            if(this.progMaestro.PrDescripcion != ''){
+                    error[3].val = 1;
+                }else if(this.progMaestro.PrDescripcion == ''){
+                    error[3].val = 0;
+            }
+
+            //RECORRIENDO ARRAY ERRORES OBJETOS PARA COMPROBAR NO HAY PROBLEMAS, POR LO MENOS UNO
+            while(i < error.length  && cen == 0){
+                if(error[i].val == 0){
+                    cen = 1;
+                }
+                i++;
+            }
         }
 
         //MENSAJE A PANTALLA SI HAY O NO ERROR
+
+        /* NO ERRORES */
         if(cen == 0 ){
                //cargando lo ingresado en una variable //PrFecha y UsFechaReg, ¿Cual es la diferencia?
                
@@ -316,8 +320,9 @@ export class ProgComponent implements OnInit{
                     UsId : this.progMaestro.UsId, //number
                     UsFechaReg : this.progMaestro.PrFecha //string
                 }
+
                 console.log(this.objProgVentanaUno);
-                //guardando en array para poder mostrarlo en la grilla
+                /*guardando en array para poder mostrarlo en la grilla
                 this.programacionMaestroArrayMemoria.push({
                     PrId : this.progMaestro.PrId,
                     EmId : this.progMaestro.EmId,
@@ -330,17 +335,14 @@ export class ProgComponent implements OnInit{
                     PrAleatorio : this.progMaestro.PrAleatorio,
                     UsId : this.progMaestro.UsId,
                     UsFechaReg : this.progMaestro.PrFecha
-                });
-
-                
-                
+                });*/
 
                 /*guardando en el rest Programacion Maestro (pasarlo  a la 2da VEntana modal)*/
                 this.programacionService.saveProgramacion(this.objProgVentanaUno)
                     .subscribe( 
                         data => {this.progMaestro=data;  //RECUPERANDO OBJETO PARA SACAR EL PRID
-                                 this.mostrargrillaProgramacionMaestro() ;
                                  this.getAllProgramacionByEm(1,0);
+                                 this.mostrargrillaProgramacionMaestro() ;
                         }, 
                         err => {this.errorMessage = err}
                 );
@@ -351,11 +353,11 @@ export class ProgComponent implements OnInit{
                 this.displayNuevaProgramacion=false; //cerrar 1era ventana
                 this.displayProgramacionBase=true; //abrir 2da ventana
 
+        /* ALGUN ERROR */
         }else if(cen == 1){
             //MANDAR MENSAJE A LA PANTALLA, ERROR DE LOS OBJETOS
-            this.mensaje="Se Encontro Errores En Los Datos Ingresados";
+            this.mensaje="Verifique los datos ingresados";
             this.displayErrorDatos = true;
-            //console.log("Se Encontro Errores En Los Datos");
         }
     }
 
@@ -364,15 +366,21 @@ export class ProgComponent implements OnInit{
         let _f1, _f2;  let a1, a2; let res=[]; let _res=[]; let i=0,j=0, k,l,m,n;
         let ab=[31,29,31,30,31,30,31,31,30,31,30,31], anb=[31,28,31,30,31,30,31,31,30,31,30,31];
         {
-            _f1 = f1.split('-'); 
-            _f2 = f2.split('-');  
-            _f1.push(this.bisiesto(_f1[0])); 
-            _f2.push(this.bisiesto(_f2[0]));
+            _f1 = f1.split('-'); /* DIV EN FORMA DE ARRAY */
+            _f2 = f2.split('-'); /* DIV EN FORMA DE ARRAY */
+            
+            _f1.push(this.bisiesto(_f1[0])); /* RECONOCIENDO BI O NOBI */
+            _f2.push(this.bisiesto(_f2[0])); /* RECONOCIENDO BI O NOBI */
+
             //CONVIRTIENDO ELEMENTOS A NROS -- CONTIENE SU AÑO BISIESTO(0) O NO BISIESTO(1)
             while(i<_f1.length){ _f1[i]=Number(_f1[i]); i++;}   _f1[1]=_f1[1]-1;   
             while(j<_f2.length){ _f2[j]=Number(_f2[j]); j++;}   _f2[1]=_f2[1]-1;
+            console.log(_f1); console.log(_f2);
         }
-        if(_f2[1]-_f1[1]==0){ //MESES IGUALES    AÑOS IGUALES
+
+
+         //MESES IGUALES  -  AÑOS IGUALES - DIAS DIFERENTES _F2 > _F1
+        if(_f2[1]-_f1[1]==0 && _f2[0]-_f1[0]==0){
             if(_f2[1]==1){//FEBRERO
                 k=_f1[2];
                 if(_f1[3]==0){  //  BISIESTO
@@ -388,13 +396,16 @@ export class ProgComponent implements OnInit{
                 }
             }else if(_f2[1]!=1){//CUALQUIER MES
                 k=_f1[2];
-                while(k<=_f2[2] && k<anb[1]){
+                while(k<=_f2[2] && k<=anb[1]){
                     res.push(k);
                     k++;
                 }
             }
         }
-        else if(_f2[1]-_f1[1]>0){//DIFERENCIA DE MESES  AÑOS IGUALES (1,2,3 DE DIFERENCIA)
+        //
+
+        //DIFERENCIA DE MESES  AÑOS IGUALES (1,2,3 DE DIFERENCIA)
+        else if(_f2[1]-_f1[1]>0){
             k=_f1[2]; j=_f2[2];/*DIAS*/
             
             //CORREGIR ESTO, TIENE PROBLEMA CON RECONOCER SI ES AÑO BISIESTO O NO
@@ -437,9 +448,15 @@ export class ProgComponent implements OnInit{
                     k++;
                 }
             }
-        }else if(_f2[1]-_f1[1]<0){//AÑOS DIFERENTES
-            i=_f1[1]; j=_f2[1]; /*MESES*/ k=_f1[2]; l=_f2[2] /*DIAS*/
+        //
+
+        //AÑOS DIFERENTES
+        }else if(_f2[1]-_f1[1]<0){
+            i=_f1[1]; j=_f2[1]; /*MESES*/ 
+            k=_f1[2]; l=_f2[2] /*DIAS*/
+            
             if(_f1[3]==0 && _f2[3]==1){       /* B NB */ 
+
                 //DIAS 1ER MES-MAYOR AÑO BISIESTO
                 while(k<=ab[_f1[1]]){ 
                     res.push(k);
@@ -470,6 +487,7 @@ export class ProgComponent implements OnInit{
                     res.push(k);
                     k++;
                 }
+
             }else if(_f1[3]==1 && _f2[3]==0){ /* NB B */
                 //DIAS 1ER MES-MAYOR AÑO NO BISIESTO
                 while(k<=anb[_f1[1]]){ 
@@ -832,6 +850,8 @@ export class ProgComponent implements OnInit{
         this.calendarioProg(fi,ff);
         this.displayProgramacion = true;
         this.nroDias=[];
+        this.progBDDetalle=[];
+
         //this.descargarProgramacion(this.nroBusesFilaSelect); //FUNCION PARA GENERAR PROG EN PDF
         //LIMPIANDO VARIABLES
         this.columnas=[]; //COLUMNAS
@@ -1046,8 +1066,10 @@ export class ProgComponent implements OnInit{
         arr1=[[],[],[],[],[],[],[]]; //NRO DE HOJAS EN TOTAL Q SE PUEDE DIVIDIR EL CALENDARIO
 
         //ALGORITMOS
-        arrprog=this.placasProgramacion(this.progBDDetalle,this.arrayPlacas);
-        
+
+        arrprog=this.placasProgramacion(this.progBDDetalle,this.arrayPlacas);/* ARRAY DE PROG (SOLO PLACAS) */
+        console.log(arrprog);
+
         i=0; let arrAux=[],arrborrar2=[];
 
         while(i<this.nroBusesFilaSelect){
@@ -1061,11 +1083,13 @@ export class ProgComponent implements OnInit{
             i++;  nrosalto=0;  j=0;
         }
         arr0=arrAux;
+        
         /*AJUSTANDO EL NRO DE COLUMNAS A LA HOJA = 15 X HOJA*/
         i=j=0;
         ncol = 15; //NUMERO DE COLUMNAS MAXIMO EN CADA HOJA
         r = dividendo - ncol;//1ER RESIDUO, SABER SI EL TOTAL DE COLUMNAS ES MENOR O IGUAL QUE EL MAXIMO DE COLUMNAS PERMITIDO 
 
+        /* HAY 2 A MAS HOJAS */
         if(r>=0){
             while( r > ncol ){
                 dividendo = r;
@@ -1074,7 +1098,7 @@ export class ProgComponent implements OnInit{
                 c++;
             }
             
-            //DIVIDIENDO EN ARRAYS EL ARRAY DE CALENDARIO
+            //DIVIDIENDO EN ARRAYS (ARRAY DE CALENDARIO)
             while(i<c){
                 while( k<ncol && j<15*(i+1)){
                     arr1[i][k]=this.calendario[j]; 
@@ -1082,6 +1106,7 @@ export class ProgComponent implements OnInit{
                 }
                 k=0; i++;   
             }
+            console.log(arr1);
 
             //TOMANDO EL RESIDUO DE DIVIDIR LA TABLA 
             //ULTIMA HOJA
@@ -1120,10 +1145,11 @@ export class ProgComponent implements OnInit{
                     columnWidth: 70,
                     valign: 'top',
             });
+        /* */
 
+        /*UNA SOLA HOJA (RESIDUO ES MENOR A CERO)*/
         }else if(r<0){
-            /*CREAR DEFRENTE EL ARCHIVO PDF*/
-            console.log("RESIDUO ES MENOR A CERO");
+            console.log(this.calendario); console.log(arr0);
             doc.autoTable(this.calendario, arr0,{ 
                 styles: { 
                           fontSize: 7,
@@ -1139,7 +1165,8 @@ export class ProgComponent implements OnInit{
             
         }
 
-        doc.save('programacion.pdf'); //CAMBIAR EL NOMBRE DEL ARCHIVO QUE SE VA A DESCARGAR, PONERLE LA FECHA Y LA SI ES POSIBLE LA RUTA A LA Q PERTENECE
+        /* GUARDANDO ARCHIVO CON NOMBRE */
+        doc.save('programacion.pdf');
         this.mensaje="Se Descargo La Programacion";
         this.displayDescargaProg=true;
     }
@@ -1150,6 +1177,7 @@ export class ProgComponent implements OnInit{
         this.displayDescargaProg=false;
     }
 
+    /* CAMBIANDO BUID POR PLACA (TODA LA PROGRAMACION) */
     placasProgramacion(arr1 = [],arrplacas = []) {
         let arrbuid=[{}], arrplacasprog=[];
         let i,j,k,cen=0;
