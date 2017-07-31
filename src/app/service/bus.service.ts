@@ -6,11 +6,11 @@ import {Observable} from 'rxjs';
 @Injectable()
 
 export class BusService{
-    private baseUrl:string = 'http://controlbus-ronaldmam.rhcloud.com/rest/bus/'; /* http://controlbus-ronaldmam.rhcloud.com/rest/bus/getallbusesbyemsuem?emId=1&suEmId=1 */
-    
+    private baseUrl :string ='http://controlbus-ronaldmam.rhcloud.com/rest/bus/'; /* http://controlbus-ronaldmam.rhcloud.com/rest/bus/getallbusesbyemsuem?emId=1&suEmId=1 */
+    private baseUrl2:string ='http://controlbus-ronaldmam.rhcloud.com/rest/buspersona/';
     /* */
     constructor(private http: Http){}
-    
+
     /* CONSULTA PARA GRILLA PRINCIPAL */
     getAllBusByEmEmSu(emId: number, suEmId : number){
         return this.http
@@ -28,6 +28,17 @@ export class BusService{
             .get(this.baseUrl+buid)
             .map( (r:Response) => r.json() )
             .catch( (error:any) => Observable.throw( error.json().error || 'Error en el servidor' ));
+    }
+
+    /* CONSULTA BUS POR PERSONA getallpersonabyembu?emId=1&suEmId=2&buId=4 */
+    getAllBusByEmEmSubuId(emId:number, suEmId:number, buId:number){
+        return this.http
+            /* obtener consulta*/
+                .get(this.baseUrl2 +"getallpersonabyembu?emId="+emId+"&suEmId="+suEmId+"&buId="+buId) 
+            /* convirtiendo la respuesta a json| */
+                .map( (r:Response) => r.json() ) 
+            /* capturando error*/
+                .catch(this.handleError); 
     }
 
     /* NUEVO BUS */

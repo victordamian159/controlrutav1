@@ -10,10 +10,12 @@ import {TcontrolComponent} from './components/tcontrol.component';
 
 import {menuComponent} from './components/menu.component';
 import {BusComponent} from './components/bus.component';
-import {EmpComponent} from './components/empresa.component';
+import {EmpPerComponent} from './components/empresapersonal.component';
+import {EmpSubEmpComponent} from './components/empSubemp.component';
 import {PersComponent} from './components/personal.component';
 import {LoginComponent} from './login/_login/_login.component';
 import { RegisterComponent } from './login/register/register.component';
+
 
 /*COMPONENTES PARA EL LOGIN */
 //import { HomeComponent } from './home/index';
@@ -32,8 +34,8 @@ const app_routes: Routes = [
 
       {path: 'regbus', component:BusComponent}, 
       {path: 'menu',   component:menuComponent}, /* ISNTRUCCIONES??*/
-      {path: 'regemp', component:EmpComponent }, 
-
+      {path: 'regempper', component:EmpPerComponent }, 
+      {path: 'regempsubemp',component:EmpSubEmpComponent},
       {path: 'login', component:LoginComponent },
       {path: 'regusersystem', component:RegisterComponent},
       { path: '**', redirectTo: 'login' } /* __ ** : SI ESCRIBE CUALQUIER COSA MANDA AL LOGIN*/

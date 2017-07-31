@@ -33,7 +33,7 @@ export class BusComponent implements OnInit{
         UsFechaReg:"",
     }
     objBus:any;
-    busD={
+    busPer={
         PeId:null,
         BuId:null,
         BuPeTipo:"",
@@ -44,19 +44,21 @@ export class BusComponent implements OnInit{
     /*ARRAYS */
     _bus=[]; /*ARRAY BD*/
     _gbus=[]; /*ARRAY GRILLA*/
-    _busD=[];
-    _gbusD=[];
+    _busPer=[]; /*ARRAY BD*/
+    _gbusPer=[]; /*ARRAY GRILLA*/
 
     /* VARIEBLES*/
+    private emid:number;
+    private suemid:number;
     titulo:string;
     mensaje:string;
 
     /* DISPLAY MODAL*/
     displayNuevoBus : boolean = false;
-    displayNuevoBusD : boolean = false;
+    displayNuevoBusPersona : boolean = false;
     displayAceptarNuevoBus : boolean = false;
     displayEliminarBus : boolean = false;
-    displayEliminarBusD : boolean = false;
+    displayEliminarBusPers : boolean = false;
     
 
     /* OTRAS VARIABLES*/
@@ -68,15 +70,28 @@ export class BusComponent implements OnInit{
     constructor(private busService: BusService){}
 
     ngOnInit(){
-        this.bus.SuEmId=1;
-        this.getallbusbyemidsuemid(1,1);
+        this.emid=1;
+        this.suemid=1;
+        /*this.bus.EmId=1;
+        this.bus.SuEmId=1;*/
+        this.getallbusbyemidsuemid(this.emid,this.suemid);
        
     }
     
-    /* CONSULTA TODOS LOS BUSES */
+    /* CONSULTA TODOS LOS BUSES POR EMPRESA Y SUBEMPRESA*/
     getallbusbyemidsuemid(emid:number, suemid:number){
         this.busService.getAllBusByEmEmSu(emid, suemid).subscribe(
-            data => {this._bus=data; console.log(this._bus); this.mgBus();},
+            data => {this._bus=data; this.mgBus();},
+            err => {this.errorMessage = err},
+            () => this.isLoading = false
+        );
+    }
+
+    /* CONSULTA BUSES POR PERSONA */
+    getallbusbypersona(emid:number, suemid:number, buid:number){
+        let busPers:any[]=[];
+        this.busService.getAllBusByEmEmSubuId(emid,suemid,buid).subscribe(
+            data => {busPers=data; this._gbusPer=busPers;},
             err => {this.errorMessage = err},
             () => this.isLoading = false
         );
@@ -159,7 +174,13 @@ export class BusComponent implements OnInit{
         this._gbus=[];
         for(let bus of this._bus){
             this._gbus.push({
-                nro : 0, BuId:bus.BuId, BuDescripcion : bus.BuDescripcion, BuPlaca : bus.BuPlaca, BuMarca : bus.BuMarca, BuCapacidad : bus.BuCapacidad
+                nro : 0, 
+                BuId:bus.BuId, 
+                SuEmId:bus.SuEmId,
+                BuDescripcion : bus.BuDescripcion, 
+                BuPlaca : bus.BuPlaca, 
+                BuMarca : bus.BuMarca, 
+                BuCapacidad : bus.BuCapacidad
             });
         }
         for(let i=0; i<this._bus.length;i++){
@@ -169,8 +190,10 @@ export class BusComponent implements OnInit{
 
     /* TABLE BUS  - SELECCIONA REGISTRO CABECERA Y MUESTRA LOS DETALLES DEL BUS*/
     onRowSelectBus(event){
-        console.log("seleccionado :s");
-        this.mgBusD();
+        let emid:number, suemid:number, buid:number;
+        emid=this.emid; suemid=event.data.SuEmId; buid=event.data.BuId;
+        this.getallbusbypersona(emid,suemid,buid);
+        this.mgBusPer(this._gbusPer);
     }
 
     /* GUARDAR EN LA BASE DE DATOS */
@@ -259,7 +282,54 @@ export class BusComponent implements OnInit{
         this.displayAceptarNuevoBus=false;
     }
 
+/* TABLA BUS ASIGNADO A PERSONA*/
+    mgBusPer(arrBusPers=[]){
+        this._gbusPer=[];
+        for(let bus of arrBusPers){
+            this._gbusPer.push({
+                nro: 0,
+                PeId:bus.PeId,
+                BuId:bus.BuId,
+                BuPeTipo:bus.BuPeTipo,
+                UsId:bus.UsId
+            });
+        }
+        for(let i; i<arrBusPers.length; i++){
+            this._gbusPer[i]=i+1;
+        }
+        console.log(this._gbusPer);
+    }
 
+    nuevoBusPersona(){
+        this.displayNuevoBusPersona=true;
+    }
+
+    editarBusPers(busd : Object){}
+
+    eliminarBusPers(PeId : number){
+        this.mensaje="¿Esta Seguro De ELiminar el Registro?";
+        this.displayEliminarBusPers=true;
+    }
+    _eliminarBusPers(){
+        this.mensaje="";
+
+        /*CONSULTA Y RECUPERAR VARIABLE PA ELIMINAR */ 
+        this.displayEliminarBusPers=false;
+    }
+    cancEliBusPers(){
+        this.mensaje="";
+        this.displayEliminarBusPers=false;
+    }
+
+    guardarbusPer(){
+        this.displayNuevoBusPersona=false;
+    }
+
+    cancelarbusPer(){
+        this.displayNuevoBusPersona=false;
+    }
+
+/*PASAR A LIBRERIA */ 
        //COMPLETANDO CEROS EN CASO DE NECESITAR PARA HORAS Y FECHAS   2017/
     cCeroHora(h:string) :string{
             //DIVIDIRLO EN PARTES Y COMPLETAR LOS CEROS PARA QUE LOS ELEMENTOS SEAN TODOS PARES
@@ -322,46 +392,6 @@ export class BusComponent implements OnInit{
         aux = _f[0]; _f[0]=_f[2]; _f[2]=aux;
         r = _f.join("-");
         return r;
-    }
-
-/* TABLA BUS DETALLE*/
-    mgBusD(){
-        this._gbusD=[];
-        console.log("bus bus");
-        for(let busd of this._busD){
-            this._gbusD.push({
-                nro: 0,
-                PeId:busd.PeId,
-                BuId:busd.BuId,
-                BuPeTipo:busd.BuPeTipo,
-                UsId:busd.UsId
-            });
-        }
-
-        for(let i; i<this._busD.length; i++){
-            this._gbusD[i]=i+1;
-        }
-    }
-
-    nuevoBusD(){
-        this.displayNuevoBusD=true;
-    }
-
-    editarBusD(busd : Object){}
-
-    eliminarBusD(PeId : number){
-        this.mensaje="¿Esta Seguro De ELiminar el Registro?";
-        this.displayEliminarBusD=true;
-    }
-    _eliminarBusD(){
-        this.mensaje="";
-
-        /*CONSULTA Y RECUPERAR VARIABLE PA ELIMINAR */ 
-        this.displayEliminarBusD=false;
-    }
-    cancEliBusD(){
-        this.mensaje="";
-        this.displayEliminarBusD=false;
     }
 
 }

@@ -1,16 +1,19 @@
 
-<!--TABLAS-->
+<!--PRINCIPAL-->
 <div class="contenedor">
     <div class="row" >
          <!--TABLA BUS CABECERA-->
         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="row">
-                <h5 id=titulo>Bus</h5>
-            </div>
+            <div class="row"><h5 id=titulo>Bus</h5></div>
 
             <div class="row">
                 <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
-                <span class="text-xs-right">  <button (click)="nuevoBus()" pButton icon="fa-file-text-o" label="Nuevo"></button>  </span>
+                <button (click)="nuevoBus()" pButton icon="fa-file-text-o" label="Nuevo"></button>
+                <select class="form-control">
+                    <option>Empresa 1</option>
+                    <option>Empresa 2</option>
+                    <option>Empresa 3</option>
+                </select>
             </div>
 
             <div class="row table table-responsive">
@@ -33,20 +36,19 @@
             </div>
         </div>
 
-        <!--TABLA BUS DETALLE-->
+        <!--TABLA ASIGNAR PERSONA A BUS-->
         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="row"><h5 id=titulo>Persona Encargada</h5></div>
+
             <div class="row">
-                <h5 id=titulo>Detalles</h5> 
-            </div>
-            <div class="row">
-                <button (click)="nuevoBusD()" pButton icon="fa-file-text-o" label="Nuevo"></button>
+                <button (click)="nuevoBusPersona()" pButton icon="fa-file-text-o" label="Nueva Asignacion"></button>
             </div>
             <div class="row table table-responsive">
-                <p-dataTable [value]="_gbusD" [rows]="2"  [globalFilter]="filtroGlobal" emptyMessage="No Hay Registros" scrollable="true" scrollWidth="100%" [paginator]="true" selectionMode="single" (onRowSelect)="onRowSelectBusDetalle($event)">
+                <p-dataTable [value]="_gbusPer" [rows]="2"  [globalFilter]="filtroGlobal" emptyMessage="No Hay Registros" scrollable="true" scrollWidth="100%" [paginator]="true" selectionMode="single" (onRowSelect)="onRowSelectBusDetalle($event)">
                     <p-column styleClass="col-button" [style]="{'width':'6em'}">
                         <template let-col  let-objBusD="rowData"  pTemplate="body">
-                                <button type="button" pButton class="btn" (click)=  "editarBusD(objBusD)" icon="fa-pencil-square-o" > </button>                  
-                                <button type="button" pButton class="btn" (click)= "eliminarBusD(objBusD.PeId)" icon="fa-trash">  </button>
+                                <button type="button" pButton class="btn" (click)=  "editarBusPers(objBusD)" icon="fa-pencil-square-o" > </button>                  
+                                <button type="button" pButton class="btn" (click)= "eliminarBusPers(objBusD.PeId)" icon="fa-trash">  </button>
                         </template>
                     </p-column>
                     <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
@@ -55,6 +57,7 @@
                 </p-dataTable>
             </div>
         </div>
+
     </div>
 </div>
     
@@ -64,7 +67,6 @@
             <p-header> {{titulo}} </p-header>
             
             <!--CUERPO-->
-            <!--<div class="row" style="overflow-y: auto; height:300px; ">-->
             <div class="win_modal" style="overflow-y: auto; height:380px; width: 100%;">
                 <div class="form-group row">
                     <div class="col-xl-4 col-md-6 col-sm-12 col-xs-12">
@@ -212,78 +214,95 @@
             </div>
         </p-dialog>
 
-    <!--MODAL NUEVO BUS DETALLE-->
-        <p-dialog [(visible)]="displayNuevoBusD" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
+    <!--MODAL NUEVO ASIGNAR BUS A PERSONA -->
+        <p-dialog [(visible)]="displayNuevoBusPersona" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
             <p-header>{{titulo}}</p-header>
+            <!--
+                <div>
+                    <div class="form-group">
+                        <label class="control-label" for="placa">Placa:</label>
+                        <input class="form-control" id="placa" name="placa"  type="text" [(ngModel)]="busPer.BuId"/>
+                    </div>
 
-            <div style="overflow-y: auto; height:300px; ">
-                <!--PLACA-->
-                <div class="form-group">
-                    <label class="control-label" for="placa">Placa:</label>
-                    <input class="form-control" id="placa" name="placa"  type="text" [(ngModel)]="busD.BuId"/>
-                   
+                    <div class="form-group">
+                        <label class="control-label" for="ident">DNI:</label>
+                        <input class="form-control" id="ident" name="ident"  type="text" [(ngModel)]="busPer.PeId" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="motor">Tipo:</label>
+                        <input class="form-control" id="motor" name="motor"  type="text" [(ngModel)]="busPer.BuPeTipo" />
+                    </div>
                 </div>
-
-                <!--IDENTIFICACION DEL INDIVIDUO RECUPERADO DE LA BD-->
-                <div class="form-group">
-                    <label class="control-label" for="ident">DNI:</label>
-                    <input class="form-control" id="ident" name="ident"  type="text" [(ngModel)]="busD.PeId" />
-                </div>
-
-                <!--TIPO DE CARGO REPRESENTACION EN LA EMPRESA  RUTA -->
-                <div class="form-group">
-                    <label class="control-label" for="motor">Tipo:</label>
-                    <input class="form-control" id="motor" name="motor"  type="text" [(ngModel)]="busD.BuPeTipo" />
+            -->
+            <div class="row">
+                <div class="container">
+                    <div class="table table-responsive">                               
+                        <p-dataTable [value]="" [pageLinks]="4" emptyMessage="Lista vacia"
+                                scrollable="true" scrollWidth="auto" selectionMode="single" >        
+                            <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                                <template let-col let-persubemp="rowData" pTemplate="body">                                        
+                                    <button id="btnTable"  type="button" pButton class="btn" (click)="editPerSubEmp(persubemp.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
+                                    <button id="btnTable"  type="button" pButton class="btn" (click)="elimPerSubEmp(persubemp.PuCoDeId)" icon="fa-trash"> </button>
+                                </template>
+                            </p-column>
+                            <p-column field=""      header=""   [style]="{'width':'4em','text-align':'center'}"  ></p-column>
+                            <p-column field="" header=""  [style]="{'width':'12em'}"></p-column>
+                            <p-column field=""        header=""      [style]="{'width':'6em'}"></p-column>
+                        </p-dataTable>                  
+                    </div>        
                 </div>
             </div>
             
-            <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <button type="button" pButton label="Guardar" (click)="guardarbusD()"></button>
-                    <button type="button" pButton label="Cancelar" (click)="cancelarbusD()"></button>
-                </div>
-            </p-footer>
+            <div class="row">
+                <button type="button" pButton label="Guardar" (click)="guardarbusPer()"></button>
+                <button type="button" pButton label="Cancelar" (click)="cancelarbusPer()"></button>
+            </div>
+            
         </p-dialog>
 
     <!--VENTANAS MODAL CONFIRMACION-->
         <!--MODAL ACEPTAR NUEVO BUS-->
         <p-dialog [(visible)]="displayAceptarNuevoBus" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
                 {{mensaje}}
-            <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            
+                <div class="row">
                     <button type="button" pButton label="Aceptar" (click)="aceptarNuevoBus()"></button>
                 </div>
-            </p-footer>
+            
         </p-dialog>
 
         <!--MODAL ELIMINAR BUS-->
         <p-dialog [(visible)]="displayEliminarBus" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
                 {{mensaje}}
-            <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            
+                <div class="row">
                     <button type="button" pButton label="Aceptar" (click)="_eliminarBus()"></button>
                     <button type="button" pButton label="Cancelar" (click)="cancelEliminar()"></button>
                 </div>
-            </p-footer>
+            
         </p-dialog>
 
          <!--MODAL ACEPTAR NUEVO BUS DETALLE-->
         <p-dialog [(visible)]="displayAceptarNuevoBusD" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
                 {{mensaje}}
-            <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            
+                <div class="row">
                     <button type="button" pButton label="Aceptar" (click)="aceptarNuevoBusD()"></button>
                 </div>
-            </p-footer>
+            
         </p-dialog>
 
         <!--MODAL ELIMINAR BUS DETALLE-->
-        <p-dialog [(visible)]="displayEliminarBusD" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
+        <p-dialog [(visible)]="displayEliminarBusPers" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
                 {{mensaje}}
-            <p-footer>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <button type="button" pButton label="Aceptar" (click)="_eliminarBusD()"></button>
-                    <button type="button" pButton label="Cancelar" (click)="cancEliBusD()"></button>
+            
+                <div class="row">
+                    <button type="button" pButton label="Aceptar" (click)="_eliminarBusPers()"></button>
+                    <button type="button" pButton label="Cancelar" (click)="cancEliBusPers()"></button>
                 </div>
-            </p-footer>
+            
         </p-dialog>
+
+
+
+<!--<div class="row" style="overflow-y: auto; height:300px; ">-->

@@ -1,0 +1,127 @@
+<div class="contenedor">
+    <div id="titulo">Persona por Empresa</div>
+    <div class="row">
+        <!--TABLA EMPRESA-->
+        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="row">
+                <div class="table table-responsive">
+                    <p-dataTable [value]="_gempresa" scrollable="true" emptyMessage="No Hay Registros" scrollWidth="100%" (onRowSelect)="onRowSelectEmpresa($event)">
+                        <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                            <template let-col  let-emp="rowData"  pTemplate="body">
+                                    <button type="button" pButton class="btn" (click)=  "editarEmpresa(emp)" icon="fa-pencil-square-o" > </button>                  
+                            </template>
+                        </p-column>
+                        <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
+                        <p-column field="EmConsorcio" header="Empresa" [style]="{'width':'14em'}"></p-column>
+                        <p-column field="EmTipo" header="Tipo" [style]="{'width':'8em','text-align':'center'}" ></p-column>
+                    </p-dataTable>
+                </div>
+            </div>
+        </div>
+
+        <!--TABLA SUBEMPRESA-->
+        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+            <div id="titulo">Empresas Asociadas</div>
+            <div class="row">
+                <button (click)="nuevaSubEmpresa()" pButton icon="fa-file-text-o" label="Agregar SubEmpresa"></button>
+                <button (click)="vincularPersona()" pButton icon="fa-user-plus" label="Vincular Persona"></button>
+            </div>
+            
+            <div class="row table table-responsive">
+                <p-dataTable [value]="_gsubempresa" scrollable="true" emptyMessage="No Hay Registros"
+                            scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectSubEmpresa($event)">
+
+                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                        <template let-col  let-subemp="rowData"  pTemplate="body">
+                                <button type="button" pButton class="btn" (click)=  "editarSubEmpresa(subemp)" icon="fa-pencil-square-o" > </button>                  
+                                <button type="button" pButton class="btn" (click)= "eliminarSubEmpresa(subemp.EmId)" icon="fa-trash">  </button>
+                        </template>
+                    </p-column>
+                    <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
+                    <p-column field="SuEmRuc" header="Ruc" [style]="{'width':'10em'}"></p-column>
+                    <p-column field="SuEmDireccion" header="Direccion" [style]="{'width':'12em'}" ></p-column>
+                    <p-column field="SuEmUbigeo" header="Ubigeo" [style]="{'width':'12em'}"></p-column>
+                    <p-column field="SuEmNfijo" header="Telefono" [style]="{'width':'8em','text-align':'center'}"></p-column>
+                    <p-column field="SuEmTiempoVuelta" header="Tiempo" [style]="{'width':'6em','text-align':'center'}"></p-column>    
+                </p-dataTable>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+<!--FORMULARIOS-->
+    <p-dialog [(visible)]="displayBuscarPersona" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
+        
+        <div class="row">
+            <div class="container">
+                <div class="table table-responsive">                               
+                    <p-dataTable [value]="personas" emptyMessage="Lista vacia" scrollable="true" scrollWidth="auto" selectionMode="single" >        
+                        
+                        <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                            <template let-col let-pcDetalle="rowData" pTemplate="body">                                        
+                                <button id="btnTable"  type="button" pButton class="btn" (click)="editarDetalle(pcDetalle.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
+                                <button id="btnTable"  type="button" pButton class="btn" (click)="eliminarDetalle(pcDetalle.PuCoDeId)" icon="fa-trash"> </button>
+                            </template>
+                        </p-column>
+                        <p-column field="PuCoDeOrden"      header="N°"   [style]="{'width':'4em','text-align':'center'}"  ></p-column>
+                        <p-column field="PuCoDeDescripcion" header="Lugar"  [style]="{'width':'12em'}"></p-column>
+                        <p-column field="PuCoDeHora"        header="Hora"      [style]="{'width':'6em'}"></p-column>
+                    
+                    </p-dataTable>                  
+                </div>    
+            </div>
+        </div>
+
+        
+        <div class="row">
+            <div class="col-xl-4 col-md-4 col-sm-4 col-sx-12">
+                <button id="btn" type="button" (click)="displayVincularPersona=false" pButton icon="fa-check" label="Aceptar"></button>
+            </div>
+            <div class="col-xl-4 col-md-4 col-sm-4 col-sx-12">
+                <button id="btn" type="button" (click)="displayVincularPersona=false" pButton icon="fa-close" label="Cerrar"></button>
+            </div>
+            <div class="col-xl-4 col-md-4 col-sm-4 col-sx-12">
+                <button id="btn" type="button" (click)="nuevaPersona()" pButton icon="fa-user-plus" label="Agregar Persona"></button>
+            </div>
+        </div>
+    </p-dialog>
+
+    <p-dialog header="Nuevo Registro" [(visible)]="displayAgregaPersona" [resizable]="false" modal="modal" width="350" responsive="true" [closable]="false">
+        
+        <div class="row">
+            <div class="container">
+                
+                <div class="form-group">
+                    <input type="text" class="form-control" maxlength="40" placeholder="Nombres"/>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" maxlength="60" placeholder="Apellidos"/>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" maxlength="8" placeholder="DNI"/>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" maxlength="80" placeholder="Direccion"/>
+                </div>
+                <div class="form-group">
+                    <select class="form-control">
+                        <option>tipo 1</option>
+                        <option>tipo 2</option>
+                        <option>tipo 3</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
+                <button id="btn" type="button" (click)="aceptarPersona()" pButton icon="fa-check" label="Aceptar"></button>
+            </div>
+            <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
+                <button id="btn" type="button" (click)="cancelarPersona()" pButton icon="fa-close" label="Cancelar"></button>
+            </div>
+        </div>
+    </p-dialog>
+<!--VENTANAS CONFIRMACION-->

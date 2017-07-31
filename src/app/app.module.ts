@@ -22,7 +22,8 @@ import {RegtimeComponent} from './components/regtime.component';
 import {TcontrolComponent} from './components/tcontrol.component';
 import {menuComponent} from './components/menu.component' ; 
 import {BusComponent} from './components/bus.component';
-import {EmpComponent} from './components/empresa.component';
+import {EmpSubEmpComponent} from './components/empSubemp.component';
+import {EmpPerComponent} from './components/empresapersonal.component';
 import {PersComponent} from './components/personal.component';
 
 
@@ -37,8 +38,9 @@ import {PuntoControlService} from './service/pcontrol.service';
 import {PlacasService} from './service/placas.service';
 import {TControlService}  from './service/tcontrol.service';
 import {BusService} from './service/bus.service';
-import {EmpService} from './service/empresa.service';
+import {EmpPerService} from './service/empresapersonal.service';
 import {PersService}  from './service/personal.service';
+import {EmpSubEmpService} from './service/empSubemp.service';
 
 
 
@@ -72,7 +74,8 @@ import { BaseRequestOptions } from '@angular/http';*/
     RegtimeComponent,
     TcontrolComponent,
     BusComponent,
-    EmpComponent,
+    EmpSubEmpComponent,
+    EmpPerComponent,
     PersComponent,
     menuComponent,
     LoginComponent,
@@ -123,7 +126,8 @@ import { BaseRequestOptions } from '@angular/http';*/
       AuthenticationService,
       UserService,
       BusService,
-      
+      EmpPerService,
+      EmpSubEmpService
       /* fake backend
       fakeBackendProvider,
       MockBackend,

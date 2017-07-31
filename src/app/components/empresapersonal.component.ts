@@ -1,21 +1,16 @@
 import {Component, OnInit} from '@angular/core';
 
 @Component({
-    selector: 'app-empresa',
-    templateUrl	: '../views/empresa.component.html',
-    styleUrls: ['../styles/empresa.component.css']
+    selector: 'app-empresapersonal',
+    templateUrl	: '../views/empresapersonal.component.html',
+    styleUrls: ['../styles/empresapersonal.component.css']
 })
 
-export class EmpComponent implements OnInit{
+export class EmpPerComponent implements OnInit{
 
     /* OBJETOS*/
-    empresa={
-        EmId:null,
-        EmConsorcio:"",
-        EmTipo:null,
-        UdId:null,
-        UsFechaReg:null,
-    }
+    
+    
     subempresa={
         SuEmId:null,
         PeId:null,
@@ -33,7 +28,7 @@ export class EmpComponent implements OnInit{
 
     /* ARRAYS*/
     _empresa=[];
-    _subempresa=[];
+    _subempresa=[]; /* USANDO EN GRILLA SUBEMP */
     _gempresa=[];
     _gsubempresa=[];
 
@@ -44,6 +39,8 @@ export class EmpComponent implements OnInit{
     displayEditarSubEmp : boolean = false;
     displayConfDelEmp : boolean = false;
     displayConfDelSubEmp : boolean = false;
+    displayBuscarPersona:boolean=false;
+    displayAgregaPersona:boolean=false;
     //displayNuevaEmp : boolean = false;
     //displayNuevaEmp : boolean = false;
 
@@ -56,15 +53,42 @@ export class EmpComponent implements OnInit{
         
     }
 
-    /* NUEVA EMPRESA*/
+    /* OBTENIENDO DATOS -> EMPRESA - PERSONA */
+
+    /* OTRAS FUNCIONES */
+    vincularPersona(){
+        console.log("vincular");
+        this.displayBuscarPersona=true;
+    }
+
+    /* NUEVA */
     nuevaEmpresa(){
         console.log("nuevo");
     }
     nuevaSubEmpresa(){
         console.log("nueva sub");
     }
+    nuevaPersona(){
+        this.displayBuscarPersona=false; /* CERRAR */
+        this.displayAgregaPersona=true;  /* ABRIR */ 
+        /* PROCEDURE NUEVAPER */
+    }
 
-    /* EDITAR EMPRESA*/
+    /* ACEPTAR CANCELAR - NUEVO */
+    aceptarPersona(){
+        this.displayBuscarPersona=true;  /* ABRIR */
+        this.displayAgregaPersona=false; /* CERRAR */
+        /* PROCEDURE GUARDARPER - RECARGAR GRILLA BUSCA PERSONA */
+    
+    }
+    cancelarPersona(){
+        this.displayBuscarPersona=true;  /* ABRIR */
+        this.displayAgregaPersona=false; /* CERRAR */
+        /* VACIAR OBJETO */
+    }
+
+
+    /* EDITAR */
     editarEmpresa(emp : Object){
         console.log("editar");
     }
@@ -72,7 +96,7 @@ export class EmpComponent implements OnInit{
         console.log("editar");
     }
 
-    /* ELIMINAR EMPRESA*/
+    /* ELIMINAR */
     eliminarEmpresa(empid : number){
         console.log("eliminar");
     }
