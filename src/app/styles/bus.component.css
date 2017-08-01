@@ -1,7 +1,9 @@
 #titulo{
     color: black;
     margin-top:20px;
+    margin-bottom:10px;
     text-decoration: none;
+    text-align: left;
 }
 col{
     margin-top:10px;
@@ -16,9 +18,7 @@ col{
     margin-bottom:80px;
 }
 
-.table{
-    margin-top:20px;
-}
+
 
 
 #btn{
@@ -29,4 +29,69 @@ col{
 
 .win_modal{
     padding: 10px 20px;
+}
+
+.form-control{
+    width: 100%;
+}
+
+.cont_modal{
+    overflow-y: auto; 
+    overflow-x: auto;
+    height:320px;
+    width: 100%;
+}
+
+.form-group{
+    margin:0;
+    padding-bottom:18px;
+    padding-top:10px; 
+}
+
+row{
+    margin-top:10px;
+    margin-left:10px;
+    margin-right:10px;
+    margin-bottom:10px;
+}
+
+#validation{
+    color:red; 
+    margin:0; 
+    padding:0;
+    position: absolute;
+}
+
+
+/* BOTONES (GUARDAR CANCELAR + OTROS) VENTANAS MODALES */
+.btn_modal{
+    width:100%; 
+    height:40px; 
+    font-size:15px;
+    background-color:#4CAF50;
+    text-align: center;
+}
+
+/*GRUPO BOTONES DE LAS VENTANAS MODALES*/
+.btn_Modal{
+    margin-top: 30px;
+}
+
+/*APARIENCIA BOTON NUEVO (ARRIBA DE GRILLA PRINCIPAL)*/
+#btnNuevo{
+    padding:4px;
+    width: 100%;
+    background: #4CAF50; 
+}
+
+/*USADO EN LOS BOTONES DE LAS VENTANAS MODALES*/
+.container{
+    margin-bottom: 20px;
+}
+
+#btnTable{
+    background-color: #4CAF50;
+}
+.table{
+    margin-top:20px;
 }

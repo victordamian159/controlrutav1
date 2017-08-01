@@ -1,23 +1,39 @@
 
 <!--PRINCIPAL-->
 <div class="contenedor">
-    <div class="row" >
-         <!--TABLA BUS CABECERA-->
-        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="row"><h5 id=titulo>Bus</h5></div>
-
+        <!--TABLA NUEVO BUS -->
+            <div id=titulo>Bus</div>
+            <!-- FILTRO - NUEVOBUS - SUBEMPRESA -->
             <div class="row">
-                <input placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
-                <button (click)="nuevoBus()" pButton icon="fa-file-text-o" label="Nuevo"></button>
-                <select class="form-control">
-                    <option>Empresa 1</option>
-                    <option>Empresa 2</option>
-                    <option>Empresa 3</option>
-                </select>
+                <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
+                    <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+                </div>
+                <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
+                    <button id="btnNuevo" (click)="nuevoBus()" pButton icon="fa-file-text-o" label="Agregar Bus"></button>
+                </div>
+                <!--
+                    <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
+                        <select class="form-control">
+                            <option>Empresa 1</option>
+                            <option>Empresa 2</option>
+                            <option>Empresa 3</option>
+                        </select>
+                    </div>
+                -->
+                <!--COMBO SUBEMPRESAS-->
+                <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
+                    <select class="form-control" required [(ngModel)]="_suemid" (change)="SuEmId($event)">
+                        <!--<option value="" disabled selected hidden>Please Choose...</option>-->
+                        <option *ngFor="let suem of _arrsuEmp" [value]="suem.SuEmId">
+                            {{suem.SuEmRSocial}}
+                        </option>
+                    </select> 
+                </div>
             </div>
 
+            <!--TABLA BUS-->
             <div class="row table table-responsive">
-                <p-dataTable [value]="_gbus" [rows]="4"  [globalFilter]="filtroGlobal" scrollable="true" emptyMessage="No Hay Registros" 
+                <p-dataTable [value]="_gbus" [rows]="3"  [globalFilter]="filtroGlobal" scrollable="true" emptyMessage="No Hay Registros" 
                 scrollWidth="100%" [paginator]="true" selectionMode="single" (onRowSelect)="onRowSelectBus($event)"  >
                     
                     <p-column styleClass="col-button" [style]="{'width':'5em'}">
@@ -31,20 +47,46 @@
                     <p-column field="BuPlaca" header="Placa" [style]="{'width':'8em','text-align':'center'}" ></p-column>
                     <p-column field="BuMarca" header="Marca" [style]="{'width':'8em'}"></p-column>
                     <p-column field="BuCapacidad" header="Cap." [style]="{'width':'4em','text-align':'center'}"></p-column>
-                   
+                    
                 </p-dataTable>
             </div>
-        </div>
+        
 
-        <!--TABLA ASIGNAR PERSONA A BUS-->
-        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="row"><h5 id=titulo>Persona Encargada</h5></div>
-
+        <!--TABLA ASIGNAR BUS A PERSONA -->
+            <div id=titulo>Persona Encargada</div>
             <div class="row">
-                <button (click)="nuevoBusPersona()" pButton icon="fa-file-text-o" label="Nueva Asignacion"></button>
+                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                    <button id="btnNuevo" (click)="nuevoBusPersona()" pButton icon="fa-file-text-o" label="Nueva Asignacion"></button>
+                </div>
             </div>
+
+            <!--TABLA ASIGNAR BUSPERSONA-->
             <div class="row table table-responsive">
-                <p-dataTable [value]="_gbusPer" [rows]="2"  [globalFilter]="filtroGlobal" emptyMessage="No Hay Registros" scrollable="true" scrollWidth="100%" [paginator]="true" selectionMode="single" (onRowSelect)="onRowSelectBusDetalle($event)">
+                <p-dataTable [value]="_gbusPer" [rows]="2"  emptyMessage="No Hay Registros" scrollable="true" scrollWidth="100%" selectionMode="single">
+                    <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                        <template let-col  let-objBusPer="rowData"  pTemplate="body">
+                                <button type="button" pButton class="btn" (click)=  "editarBusPers(objBusPer)" icon="fa-pencil-square-o" > </button>                  
+                                <button type="button" pButton class="btn" (click)= "eliminarBusPers(objBusPer.PeId)" icon="fa-trash">  </button>
+                        </template>
+                    </p-column>
+                    <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
+                    <p-column field="BuPeTipo" header="Placa" [style]="{'width':'10em','text-align':'center'}"></p-column>
+                    <p-column field="BuPeTipo" header="Persona" [style]="{'width':'10em','text-align':'center'}"></p-column>
+                    <p-column field="UsId" header="Cargo" [style]="{'width':'10em','text-align':'left'}"></p-column>
+                </p-dataTable>
+            </div>
+            
+        <!--TABLA TELEFONO -->
+            <div id=titulo>Telefono Movil Asignado</div>
+            <div class="row">
+                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                    <button id="btnNuevo" (click)="nuevoTelMovPersona()" pButton icon="fa-file-text-o" label="Asignar Telefono"></button>
+                </div>
+            </div>
+
+            <!--TABLA ASIGNAR BUSPERSONA-->
+            <div class="row table table-responsive">
+                <p-dataTable [value]="" [rows]="2" emptyMessage="No Hay Registros" scrollable="true" scrollWidth="100%" selectionMode="single">
                     <p-column styleClass="col-button" [style]="{'width':'6em'}">
                         <template let-col  let-objBusD="rowData"  pTemplate="body">
                                 <button type="button" pButton class="btn" (click)=  "editarBusPers(objBusD)" icon="fa-pencil-square-o" > </button>                  
@@ -52,13 +94,12 @@
                         </template>
                     </p-column>
                     <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
-                    <p-column field="BuPeTipo" header="" [style]="{'width':'10em','text-align':'center'}"></p-column>
-                    <p-column field="UsId" header="Usuarios" [style]="{'width':'10em','text-align':'left'}"></p-column>
+                    <p-column field="BuPeTipo" header="Placa" [style]="{'width':'10em','text-align':'center'}"></p-column>
+                    <p-column field="BuPeTipo" header="Marca" [style]="{'width':'10em','text-align':'center'}"></p-column>
+                    <p-column field="UsId" header="Imei" [style]="{'width':'10em','text-align':'left'}"></p-column>
+                    <p-column field="UsId" header="Modelo" [style]="{'width':'10em','text-align':'left'}"></p-column>
                 </p-dataTable>
             </div>
-        </div>
-
-    </div>
 </div>
     
      <!--MODAL NUEVO BUS-->

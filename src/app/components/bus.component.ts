@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import { BusService } from '../service/bus.service';
+import {EmpSubEmpService} from '../service/empSubemp.service';
+import {hora,_hora} from 'app/funciones';
 
 @Component({
     selector: 'app-bus',
@@ -47,9 +49,12 @@ export class BusComponent implements OnInit{
     _busPer=[]; /*ARRAY BD*/
     _gbusPer=[]; /*ARRAY GRILLA*/
 
+    _arrsuEmp:any[]=[]; //ARRAY COMBO SUBEMPRESAS
+
     /* VARIEBLES*/
     private emid:number;
     private suemid:number;
+    private _suemid:number; /* VARIABLE ASOCIADA A COMBO SUBEMPS */
     titulo:string;
     mensaje:string;
 
@@ -67,15 +72,26 @@ export class BusComponent implements OnInit{
     private idDelReg:number = 0; /* ID REG A ELIMINAR */
     private busId:any;
 
-    constructor(private busService: BusService){}
+    constructor(private busService: BusService,
+                private empSubempservice : EmpSubEmpService){}
 
     ngOnInit(){
         this.emid=1;
-        this.suemid=1;
-        /*this.bus.EmId=1;
+        /*this.suemid=1;
+        this.bus.EmId=1;
         this.bus.SuEmId=1;*/
-        this.getallbusbyemidsuemid(this.emid,this.suemid);
-       
+        
+       this.getallsuembyemid(this.emid);
+    }
+    /* CONSULTA TODAS LAS SUBEMPRESAS POR EMID */
+    getallsuembyemid(emid:number){
+        let arrsuemp:any=[]=[];
+        this.empSubempservice.getallsubempresasbyemid(emid).subscribe(
+            data => {arrsuemp=data; 
+                     console.log(arrsuemp); 
+                     
+                     this.mcSubEmpresas(arrsuemp); }
+        );
     }
     
     /* CONSULTA TODOS LOS BUSES POR EMPRESA Y SUBEMPRESA*/
@@ -95,6 +111,21 @@ export class BusComponent implements OnInit{
             err => {this.errorMessage = err},
             () => this.isLoading = false
         );
+    }
+
+    /* MOSTRAR SUBEMPRESAS EN COMBO */
+    mcSubEmpresas(arrsuEmp=[]){
+        this._arrsuEmp=[];
+        for(let suemp of arrsuEmp){
+            this._arrsuEmp.push({
+                SuEmId:suemp.SuEmId,
+                SuEmRSocial:suemp.SuEmRSocial,
+                SuEmRuc:suemp.SuEmRuc,
+                SuEmDireccion:suemp.SuEmDireccion,
+                SuEmTiempoVuelta:suemp.SuEmTiempoVuelta
+            });
+        }
+        console.log(this._arrsuEmp);
     }
 
     /* NUEVO OBJETO BUS*/ 
@@ -327,6 +358,11 @@ export class BusComponent implements OnInit{
 
     cancelarbusPer(){
         this.displayNuevoBusPersona=false;
+    }
+
+    SuEmId(){
+        console.log(this._suemid);
+        this.getallbusbyemidsuemid(this.emid,this._suemid);
     }
 
 /*PASAR A LIBRERIA */ 

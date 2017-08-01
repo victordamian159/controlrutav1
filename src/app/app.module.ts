@@ -127,7 +127,8 @@ import { BaseRequestOptions } from '@angular/http';*/
       UserService,
       BusService,
       EmpPerService,
-      EmpSubEmpService
+      EmpSubEmpService,
+      PersService
       /* fake backend
       fakeBackendProvider,
       MockBackend,
