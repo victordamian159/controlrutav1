@@ -1,18 +1,19 @@
 <div class="contenedor">
+    <div id="titulo">Listado de Personas</div>
     <div class="row">
         <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
             <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
         </div>
         <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
-            <button class="form-control" id="btnNuevo" (click)="nuevoPersonal()" pButton icon="fa-file-text-o" label="Nuevo"></button>
+            <button class="form-control" id="btnNuevo" (click)="nuevoPersonal()" pButton icon="fa-file-text-o" label="Agregar Persona"></button>
         </div>
     </div>
 
     <!--TABLA PRINCIPAL-->
     <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
         <div class="table table-responsive">
-            <p-dataTable [value]="personalArr" [rows]="5"  [globalFilter]="filtroGlobal" scrollable="true" emptyMessage="No Hay Registros"
-                        scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectPersonal($event)">
+            <p-dataTable [value]="personalArr"  [globalFilter]="filtroGlobal" scrollable="true" emptyMessage="No Hay Registros"
+                        scrollWidth="300" selectionMode="single" (onRowSelect)="onRowSelectPersonal($event)">
 
                 <p-column styleClass="col-button" [style]="{'width':'3em'}">
                     <template let-col  let-Personal="rowData"  pTemplate="body">
@@ -37,7 +38,7 @@
         <!--MODAL NUEVO PERSONAL-->
         <p-dialog [style]="{'font-size':'14px'}" [(visible)]="displayNuevo" modal="modal" [resizable]="false" width="100%" [closable]="false">
             <!--ENCABEZADO-->
-            <p-header>{{titulo}}</p-header>
+            <p-header>{{mensaje}}</p-header>
             <div class="row">
                 <div class="cont_modal">
                     <div class="container">
@@ -110,14 +111,14 @@
                                     </div>
                                 </div>
                         
-                                <!--TIPO PERSONAL-->
+                                <!--TIPO PERSONAL
                                 <div class="col-xl-4 col-md-6 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                         <label class="control-label">Tipo:</label>
-                                        <!--DROPDOWN-->
+                                
                                         <input class="form-control" type="text" [(ngModel)]="personal. PeTipo" />
                                     </div>
-                                </div>
+                                </div>-->
 
                                 <!--LICENCIA-->
                                 <div class="col-xl-4 col-md-6 col-sm-6 col-xs-12">

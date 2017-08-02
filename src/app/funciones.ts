@@ -35,6 +35,7 @@
         return _hora;
     }
 
+    /* COMPLETANDO CEROS A FORMATO YYYY/MM/DD */
     export function cCeroFecha(f : string) :string{
         let fecha:string, _fecha:string, resultado, i=0;
         resultado = f.split('/');
@@ -51,6 +52,17 @@
         return _fecha
     }
 
+    /* AJUSTANDO FORMATO DE LA FECHA PARA PASARLO A UN FORMULARIO */
+    /* DANDO FORMATO A LA FECHA PARA SER EDITADA EN EL FORMULARIO DE EDITAR*/
+    export function formatFech(f : string) : string{
+        let _f, r, aux;
+        _f = f.split("/");
+        aux = _f[0]; _f[0]=_f[2]; _f[2]=aux;
+        r = _f.join("-");
+        return r;
+    }
+
+    /* CAMBIANDO EL '/' POR '-' */
     export function cCeroFechaForEditar(f : string) :string{
         let fecha:string, _fecha:string, resultado, i=0;
         resultado = f.split('/');
@@ -66,24 +78,22 @@
         
         return _fecha
     }
+
     //CONVERTIR STRING A DATE PARA FECHA   ----   FORMULARIO A BD   2017/03/31  2017-03-31
     export function fecha(fecha: string) : Date{
         let thoy:Date , _thoy:Date, _fecha:string;
         thoy = new Date();
         _fecha = fecha;
-        console.log("antes :"+_fecha);
         let resultado=_fecha.split('-');
         _thoy = new Date(  Number(resultado[0]),  Number(resultado[1]) -1 ,  Number(resultado[2]) , 12, 0,0 );
-        console.log("despues :"+_thoy);
-
         return _thoy;
     }
+
     //CONVERTIR DATE A STRING PARA FECHA  - ---   BD A GRILLA
     export function _fecha(fecha: Date) :string{
         let fechaProg : string; let _fechaProg : string; let _fecha = new Date(fecha);  
         //_fechaProg=(_fecha.getFullYear()).toString() +" / "+ (_fecha.getMonth() +1 ).toString() +" / "+(_fecha.getDate()).toString() ;
         _fechaProg=(_fecha.getDate()).toString() +" / "+ (_fecha.getMonth() +1 ).toString() +" / "+(_fecha.getFullYear()).toString() ;
-        _fechaProg=this.cCeroFecha(_fechaProg);
-        
+        _fechaProg=cCeroFecha(_fechaProg);
         return  _fechaProg;
     }

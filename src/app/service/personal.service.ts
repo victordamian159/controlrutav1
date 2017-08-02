@@ -38,7 +38,7 @@ export class PersService{
         }
     /* ELIMINAR */
         deletePersona(id:number){
-            return this.http.delete(this.baseUrl+"delete/"+id) 
+            return this.http.delete(this.baseUrl+id) 
                             .map((res:Response) => res.json())
                             .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
         }

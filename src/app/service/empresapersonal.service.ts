@@ -18,6 +18,15 @@ export class EmpPerService{
                 .map((r:Response) => r.json() )
                 .catch(this.handleError);
         }
+
+    /* GET EMPRESAPERSONA POR SU ID (EMPEID) */    
+        getEmpPerById(empeid:number){
+            return this.http
+                .get(this.baseUrl1+empeid)
+                .map((r:Response) => r.json() )
+                .catch(this.handleError);
+        }
+
     /* NUEVO */
         newEmpresaPersona(){
             return this.http
@@ -26,14 +35,14 @@ export class EmpPerService{
 			.catch((error:any) => Observable.throw(error.json().error || 'Server error'));
         }
     /* GUARDAR */
-        saveRuta(empPer:Object){
+        saveEmpresaPersona(empPer:Object){
 		return this.http.post(this.baseUrl1+"save/",empPer) 
                          .map((res:Response) => res.json()) 
                          .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
 	}
     /* ELIMINAR */
-        deleteRuta(id:number){
-            return this.http.delete(this.baseUrl1+"delete/"+id) 
+        deleteEmpresaPersona(id:number){
+            return this.http.delete(this.baseUrl1+id) 
                 .map((res:Response) => res.json()) 
                 .catch((error:any) => Observable.throw(error.json().error || 'Server error')); 
 	    }

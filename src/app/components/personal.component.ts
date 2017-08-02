@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {PersService} from '../service/personal.service';
-
+import {_fecha,fecha,formatFech,cCeroFecha} from 'app/funciones';
 @Component({
     selector: 'app-personal',
     templateUrl	: '../views/personal.component.html',
@@ -16,7 +16,7 @@ export class PersComponent implements OnInit{
             PeDni : "",
             PeFecNac : "",
             PeDireccion :"",
-            PeTipo :"",
+            /*PeTipo :"",*/
             PeTipoLicencia :"",
             PeNMovil :"",
             PeNFijo :"",
@@ -32,7 +32,7 @@ export class PersComponent implements OnInit{
         personalArr=[];
         _personalArr:any[]=[];
 
-    /*BORRAR CUANDO SE TENGAS LOS SERVICIOS*/
+    /*BORRAR CUANDO SE TENGAS LOS SERVICIOS
         borrarpersonal : any ={
             PeId :null,
             PeNombres : "",
@@ -51,7 +51,7 @@ export class PersComponent implements OnInit{
             UsFechaReg :null,
             PeSexo:null,
             PeEstCivil :"",
-        }
+        }*/
 
     /*VARIABLES DISPLAY VENTANAS MODAL*/
         displayNuevo : boolean = false;
@@ -88,14 +88,14 @@ export class PersComponent implements OnInit{
             getallpersonal(){
                 let arrper:any[]=[];
                 this.personaService.getallpersonal().subscribe(
-                    data => {arrper=data; console.log(arrper); this.mgPersonal(arrper);}
+                    data => {arrper=data; console.log(arrper);this.mgPersonal(arrper);}
                 );
             }
         /* GET BY ID */
             getpersonalbyid(peid:number){
                 let objPer:any;
                 this.personaService.getPersonaById(peid).subscribe(
-                    data => { objPer = data; console.log(objPer); this.mformPersona(objPer);},
+                    data => { objPer = data; this.mformPersona(objPer);},
                             err => {this.errorMessage = err}, 
                             () =>this.isLoading = false
                 );
@@ -118,7 +118,8 @@ export class PersComponent implements OnInit{
             nuevapersonaProc(){
                 let nwpersona:any;
                 this.personaService.newPersona().subscribe(
-                    data => {nwpersona=data; console.log(nwpersona); this.peid=0;}
+                    data => {nwpersona=data; this.peid=0;
+                             this.personal=nwpersona; this.PeEstCivil=""; this.PeSexo="";  }
                 );
             }
 
@@ -144,65 +145,93 @@ export class PersComponent implements OnInit{
             }
 
         /* FORMULARIO */
-            mformPersona(objPer:Object){
-                console.log(objPer);
+            mformPersona(objPer:any){
+                this.personal={
+                    PeId :objPer.PeId,
+                    PeNombres : objPer.PeNombres,
+                    PeApellidos : objPer.PeApellidos,
+                    PeDni : objPer.PeDNI,
+                    PeFecNac : formatFech(_fecha(objPer.PeFecNac)),
+                    PeDireccion :objPer.PeDireccion,
+                    /*PeTipo :objPer.PeTipo,*/
+                    PeTipoLicencia :objPer.PeTipoLicencia,
+                    PeNMovil :objPer.PeCelular,
+                    PeNFijo :objPer.PeTelefonoFijo,
+                    PeEmail :objPer.PeEmail,
+                    getPeFechaIng :formatFech(_fecha(objPer.getPeFechaIng)),
+                    PeFechaSal :formatFech(_fecha(objPer.PeFechaSal)),
+                    UsId:objPer.UsId,
+                    UsFechaReg :objPer.UsFechaReg,
+                    PeSexo:objPer.PeSexo,
+                    PeEstCivil :objPer.PeEstadoCivil
+                }
+                this.PeSexo=this.personal.PeSexo;
+                this.PeEstCivil=this.personal.PeEstCivil;
+                console.log(this.personal);
             }
 
     /*FUN ASOCIADA BTNNUEVO PERSONAL(FORM PRINCIPAL)*/
+
+        /* BTN NUEVO */
         nuevoPersonal(){
-            this.titulo="Nuevo Registro de Personal";
+            this.mensaje="Nuevo Registro de Personal";
             this.displayNuevo=true;
             /*CONSULTA NUEVO PERSONAL*/
             this.nuevapersonaProc();
         }
 
-    guardarPersonal(){
-        this.displayNuevo=false;
-        this.personal.UsFechaReg = new Date(); /*FECHA ACTUAL DEL SISTEMA */
-        this.personal.UsId=this.usid;
+        guardarPersonal(){
+            this.displayNuevo=false;
+            this.personal.UsFechaReg = new Date(); /*FECHA ACTUAL DEL SISTEMA */
+            this.personal.UsId=this.usid;
 
 
-        /*REEMPLAZAR POR EL VARIABLE CONSULTA NUEVO REG */
-        this._personal = {
-            PeId : this.personal.PeId,
-            PeNombres : this.personal.PeNombres,
-            PeApellidos : this.personal.PeApellidos,
-            PeDNI : this.personal.PeDni,
-            PeFecNac : this.fecha(this.personal.PeFecNac),
-            PeDireccion :this.personal.PeDireccion,
-            PeTipo :this.personal.PeTipo,
-            PeTipoLicencia :this.personal.PeTipoLicencia,
-            PeCelular :this.personal.PeNMovil,
-            PeTelefonoFijo :this.personal.PeNFijo,
-            PeEmail :this.personal.PeEmail,
-            getPeFechaIng : this.fecha(this.personal.getPeFechaIng),
-            PeFechaSal : this.fecha(this.personal.PeFechaSal),
-            UsId:this.personal.UsId,
-            UsFechaReg : this.personal.UsFechaReg,
-            PeSexo:this.personal.PeSexo,
-            PeEstadoCivil :this.personal.PeEstCivil,
-        };
+            /*REEMPLAZAR POR EL VARIABLE CONSULTA NUEVO REG */
+            this._personal = {
+                PeId : this.personal.PeId,
+                PeNombres : this.personal.PeNombres,
+                PeApellidos : this.personal.PeApellidos,
+                PeDNI : this.personal.PeDni,
+                PeFecNac : fecha(this.personal.PeFecNac),
+                PeDireccion :this.personal.PeDireccion,
+                //PeTipo :this.personal.PeTipo,
+                PeTipoLicencia :this.personal.PeTipoLicencia,
+                PeCelular :this.personal.PeNMovil,
+                PeTelefonoFijo :this.personal.PeNFijo,
+                PeEmail :this.personal.PeEmail,
+                getPeFechaIng : fecha(this.personal.getPeFechaIng),
+                PeFechaSal : fecha(this.personal.PeFechaSal),
+                UsId:this.personal.UsId,
+                UsFechaReg : this.personal.UsFechaReg,
+                PeSexo:this.personal.PeSexo,
+                PeEstadoCivil :this.personal.PeEstCivil,
+            };
 
-        /*CONDICIONAL EN CASO DE NUEVO O EDITANDO*/
-        if(this.peid==0){
-            this._personal.PeId=0;
-            
-        }else if(this.peid!=0){
-            this._personal.PeId=this.peid;
-            /*this._personal.PeFecNac = this.fecha(this.personal.PeFecNac), this._personal.PeFechaIng = this.fecha(this.personal.PeFechaIng), this._personal.PeFechaSal = this.fecha(this.personal.PeFechaSal), this._personal=this.personal;*/
+            /*CONDICIONAL EN CASO DE NUEVO O EDITANDO*/
+            if(this.peid==0){
+                this._personal.PeId=0;
+                
+            }else if(this.peid!=0){
+                this._personal.PeId=this.peid;
+               
+            }
+
+            console.log(this._personal);
+            /* CONSULTA GUARDAR PERSONAL*/
+            this.savepersonal(this._personal);
+            this.mensaje="";
         }
-        
-        console.log("guardado");
-        console.log(this._personal);
-        /* CONSULTA GUARDAR PERSONAL*/
-        this.savepersonal(this._personal);
-    }
 
-    cancelarPersonal(){
-        this.displayNuevo=false;
-    }
+        cancelarPersonal(){
+            this.personal=null;
+            this.peid=null
+            this.PeSexo=null
+            this.PeEstCivil=null
+            this.displayNuevo=false;
+        }
 
     /*EDITAR PERSONAL*/
+        /* FUNCION ASOCIADA A BOTON FILA DATATABLE */
         editarPersonal(perid : number){
             this.mensaje="Editar Registro";
             this.peid=perid;
@@ -212,6 +241,7 @@ export class PersComponent implements OnInit{
         verificarEditar(){
             this.getpersonalbyid(this.peid);
             this.displayConfEditar=false;
+            this.displayNuevo=true; /* USANDO ESTA VENTANA TBN PARA EDITAR LA TABLA */
         }
 
         cancelarEditar(){
@@ -223,9 +253,9 @@ export class PersComponent implements OnInit{
         eliminarPersonal(perid : number){
             this.peid=perid;
             this.mensaje="¿Esta Seguro De Eliminar El Registro?";
-            console.log("eliminar : "+this.peid);
             this.displayEliminar=true;
         }
+
         verificarEliminar(){
             this.mensaje="";
             this.displayEliminar=false;
@@ -237,7 +267,6 @@ export class PersComponent implements OnInit{
             this.peid=null;
             this.mensaje="";
             this.displayEliminar=false;
-            console.log("cancelar");
         }
 
     /* FUNCION ASOCIADA COMBO GENERO */
@@ -249,96 +278,4 @@ export class PersComponent implements OnInit{
         funCbopeEstCivilId(){
             this.personal.PeEstCivil=this.PeEstCivil
         }
-
-/*CREAR CLASES PARA ESTO, Y BORRAR ESTO*/
-       //CONVERTIR STRING A DATE FORMULARIO A BD  HORAS
-    hora(fecha : string) : Date{
-        //FECHA               
-        let thoy:Date,  otra:Date, horaTarjeta:string;
-        thoy=new Date();
-        if(fecha.length<=5){ fecha = fecha+":00"; }
-        horaTarjeta=fecha;
-        let resultado=horaTarjeta.split(':');
-        otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));    
-        //console.log(otra);
-        return otra; 
-        
-    }
-
-    //CONVERTIR DATE A STRING DE BD A FORMULARIO HORAS
-    _hora(fecha : Date) :string{
-        let hora : string; let _hora : string; let _fecha = new Date(fecha);
-        _hora =  (_fecha.getHours() - 1).toString();// restando 1 hora (CORREGIR EN EL BACKEND)
-            hora = _hora + ":"+_fecha.getMinutes()+":"+_fecha.getSeconds();
-
-            hora = this.cCeroHora(hora);
-        return hora;
-    }
-    //COMPLETANDO CEROS EN CASO DE NECESITAR PARA HORAS Y FECHAS   2017/
-    cCeroHora(h:string) :string{
-            //DIVIDIRLO EN PARTES Y COMPLETAR LOS CEROS PARA QUE LOS ELEMENTOS SEAN TODOS PARES
-            let hora : string, _hora :string, resultado, i=0;
-            resultado = h.split(':');
-            while(i<resultado.length){
-                if(resultado[i].length%2!=0){
-                    resultado[i]="0"+resultado[i];
-                }
-                i++;
-            }
-            //CONCATENANDO
-            _hora=resultado[0]+":"+resultado[1]+":"+resultado[2];
-        return _hora;
-    }
-
-    cCeroFecha(f : string) :string{
-        let fecha:string, _fecha:string, resultado, i=0;
-        resultado = f.split('/');
-            while(i<resultado.length){
-                resultado[i]=resultado[i].trim(); //BORRANDO ESPACIOS EN BLANCO
-                if(resultado[i].length%2!=0){
-                    resultado[i]="0"+resultado[i];
-                }
-                i++;
-            }
-            //CONCATENANDO
-            _fecha=resultado[0]+"/"+resultado[1]+"/"+resultado[2];
-        
-        return _fecha
-    }
-
-    cCeroFechaForEditar(f : string) :string{
-        let fecha:string, _fecha:string, resultado, i=0;
-        resultado = f.split('/');
-            while(i<resultado.length){
-                resultado[i]=resultado[i].trim(); //BORRANDO ESPACIOS EN BLANCO
-                if(resultado[i].length%2!=0){
-                    resultado[i]="0"+resultado[i];
-                }
-                i++;
-            }
-            //CONCATENANDO
-            _fecha=resultado[0]+"-"+resultado[1]+"-"+resultado[2];
-        
-        return _fecha
-    }
-    
-    //CONVERTIR DATE A STRING PARA FECHA  - ---   BD A GRILLA
-    _fecha(fecha: Date) :string{
-        let fechaProg : string; let _fechaProg : string; let _fecha = new Date(fecha); 
-        _fechaProg=(_fecha.getDate()).toString() +" / "+ (_fecha.getMonth() +1 ).toString() +" / "+ (_fecha.getFullYear()).toString();
-        //_fechaProg=(_fecha.getFullYear()).toString() +" / "+ (_fecha.getMonth() +1 ).toString() +" / "+(_fecha.getDate()).toString() ;
-        
-        _fechaProg=this.cCeroFecha(_fechaProg);
-        return  _fechaProg;
-    }
-      //CONVERTIR STRING A DATE PARA FECHA   ----   FORMULARIO A BD 
-    fecha(fecha: string) : Date{
-        let thoy:Date , _thoy:Date, _fecha:string;
-        thoy = new Date();
-        _fecha = fecha;
-        let resultado=_fecha.split('-');
-        _thoy = new Date(  Number(resultado[0]),  Number(resultado[1]) -1 ,  Number(resultado[2]) , 12, 0,0 );
-        return _thoy;
-    }
-
 }

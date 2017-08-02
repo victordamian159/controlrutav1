@@ -94,7 +94,7 @@ export class EmpSubEmpComponent implements OnInit{
             getsuempbysuemid(suemid:number){
                 let subem:any;
                 this.empSubempservice.getsubempbysuemid(suemid).subscribe(
-                    data =>{subem=data; this.msubemp(subem);}
+                    data =>{subem=data; console.log(subem); this.msubemp(subem);}
                 );
             }
         /* NUEVO */
@@ -170,6 +170,7 @@ export class EmpSubEmpComponent implements OnInit{
                     SuEmTiempoVuelta:_hora(suem.SuEmTiempoVuelta)
                 }
                 this.displayNuevaSubEmp=true;
+                console.log(this.subempresa);
             }
 
             mEmpresa(emp:any){
