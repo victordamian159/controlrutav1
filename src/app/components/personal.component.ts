@@ -32,27 +32,6 @@ export class PersComponent implements OnInit{
         personalArr=[];
         _personalArr:any[]=[];
 
-    /*BORRAR CUANDO SE TENGAS LOS SERVICIOS
-        borrarpersonal : any ={
-            PeId :null,
-            PeNombres : "",
-            PeApellidos : "",
-            PeDni : "",
-            PeFecNac : "",
-            PeDireccion :"",
-            PeTipo :"",
-            PeTipoLicencia :"",
-            PeNMovil :"",
-            PeNFijo :"",
-            PeEmail :"",
-            PeFechaIng :"",
-            PeFechaSal :"",
-            UsId:0,
-            UsFechaReg :null,
-            PeSexo:null,
-            PeEstCivil :"",
-        }*/
-
     /*VARIABLES DISPLAY VENTANAS MODAL*/
         displayNuevo : boolean = false;
         displayEliminar : boolean = false;
@@ -223,7 +202,19 @@ export class PersComponent implements OnInit{
         }
 
         cancelarPersonal(){
-            this.personal=null;
+
+            this.personal.PeNombres = "",
+            this.personal.PeApellidos = "",
+            this.personal.PeDni = "",
+            this.personal.PeFecNac = "",
+            this.personal.PeDireccion ="",
+            this.personal.PeTipoLicencia ="",
+            this.personal.PeNMovil ="",
+            this.personal.PeNFijo ="",
+            this.personal.PeEmail ="",
+            this.personal.getPeFechaIng ="",
+            this.personal.PeFechaSal ="",
+            
             this.peid=null
             this.PeSexo=null
             this.PeEstCivil=null

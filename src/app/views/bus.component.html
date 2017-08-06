@@ -5,21 +5,16 @@
             <div id=titulo>Bus</div>
             <!-- FILTRO - NUEVOBUS - SUBEMPRESA -->
             <div class="row">
+                <!--FILTRO-->
                 <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
                     <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
                 </div>
+
+                <!--BOTON NUEVO-->
                 <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
-                    <button id="btnNuevo" (click)="nuevoBus()" pButton icon="fa-file-text-o" label="Agregar Bus"></button>
+                    <button id="btnNuevo" (click)="nuevoBus()" [disabled]="_suemid==0" pButton icon="fa-file-text-o" label="Agregar Bus"></button>
                 </div>
-                <!--
-                    <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
-                        <select class="form-control">
-                            <option>Empresa 1</option>
-                            <option>Empresa 2</option>
-                            <option>Empresa 3</option>
-                        </select>
-                    </div>
-                -->
+
                 <!--COMBO SUBEMPRESAS-->
                 <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
                     <select class="form-control" required [(ngModel)]="_suemid" (change)="SuEmId($event)">
@@ -36,7 +31,7 @@
                 <p-dataTable [value]="_gbus" [rows]="3"  [globalFilter]="filtroGlobal" scrollable="true" emptyMessage="No Hay Registros" 
                 scrollWidth="100%" [paginator]="true" selectionMode="single" (onRowSelect)="onRowSelectBus($event)"  >
                     
-                    <p-column styleClass="col-button" [style]="{'width':'5em'}">
+                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
                         <template let-col  let-objBus="rowData"  pTemplate="body">
                                 <button type="button" pButton class="btn" (click)= "editarBus(objBus.BuId)" icon="fa-pencil-square-o" > </button>                  
                                 <button type="button" pButton class="btn" (click)= "eliminarBus(objBus.BuId)" icon="fa-trash">  </button>
@@ -56,14 +51,14 @@
             <div id=titulo>Persona Encargada</div>
             <div class="row">
                 <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                    <button id="btnNuevo" (click)="nuevoBusPersona()" pButton icon="fa-file-text-o" label="Nueva Asignacion"></button>
+                    <button id="btnNuevo" (click)="nuevoBusPersona()" [disabled]="BuPlaca=='none'" pButton icon="fa-file-text-o" label="Nueva Asignacion"></button>
                 </div>
             </div>
 
             <!--TABLA ASIGNAR BUSPERSONA-->
             <div class="row table table-responsive">
                 <p-dataTable [value]="_gbusPer" [rows]="2"  emptyMessage="No Hay Registros" scrollable="true" scrollWidth="100%" selectionMode="single">
-                    <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
                         <template let-col  let-objBusPer="rowData"  pTemplate="body">
                                 <button type="button" pButton class="btn" (click)=  "editarBusPers(objBusPer)" icon="fa-pencil-square-o" > </button>                  
                                 <button type="button" pButton class="btn" (click)= "eliminarBusPers(objBusPer.PeId)" icon="fa-trash">  </button>
@@ -77,17 +72,17 @@
             </div>
             
         <!--TABLA TELEFONO -->
-            <div id=titulo>Telefono Movil Asignado</div>
+            <div id=titulo>Telefono Movil Asignado a Cada Placa</div>
             <div class="row">
                 <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                     <button id="btnNuevo" (click)="nuevoTelMovPersona()" pButton icon="fa-file-text-o" label="Asignar Telefono"></button>
                 </div>
             </div>
 
-            <!--TABLA ASIGNAR BUSPERSONA-->
+            <!--AGREGANDO TELEFONO AL SISTEMA-->
             <div class="row table table-responsive">
                 <p-dataTable [value]="" [rows]="2" emptyMessage="No Hay Registros" scrollable="true" scrollWidth="100%" selectionMode="single">
-                    <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
                         <template let-col  let-objBusD="rowData"  pTemplate="body">
                                 <button type="button" pButton class="btn" (click)=  "editarBusPers(objBusD)" icon="fa-pencil-square-o" > </button>                  
                                 <button type="button" pButton class="btn" (click)= "eliminarBusPers(objBusD.PeId)" icon="fa-trash">  </button>
@@ -102,143 +97,193 @@
             </div>
 </div>
     
-     <!--MODAL NUEVO BUS-->
+    <!--MODAL NUEVO BUS-->
         <p-dialog [(visible)]="displayNuevoBus" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
             <!--TITULO-->
-            <p-header> {{titulo}} </p-header>
+            <p-header> {{titulo}} : {{SuEmRSocial}} </p-header>
             
             <!--CUERPO-->
-            <div class="win_modal" style="overflow-y: auto; height:380px; width: 100%;">
-                <div class="form-group row">
-                    <div class="col-xl-4 col-md-6 col-sm-12 col-xs-12">
-                        <!--PLACA   **-->
-                        <div class="form-group">
-                            <label class="control-label" for="placa">Placa:</label>
-                            <input class="form-control" id="placa" name="placa"  type="text" [(ngModel)]="bus.BuPlaca" #placa="ngModel" required minlength="6" maxlength="10"/>
-                            <span *ngIf="!placa.valid && placa.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;" >
-                                <div [hidden]="!placa.errors.required"> Obligatorio </div>
-                                <div [hidden]="!placa.errors.minlength"> Minimo 6 Caracteres </div>
-                                <div [hidden]="!placa.errors.maxlength"> Maximo 15 Caracteres </div>
-                            </span>
-                        </div>
+            
+            <div class="row">
+                <div class="cont_modal">
+                    <div class="container">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="row">
 
-                        <!--AÑO  **-->
-                        <div class="form-group">
-                            <label class="control-label" for="anio">Año:</label>
-                            <input class="form-control" id="anio" name="anio"  type="text" [(ngModel)]="bus.BuAnio" #anio="ngModel" length="4" pattern="([1-2]{1}[0-9]{1}[0-9]{1}[0-9]{1})" minlength="4" maxlength="4" required/>
+                                
+                                    <!--PLACA   **-->
+                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label">Placa:</label>
+                                            <input class="form-control" type="text" [(ngModel)]="bus.BuPlaca" #placa="ngModel" required minlength="6" maxlength="10"/>
+                                        
+                                            <span *ngIf="!placa.valid && placa.touched" id="validation" style="display: inline-block; font-size: 80%;" >
+                                                <div [hidden]="!placa.errors.required"> Obligatorio </div>
+                                                <div [hidden]="!placa.errors.minlength"> Minimo 6 Caracteres </div>
+                                                <div [hidden]="!placa.errors.maxlength"> Maximo 15 Caracteres </div>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!--AÑO  **-->
+                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label">Año:</label>
+                                            <input class="form-control" type="text" [(ngModel)]="bus.BuAnio" #anio="ngModel" length="4" pattern="([1-2]{1}[0-9]{1}[0-9]{1}[0-9]{1})" minlength="4" maxlength="4" required/>
+                                            
+                                            <div [hidden]="anio.valid || !anio.touched" id="validation" style="display: inline-block; font-size: 80%;" >
+                                                Error en el dato ingresado
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--MOTOR  **-->
+                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label">Motor:</label>
+                                            <input class="form-control" type="text" [(ngModel)]="bus.BuMotor" required #motor="ngModel" />
+                                            <div [hidden]="motor.valid || !motor.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
+                                                Error en el dato ingresado
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--DESCRIPCION-->
+                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label" >Descripcion:</label>
+                                            
+                                            <input class="form-control" type="text" [(ngModel)]="bus.BuDescripcion" />
+                                        </div>
+                                    </div>
+
+                                    <!--TIPO COMBUSTIBLE  COMBOBOX-->
+                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label">Combustible:</label>
+                                            <!--
+                                                <input class="form-control" type="text" [(ngModel)]="bus.BuTipoCombustible" required #tipoCos="ngModel" />
+                                            -->
+                                            <select class="form-control" [(ngModel)]="BuTipoCombustible" (change)="FunComb_Combustibles($event)" required #tipoCos="ngModel">
+                                                <option *ngFor="let comb of combustibles" [ngValue]="comb.id">{{comb.nomb}}</option>
+                                            </select>
+
+                                            <span *ngIf="!tipoCos.valid && tipoCos.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
+                                                <div [hidden]="!tipoCos.errors.required"> Obligatorio </div>
+                                            </span>
+                                        </div>
+                                    </div>
+                                                               
+                                    <!--COLOR-->
+                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label">Color.:</label>
+                                            <input class="form-control" type="text" [(ngModel)]="bus.BuColor" />
+                                        </div>
+                                    </div>
+
+                                    <!--CAPACIDAD-->
+                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label">Capacidad:</label>
+                                            <input class="form-control" type="number" [(ngModel)]="bus.BuCapacidad" />
+                                        </div>
+                                    </div>
+
+                                    <!--MARCA-->
+                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label">Marca:</label>
+                                            <!--DROPDOWN-->
+                                            <input class="form-control" type="text" [(ngModel)]="bus.BuMarca" />
+                                        </div>
+                                    </div>
+
+                                    <!--TIPO-->
+                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label">Tipo:</label>
+                                            <input class="form-control" type="text" [(ngModel)]="bus.BuTipo" />
+                                        </div>
+                                    </div>
+
+                                    <!--SOAT  **-->
+                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label" >SOAT:</label>
+                                            <input class="form-control" type="text" [(ngModel)]="bus.BuSOAT" required #soat="ngModel" />
+
+                                            <span *ngIf="!soat.valid && soat.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
+                                                <div [hidden]="!soat.errors.required"> Obligatorio </div>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!--MODELO  **-->
+                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label">Modelo:</label>
+                                            <input class="form-control" type="text" [(ngModel)]="bus.BuModelo" required #mod="ngModel" />
+                                            
+                                            <span *ngIf="!mod.valid && mod.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
+                                                <div [hidden]="!mod.errors.required"> Obligatorio </div>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!--OPERATIVIDAD COMBOBOX (SI ESTA APTO EL BUS PARA CIRCULAR O SE ENCUENTRA EN EL TALLER POR REPARACION) -->
+                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label">En Funcionamiento:</label>
+                                            <!--
+                                            <input class="form-control" type="text" [(ngModel)]="bus.BuOperatividad" required #oper="ngModel" />
+                                            -->
+                                            <select class="form-control" [(ngModel)]="BuOperatividad" required #oper="ngModel">
+                                                <option *ngFor="let ope of operativo" [ngValue]="ope.id">{{ope.nomb}}</option>
+                                            </select>
+                                            <span *ngIf="!oper.valid && oper.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
+                                                <div [hidden]="!oper.errors.required"> Obligatorio </div>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!--ACTIVO COMBOBOX (SI ESTA O NO CIRCULANDO EN LA EMPRESA)-->
+                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label"> Registro Activo:</label>
+                                            <!--
+                                            <input class="form-control" type="text" [(ngModel)]="bus.BuActivo" required #act="ngModel" />
+                                            -->
+                                            <select class="form-control" [(ngModel)]="BuActivo" required #act="ngModel">
+                                                <option *ngFor="let act of activo" [ngValue]="act.id">{{act.nomb}}</option>
+                                            </select>
+                                            <span *ngIf="!act.valid && act.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
+                                                <div [hidden]="!act.errors.required"> Obligatorio </div>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!--FECHA INGRESO-->
+                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label" >Ingreso:</label>
+                                            <input class="form-control" type="date" [(ngModel)]="bus.BuFechaIngreso"  required #fingreso="ngModel" />
+                                            
+                                            <span *ngIf="!fingreso.valid && fingreso.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
+                                                <div [hidden]="!fingreso.errors.required"> Obligatorio </div>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!--FECHA SALIDA-->
+                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label" for="fsal">Salida:</label>
+                                            <input class="form-control" id="fsal" name="fsal"  type="date" [(ngModel)]="bus.BuFechaSalida"  />
+                                        </div>
+                                    </div>
                             
-                            <div [hidden]="anio.valid || !anio.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;" >
-                                Error en el dato ingresado
                             </div>
-                        </div>
-
-                        <!--MOTOR  **-->
-                        <div class="form-group">
-                            <label class="control-label" for="motor">Motor:</label>
-                            <input class="form-control" id="motor" name="motor"  type="text" [(ngModel)]="bus.BuMotor" required #motor="ngModel" />
-                            <div [hidden]="motor.valid || !motor.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                                Error en el dato ingresado
-                            </div>
-                        </div>
-
-                        <!--DESCRIPCION-->
-                        <div class="form-group">
-                            <label class="control-label" for="descr">Descripcion:</label>
-                            <!--DROPDOWN-->
-                            <input class="form-control" id="descr" name="descr"  type="text" [(ngModel)]="bus.BuDescripcion" />
-                        </div>
-
-                        <!--TIPO COMBUSTIBLE  **-->
-                        <div class="form-group">
-                            <label class="control-label" for="comb">Combustible:</label>
-                            <!--DROPDOWN-->
-                            <input class="form-control" id="comb" name="comb"  type="text" [(ngModel)]="bus.BuTipoCombustible" required #tipoCos="ngModel" />
-                            <span *ngIf="!tipoCos.valid && tipoCos.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                                <div [hidden]="!tipoCos.errors.required"> Obligatorio </div>
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-xl-4 col-md-6 col-sm-12 col-xs-12">
-                        <!--COLOR-->
-                        <div class="form-group">
-                            <label class="control-label" for="color">Color.:</label>
-                            <input class="form-control" id="color" name="color"  type="text" [(ngModel)]="bus.BuColor" />
-                        </div>
-
-                        <!--CAPACIDAD-->
-                        <div class="form-group">
-                            <label class="control-label" for="cap">Capacidad:</label>
-                            <input class="form-control" id="cap" name="cap"  type="number" [(ngModel)]="bus.BuCapacidad" />
-                        </div>
-
-                        <!--MARCA-->
-                        <div class="form-group">
-                            <label class="control-label" for="marca">Marca:</label>
-                            <!--DROPDOWN-->
-                            <input class="form-control" id="marca" name="marca"  type="text" [(ngModel)]="bus.BuMarca" />
-                        </div>
-
-                        <!--TIPO-->
-                        <div class="form-group">
-                            <label class="control-label" for="tipo">Tipo:</label>
-                            <input class="form-control" id="tipo" name="tipo"  type="text" [(ngModel)]="bus.BuTipo" />
-                        </div>
-
-                        <!--SOAT  **-->
-                        <div class="form-group">
-                            <label class="control-label" for="soat">SOAT:</label>
-                            <input class="form-control" id="soat" name="soat"  type="text" [(ngModel)]="bus.BuSOAT" required #soat="ngModel" />
-                            <span *ngIf="!soat.valid && soat.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                                <div [hidden]="!soat.errors.required"> Obligatorio </div>
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-xl-4 col-md-12 col-sm-12 col-xs-12">
-                        <!--MODELO  **-->
-                        <div class="form-group">
-                            <label class="control-label" for="mod">Modelo:</label>
-                            <input class="form-control" id="mod" name="mod"  type="text" [(ngModel)]="bus.BuModelo" required #mod="ngModel" />
-                            
-                            <span *ngIf="!mod.valid && mod.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                                <div [hidden]="!mod.errors.required"> Obligatorio </div>
-                            </span>
-                        </div>
-
-                        <!--OPERATIVIDAD (SI ESTA APTO EL BUS PARA CIRCULAR O SE ENCUENTRA EN EL TALLER POR REPARACION) -->
-                        <div class="form-group">
-                            <label class="control-label" for="oper">En Funcionamiento:</label>
-                            <input class="form-control" id="oper" name="oper"  type="text" [(ngModel)]="bus.BuOperatividad" required #oper="ngModel" />
-                            
-                            <span *ngIf="!oper.valid && oper.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                                <div [hidden]="!oper.errors.required"> Obligatorio </div>
-                            </span>
-                        </div>
-
-                        <!--ACTIVO (SI ESTA O NO CIRCULANDO EN LA EMPRESA)-->
-                        <div class="form-group">
-                            <label class="control-label" for="act"> Registro Activo:</label>
-                            <input class="form-control" id="act" name="act"  type="text" [(ngModel)]="bus.BuActivo" required #act="ngModel" />
-                            
-                            <span *ngIf="!act.valid && act.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                                <div [hidden]="!act.errors.required"> Obligatorio </div>
-                            </span>
-                        </div>
-
-                        <!--FECHA INGRESO-->
-                        <div class="form-group">
-                            <label class="control-label" for="fingr">Ingreso:</label>
-                            <input class="form-control" id="fingr" name="fingr"  type="date" [(ngModel)]="bus.BuFechaIngreso"  required #fingreso="ngModel" />
-                            <span *ngIf="!fingreso.valid && fingreso.touched" class="alert alert-danger" style="display: inline-block; font-size: 80%;"  >  
-                                <div [hidden]="!fingreso.errors.required"> Obligatorio </div>
-                            </span>
-                        </div>
-
-                        <!--FECHA SALIDA-->
-                        <div class="form-group">
-                            <label class="control-label" for="fsal">Salida:</label>
-                            <input class="form-control" id="fsal" name="fsal"  type="date" [(ngModel)]="bus.BuFechaSalida"  />
                         </div>
                     </div>
                 </div>
@@ -258,92 +303,144 @@
     <!--MODAL NUEVO ASIGNAR BUS A PERSONA -->
         <p-dialog [(visible)]="displayNuevoBusPersona" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
             <p-header>{{titulo}}</p-header>
-            <!--
-                <div>
-                    <div class="form-group">
-                        <label class="control-label" for="placa">Placa:</label>
-                        <input class="form-control" id="placa" name="placa"  type="text" [(ngModel)]="busPer.BuId"/>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label" for="ident">DNI:</label>
-                        <input class="form-control" id="ident" name="ident"  type="text" [(ngModel)]="busPer.PeId" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="motor">Tipo:</label>
-                        <input class="form-control" id="motor" name="motor"  type="text" [(ngModel)]="busPer.BuPeTipo" />
-                    </div>
-                </div>
-            -->
             <div class="row">
                 <div class="container">
-                    <div class="table table-responsive">                               
-                        <p-dataTable [value]="" [pageLinks]="4" emptyMessage="Lista vacia"
-                                scrollable="true" scrollWidth="auto" selectionMode="single" >        
-                            <p-column styleClass="col-button" [style]="{'width':'6em'}">
-                                <template let-col let-persubemp="rowData" pTemplate="body">                                        
-                                    <button id="btnTable"  type="button" pButton class="btn" (click)="editPerSubEmp(persubemp.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
-                                    <button id="btnTable"  type="button" pButton class="btn" (click)="elimPerSubEmp(persubemp.PuCoDeId)" icon="fa-trash"> </button>
-                                </template>
-                            </p-column>
-                            <p-column field=""      header=""   [style]="{'width':'4em','text-align':'center'}"  ></p-column>
-                            <p-column field="" header=""  [style]="{'width':'12em'}"></p-column>
-                            <p-column field=""        header=""      [style]="{'width':'6em'}"></p-column>
-                        </p-dataTable>                  
-                    </div>        
+                    <div class="row">
+                        <!--PLACA SELECCIONADA-->
+                            <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
+                                {{BuPlaca}}
+                            </div>
+                        <!--COMBO SUBEMPRESAS-->
+                            <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
+                                <select class="form-control" required [(ngModel)]="suemid" (change)="_SuEmId($event)">
+                                    <option *ngFor="let suem of _arrsuEmp" [value]="suem.SuEmId">
+                                        {{suem.SuEmRSocial}}
+                                    </option>
+                                </select> 
+                            </div>
+
+                        <!--COMBO BUSPERSONA TIPO-->
+                            <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
+                                <select class="form-control" required [(ngModel)]="BuPeTipo">
+                                    <option *ngFor="let bupeti of arrBuPeTipo" [value]="bupeti.id">
+                                        {{bupeti.cargo}}
+                                    </option>
+                                </select> 
+                            </div>
+                    </div>
+
+                    <div class="row">
+                        <!--TABLA PERSONAS DENTRO DE LAS DIFERENTES SUBEMPRESAS-->
+                            <div class="table table-responsive">                               
+                                <p-dataTable [value]="arrEmpPer" emptyMessage="Lista vacia" scrollable="true" scrollWidth="auto" selectionMode="single" (onRowSelect)="onRowSelectEmpPer($event)" >        
+                                    <!--
+                                        <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                                            <template let-col let-persubemp="rowData" pTemplate="body">                                        
+                                                <button id="btnTable"  type="button" pButton class="btn" (click)="editPerSubEmp(persubemp.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
+                                                <button id="btnTable"  type="button" pButton class="btn" (click)="elimPerSubEmp(persubemp.PuCoDeId)" icon="fa-trash"> </button>
+                                            </template>
+                                        </p-column>
+                                    -->
+                                    <p-column field="nro" header="N°" [style]="{'width':'3em'}"  ></p-column>
+                                    <p-column field="PeNombres" header="Nombres" [style]="{'width':'8em'}"  ></p-column>
+                                    <p-column field="PeApellidos" header="Apellidos"  [style]="{'width':'8em'}"></p-column>
+                                    <p-column field="EmPeTipo" header="Cargo" [style]="{'width':'6em','text-align':'center'}"></p-column>
+                                </p-dataTable>                  
+                            </div>       
+                    </div> 
                 </div>
             </div>
             
             <div class="row">
-                <button type="button" pButton label="Guardar" (click)="guardarbusPer()"></button>
-                <button type="button" pButton label="Cancelar" (click)="cancelarbusPer()"></button>
+                <button type="button" pButton label="Guardar" (click)="guardarBusPer()"></button>
+                <button type="button" pButton label="Cancelar" (click)="cancelarBusPer()"></button>
             </div>
             
+        </p-dialog>
+    
+    <!--MODAL NUEVO TELEFONO-->
+        <p-dialog  [(visible)]="displayNuevoTelMovil" modal="modal" [resizable]="false" width="400" height="100%" responsive="true" [closable]="false">
+            <!--TITULO-->
+            <p-header> {{titulo}} </p-header>
+            <!--CUERPO-->
+            <div class="cont_modal">
+                <div class="row">
+                    <!--MARCA-->
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label">Marca:</label>
+                            <input class="form-control" type="text" [(ngModel)]="telefono.TeMarca" #marca="ngModel"/>
+                        </div>
+                    </div>
+
+                    <!--IMEI-->
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label" >Imei:</label>
+                            <input class="form-control" type="text" [(ngModel)]="telefono.TeImei" #imei="ngModel" />
+                        </div>
+                    </div>
+        
+                    <!--MODELO-->
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label" >Modelo:</label>
+                            <input class="form-control" type="text" [(ngModel)]="telefono.TeModelo" #modelo="ngModel" />
+                        </div>
+                    </div>
+
+                    <!--VERSION ANDROID-->
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label">Ver. Android:</label>
+                            <input class="form-control" type="text" [(ngModel)]="telefono.TeVersionAndroid"  #verAndro="ngModel" />   
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <!--PIE-->
+            <div class="row">
+                <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
+                    <button id="btn" type="button" pButton label="Guardar"  (click)= "guardarTelMovil();"></button>
+                </div>
+                <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
+                    <button id="btn" type="button" pButton label="Cancelar" (click)="cancelarTelMovil();"></button>
+                </div>
+            </div>
         </p-dialog>
 
     <!--VENTANAS MODAL CONFIRMACION-->
         <!--MODAL ACEPTAR NUEVO BUS-->
         <p-dialog [(visible)]="displayAceptarNuevoBus" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
-                {{mensaje}}
-            
-                <div class="row">
-                    <button type="button" pButton label="Aceptar" (click)="aceptarNuevoBus()"></button>
-                </div>
-            
+            {{mensaje}}
+            <div class="row">
+                <button type="button" pButton label="Aceptar" (click)="aceptarNuevoBus()"></button>
+            </div>
         </p-dialog>
 
         <!--MODAL ELIMINAR BUS-->
         <p-dialog [(visible)]="displayEliminarBus" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
-                {{mensaje}}
-            
-                <div class="row">
-                    <button type="button" pButton label="Aceptar" (click)="_eliminarBus()"></button>
-                    <button type="button" pButton label="Cancelar" (click)="cancelEliminar()"></button>
-                </div>
-            
+            {{mensaje}}
+            <div class="row">
+                <button type="button" pButton label="Aceptar" (click)="_eliminarBus()"></button>
+                <button type="button" pButton label="Cancelar" (click)="cancelEliminar()"></button>
+            </div>
         </p-dialog>
 
          <!--MODAL ACEPTAR NUEVO BUS DETALLE-->
         <p-dialog [(visible)]="displayAceptarNuevoBusD" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
-                {{mensaje}}
-            
-                <div class="row">
-                    <button type="button" pButton label="Aceptar" (click)="aceptarNuevoBusD()"></button>
-                </div>
-            
+            {{mensaje}}
+            <div class="row">
+                <button type="button" pButton label="Aceptar" (click)="aceptarNuevoBusD()"></button>
+            </div>
         </p-dialog>
 
         <!--MODAL ELIMINAR BUS DETALLE-->
         <p-dialog [(visible)]="displayEliminarBusPers" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
-                {{mensaje}}
-            
-                <div class="row">
-                    <button type="button" pButton label="Aceptar" (click)="_eliminarBusPers()"></button>
-                    <button type="button" pButton label="Cancelar" (click)="cancEliBusPers()"></button>
-                </div>
-            
+            {{mensaje}}
+            <div class="row">
+                <button type="button" pButton label="Aceptar" (click)="_eliminarBusPers()"></button>
+                <button type="button" pButton label="Cancelar" (click)="cancEliBusPers()"></button>
+            </div>
         </p-dialog>
-
-
-
-<!--<div class="row" style="overflow-y: auto; height:300px; ">-->

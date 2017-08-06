@@ -11,6 +11,7 @@
             return otra; 
     
     }
+
     //CONVERTIR DATE A STRING DE BD A FORMULARIO HORAS
     export function _hora(fecha : Date) :string{
         let hora : string; let _hora : string; let _fecha = new Date(fecha);
@@ -19,6 +20,7 @@
             hora = cCeroHora(hora);
         return hora;
     }
+    
     //COMPLETANDO CEROS EN CASO DE NECESITAR PARA HORAS Y FECHAS   2017/
     export function cCeroHora(h:string) :string{
             //DIVIDIRLO EN PARTES Y COMPLETAR LOS CEROS PARA QUE LOS ELEMENTOS SEAN TODOS PARES
@@ -48,6 +50,23 @@
             }
             //CONCATENANDO
             _fecha=resultado[0]+"/"+resultado[1]+"/"+resultado[2];
+        
+        return _fecha
+    }
+
+    /* COMPLETANDO CEROS A FORMATO YYYY-MM-DD */
+    export function _cCeroFecha(f : string) :string{
+        let fecha:string, _fecha:string, resultado, i=0;
+        resultado = f.split('-');
+            while(i<resultado.length){
+                resultado[i]=resultado[i].trim(); //BORRANDO ESPACIOS EN BLANCO
+                if(resultado[i].length%2!=0){
+                    resultado[i]="0"+resultado[i];
+                }
+                i++;
+            }
+            //CONCATENANDO
+            _fecha=resultado[0]+"-"+resultado[1]+"-"+resultado[2];
         
         return _fecha
     }
@@ -96,4 +115,11 @@
         _fechaProg=(_fecha.getDate()).toString() +" / "+ (_fecha.getMonth() +1 ).toString() +" / "+(_fecha.getFullYear()).toString() ;
         _fechaProg=cCeroFecha(_fechaProg);
         return  _fechaProg;
+    }
+
+
+    export function fechaActual():string{
+        let fecha;
+        
+        return fecha;
     }

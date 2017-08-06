@@ -27,9 +27,7 @@ col{
     margin:0;
 }
 
-.win_modal{
-    padding: 10px 20px;
-}
+/*.win_modal{}*/
 
 .form-control{
     width: 100%;
@@ -38,8 +36,10 @@ col{
 .cont_modal{
     overflow-y: auto; 
     overflow-x: auto;
-    height:320px;
+    height:440px;
+    /*height:100%;*/
     width: 100%;
+    padding: 10px 20px;
 }
 
 .form-group{

@@ -41,7 +41,8 @@ import {BusService} from './service/bus.service';
 import {EmpPerService} from './service/empresapersonal.service';
 import {PersService}  from './service/personal.service';
 import {EmpSubEmpService} from './service/empSubemp.service';
-
+import {TeleMovilService} from './service/telefono.service';
+import {UserSystemService} from './service/usuarioSistema.service';
 
 
 
@@ -128,7 +129,9 @@ import { BaseRequestOptions } from '@angular/http';*/
       BusService,
       EmpPerService,
       EmpSubEmpService,
-      PersService
+      PersService,
+      TeleMovilService,
+      UserSystemService
       /* fake backend
       fakeBackendProvider,
       MockBackend,

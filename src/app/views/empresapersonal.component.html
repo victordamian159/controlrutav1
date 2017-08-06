@@ -1,50 +1,91 @@
 <div class="contenedor">
-    <div id="titulo">Persona por Empresa</div>
-    
-    <!--FILTRO BUSQUEDA(NUEVO-REG) -->
-    <div class="row">
-        <!--COMBO SUBEMPRESAS-->
-            <div class="col-xl-4 col-md-4 col-sm-4 col-sx-12">                 
-                <select class="form-control" required [(ngModel)]="suemid" (change)="_SuEmId($event)">
-                    <option *ngFor="let suem of _arrsuEmp" [value]="suem.SuEmId">
-                        {{suem.SuEmRSocial}}
-                    </option>
-                </select> 
-            </div>
+    <!--EMPRESAPERSONA-->
+        <div class="row">
+            <div id="titulo">Persona por Empresa</div>
+        </div>
+        <!--FILTRO BUSQUEDA(NUEVO-REG) -->
+        <div class="row">
+            <!--COMBO SUBEMPRESAS-->
+                <div class="col-xl-4 col-md-4 col-sm-4 col-sx-12">                 
+                    <select class="form-control" required [(ngModel)]="suemid" (change)="_SuEmId($event)">
+                        <option *ngFor="let suem of _arrsuEmp" [value]="suem.SuEmId">
+                            {{suem.SuEmRSocial}}
+                        </option>
+                    </select> 
+                </div>
 
-        <!--BUSQUEDA-->
-            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
-                <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
-            </div>
-        <!--NUEVO REGISTRO-->
-            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
-                <button id="btnNuevo" type="button"  pButton icon="fa-user-plus" (click)="nuevoEmpPer(); vincularPersona();" label="Integrar Persona" ></button>
-            </div>
-    </div>
-    
-     <!--TABLA EMPRESAPERSONA-->
-    <div class="row">
-        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="row">
-                <div class="table table-responsive">
-                    <p-dataTable [value]="arrEmpPer" [globalFilter]="filtroGlobal" scrollable="true" emptyMessage="No Hay Registros" scrollWidth="100%" (onRowSelect)="onRowSelectPerEmp($event)">
-                        <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                            <template let-col  let-emp="rowData"  pTemplate="body">
-                                    <button type="button" pButton class="btn" (click)=  "editarEmpPer(emp.Id)" icon="fa-pencil-square-o" > </button>
-                                    <button type="button" pButton class="btn" (click)=  "eliminarEmpPer(emp.Id)" icon="fa-trash" > </button>                  
-                            </template>
-                        </p-column>
-                        <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
-                        <p-column field="PeNombres" header="Nombres" [style]="{'width':'10em'}"></p-column>
-                        <p-column field="PeApellidos" header="Apellidos" [style]="{'width':'10em'}" ></p-column>
-                        <p-column field="EmPeTipo" header="Cargo" [style]="{'width':'9em','text-align':'center'}"></p-column>
-                        <p-column field="PeDNI" header="Dni" [style]="{'width':'7em','text-align':'center'}" ></p-column>
-                    </p-dataTable>
+            <!--BUSQUEDA-->
+                <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                    <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+                </div>
+            <!--NUEVO REGISTRO-->
+                <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                    <button id="btnNuevo" pButton icon="fa-user-plus" (click)="nuevoEmpPer(); vincularPersona();" label="Integrar Persona" ></button>
+                </div>
+        </div>
+        
+        <!--TABLA EMPRESAPERSONA-->
+        <div class="row">
+            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="row">
+                    <div class="table table-responsive">
+                        <p-dataTable [value]="arrEmpPer" [globalFilter]="filtroGlobal" scrollable="true" emptyMessage="No Hay Registros" scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectPerEmp($event)">
+                            <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                                <template let-col  let-emp="rowData"  pTemplate="body">
+                                        <button type="button" pButton class="btn" (click)=  "editarEmpPer(emp.Id)" icon="fa-pencil-square-o" > </button>
+                                        <button type="button" pButton class="btn" (click)=  "eliminarEmpPer(emp.Id)" icon="fa-trash" > </button>                  
+                                </template>
+                            </p-column>
+                            <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
+                            <p-column field="PeNombres" header="Nombres" [style]="{'width':'10em'}"></p-column>
+                            <p-column field="PeApellidos" header="Apellidos" [style]="{'width':'10em'}" ></p-column>
+                            <p-column field="EmPeTipo" header="Cargo" [style]="{'width':'9em','text-align':'center'}"></p-column>
+                            <p-column field="PeDNI" header="Dni" [style]="{'width':'7em','text-align':'center'}" ></p-column>
+                        </p-dataTable>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
+
+    <!--TABLA USUARIO DEL SISTEMA-->
+        <!--TITULO-->
+        <div class="row">
+            <div id="titulo">Usuario de la Aplicacion</div>
+        </div>
+
+        <div class="row">
+            <!--BUSQUEDA-->
+            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                <input class="form-control" placeholder="Buscar..." type="text" #filtroGlobal3/>
+            </div>
+
+            <!--BOTON NUEVO-->
+            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                <button id="btnNuevo" pButton icon="fa-user-plus" [disabled]="nombre=='x'" (click)="nuevoUserSystem();" label="Nuevo Usuario"></button>
+            </div>
+        </div>
+        <!--TABLA USUARIO DEL SISTEMA-->
+        <div class="row">
+            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="row">
+                    <div class="table table-responsive">
+                        <p-dataTable [value]="arrAllUser" [globalFilter]="filtroGlobal3" scrollable="true" emptyMessage="No Hay Registros" scrollWidth="100%" >
+                            <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                                <template let-col  let-usersystem="rowData"  pTemplate="body">
+                                        <button pButton class="btn" (click)="editarUserSystem(usersystem.Id)" icon="fa-pencil-square-o" > </button>
+                                        <button pButton class="btn" (click)="eliminarUserSystem(usersystem.Id)" icon="fa-trash" > </button>                  
+                                </template>
+                            </p-column>
+                            <p-column field="Nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
+                            <p-column field="PeNombres" header="Nombres" [style]="{'width':'8em'}"></p-column>
+                            <p-column field="PeApellidos" header="Apellidos" [style]="{'width':'8em'}" ></p-column>
+                            <p-column field="UsUserName" header="Usuario" [style]="{'width':'8em'}" ></p-column>
+                        </p-dataTable>
+                    </div>
+                </div>
+            </div>
+        </div>
 </div>
 
 
@@ -132,18 +173,20 @@
     <p-dialog header="Añadiendo Persona" [(visible)]="displayAgregaPersona" [resizable]="false" modal="modal" width="350" responsive="true" [closable]="false">
         
         <div class="row">
-            <div class="container">
-                <div class="form-group">
-                    <input type="text" class="form-control" maxlength="40" placeholder="Nombres"/>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" maxlength="60" placeholder="Apellidos"/>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" maxlength="8" placeholder="DNI"/>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" maxlength="10" placeholder="Nro. Tel. Celular"/>
+            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="container">
+                    <div class="form-group">
+                        <input type="text" class="form-control" maxlength="40" placeholder="Nombres" [(ngModel)]="persona.nombres"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" maxlength="60" placeholder="Apellidos" [(ngModel)]="persona.apellidos"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" maxlength="8" placeholder="DNI" [(ngModel)]="persona.dni"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" maxlength="10" placeholder="Nro. Tel. Celular" [(ngModel)]="persona.nrocel"/>
+                    </div>
                 </div>
             </div>
         </div>
@@ -154,6 +197,34 @@
             </div>
             <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
                 <button id="btn" type="button" (click)="cancelarNuevaPersona()" pButton icon="fa-close" label="Cancelar"></button>
+            </div>
+        </div>
+    </p-dialog>
+
+    <!--CREANDO UN USUARIO PARA INGRESAR AL SISTEMA-->
+    <p-dialog header="Nuevo Usuario del Sistema" [(visible)]="displayUserSystem" [resizable]="false" modal="modal" width="350" responsive="true" [closable]="false">
+        <h3>{{nombre}}</h3>
+        <div class="row">
+            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="container">
+                    <div class="form-group">
+                        <label>Usuario:</label>
+                        <input type="text" class="form-control" maxlength="20" [(ngModel)]="userSystem.nomUser"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Contraseña:</label>
+                        <input type="text" class="form-control" maxlength="20" [(ngModel)]="userSystem.password"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
+                <button id="btn" type="button" (click)="guardarNewUserSystem();" pButton icon="fa-save" label="Guardar"></button>
+            </div>
+            <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
+                <button id="btn" type="button" (click)="cancelarNewUserSystem();" pButton icon="fa-close" label="Cancelar"></button>
             </div>
         </div>
     </p-dialog>

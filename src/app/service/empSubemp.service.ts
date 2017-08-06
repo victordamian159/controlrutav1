@@ -25,11 +25,27 @@ export class EmpSubEmpService{
                     .map((r: Response) => r.json())
                     .catch(this.handleError);
             }
+        
+        /* NUEVO */
+            newEmpresa(){
+                return this.http
+                .get(this.baseUrl1+'new')
+                .map((r: Response) => r.json() )
+                .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+            }
+
         /* GUARDAR EDITA - EMPRESA */
             saveEmpresa(emp:Object){
                 return this.http.post(this.baseUrl1+ "save/", emp) // ...using post request
                          .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
                          .catch((error:any) => Observable.throw(error.json().error || 'Server error')); 
+            }
+
+        /* ELIMINAR REG EMPRESA*/
+            deleteEmpresa(emid:number){
+                return this.http.delete(this.baseUrl1+emid) // ...using post request
+                                .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
+                                .catch((error:any) => Observable.throw(error.json().error || 'Server error')); //...errors if any
             }
 
     /* SUBEMPRESA */    

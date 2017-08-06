@@ -4,6 +4,11 @@
     
     <!--CUERPO-->
     <div class="row">
+        <!--BTN NUEVA EMPRESA-->
+        <div class="col-xl-4 col-md-3 col-sm-4 col-xs-12">
+            <button type="button" pButton id="btnNuevo" icon="fa-file-text-o" (click)="nuevaEmpresa();" label="Nuevo Registro"></button>
+        </div>
+          
         <!--EMPRESA-->
         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
             <div class="row">
@@ -12,13 +17,13 @@
                             <!--COLUMNAS-->
                             <p-column styleClass="col-button" [style]="{'width':'3em'}">
                                 <template let-col let-Emp="rowData" pTemplate="body" >
-                                    <button id="btnTable" type="button" pButton (click)="editarEmpresa(Emp.EmId)" icon="fa-pencil-square-o" class="btn"></button>			
+                                    <button id="btnTable" type="button" pButton (click)="editarEmpresa(Emp.EmId, Emp.EmTipo)" icon="fa-pencil-square-o"></button>	
+                                    <button id="btnTable" type="button" pButton (click)="eliminarEmpresa(Emp.EmId)" icon="fa-trash" ></button>
                                 </template>          
                             </p-column>
-                            <p-column field="Nro" header="N°" [style]="{'width':'4em','text-align':'center'}"></p-column>
-                            <p-column field="EmConsorcio" header="Consorcio" [style]="{'width':'18em'}" ></p-column>
-                            <p-column field="EmTipo" header="Tipo" [style]="{'width':'8em','text-align':'center'}" ></p-column>
-                            <!--<div class="ui-helper-clearfix" style="width:100%"></div>-->
+                            <p-column field="Nro" header="N°" [style]="{'width':'2em','text-align':'center'}"></p-column>
+                            <p-column field="EmConsorcio" header="Consorcio" [style]="{'width':'12em'}" ></p-column>
+                            <p-column field="Tipo" header="Tipo" [style]="{'width':'6em','text-align':'center'}" ></p-column>
                     </p-dataTable>
                 </div>
             </div>
@@ -29,7 +34,7 @@
             <!--BTN NUEVA SUBEMPRESA-->
             <div class="row">
                 <div class="col-xl-4 col-md-3 col-sm-4 col-xs-12">
-                    <button type="button" pButton id="btnNuevo" icon="fa-file-text-o" (click)="nuevaSubEmpresa();" [disabled]="EmId==0" label="Nueva Empresa"></button>
+                    <button type="button" pButton id="btnNuevo" icon="fa-file-text-o" (click)="nuevaSubEmpresa();" [disabled]="EmId==0" label="Agregar Empresa"></button>
                 </div>
             </div>
             <!--TABLA SUBEMPRESA-->
@@ -44,13 +49,13 @@
                                         <button id="btnTable" type="button" pButton (click)="eliminarSubEmpresa(ObjSubEmp.SuEmId)" icon="fa-trash" class="btn"></button>					
                                     </template>          
                                 </p-column>
-                                <p-column field="nro" header="N°" [style]="{'width':'4em','text-align':'center'}"></p-column>
-                                <p-column field="SuEmRSocial" header="R. Social" [style]="{'width':'18em'}" ></p-column>
-                                <p-column field="SuEmRuc" header="Ruc" [style]="{'width':'10em'}" ></p-column>
-                                <p-column field="SuEmDireccion" header="Direccion" [style]="{'width':'25em'}" ></p-column>
-                                <p-column field="SuEmUbigeo" header="Ubigeo" [style]="{'width':'8em'}" ></p-column>
-                                <p-column field="SuEmTelefono" header="Telefono" [style]="{'width':'8em'}" ></p-column>
-                                <p-column field="SuEmTiempoVuelta" header="T. Vuelta" [style]="{'width':'8em'}" ></p-column>
+                                <p-column field="nro" header="N°" [style]="{'width':'2em','text-align':'center'}"></p-column>
+                                <p-column field="SuEmRSocial" header="R. Social" [style]="{'width':'13em'}" ></p-column>
+                                <p-column field="SuEmRuc" header="Ruc" [style]="{'width':'8em','text-align':'center'}" ></p-column>
+                                <p-column field="SuEmDireccion" header="Direccion" [style]="{'width':'13em'}" ></p-column>
+                                <p-column field="SuEmUbigeo" header="Ubigeo" [style]="{'width':'6em','text-align':'center'}" ></p-column>
+                                <p-column field="SuEmTelefono" header="Telefono" [style]="{'width':'6em','text-align':'center'}" ></p-column>
+                                <p-column field="SuEmTiempoVuelta" header="T. Vuelta" [style]="{'width':'6em','text-align':'center'}" ></p-column>
                                 <!--<div class="ui-helper-clearfix" style="width:100%"></div>-->
                         </p-dataTable>
                     </div>
@@ -140,7 +145,7 @@
                                     <div class="col-xl-4 col-md-6 col-sm-12 col-xs-12">
                                         <div class="form-group">
                                             <label>Ubigeo:</label>
-                                            <input type="text" class="form-control" pattern="[0-9][0-9][0-9][0-9][0-9][0-9]" [(ngModel)]="subempresa.SuEmUbigeo"  #UBIGEO="ngModel" required/>
+                                            <input type="text" class="form-control" pattern="[0-9][0-9][0-9][0-9][0-9][0-9]" maxlength=6 [(ngModel)]="subempresa.SuEmUbigeo"  #UBIGEO="ngModel" required/>
                                             <div id="validation" [hidden]="!UBIGEO.touched || UBIGEO.valid">Error en los datos</div>
                                         </div>
                                     </div>
@@ -160,22 +165,24 @@
                 </div>
             </p-dialog>
 
-            <!-- EDITAR EMPRESA-->
-            <p-dialog header="Editar Registro" [(visible)]="displayEditEmpresa" [resizable]="false" modal="modal" width="300" responsive="true" [closable]=false>
+            <!-- REGISTRO EMPRESA-->
+            <p-dialog header="Editar Registro" [(visible)]="displayRegEmpresa" [resizable]="false" modal="modal" width="300" responsive="true" [closable]=false>
                 <!--CONTENIDO-->
                 <div class="row">
                     <div class="container">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <label>Nombre:</label>
-                                <input class="form-control" type="text" maxlength=30 [ngModel]="empresa.EmConsorcio">
+                                <input class="form-control" type="text" maxlength=30 [(ngModel)]="empresa.EmConsorcio">
                             </div>
+
                             <div class="form-group">
                                 <label>Tipo:</label>
-                                <select class="form-control">
-                                        <option>si</option>
-                                        <option>no</option>
-                                </select>
+                                <select class="form-control" required [(ngModel)]="EmTipo">
+                                    <option *ngFor="let tipo of arrTiposEmp" [value]="tipo.tipId">
+                                        {{tipo.nomTipo}}
+                                    </option>
+                                </select> 
                             </div>
                         </div>
                     </div>
@@ -184,10 +191,10 @@
                 <!--BOTONES VENTANA-->
                 <div class="btn_Modal row">
                     <div class="col-xl-6 col-md-6 col-sm-6 col-sm-6">
-                        <button class="btn_modal" type="button" pButton icon="fa-save" label="Guardar"  (click)="displayEditEmpresa=false" ></button>
+                        <button class="btn_modal" type="button" pButton icon="fa-save" label="Guardar"  (click)="guardarEmpresa();" ></button>
                     </div>
                     <div class="col-xl-6 col-md-6 col-sm-6 col-sm-6">    
-                        <button class="btn_modal" type="button" pButton icon="fa-close" label="Cancelar" (click)="displayEditEmpresa=false"></button>
+                        <button class="btn_modal" type="button" pButton icon="fa-close" label="Cancelar" (click)="cancelEmpresa();"></button>
                     </div>
                 </div>
             </p-dialog>
@@ -201,7 +208,20 @@
                         <button class="btn_modal" type="button" pButton icon="fa-check" (click)="acpEditEmpresa();" label="Aceptar"></button>
                     </div>
                     <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
-                        <button class="btn_modal" type="button" pButton icon="fa-close" (click)="cancEditSubEmp();" label="Cancelar"></button>
+                        <button class="btn_modal" type="button" pButton icon="fa-close" (click)="canEditEmpresa();" label="Cancelar"></button>
+                    </div>
+                </div>
+            </p-dialog>
+
+            <!--BTNCOLUMNA ELIMINAR EMPRESA-->
+            <p-dialog [(visible)]="displayElimEmp" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]=false>
+                <p>{{confMensaje}}</p>
+                <div class="btn_Modal row">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <button class="btn_modal" type="button" pButton icon="fa-check" (click)="aceptarEliminarEmp();" label="Aceptar"></button>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <button class="btn_modal" type="button" pButton icon="fa-close" (click)="cancelEliminarEmp();" label="Cancelar"></button>
                     </div>
                 </div>
             </p-dialog>
