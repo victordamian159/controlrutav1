@@ -46,6 +46,16 @@ export class UserSystemService{
                                 .catch((error:any) => Observable.throw(error.json().error || 'Server error')); //...errors if any
             }
 
+        /* AUTHENTICACION DE USUARIO (LOGIN) */
+            autenticacion(objLogin:Object){
+                return this.http.post(this.baseUrl1+"authenticate/",objLogin) // ...using post request
+                          /* ...and calling .json() on the response to return data*/
+                         .map((res:Response) =>    res.json()
+                                                    /*let user= res.json();
+                                                    console.log(user);*/
+                          ) 
+                         .catch((error:any) => Observable.throw(error.json().error || 'Server error')); 
+            }
 
     handleError (error: any) {
         let errorMsg = error.message;

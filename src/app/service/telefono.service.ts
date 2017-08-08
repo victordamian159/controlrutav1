@@ -10,6 +10,12 @@ export class TeleMovilService{
     constructor(private http: Http){}
 
     /* GET ALL TELEFONO POR BUID */
+        getAllTeleMovilById(buid:number){
+            return this.http
+                .get(this.baseUrl+'getalltelefonobybu?buId='+buid)
+                .map( (r:Response) => r.json() )
+                .catch( (error:any) => Observable.throw( error.json().error || 'Error en el servidor' ));
+        }
     /* GET TELEFONO POR ID */
         getTeMovById(TeId : number){
             return this.http    

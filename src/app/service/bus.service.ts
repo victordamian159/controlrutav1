@@ -48,17 +48,17 @@ export class BusService{
 
         /* ELIMINAR BUS*/
             deleteBus(id:number){
-                return this.http.delete(this.baseUrl+ "delete/"+id)
+                return this.http.delete(this.baseUrl+id)
                                     .map( (r:Response) => r.json() )
                                     .catch( (error:any) => Observable.throw(error.json().error || 'Error en el servidor' ))
             }
 
     /* TABLA BUSPERSONA */
         /* CONSULTA BUSPERSONA (TODAS LAS PERSONAS QUE ESTAN A CARGO DEL BUS) */
-            getAllBusByEmEmSubuId(emId:number, suEmId:number, buId:number){
+            getAllBusByEmEmSubuId(emId:number, buId:number){
                 return this.http
                     /* obtener consulta*/
-                        .get(this.baseUrl2 +"getallpersonabyembu?emId="+emId+"&suEmId="+suEmId+"&buId="+buId) 
+                        .get(this.baseUrl2 +"getallpersonabyembu?emId="+emId+"&buId="+buId) 
                     /* convirtiendo la respuesta a json| */
                         .map( (r:Response) => r.json() ) 
                     /* capturando error*/

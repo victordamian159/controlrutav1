@@ -161,6 +161,13 @@ export class BusComponent implements OnInit{
         
         /* TABLA TELEFONO */
             /* ALL TELEFONOS BY BUID */ 
+                procGetAllTleMovilByBuId(buid:number){
+                    let allSPhone:any;
+                    this.movilService.getAllTeleMovilById(buid).subscribe(
+                        data=> {allSPhone=data; console.log(allSPhone);}
+                    );
+                }
+
             /* NUEVO */
                 procNuevoTeleMovil(){
                     this.TeId=0;
@@ -168,6 +175,7 @@ export class BusComponent implements OnInit{
                         data => {this.objTeMovil=data; console.log(this.objTeMovil);}
                     );
                 }
+
             /* GUARDAR */
                 procSaveNuevoTeleMovil(obj : Object){
                     this.movilService.saveTeMov(obj).subscribe( 
@@ -175,6 +183,7 @@ export class BusComponent implements OnInit{
                             err => { this.errorMessage = err }
                     );
                 }
+
             /* BUSCAR POR ID */
                 getTeleMovilbyId(teid:number){
                     let objTel:any;
@@ -184,6 +193,7 @@ export class BusComponent implements OnInit{
                                 () =>this.isLoading = false
                     );
                 }
+                
             /* ELIMINAR */
                 procDeleteTeleMovil(teid:number){
                     this.movilService.deleteTeMov(teid).subscribe(
@@ -264,10 +274,12 @@ export class BusComponent implements OnInit{
     }
 
     /* CONSULTA BUSES POR PERSONA */
-    getallbusbypersona(emid:number, suemid:number, buid:number){
+    getallbusbypersona(emid:number, buid:number){
         let busPers:any[]=[];
-        this.busService.getAllBusByEmEmSubuId(emid,suemid,buid).subscribe(
-            data => {busPers=data; this._gbusPer=busPers;},
+        this.busService.getAllBusByEmEmSubuId(emid,buid).subscribe(
+            data => {busPers=data; 
+                     /*this._gbusPer=busPers;*/
+                     this.mgBusPer(busPers);},
             err => {this.errorMessage = err},
             () => this.isLoading = false
         );
@@ -400,14 +412,11 @@ export class BusComponent implements OnInit{
     /* FUNCIONES - SELECCION UNA FILA DE UN DATATABLE */
         /* TABLE BUS  - SELECCIONA REGISTRO CABECERA Y MUESTRA LOS DETALLES DEL BUS*/
             onRowSelectBus(event){
-                let emid:number, suemid:number, buid:number;
-                emid=this.emid; suemid=event.data.SuEmId; buid=event.data.BuId;
-                console.log(emid);
-                console.log(suemid);
-                console.log(buid);
-                this.getallbusbypersona(emid,suemid,buid);
-                this.mgBusPer(this._gbusPer);
-
+                let emid:number, buid:number;
+                emid=this.emid;  buid=event.data.BuId;
+                console.log(emid); console.log(buid);
+                this.getallbusbypersona(emid,buid);
+                
                 this.BuId=event.data.BuId;
                 this.BuPlaca=event.data.BuPlaca;
             }
@@ -502,14 +511,21 @@ export class BusComponent implements OnInit{
         for(let bus of arrBusPers){
             this._gbusPer.push({
                 nro: 0,
-                PeId:bus.PeId,
-                BuId:bus.BuId,
-                BuPeTipo:bus.BuPeTipo,
-                UsId:bus.UsId
+                /*PeId:bus.PeId,BuId:bus.BuId,BuPeTipo:bus.BuPeTipo,UsId:bus.UsId*/
+                EmPeTipo:bus.EmPeTipo,
+                BuPeId:bus.Id,
+                PeApellidos:bus.PeApellidos,
+                PeDNI:bus.PeDNI,
+                PeEmail:bus.PeEmail,
+                PeFecNac:bus.PeFecNac,
+                PeFechaIng:bus.PeFechaIng,
+                PeNombres:bus.PeNombres,
+                PeSexo:bus.PeSexo,
+                SuEmRSocial:bus.SuEmRSocial,
             });
         }
-        for(let i; i<arrBusPers.length; i++){
-            this._gbusPer[i]=i+1;
+        for(let i=0; i<arrBusPers.length; i++){
+            this._gbusPer[i].nro=i+1;
         }
         console.log(this._gbusPer);
     }
@@ -582,7 +598,7 @@ export class BusComponent implements OnInit{
                 TeImei:this.telefono.TeImei,
                 TeModelo:this.telefono.TeModelo,
                 TeVersionAndroid:this.telefono.TeVersionAndroid,
-                TeActivo:true,
+                TeActivo:1,
                 BuId:this.BuId,
                 UsFechaReg:new Date(),
                 UsId:this.userId
@@ -599,7 +615,7 @@ export class BusComponent implements OnInit{
         }
 
         cancelarTelMovil(){
-
+            this.displayNuevoTelMovil=false;
         }
 
 /*PASAR A LIBRERIA */ 

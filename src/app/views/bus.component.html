@@ -3,6 +3,7 @@
 <div class="contenedor">
         <!--TABLA NUEVO BUS -->
             <div id=titulo>Bus</div>
+
             <!-- FILTRO - NUEVOBUS - SUBEMPRESA -->
             <div class="row">
                 <!--FILTRO-->
@@ -28,7 +29,7 @@
 
             <!--TABLA BUS-->
             <div class="row table table-responsive">
-                <p-dataTable [value]="_gbus" [rows]="3"  [globalFilter]="filtroGlobal" scrollable="true" emptyMessage="No Hay Registros" 
+                <p-dataTable [value]="_gbus" [rows]="5"  [globalFilter]="filtroGlobal" scrollable="true" emptyMessage="No Hay Registros" 
                 scrollWidth="100%" [paginator]="true" selectionMode="single" (onRowSelect)="onRowSelectBus($event)"  >
                     
                     <p-column styleClass="col-button" [style]="{'width':'3em'}">
@@ -65,9 +66,9 @@
                         </template>
                     </p-column>
                     <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
-                    <p-column field="BuPeTipo" header="Placa" [style]="{'width':'10em','text-align':'center'}"></p-column>
-                    <p-column field="BuPeTipo" header="Persona" [style]="{'width':'10em','text-align':'center'}"></p-column>
-                    <p-column field="UsId" header="Cargo" [style]="{'width':'10em','text-align':'left'}"></p-column>
+                    <p-column field="PeApellidos" header="Placa" [style]="{'width':'10em','text-align':'center'}"></p-column>
+                    <p-column field="PeNombres" header="Persona" [style]="{'width':'10em','text-align':'center'}"></p-column>
+                    <p-column field="EmPeTipo" header="Cargo Emp" [style]="{'width':'10em','text-align':'left'}"></p-column>
                 </p-dataTable>
             </div>
             

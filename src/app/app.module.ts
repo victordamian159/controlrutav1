@@ -25,8 +25,8 @@ import {BusComponent} from './components/bus.component';
 import {EmpSubEmpComponent} from './components/empSubemp.component';
 import {EmpPerComponent} from './components/empresapersonal.component';
 import {PersComponent} from './components/personal.component';
-
-
+import {loginUserComponent} from './components/loginUser.component';
+import { AuthGuard } from './components/auth.guard';
 
 //ROUTING MODULE
 import {AppRoutingModule} from './app-routing.module';
@@ -44,16 +44,9 @@ import {EmpSubEmpService} from './service/empSubemp.service';
 import {TeleMovilService} from './service/telefono.service';
 import {UserSystemService} from './service/usuarioSistema.service';
 
-
-
-/*  
-  import { RegisterComponent } from './register/index';
-  import { InMemoryWebApiModule } from 'angular2-in-memory-web-api';
-  import { InMemoryDataService }  from './in-memory-data.service';
-*/
-/* PARA EL LOGIN*/
+/* PARA EL LOGIN   BORRAR DESPUES DE TERMINAR DE PROGRAMARLO*/
 import { AlertComponent } from './login/_directives/alert.component';
-import { AuthGuard } from './login/guards/auth.guard';
+/*import { AuthGuard } from './login/guards/auth.guard';*/
 import { AlertService} from './login/services/alert.service';
 import { AuthenticationService } from './login/services/authentication.service';
 import { UserService } from './login/services/user.service';
@@ -64,6 +57,11 @@ import { RegisterComponent } from "./login/register/register.component";
 /*import { fakeBackendProvider } from './login/helper/fake-backend';
 import { MockBackend, MockConnection } from '@angular/http/testing';
 import { BaseRequestOptions } from '@angular/http';*/
+/*  
+  import { RegisterComponent } from './register/index';
+  import { InMemoryWebApiModule } from 'angular2-in-memory-web-api';
+  import { InMemoryDataService }  from './in-memory-data.service';
+*/
 
 @NgModule({
   //MODULOS DEL APLICATIVO
@@ -81,7 +79,8 @@ import { BaseRequestOptions } from '@angular/http';*/
     menuComponent,
     LoginComponent,
     RegisterComponent,
-    AlertComponent
+    AlertComponent,
+    loginUserComponent
     //InMemoryWebApiModule.forRoot()
     //InMemoryWebApiModule.forRoot(InMemoryDataService)
   ],
@@ -137,6 +136,8 @@ import { BaseRequestOptions } from '@angular/http';*/
       MockBackend,
       BaseRequestOptions*/
   ],
+
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

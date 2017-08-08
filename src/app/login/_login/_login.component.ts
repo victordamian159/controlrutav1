@@ -13,6 +13,7 @@ export class LoginComponent implements OnInit {
     model: any = {}; /* OBJETO USUARIO*/
     loading = false;
     returnUrl: string; /*RETORNANDO URL */
+    
     constructor(
         private route: ActivatedRoute,
         private router: Router,
@@ -25,7 +26,8 @@ export class LoginComponent implements OnInit {
         /* reset login status      --  Restablecer el estado de inicio de sesión*/
         this.authenticationService.logout();/*DESCONECTANDO ANTES DE INICIAR UNA SESION */
 
-        /* get return url from route parameters or default to '/' ===>  Obtener url de retorno de los parámetros de ruta o predeterminado para '/'  */
+        /* get return url from route parameters or default to '/'
+        ===>  Obtener url de retorno de los parámetros de ruta o predeterminado para '/'  */
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/menu';
     }
 
@@ -33,11 +35,8 @@ export class LoginComponent implements OnInit {
         this.loading = true; /* CARGANDO EN VERDAD*/
         this.authenticationService.login(this.model.username, this.model.password)
             .subscribe(
-                /* SI NO HAY ERROR PASA A DATA */
-                 data => {this.router.navigate([this.returnUrl]);},
-                
-                /* SI HAY ERROR MANDA AL SERVICIO DE ALERTA DE TIPO ERROR */
-                error => {this.alertService.error(error); this.loading = false; console.log(error);}
+                data => { this.router.navigate([this.returnUrl]); }, /* SI NO HAY ERROR PASA A DATA */
+                error => {this.alertService.error(error); this.loading = false; console.log(error);} /* SI HAY ERROR MANDA AL SERVICIO DE ALERTA DE TIPO ERROR */
             );
     }
 
