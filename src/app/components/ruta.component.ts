@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Message} from 'primeng/primeng';
 //import {Ruta, RutaDetalle} from 'app/variables';
-import {puntosTrazaRuta} from 'app/variables'
+//import {puntosTrazaRuta} from 'app/variables'
 import { RutaService } from '../service/ruta.service';
 
 declare var google: any;

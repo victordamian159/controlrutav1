@@ -27,6 +27,7 @@ import {EmpPerComponent} from './components/empresapersonal.component';
 import {PersComponent} from './components/personal.component';
 import {loginUserComponent} from './components/loginUser.component';
 import { AuthGuard } from './components/auth.guard';
+import {GlobalVars} from './variables';
 
 //ROUTING MODULE
 import {AppRoutingModule} from './app-routing.module';
@@ -80,7 +81,8 @@ import { BaseRequestOptions } from '@angular/http';*/
     LoginComponent,
     RegisterComponent,
     AlertComponent,
-    loginUserComponent
+    loginUserComponent,
+    
     //InMemoryWebApiModule.forRoot()
     //InMemoryWebApiModule.forRoot(InMemoryDataService)
   ],
@@ -130,7 +132,8 @@ import { BaseRequestOptions } from '@angular/http';*/
       EmpSubEmpService,
       PersService,
       TeleMovilService,
-      UserSystemService
+      UserSystemService,
+      GlobalVars  /* CLASS GLOBAL :s */
       /* fake backend
       fakeBackendProvider,
       MockBackend,

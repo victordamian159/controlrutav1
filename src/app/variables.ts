@@ -1,4 +1,10 @@
-//export var variable="victor ingeniero";
-
-export var puntosTrazaRuta:any[]=[];
-export var puntoscontrol:any[]=[];
+export class GlobalVars{
+    constructor(){}
+    public localstorageItems():boolean{
+        if(localStorage.getItem('DATOSUSER')!=null || localStorage.getItem('DATOSUSER')!=undefined){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}

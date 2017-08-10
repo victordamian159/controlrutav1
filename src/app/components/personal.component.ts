@@ -67,7 +67,7 @@ export class PersComponent implements OnInit{
             getallpersonal(){
                 let arrper:any[]=[];
                 this.personaService.getallpersonal().subscribe(
-                    data => {arrper=data; console.log(arrper);this.mgPersonal(arrper);}
+                    data => {arrper=data; /*console.log(arrper);*/ this.mgPersonal(arrper);}
                 );
             }
         /* GET BY ID */
@@ -148,6 +148,12 @@ export class PersComponent implements OnInit{
                 this.PeEstCivil=this.personal.PeEstCivil;
                 console.log(this.personal);
             }
+    
+    /* CLICK SOBRE UNA FILA DATATABLE */
+        /* DATATABLE PERSONA */
+        onRowSelectPersonal(){
+            
+        }
 
     /*FUN ASOCIADA BTNNUEVO PERSONAL(FORM PRINCIPAL)*/
 
@@ -195,7 +201,7 @@ export class PersComponent implements OnInit{
                
             }
 
-            console.log(this._personal);
+            /*console.log(this._personal);*/
             /* CONSULTA GUARDAR PERSONAL*/
             this.savepersonal(this._personal);
             this.mensaje="";

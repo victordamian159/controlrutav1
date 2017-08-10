@@ -99,7 +99,7 @@ export class EmpPerComponent implements OnInit{
                     procNuevoUserSystem(){
                         this.UsId=0;
                         this.userService.newUserSystem().subscribe(
-                            data=>{this._user=data; console.log(this._user);}
+                            data=>{this._user=data; /*console.log(this._user);*/}
                         );
                     }
                 /* PROCEDURE GUARDAR */
@@ -160,7 +160,7 @@ export class EmpPerComponent implements OnInit{
                 getallempPerByEmIdSuEmId(emid:number, suemid:number){
                     let empPer:any[]=[];
                     this.empPerservice.getallempperbyemidsuemid(emid,suemid).subscribe(
-                        data => { empPer=data; console.log(empPer);
+                        data => { empPer=data; /*console.log(empPer);*/
                                     /* CARGANDO EN TABLA PRINCIPAL */
                                     this.mgEmprPers(empPer);
                                 },
@@ -282,7 +282,7 @@ export class EmpPerComponent implements OnInit{
                         EmPeTipo:this.idTiEmpPer
                     }
                     /* PROCEDURE GUARDAREMPPER - RECARGAR GRILLA EMPPERSONA */
-                    console.log(this.empPer);
+                    /*console.log(this.empPer);*/
                     this.guardarEmpPer(this.empPer);
                 }
 
@@ -377,7 +377,7 @@ export class EmpPerComponent implements OnInit{
                 for(let i=0; i<this.arrAllUser.length; i++){
                     this.arrAllUser[i].Nro=i+1;
                 }
-                console.log(this.arrAllUser);
+                /*console.log(this.arrAllUser);*/
             }
 
         /* TABLA EMPPER GRILLA PRINCIPAL */
