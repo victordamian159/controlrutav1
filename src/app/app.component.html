@@ -1,13 +1,10 @@
-<div *ngIf="varGlobal.localstorageItems()==true">
+<div *ngIf="ClassGlobal.localstorageItems()==true">
+
     <nav class="navbar navbar-toggleable-md navbar-inverse" style="background-color: #00796B;" >
-        <!--BARRA BOTON-->
-        <button 
-                class="navbar-toggler navbar-toggler-right" 
-                type="button"  
-                data-toggle="collapse" 
-                data-target="#navbarNavDropdown" 
-                aria-controls="navbarNavDropdown" 
-                aria-expanded="false" 
+        <!--BARRA BOTON PEQUEÑO RESPONSIVE-->
+        <button class="navbar-toggler navbar-toggler-right" type="button"  
+                data-toggle="collapse" data-target="#navbarNavDropdown" 
+                aria-controls="navbarNavDropdown"  aria-expanded="false" 
                 aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -23,22 +20,12 @@
             <ul class="navbar-nav">
                 <!--MANTENIMIENTO-->
                 <li class="nav-item dropdown">
-                    <a  href="#" 
-                        class="dropdown-toggle" 
-                        data-toggle="dropdown" 
-                        role="button" 
-                        aria-haspopup="true" 
-                        aria-expanded="false">
-                            Mantenimiento 
-                        <span class="caret"></span>
-                    </a>
-
-                    <!--MENU-->
+                    <a  href="#" class="dropdown-toggle"  data-toggle="dropdown" role="button"  aria-haspopup="true" aria-expanded="false">Mantenimiento<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li class="nav-item "><a href="#" class="nav-link" routerLink="/regpersonal" routerLinkActive="active">Personal</a></li>
-                        <li class="nav-item "><a href="#" class="nav-link" routerLink="/regempper" routerLinkActive="active">Persona por Empresa</a></li>
-                        <li class="nav-item "><a href="#" class="nav-link" routerLink="/regempsubemp" routerLinkActive="active">La Empresa</a></li>
-                        <li class="nav-item "><a href="#" class="nav-link" routerLink="/regbus" routerLinkActive="active">Bus</a></li>
+                        <li class="sub-nav-item "><a href="#" routerLink="/regpersonal" routerLinkActive="active">Personal</a></li>
+                        <li class="sub-nav-item "><a href="#" routerLink="/regempper" routerLinkActive="active">Persona por Empresa</a></li>
+                        <li class="sub-nav-item "><a href="#" routerLink="/regempsubemp" routerLinkActive="active">La Empresa</a></li>
+                        <li class="sub-nav-item "><a href="#" routerLink="/regbus" routerLinkActive="active">Bus</a></li>
                     </ul>
                 </li>
 
@@ -56,11 +43,11 @@
 
                     <!--MENU-->
                     <ul class="dropdown-menu">
-                        <li class="nav-item "><a href="#" class="nav-link" routerLink="/ruta" routerLinkActive="active">Ruta</a></li>		 
-                        <li class="nav-item "><a href="#" class="nav-link" routerLink="/pcontrol" routerLinkActive="active">Puntos de Control</a></li>						
-                        <li class="nav-item "><a href="#" class="nav-link" routerLink="/prog" routerLinkActive="active">Programacion</a></li>		
-                        <li class="nav-item "><a href="#" class="nav-link" routerLink="/tcontrol" routerLinkActive="active">Tarjeta de Control</a></li>		
-                        <li class="nav-item "><a href="#" class="nav-link" routerLink="/regtime" routerLinkActive="active">Reg Tiempo</a></li>
+                        <li class="sub-nav-item "><a href="#" routerLink="/ruta" routerLinkActive="active">Ruta</a></li>		 
+                        <li class="sub-nav-item "><a href="#" routerLink="/pcontrol" routerLinkActive="active">Puntos de Control</a></li>						
+                        <li class="sub-nav-item "><a href="#" routerLink="/prog" routerLinkActive="active">Programacion</a></li>		
+                        <li class="sub-nav-item "><a href="#" routerLink="/tcontrol" routerLinkActive="active">Tarjeta de Control</a></li>		
+                        <!--<li class="nav-item "><a href="#" routerLink="/regtime" routerLinkActive="active">Reg Tiempo</a></li>-->
                     </ul>
                 </li>
 
@@ -75,28 +62,29 @@
                             Reportes 
                         <span class="caret"></span>
                     </a>
-
                     <!--MENU-->
                     <ul class="dropdown-menu">
-                        <li><a href="#">Usuarios</a></li>
-                        <li><a href="#">Sanciones</a></li>
-                        <li><a href="#">Mantenimiento</a></li>
+                        <li class="sub-nav-item "><a href="#">Usuarios</a></li>
+                        <li class="sub-nav-item "><a href="#">Sanciones</a></li>
+                        <li class="sub-nav-item "><a href="#">Mantenimiento</a></li>
                     </ul>
-                    
                 </li>
+            </ul>   
+        </div>
 
-                <li class="nav-item "><a href="#" class="nav-link" routerLink="/login">Cerrar Sesion</a></li>
+        <div class="navbar-collapse collapse" id="userLogout">
+            <ul class="navbar-nav">
+                <li><a>Usuario:{{nombre}}</a></li>
+                <li class="nav-item "><a href="#" routerLink="/login">Cerrar Sesion</a></li>
             </ul>
-
-        
         </div>
     </nav>
+
  </div>
 
-{{varGlobal.localstorageItems()}}
+<!--{{varGlobal.localstorageItems()}}-->
 <!--<alert></alert>-->
 <router-outlet></router-outlet>
-
 
 <footer >
     <ul>
@@ -105,65 +93,3 @@
         <p>2017 - Industrias Qu@ntum</p>
     </ul>
 </footer>
-
-
-
-      <!--<img src="{{logo}}" width="30" height="30" alt="">-->
-      <!--<img src="{{heroImageUrl}}" width="30" height="30" alt="">-->
-   <!--<ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Link</a></li>
-        <li role="separator" class="divider"></li>
-    </ul>-->
-  <!--
-      <nav class="navbar navbar-light bg-faded">
-        <a class="navbar-brand" href="#">
-            <img src="/assets/brand/bootstrap-solid.svg" width="30" height="30" alt="">
-        </a>
-      </nav>
-
-      <nav class="navbar navbar-light bg-faded">
-        <a class="navbar-brand" href="#">
-            <img src="/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="">
-            Bootstrap
-        </a>
-      </nav>
-  -->
- <!--
-            <li class="nav-item "><a href="#" class="nav-link" routerLink="/ruta" routerLinkActive="active">Ruta</a></li>		 
-            <li class="nav-item "><a href="#" class="nav-link" routerLink="/pcontrol" routerLinkActive="active">Puntos de Control</a></li>						
-            <li class="nav-item "><a href="#" class="nav-link" routerLink="/prog" routerLinkActive="active">Programacion</a></li>		
-            <li class="nav-item "><a href="#" class="nav-link" routerLink="/tcontrol" routerLinkActive="active">Tarjeta de Control</a></li>		
-            <li class="nav-item "><a href="#" class="nav-link" routerLink="/regtime" routerLinkActive="active">Reg Tiempo</a></li>
-            <li class="nav-item "><a href="#" class="nav-link" routerLink="/regpersonal" routerLinkActive="active">Personal</a></li>
-            <li class="nav-item "><a href="#" class="nav-link" routerLink="/regemp" routerLinkActive="active">Empresa</a></li>
-            <li class="nav-item "><a href="#" class="nav-link" routerLink="/regbus" routerLinkActive="active">Bus</a></li>
-        -->
-
-<!--
-    $(document).ready(function(){
-        if( $("body").height() < $(window).height() ){
-            $("footer").css({"position":"absolute","bottom":"0px"});
-        }
-    });
-
-  
-        <ul class="navbar-nav navbar-right">
-        <li><a  class="nav-link" href="#"></a></li>
-        <li><a class="nav-link" href="#" (click)="logout()">Salir</a></li>
-        </ul>
-    
-     
-     
-    <li class="nav-item active"><a href="#" class="nav-link"  [routerLink]="['/login']">Logout</a></li>
-
-    <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"  id="navbarDropdownMenuLink"  data-toggle="dropdown" >Bandeja<b class="caret"></b></a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" href="#">Reporte Usuarios</a>
-            <a class="dropdown-item" href="#">Mantenimiento</a>
-            <a class="dropdown-item" href="#">Reporte Buses</a>
-            <a class="dropdown-item" href="#">Reporte de Puntos</a>
-        </div>					
-    </li>
-      		
--->

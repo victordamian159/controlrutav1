@@ -5,6 +5,7 @@ import {EmpSubEmpService} from '../service/empSubemp.service';
 import {hora,_hora} from 'app/funciones';
 import {PersService} from '../service/personal.service';
 import {UserSystemService} from '../service/usuarioSistema.service';
+import {GlobalVars} from 'app/variables'
 
 @Component({
     selector: 'app-empresapersonal',
@@ -59,9 +60,9 @@ export class EmpPerComponent implements OnInit{
         private nombre:string; /* PARA MOSTRAR EN EL FORM NUEVO USERSYSTEM(PARA SABER A Q PERSONA SE LE CREA) */
 
     ngOnInit(){
-        this.emid=1;
+        /*this.emid=1;
         this.userid=1;
-        this.nombre="x";
+        this.nombre="x";*/
         //this.getallempPerByEmIdSuEmId(1,1);
         this.getallsuembyemid(this.emid);
         this.arrTipoEmpPer=[{id:'01',perTEmpPer:'GERENTE'},{id:'02',perTEmpPer:'ADMINISTRADOR'},
@@ -73,10 +74,11 @@ export class EmpPerComponent implements OnInit{
     }
 
     /* CONSTRUCTOR */
-    constructor(private empPerservice : EmpPerService, 
-                private empSubempservice : EmpSubEmpService, 
-                private persService : PersService,
-                private userService: UserSystemService){}
+    constructor(private empPerservice : EmpPerService,  private empSubempservice : EmpSubEmpService, private persService : PersService, private userService: UserSystemService, public ClassGlobal:GlobalVars){
+        this.emid=this.ClassGlobal.GetEmId();
+        this.userid=this.ClassGlobal.GetUsId();
+        this.nombre="x";    
+    }
 
 
     /* PROCEDURES */

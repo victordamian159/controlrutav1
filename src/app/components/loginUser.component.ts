@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserSystemService} from '../service/usuarioSistema.service';
 import { AppComponent } from '../app.component';
+import { Router} from '@angular/router';
 //import {AuthGuard} from '../components/auth.guard';
 
 
@@ -20,7 +21,7 @@ export class loginUserComponent implements OnInit{
     public userValid:any;
     public user:any={};
 
-    constructor(private userservice: UserSystemService, private appcomp:AppComponent){}
+    constructor(private userservice: UserSystemService, private router: Router,private appcomp:AppComponent){}
 
     ngOnInit(){
         this.procNuevoUser();
@@ -45,7 +46,7 @@ export class loginUserComponent implements OnInit{
                                 this.userValid=validUser;
                                 localStorage.setItem('DATOSUSER',JSON.stringify(validUser));
                                 localStorage.getItem('DATOSUSER');
-                                
+                                this.router.navigate(['/regempper']);
                             }else{
                                 console.log("no se pudo iniciar sesion :c");
                             }
