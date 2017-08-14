@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Message} from 'primeng/primeng';
 import {EmpSubEmpService} from '../service/empSubemp.service';
 import {hora,_hora} from 'app/funciones';
+import {GlobalVars} from 'app/variables'
 
 @Component({
     selector:'app-empSubemp',
@@ -19,6 +20,7 @@ export class EmpSubEmpComponent implements OnInit{
             private suemid:number;
             private EmTipo:number;
             private _EmId:number; /* USADO EN OBJ PARA ENVIAR A LA BD */
+            private selectRow:boolean; /* USADO PARA SABER SI SE SELECCIONO UNA FILA O NO DE LA TABLA EMPRESA(NO SUBEMPRESA) */
 
         /* CABECERA */
             private mpresa:any;
@@ -44,18 +46,23 @@ export class EmpSubEmpComponent implements OnInit{
             private arrTiposEmp:any={tipId:null,nomTipo:""};
 
         /* VAR DISPLAY MODAL */
-            displayEditSubEmp:boolean;
-            displayElimSubEmp:boolean;
-            displayNuevaSubEmp:boolean;
-            displayEditEmpresa:boolean;
-            displayEditConfEmpresa:boolean;
-            displayRegEmpresa:boolean;
-            displayElimEmp:boolean;
+            private displayEditSubEmp:boolean;
+            private displayElimSubEmp:boolean;
+            private displayNuevaSubEmp:boolean;
+            private displayEditEmpresa:boolean;
+            private displayEditConfEmpresa:boolean;
+            private displayRegEmpresa:boolean;
+            private displayElimEmp:boolean;
 
     ngOnInit(){
-        this.EmId=0;
-        this.userid=1;
+        /*this.EmId=0;
+        this.userid=1;*/
         this.getempresas();
+        
+    }
+    constructor(private empSubempservice : EmpSubEmpService,public ClassGlobal:GlobalVars){
+        this.EmId=this.ClassGlobal.GetEmId();
+        this.userid=this.ClassGlobal.GetUsId();
         /* INICIANDO VAR DISPLAY */
             this.displayEditSubEmp=false;
             this.displayElimSubEmp=false;
@@ -65,8 +72,8 @@ export class EmpSubEmpComponent implements OnInit{
             this.displayRegEmpresa=false;
             this.displayElimEmp=false;
         this.arrTiposEmp=[{tipId:0,nomTipo:"CONSORCIO"},{tipId:1,nomTipo:"INDIVIDUAL"}]
+        this.selectRow=false; /*false: no se selecciono ninguna fila, true: si se selecciono una fila */
     }
-    constructor(private empSubempservice : EmpSubEmpService){}
 
     /* PROCEDURE */
         /* OBTENER TODAS LAS EMPRESAS */
@@ -147,7 +154,7 @@ export class EmpSubEmpComponent implements OnInit{
         /* ELIMINAR */
             eliminarSubEmp(suemid:number){
                 this.empSubempservice.deleteSubEmpresa(suemid).subscribe(
-                    realizar =>{},
+                    realizar =>{this.getsubempresasbyemid(this.EmId)},
                     err => {console.log(err);}
                 );
             }
@@ -155,91 +162,92 @@ export class EmpSubEmpComponent implements OnInit{
     /* TABLAS + FORMULARIOS */
         /* CARGANDO PARA GRILLAS */
             /* MOSTRAR TODAS LAS EMPRESAS */
-            mgempresa(empr:any[]){
-                this.empresas=[];
-                for(let emp of empr){
-                    this.empresas.push({
-                        Nro:1,
+                mgempresa(empr:any[]){
+                    this.empresas=[];
+                    for(let emp of empr){
+                        this.empresas.push({
+                            Nro:1,
+                            EmConsorcio:emp.EmConsorcio,
+                            EmTipo:emp.EmTipo,
+                            Tipo:"",
+                            EmId:emp.EmId
+                        });
+                    }
+
+                    /* TIPO DE EMPRESA    1 -  true:INDIVIDUAL / 0 - false:CONSORCIO */
+                    let i=0;
+                    while(i<empr.length){
+                        if(empr[i].EmTipo==true){
+                            this.empresas[i].EmTipo=1;
+                            this.empresas[i].Tipo="INDIVIDUAL";
+                        }
+                        else if(empr[i].EmTipo==false){
+                            this.empresas[i].EmTipo=0;
+                            this.empresas[i].Tipo="CONSORCIO";
+                        }
+                        i++;
+                    }
+
+                    /* ENUMERANDO ROWS */
+                    for(let i=0;i<this.empresas.length;i++){
+                        this.empresas[i].Nro=i+1;
+                    }
+                }
+
+                mgsubempresas(subemps=[]){
+                    this.subempresas=[];
+                    for(let subemp of subemps){
+                        this.subempresas.push({
+                            nro:0,
+                            EmId:subemp.EmId,
+                            SuEmId:subemp.SuEmId,
+                            SuEmRSocial:subemp.SuEmRSocial,
+                            SuEmRuc:subemp.SuEmRuc,
+                            SuEmDireccion:subemp.SuEmDireccion,
+                            SuEmUbigeo:subemp.SuEmUbigeo,
+                            SuEmTelefono:subemp.SuEmTelefono,
+                            SuEmEmail:subemp.SuEmEmail,
+                            SuEmTiempoVuelta:_hora(subemp.SuEmTiempoVuelta)
+                        });
+                    }
+
+                    for(let i=0; i<this.subempresas.length;i++){
+                        this.subempresas[i].nro=i+1;
+                    }
+                }
+
+                msubemp(suem:any){
+                    this.subempresa={
+                        EmId:suem.EmId,
+                        SuEmId:suem.SuEmId,
+                        SuEmRSocial:suem.SuEmRSocial,
+                        SuEmRuc:suem.SuEmRuc,
+                        SuEmDireccion:suem.SuEmDireccion,
+                        SuEmUbigeo:suem.SuEmUbigeo,
+                        SuEmTelefono:suem.SuEmTelefono,
+                        SuEmEmail:suem.SuEmEmail,
+                        SuEmTiempoVuelta:_hora(suem.SuEmTiempoVuelta)
+                    }
+                    this.displayNuevaSubEmp=true;
+                    console.log(this.subempresa);
+                }
+
+                mEmpresa(emp:any){
+                    this.empresa={
                         EmConsorcio:emp.EmConsorcio,
+                        //EmId:emp.EmId,
                         EmTipo:emp.EmTipo,
-                        Tipo:"",
-                        EmId:emp.EmId
-                    });
-                }
-
-                /* TIPO DE EMPRESA    1 -  true:INDIVIDUAL / 0 - false:CONSORCIO */
-                let i=0;
-                while(i<empr.length){
-                    if(empr[i].EmTipo==true){
-                        this.empresas[i].EmTipo=1;
-                        this.empresas[i].Tipo="INDIVIDUAL";
+                        //UsFechaReg:emp.UsFechaReg,
+                        //UsId:emp.UsId
                     }
-                    else if(empr[i].EmTipo==false){
-                        this.empresas[i].EmTipo=0;
-                        this.empresas[i].Tipo="CONSORCIO";
-                    }
-                    i++;
+                    console.log(this.empresa);
+                    this.displayRegEmpresa=true;
                 }
-
-                /* ENUMERANDO ROWS */
-                for(let i=0;i<this.empresas.length;i++){
-                    this.empresas[i].Nro=i+1;
-                }
-            }
-
-            mgsubempresas(subemps=[]){
-                this.subempresas=[];
-                for(let subemp of subemps){
-                    this.subempresas.push({
-                        nro:0,
-                        EmId:subemp.EmId,
-                        SuEmId:subemp.SuEmId,
-                        SuEmRSocial:subemp.SuEmRSocial,
-                        SuEmRuc:subemp.SuEmRuc,
-                        SuEmDireccion:subemp.SuEmDireccion,
-                        SuEmUbigeo:subemp.SuEmUbigeo,
-                        SuEmTelefono:subemp.SuEmTelefono,
-                        SuEmEmail:subemp.SuEmEmail,
-                        SuEmTiempoVuelta:_hora(subemp.SuEmTiempoVuelta)
-                    });
-                }
-
-                for(let i=0; i<this.subempresas.length;i++){
-                    this.subempresas[i].nro=i+1;
-                }
-            }
-
-            msubemp(suem:any){
-                this.subempresa={
-                    EmId:suem.EmId,
-                    SuEmId:suem.SuEmId,
-                    SuEmRSocial:suem.SuEmRSocial,
-                    SuEmRuc:suem.SuEmRuc,
-                    SuEmDireccion:suem.SuEmDireccion,
-                    SuEmUbigeo:suem.SuEmUbigeo,
-                    SuEmTelefono:suem.SuEmTelefono,
-                    SuEmEmail:suem.SuEmEmail,
-                    SuEmTiempoVuelta:_hora(suem.SuEmTiempoVuelta)
-                }
-                this.displayNuevaSubEmp=true;
-                console.log(this.subempresa);
-            }
-
-            mEmpresa(emp:any){
-                this.empresa={
-                    EmConsorcio:emp.EmConsorcio,
-                    //EmId:emp.EmId,
-                    EmTipo:emp.EmTipo,
-                    //UsFechaReg:emp.UsFechaReg,
-                    //UsId:emp.UsId
-                }
-                console.log(this.empresa);
-                this.displayRegEmpresa=true;
-            }
 
         /* SELECCIONAR FILA */
             onRowSelectEmpresa(event){
                 this.EmId=event.data.EmId;
+                this.selectRow=true;
                 this.getsubempresasbyemid(this.EmId);
             }
 
@@ -247,8 +255,7 @@ export class EmpSubEmpComponent implements OnInit{
                 console.log(event.data.SuEmId);
             }
         /* BOTONES DE FILAS */
-            /* FUNCIONES ASOCIADAS A BTN DE FILAS */
-                                                        
+            /* FUNCIONES ASOCIADAS A BTN DE FILAS */                             
                 /* EDITAR */
                     editarEmpresa(emid:number, emtipo:number){
                         this.EmId=emid;

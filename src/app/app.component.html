@@ -1,6 +1,6 @@
 <div *ngIf="ClassGlobal.localstorageItems()==true">
 
-    <nav class="navbar navbar-toggleable-md navbar-inverse" style="background-color: #00796B;" >
+    <nav class="navbar navbar-toggleable-md navbar-inverse"  >
         <!--BARRA BOTON PEQUEÑO RESPONSIVE-->
         <button class="navbar-toggler navbar-toggler-right" type="button"  
                 data-toggle="collapse" data-target="#navbarNavDropdown" 
@@ -36,7 +36,7 @@
                         data-toggle="dropdown" 
                         role="button" 
                         aria-haspopup="true" 
-                        aria-expanded="false">
+                        aria-expanded="true">
                             Operaciones 
                         <span class="caret"></span>
                     </a>
@@ -64,20 +64,23 @@
                     </a>
                     <!--MENU-->
                     <ul class="dropdown-menu">
-                        <li class="sub-nav-item "><a href="#">Usuarios</a></li>
-                        <li class="sub-nav-item "><a href="#">Sanciones</a></li>
-                        <li class="sub-nav-item "><a href="#">Mantenimiento</a></li>
+                        <li class="sub-nav-item "><a >Usuarios</a></li>
+                        <li class="sub-nav-item "><a >Sanciones</a></li>
+                        <li class="sub-nav-item "><a >Mantenimiento</a></li>
                     </ul>
                 </li>
             </ul>   
         </div>
 
+        <!--
         <div class="navbar-collapse collapse" id="userLogout">
-            <ul class="navbar-nav">
-                <li><a>Usuario:{{nombre}}</a></li>
-                <li class="nav-item "><a href="#" routerLink="/login">Cerrar Sesion</a></li>
-            </ul>
+            <li id="nomUsuario"><a>Usuario:{{nombre}}</a></li>
         </div>
+        <div class="navbar-collapse collapse" id="userLogout">
+            <li class="nav-item "><a href="#" routerLink="/login">Cerrar Sesion</a></li>
+        </div>
+        -->
+        
     </nav>
 
  </div>

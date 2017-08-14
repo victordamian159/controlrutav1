@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {SelectItem} from 'primeng/primeng';
 import {ProgramacionService} from '../service/prog.service'
 import {PlacasService} from '../service/placas.service'
+import {GlobalVars} from 'app/variables'
+
 declare var jsPDF: any; //PARA PASAR HTML A PDF 
 @Component({
     selector: 'app-prog',
@@ -10,203 +12,226 @@ declare var jsPDF: any; //PARA PASAR HTML A PDF
 })
 
 export class ProgComponent implements OnInit{
-    
-    //capturando fecha actual 
-    date:any;
-    anio:string;
-    mes:string;
-    dia:string;
-    
-    //borrar:any;
+    /* OBJETOS */
+        private progMaestro: any={
+            PrId:0,     //oculto
+            EmId:0,     //oculto
+            PrCantidadBuses:0,
+            PrDescripcion:"",
+            PrFecha:"",     //oculto
+            PrFechaInicio:"",
+            PrFechaFin:"",
+            PrTipo:"",      
+            PrAleatorio:true,
+            UsId:0,        //oculto
+            UsFechaReg:""   //oculto
+        }
+        private progDetalle: any={
+            PrId:23,     //oculto
+            BuId:0,     //oculto
+            PrDeFecha:"", //oculto
+            PrDeBase:true, //oculto (true)
+            PrDeOrden:0, //placas sorteo manual
+            UsId:0,     //oculto
+            UsFechaReg:"",//oculto
+        }
 
-    //para seleccionar una fila de la tabla
-    idFilaSeleccionada: number; // CLICK SOBRE REG GRILLA
-    iDReg:number;       //CLICK BOTON DE FILA ELIMINAR
-    nroBusesFilaSelect: number;
-    nroDiasFilaSelect: number;
-    titleNuevoProgPrimerModal:string;  
-    mensaje:string;     //MENSAJE CONFIRMACION MODAL 
+    /* VARIABLES */
+        private emid:number;
+        private userid:number;
+        private disabledbutton: boolean = false;
+        private errorMessage:string='';  //mensaje error del rest
+        private isLoading: boolean = false;  
+        private _progrMaestro:any; /* SALVA OBJETO PROGCABECERA DE GETPROGRAMACIONBYID() */
+        private progDescripcion:string; /* PARA EDITAR PROGRAMACION */
+        
+        //objeto maestro para Mandar al rest
+        private objProgVentanaUno : any; // objeto para almacenar datos 1era ventana modal para mandarlo o borrar del sistema al cancelar o guardar
+        //objeto detalle para mandar al rest
+        private objProgVentanaDos : any; //nuevo detalle 
+        private nroColumn:number;
+        private bAct:number; //NRO BUSES ACTIVOS
+        private bNAct:number; //NRO DE BUSES NO ACTIVOS
+        private tipoProg:number;    //MANUAL O AUTOMATICA
+        private formaProg:number;   //ESCALA O PESCADITO
 
-    /* PARA ABRIR O CERRAR MODALES */
-    displayNuevaProgramacion: boolean = false;
-    displayProgramacionBase: boolean = false;
-    displayProgramacion: boolean = false;
-    displayConfirmar: boolean = false;
-    displayAceptarProgNueva : boolean = false;
-    displayErrorDatos : boolean = false; // PRIMERA VENTANA MODAL PROGRAMACION
-    displayErrorTablaProgramacion : boolean=false; // ERROR EN LA TABLA DE PROGRAMACION
-    displayFaltanPlacas : boolean = false;
-    displayDescargaProg : boolean = false;
-    displayEditProgC : boolean = false;
+         //para seleccionar una fila de la tabla
+        private idFilaSeleccionada: number; // CLICK SOBRE REG GRILLA
+        private iDReg:number;       //CLICK BOTON DE FILA ELIMINAR
+        private nroBusesFilaSelect: number;
+        private nroDiasFilaSelect: number;
+        private titleNuevoProgPrimerModal:string;  
+        private mensaje:string;     //MENSAJE CONFIRMACION MODAL 
 
-    selectedPlacas: string[] = [];
-    disabledbutton: boolean = false;
-    private errorMessage:string='';  //mensaje error del rest
-    private isLoading: boolean = false;  
-    placas:any[]=[]; //se utiliza para almacenar lo q devuelve el rest de las placas
-    
-    //datos para la picklist (prog base)
-    arrayPlacas:any[] = []; //ESTATICO
-    _arrayPlacas:any[] = []; //DINAMICO
-    ordenSorteo:any[] = []; 
+    /* ARRAYS */
+        private selectedPlacas: string[] = []; /* NO USO */
+        private placas:any[]=[]; //se utiliza para almacenar lo q devuelve el rest de las placas
+        //datos para la picklist (prog base)
+        private arrayPlacas:any[] = []; //ESTATICO
+        private _arrayPlacas:any[] = []; //DINAMICO
+        private ordenSorteo:any[] = []; 
+        private programacionMaestroArrayMemoria :any[]=[]; /* NO USO */
+        private programacionMaestroArrayHTML :any[] = [];  //array para la grilla HTML
+        private progMaestroArray:any[]= [];/* NO USO */
+        private progDetalleArray:any[]=[];/* NO USO */
+        private programacionArrayDetalleBD:any[]=[]; //array objetos detalle para mandar al rest
+        private _tipoProg =[
+                    {id:1,nTipo:"automatico"},
+                    {id:0,nTipo:"manual"}
+                ];
+        private _formaProg=[
+                    {id:1, nForma:"pescadito"},
+                    {id:0, nForma:"escala"}
+                ];
 
-    //grilla
-    programacionMaestroArrayMemoria :any[]=[]; //array para la grilla HTML
-    programacionMaestroArrayHTML :any[] = [];  //array para la grilla HTML
+        //variables, se recupera las programaciones desde el servidor rest
+        private progRest:any[]=[];
+        private progRestMaestro:any[]=[]; /* NO USO */
+        private progBDDetalle:any[]=[]; // para recoger resultado de la BD
+        private _progBDDetalle:any[]=[]; /* NO USO */
 
-    /*PARA NGMODEL DEL MODAL 1 */ 
-    progMaestro: any={
-        PrId:0,     //oculto
-        EmId:0,     //oculto
-        PrCantidadBuses:0,
-        PrDescripcion:"",
-        PrFecha:"",     //oculto
-        PrFechaInicio:"",
-        PrFechaFin:"",
-        PrTipo:"",      
-        PrAleatorio:true,
-        UsId:0,        //oculto
-        UsFechaReg:""   //oculto
-    }
-    private _progrMaestro:any; /* SALVA OBJETO PROGCABECERA DE GETPROGRAMACIONBYID() */
-    private progDescripcion:string; /* PARA EDITAR PROGRAMACION */
-    
-    //objeto maestro para Mandar al rest
-    objProgVentanaUno : any; // objeto para almacenar datos 1era ventana modal para mandarlo o borrar del sistema al cancelar o guardar
-    progMaestroArray:any[]= [];
+        //COLUMNAS DEL DATATABLE PRIMENG
+        private columnas:any[]=[];
+        private _columnas : SelectItem[];
+        private _detalle:any[]=[];
+        private nroDias:any[]=[];
+        private calendario:any[]=[];
 
-    //objeto detalle para mandar al rest
-    objProgVentanaDos : any; //nuevo detalle 
-    progDetalleArray:any[]=[];
+   
 
-    //variables, se recupera las programaciones desde el servidor rest
-    progRest:any[]=[];
-    progRestMaestro:any[]=[];
-
-    progBDDetalle:any[]=[]; // para recoger resultado de la BD
-    _progBDDetalle:any[]=[]; //NO SE ESTA USANDO
-
-    //COLUMNAS DEL DATATABLE PRIMENG
-    columnas:any[]=[];
-    _columnas : SelectItem[];
-
-    _detalle:any[]=[];
-    nroDias:any[]=[];
-    private calendario:any[]=[];
-    nroColumn:number;
-    bAct:number; //NRO BUSES ACTIVOS
-    bNAct:number; //NRO DE BUSES NO ACTIVOS
-    tipoProg:number;    //MANUAL O AUTOMATICA
-    _tipoProg =[
-        {id:1,nTipo:"automatico"},
-        {id:0,nTipo:"manual"}
-    ];
-    formaProg:number;   //ESCALA O PESCADITO
-    _formaProg=[
-        {id:1, nForma:"pescadito"},
-        {id:0, nForma:"escala"}
-    ];
-
-//OBJETO DETALLE
-    progDetalle: any={
-        PrId:23,     //oculto
-        BuId:0,     //oculto
-        PrDeFecha:"", //oculto
-        PrDeBase:true, //oculto (true)
-        PrDeOrden:0, //placas sorteo manual
-        UsId:0,     //oculto
-        UsFechaReg:"",//oculto
-    }
-    programacionArrayDetalleBD:any[]=[]; //array objetos detalle para mandar al rest
-
-    constructor(
-            private programacionService: ProgramacionService,
-            private placasservice: PlacasService,
-    ){}
+    /* DISPLAY VENTANAS MODALES */
+        private displayNuevaProgramacion: boolean = false;
+        private displayProgramacionBase: boolean = false;
+        private displayProgramacion: boolean = false;
+        private displayConfirmar: boolean = false;
+        private displayAceptarProgNueva : boolean = false;
+        private displayErrorDatos : boolean = false; // PRIMERA VENTANA MODAL PROGRAMACION
+        private displayErrorTablaProgramacion : boolean=false; // ERROR EN LA TABLA DE PROGRAMACION
+        private displayFaltanPlacas : boolean = false;
+        private displayDescargaProg : boolean = false;
+        private displayEditProgC : boolean = false;
 
     ngOnInit(){
         this.ordenSorteo = [];
         this.getAllPlacasBusByEmSuEm(1,0);
         this.getAllProgramacionByEm(1,0);
-        this.progMaestro.EmId = 1;
     }
- 
-    tipoProgramacion($event){
-        this.ordenSorteo=[];
-        if(this.tipoProg==1){ // AUTOMATICO
-            let array = ["c"];  let nro;//ARRAY NUMEROS ALEATORIOS NO REPETIDOS
-            let arrayplacas= this.arrayPlacas;  let long = this.arrayPlacas.length; console.log("automatico");
-            let _arrayplacas=[];  let i=0,j=0, cen=0; // cen=0: no existe         cen=1: existe
-            //ALGORITMO NROS ALEATORIOS
-            while(i<long ){
-                nro = Math.floor(Math.random()*long);//NUMEROS ALEATORIOS ENTRE 0 Y LONG(7)
-                while(j<array.length ){
-                    if(array[j]!=nro){
-                        cen=0;
-                    }else if(array[j]==nro){ 
-                        cen=1; j=array.length;
+    
+    constructor(private programacionService: ProgramacionService, private placasservice: PlacasService,public ClassGlobal:GlobalVars){
+                    this.emid=this.ClassGlobal.GetEmId();
+                    this.userid=this.ClassGlobal.GetUsId();
+                    this.progMaestro.EmId = 1; /* ELIMINAR ESTO */
+                }
+    
+    /* FUNCION -> FORMA DE SORTEO MANUAL O AUTOMATICO */
+        tipoProgramacion($event){
+            this.ordenSorteo=[];/* LIMPIANDO ARRAY DE SORTEOS */
+
+            /* AUTOMATICO*/
+            if(this.tipoProg==1){ 
+                let array = ["c"];  let nro;//ARRAY NUMEROS ALEATORIOS NO REPETIDOS
+                let arrayplacas= this.arrayPlacas;  let long = this.arrayPlacas.length; console.log("automatico");
+                let _arrayplacas=[];  let i=0,j=0, cen=0; // cen=0: no existe         cen=1: existe
+                //ALGORITMO NROS ALEATORIOS
+                while(i<long ){
+                    nro = Math.floor(Math.random()*long);//NUMEROS ALEATORIOS ENTRE 0 Y LONG(7)
+                    while(j<array.length ){
+                        if(array[j]!=nro){
+                            cen=0;
+                        }else if(array[j]==nro){ 
+                            cen=1; j=array.length;
+                        }
+                        j++;
                     }
-                    j++;
+                    if(cen==0){  
+                        array[i]=nro;   
+                        i++;    
+                    }
+                    cen=0; j=0;
                 }
-                if(cen==0){  
-                    array[i]=nro;   
-                    i++;    
+                console.log(array);
+                //APLICANDO ALGORITMO, BUSCANDO INDICES CON ARRAY DE PLACAS
+                i=0; nro=0;
+                while(i<array.length){
+                    _arrayplacas.push(arrayplacas[array[i]]);
+                    i++;
                 }
-                cen=0; j=0;
+                this.ordenSorteo=_arrayplacas; 
+            /* MANUAL*/
+            }else if(this.tipoProg==0){
+                console.log("manual");
             }
-            console.log(array);
-            //APLICANDO ALGORITMO, BUSCANDO INDICES CON ARRAY DE PLACAS
-            i=0; nro=0;
-            while(i<array.length){
-                _arrayplacas.push(arrayplacas[array[i]]);
-                i++;
-            }
-            this.ordenSorteo=_arrayplacas; 
-        }else if(this.tipoProg==0){
-            console.log("manual");
+            
         }
-        
-    }
 
 
     formaProgramacion($event){
         console.log(this.formaProg);
     }
 
-    nuevaProgramacionMaestroRest(){
-        this.programacionService.newProgramacion()
-            .subscribe(data => {this.objProgVentanaUno = data});
-    }
+    /* PROCEDURES */
+        /* ACTUALIZACION */
+            /* NUEVO */
+                nuevaProgramacionMaestroRest(){
+                    this.programacionService.newProgramacion()
+                        .subscribe(data => {this.objProgVentanaUno = data});
+                }
+                
+                nuevaProgramacionDetalleRest(){
+                    this.programacionService.newProgramacionDetalle()
+                        .subscribe(data => {this.objProgVentanaDos = data});
+                }
     
-    nuevaProgramacionDetalleRest(){
-        this.programacionService.newProgramacionDetalle()
-            .subscribe(data => {this.objProgVentanaDos = data});
-    }
-    
-    /*CONSULTA PROGRAMACION DETALLE*/
-    getallprogramaciondetallebyprid(_prid:number){
-        this.programacionService.getAllProgramacionDetalleByPrId(_prid).subscribe(
-            data => {
-                this.progBDDetalle = data; 
-                console.log(this.progBDDetalle);
-            },
-            err => {this.errorMessage=err},
-            () => this.isLoading=false
-        );
-    }
+        /* GETTERS -> RECUPERANDO DATOS */
+            /*CONSULTA PROGRAMACION DETALLE*/
+            getallprogramaciondetallebyprid(_prid:number){
+                this.programacionService.getAllProgramacionDetalleByPrId(_prid).subscribe(
+                    data => {
+                        this.progBDDetalle = data; 
+                        console.log(this.progBDDetalle);
+                    },
+                    err => {this.errorMessage=err},
+                    () => this.isLoading=false
+                );
+            }
 
-    /* CONSULTA PROGRAMACION CABECERA POR SU ID - USANDO EN EDITAR PROGRAMACION */
-    getProgramacionById(prid : number){
-        this.programacionService.getProgramacionById(prid).subscribe(
-            data => {
-                    this._progrMaestro = data;
-                    this.progDescripcion = this._progrMaestro.PrDescripcion;
-                    console.log(this._progrMaestro);
-            },
-            err => {this.errorMessage=err},
-            () => this.isLoading=false
-        );
-    }
+            /* CONSULTA PROGRAMACION CABECERA POR SU ID - USANDO EN EDITAR PROGRAMACION */
+            getProgramacionById(prid : number){
+                this.programacionService.getProgramacionById(prid).subscribe(
+                    data => {
+                            this._progrMaestro = data;
+                            this.progDescripcion = this._progrMaestro.PrDescripcion;
+                            console.log(this._progrMaestro);
+                    },
+                    err => {this.errorMessage=err},
+                    () => this.isLoading=false
+                );
+            }
+
+            //CONSULTA RECUPERAR BUSES POR empId(id de empresa)  suemId(subempresa id) SOLO DA LOS BUSES ACTIVOS
+            getAllPlacasBusByEmSuEm(empId: number, suemId : number){
+                this.placasservice.getAllPlacasBusByEmSuEm(empId, suemId)
+                    .subscribe(
+                        data => {this.placas = data;},
+                        err  => {this.errorMessage = err},
+                        () =>this.isLoading = false
+                    );
+            }
+
+            //todas las programaciones por empresa y año
+            getAllProgramacionByEm( empId: number, anio: number){
+                this.programacionService.getAllProgramacionByEm(empId, anio)
+                    .subscribe(
+                        datos => {
+                            this.progRest = datos ; 
+                            //console.log(this.progRest);
+                            this.mostrargrillaProgramacionMaestro();
+                        },
+                        err => {this.errorMessage = err}, 
+                        () =>this.isLoading = false
+                    );
+                //console.log(this.progRest)
+            }
 
 
     //ABRIR 1ERA VENTANA MODAL(BOTON NUEVO)
@@ -803,30 +828,7 @@ export class ProgComponent implements OnInit{
     //CARGAR COLUMNAS Y ARRAY DE PROGRAMACION
 
 
-    //CONSULTA RECUPERAR BUSES POR empId(id de empresa)  suemId(subempresa id) SOLO DA LOS BUSES ACTIVOS
-    getAllPlacasBusByEmSuEm(empId: number, suemId : number){
-        this.placasservice.getAllPlacasBusByEmSuEm(empId, suemId)
-            .subscribe(
-                data => {this.placas = data;},
-                err  => {this.errorMessage = err},
-                () =>this.isLoading = false
-            );
-    }
-
-    //todas las programaciones por empresa y año
-    getAllProgramacionByEm( empId: number, anio: number){
-        this.programacionService.getAllProgramacionByEm(empId, anio)
-            .subscribe(
-                datos => {
-                    this.progRest = datos ; 
-                    //console.log(this.progRest);
-                    this.mostrargrillaProgramacionMaestro();
-                },
-                err => {this.errorMessage = err}, 
-                () =>this.isLoading = false
-            );
-        //console.log(this.progRest)
-    }
+  
     
     //extraer placas y el ID de los buses OPTIMIZAR ESTE CODIGO, MUCHAS VECES SE ESTA USANDO EN EL FUNCIONAMIENTO DEL PROGRAMA
     extrayendoPlacasBus(){

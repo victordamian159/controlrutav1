@@ -80,7 +80,7 @@ export class EmpSubEmpService{
             }
         /* ELIMINAR */
             deleteSubEmpresa(suemid:number){
-                return this.http.delete(this.baseUrl2+"delete/"+suemid) // ...using post request
+                return this.http.delete(this.baseUrl2+suemid) // ...using post request
                                 .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
                                 .catch((error:any) => Observable.throw(error.json().error || 'Server error')); //...errors if any
             }

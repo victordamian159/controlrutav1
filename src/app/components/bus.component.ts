@@ -5,6 +5,12 @@ import {hora,_hora,_cCeroFecha} from 'app/funciones';
 import {PersService} from '../service/personal.service';
 import {EmpPerService} from '../service/empresapersonal.service';
 import {TeleMovilService} from '../service/telefono.service';
+import {GlobalVars} from 'app/variables'
+
+import {DataTable} from 'primeng/components/datatable/datatable';
+import { ViewChild } from '@angular/core';
+
+
 
 @Component({
     selector: 'app-bus',
@@ -14,6 +20,7 @@ import {TeleMovilService} from '../service/telefono.service';
 
 export class BusComponent implements OnInit{
 
+    @ViewChild(DataTable) dtEmpPer: DataTable;
 
     /* OBJETOS*/
         bus:any={
@@ -48,11 +55,13 @@ export class BusComponent implements OnInit{
         private objBusPer:any;
         private objTeMovil:any;
 
-    /*ARRAYS */
-        _bus=[]; /*ARRAY BD*/
-        _gbus=[]; /*ARRAY GRILLA*/
-        _busPer=[]; /*ARRAY BD*/
-        _gbusPer=[]; /*ARRAY GRILLA*/
+    /* ARRAYS */
+        private selectedRow=[];
+        private _bus=[]; /*ARRAY BD*/
+        private _gbus=[]; /*ARRAY GRILLA*/
+        private _busPer=[]; /*ARRAY BD*/
+        private _gbusPer=[]; /*ARRAY GRILLA*/
+        private arrTelAsig=[]; /* TELEFONOS ASIGNADOS */
         private arrEmpPer:any[]=[]; /* ARRAY PERSONAS POR SUBEMPRESAS(DATATABLE PRINCIPAL) */
         _arrsuEmp:any[]=[]; //ARRAY COMBO SUBEMPRESAS
         private arrTipoEmpPer:any[]=[]; // ARRAY TIPOS DE PERSONA EN LA EMPRESA
@@ -80,7 +89,7 @@ export class BusComponent implements OnInit{
         private BuTipoCombustible:string; /* VAR COMBO COMBUSTIBLES FORM NUEVO BUS */
         private BuOperatividad:number; 
         private BuActivo:number;
-
+        private PeId:number; /* ID NO USO*/
 
         titulo:string;
         mensaje:string;
@@ -93,6 +102,9 @@ export class BusComponent implements OnInit{
         displayEliminarBusPers : boolean = false;
         displayNuevoTelMovil:boolean=false;
         displayNuevoTelefono:boolean=false;
+        displayEditarBusPers:boolean=false;
+        displayConfElimTelAsig:boolean=false;
+        displayConfEditTelAsig:boolean=false;
     
 
     /* OTRAS VARIABLES*/
@@ -103,32 +115,45 @@ export class BusComponent implements OnInit{
         private userId:number;
         private SuEmRSocial:string;
 
-    constructor(private busService: BusService,
-                private empSubempservice : EmpSubEmpService,
-                private empPerservice : EmpPerService,
-                private movilService : TeleMovilService){}
+    
 
     ngOnInit(){
-        this.BuPlaca="none";
+        /*this.BuPlaca="none";
         this.emid=1;
-        this.userId=1;
-        this._suemid=0; /*VARIABLE COMBO SUBEMPRE FORM PRINCIPAL */
+        this.userId=1;*/
         /*this.suemid=1; this.bus.EmId=1; this.bus.SuEmId=1;*/
-        this.arrTipoEmpPer=[{id:'01',perTEmpPer:'GERENTE'},{id:'02',perTEmpPer:'ADMINISTRADOR'},
+        
+        this.getallsuembyemid(this.emid);
+    }
+
+    constructor(private busService: BusService, private empSubempservice : EmpSubEmpService,
+                private empPerservice : EmpPerService, private movilService : TeleMovilService,
+                public ClassGlobal:GlobalVars){
+                    this.emid=this.ClassGlobal.GetEmId();
+                    this.userId=this.ClassGlobal.GetUsId();
+                    this.BuPlaca="none";
+                    this._suemid=0; /*VARIABLE COMBO SUBEMPRE FORM PRINCIPAL */
+                    this.arrTipoEmpPer=[{id:'01',perTEmpPer:'GERENTE'},{id:'02',perTEmpPer:'ADMINISTRADOR'},
                             {id:'03',perTEmpPer:'COBRADOR'},{id:'04',perTEmpPer:'ASOCIADOS'},
                             {id:'05',perTEmpPer:'CHOFER'},{id:'06',perTEmpPer:'CONTROLADOR'}];
-        this.arrBuPeTipo=[{id:'01',cargo:'CHOFER'}, {id:'02',cargo:'COBRADOR'}];
-        this.getallsuembyemid(this.emid);
-        this.combustibles=[{id:"01",nomb:"GASOLINA"},{id:"02",nomb:"PETROLEO"},{id:"03",nomb:"GLP"},
-                           {id:"04",nomb:"ELECTRICO"},{id:"05",nomb:"DIESEL"},{id:"06",nomb:"HIBRIDO"}]
+                    this.arrBuPeTipo=[{id:'01',cargo:'CHOFER'}, {id:'02',cargo:'COBRADOR'}];
+                    
+                    this.combustibles=[{id:"01",nomb:"GASOLINA"},{id:"02",nomb:"PETROLEO"},{id:"03",nomb:"GLP"},
+                                    {id:"04",nomb:"ELECTRICO"},{id:"05",nomb:"DIESEL"},{id:"06",nomb:"HIBRIDO"}]
 
-        this.operativo=[{id:1,nomb:"SI"},{id:0,nomb:"NO"}];
-        this.activo=[{id:1,nomb:"SI"},{id:0,nomb:"NO"}];
-    }
+                    this.operativo=[{id:1,nomb:"SI"},{id:0,nomb:"NO"}];
+                    this.activo=[{id:1,nomb:"SI"},{id:0,nomb:"NO"}];
+                }
+
+    /*resetDtEmpPer(dtEmpPer:DataTable){
+        dtEmpPer.reset();
+    }*/
+    
+    
     /* PROCEDURES */
         /* TABLA BUS */
+            /* NUEVO */
             procNuevoBus(){
-    
                 let fechaAct = new Date(), año=fechaAct.getFullYear(), mes=fechaAct.getMonth()+1, dia=fechaAct.getDate();
                 let f=[año,mes,dia]; let _f=f.join("-"); let fecha=_cCeroFecha(_f); 
                 this.bus={};
@@ -138,6 +163,15 @@ export class BusComponent implements OnInit{
                 
                 this.busService.newBus().subscribe(
                         data => {this.objBus=data;}
+                );
+            }
+
+            /* GUARDAR */
+            /* ELIMINAR */
+            procEliminaBus(id:number){
+                this.busService.deleteBus(id).subscribe(
+                    realizar => { this.getallbusbyemidsuemid(this.emid,this._suemid); this.displayEliminarBus=false;},
+                    error => {console.log(error);}
                 );
             }
 
@@ -152,19 +186,35 @@ export class BusComponent implements OnInit{
             /* GUARDAR */
                 procSaveNuevoBusPer(obj : Object){
                     this.busService.saveBusPersona(obj).subscribe( 
-                        realizar => {},
+                        realizar => {this.getallbusbypersona(this.emid,this.BuId); /* CONSULTANDO BUSPERSONA */},
                             err => { this.errorMessage = err }
                     );
                 }
             /* BUSCAR POR ID */
+                procgetBusPersonaById(bupeid:number){
+                    let objBuPer:any;
+                    this.busService.getBusPersonaById(bupeid).subscribe(
+                        data => { objBuPer = data; this.mformBusPer(objBuPer);},
+                                err => {this.errorMessage = err}, 
+                                () =>this.isLoading = false
+                    );
+                }
+
             /* ELIMINAR */
+                proceEliminarBusPer(id:number){
+                    this.busService.deleteBusPersona(id).subscribe(
+                        realizar => {this.getallbusbypersona(this.emid,this.BuId); },
+                        error => {console.log(error);}
+                    );
+                }
+
         
         /* TABLA TELEFONO */
             /* ALL TELEFONOS BY BUID */ 
                 procGetAllTleMovilByBuId(buid:number){
                     let allSPhone:any;
                     this.movilService.getAllTeleMovilById(buid).subscribe(
-                        data=> {allSPhone=data; console.log(allSPhone);}
+                        data=> {allSPhone=data; this.mgTelAsig(allSPhone);}
                     );
                 }
 
@@ -172,20 +222,20 @@ export class BusComponent implements OnInit{
                 procNuevoTeleMovil(){
                     this.TeId=0;
                     this.movilService.newTeMov().subscribe(
-                        data => {this.objTeMovil=data; console.log(this.objTeMovil);}
+                        data => {this.objTeMovil=data; /*console.log(this.objTeMovil);*/}
                     );
                 }
 
             /* GUARDAR */
                 procSaveNuevoTeleMovil(obj : Object){
                     this.movilService.saveTeMov(obj).subscribe( 
-                        realizar => {},
+                        realizar => {this.procGetAllTleMovilByBuId(this.BuId);},
                             err => { this.errorMessage = err }
                     );
                 }
 
             /* BUSCAR POR ID */
-                getTeleMovilbyId(teid:number){
+                procGetTeleMovilbyId(teid:number){
                     let objTel:any;
                     this.movilService.getTeMovById(teid).subscribe(
                         data => { objTel = data; this.mformTeleMovil(objTel);},
@@ -197,17 +247,12 @@ export class BusComponent implements OnInit{
             /* ELIMINAR */
                 procDeleteTeleMovil(teid:number){
                     this.movilService.deleteTeMov(teid).subscribe(
-                        realizar => {},
+                        realizar => {this.procGetAllTleMovilByBuId(this.BuId);},
                              err => {console.log(err);}
                     );
                 }
 
-     /* FUNCION ASOCIA A COMBO SUBEMPRESAS (FORM NUEVO BUSPERSONA) */ 
-        _SuEmId(){
-            console.log(this.suemid);
-            /* PROCEDURE BUSCAR TODAS LAS PERSONA(EN CADA SUBEMPRESA) POR EMID Y SUEMID */
-            this.getallempPerByEmIdSuEmId(this.emid,this.suemid);
-        }
+    
     
     /* PROCEDURE OBTENIENDO DATOS -> EMPRESAPERSONA TODAS LAS PERSONAS DENTRO DE UNA SUBEMP */
         getallempPerByEmIdSuEmId(emid:number, suemid:number){
@@ -220,84 +265,36 @@ export class BusComponent implements OnInit{
             );
         }
 
-    /* TABLA EMPPER GRILLA ASIGNAR BUSPERSONA */
-        mgEmprPers(arrEmpPer=[]){
-            this.arrEmpPer=[];
-            for(let empper of arrEmpPer){
-                this.arrEmpPer.push({
-                    nro:0,
-                    EmPeTipo:empper.EmPeTipo,
-                    Id:empper.Id,
-                    PeApellidos:empper.PeApellidos,
-                    PeDNI:empper.PeDNI,
-                    PeNombres:empper.PeNombres,
-                    SuEmRSocial:empper.SuEmRSocial
-                });
-            }
-            /* ENUMERANDO FILAS */
-            for(let i=0; i<this.arrEmpPer.length;i++){
-                this.arrEmpPer[i].nro=i+1;
-            }
-
-            /* MOSTRANDO CARGOS arrTipoEmpPer */
-            let i=0,j=0,cen=0;
-            while(i<this.arrEmpPer.length){
-                while(j<this.arrTipoEmpPer.length && cen==0){
-                    if(this.arrEmpPer[i].EmPeTipo==this.arrTipoEmpPer[j].id){
-                        this.arrEmpPer[i].EmPeTipo= this.arrTipoEmpPer[j].perTEmpPer;
-                        cen=1;
-                    }else if(this.arrEmpPer[i].EmPeTipo!=this.arrTipoEmpPer[j].id){
-                        j++;cen=0;
-                    }
-                }
-                cen=0;
-                j=0;
-                i++;
-            }
-        }
-
     /* CONSULTA TODAS LAS SUBEMPRESAS POR EMID */
-    getallsuembyemid(emid:number){
-        let arrsuemp:any=[]=[];
-        this.empSubempservice.getallsubempresasbyemid(emid).subscribe(
-            data => {arrsuemp=data; this.mcSubEmpresas(arrsuemp); }
-        );
-    }
+        getallsuembyemid(emid:number){
+            let arrsuemp:any=[]=[];
+            this.empSubempservice.getallsubempresasbyemid(emid).subscribe(
+                data => {arrsuemp=data; this.mcSubEmpresas(arrsuemp); }
+            );
+        }
     
     /* CONSULTA TODOS LOS BUSES POR EMPRESA Y SUBEMPRESA*/
-    getallbusbyemidsuemid(emid:number, suemid:number){
-        this.busService.getAllBusByEmEmSu(emid, suemid).subscribe(
-            data => {this._bus=data; this.mgBus();},
-            err => {this.errorMessage = err},
-            () => this.isLoading = false
-        );
-    }
+        getallbusbyemidsuemid(emid:number, suemid:number){
+            this.busService.getAllBusByEmEmSu(emid, suemid).subscribe(
+                data => {this._bus=data; this.mgBus(); console.log(this._bus);},
+                err => {this.errorMessage = err},
+                () => this.isLoading = false
+            );
+        }
 
     /* CONSULTA BUSES POR PERSONA */
-    getallbusbypersona(emid:number, buid:number){
-        let busPers:any[]=[];
-        this.busService.getAllBusByEmEmSubuId(emid,buid).subscribe(
-            data => {busPers=data; 
-                     /*this._gbusPer=busPers;*/
-                     this.mgBusPer(busPers);},
-            err => {this.errorMessage = err},
-            () => this.isLoading = false
-        );
-    }
-
-    /* MOSTRAR SUBEMPRESAS EN COMBO */
-    mcSubEmpresas(arrsuEmp=[]){
-        this._arrsuEmp=[];
-        for(let suemp of arrsuEmp){
-            this._arrsuEmp.push({
-                SuEmId:suemp.SuEmId,
-                SuEmRSocial:suemp.SuEmRSocial,
-                SuEmRuc:suemp.SuEmRuc,
-                SuEmDireccion:suemp.SuEmDireccion,
-                SuEmTiempoVuelta:suemp.SuEmTiempoVuelta
-            });
+        getallbusbypersona(emid:number, buid:number){
+            let busPers:any[]=[];
+            this.busService.getAllBusByEmEmSubuId(emid,buid).subscribe(
+                data => {busPers=data; 
+                        /*this._gbusPer=busPers;*/
+                        this.mgBusPer(busPers);},
+                err => {this.errorMessage = err},
+                () => this.isLoading = false
+            );
         }
-    }
+
+    
     /* FORM PRINCIPAL BTNNUEVO */
         /* NUEVO OBJETO BUS BTNNUEVO BUS*/ 
             nuevoBus(){
@@ -309,6 +306,11 @@ export class BusComponent implements OnInit{
             }
         /* BTNNUEVO BUSPERSONA */
             nuevoBusPersona(){
+                /* LIMPIANDO VARIABLES */
+                    this.arrEmpPer=[];
+                    this.suemid=null;
+                    this.BuPeTipo=null;
+
                 this.displayNuevoBusPersona=true;
                 this.procNuevoBusPer();
             }
@@ -322,28 +324,39 @@ export class BusComponent implements OnInit{
     /* EDITAR OBJETO BUS*/ 
     editarBus(buid : number){
         /* BUSCANDO OBJETO */
+        let activo:number,operativo:number;
         this.busId=buid;
         this.busService.getBusById(buid).subscribe(
             data => {
                         this.bus=data; 
+                        console.log(this.bus);
+
                         this.bus.BuActivo=this.bus.BuActivo.toString();
                         this.bus.BuOperatividad=this.bus.BuOperatividad.toString();
-                        
+                        this.BuTipoCombustible=this.bus.BuTipoCombustible; /* VAR DEL COMBO TIPO COMBUS */
                         this.bus.BuFechaIngreso=this.formatFech(this._fecha(this.bus.BuFechaIngreso));
                         this.bus.BuFechaSalida=this.formatFech(this._fecha(this.bus.BuFechaSalida));
 
-                        if(this.bus.BuActivo == "true"){
-                            this.bus.BuActivo="si";
-                        }else if(this.bus.BuActivo == "false"){
-                            this.bus.BuActivo="no";
-                        }
+                        /* BUS AGREGADO A LA EMPRESA */
+                            if(this.bus.BuActivo == "true"){
+                                activo=1;
+                                this.bus.BuActivo="si";
+                            }else if(this.bus.BuActivo == "false"){
+                                this.bus.BuActivo="no";
+                                activo=0;
+                            }
 
-                        if(this.bus.BuOperatividad == "true"){
-                            this.bus.BuOperatividad="si";
-                        }else if(this.bus.BuOperatividad=="false"){
-                            this.bus.BuOperatividad="no";
-                        }
-                        console.log(this.bus);
+                        /* BUS CIRCULANDO EN LA EMPRESA */
+                            if(this.bus.BuOperatividad == "true"){
+                                this.bus.BuOperatividad="si";
+                                operativo=1;
+                            }else if(this.bus.BuOperatividad=="false"){
+                                this.bus.BuOperatividad="no";
+                                operativo=0;
+                            }
+                        
+                        this.BuOperatividad=operativo; 
+                        this.BuActivo=activo;
                         /* FECHAS */
                     },
             error => {this.errorMessage = error}
@@ -355,69 +368,171 @@ export class BusComponent implements OnInit{
 
     /* CUADRO ELIMINAR REGISTRO BUS*/ 
     eliminarBus(idbus : number){
-        /*console.log("eliminar");*/
         this.mensaje="¿Esta Seguro De Eliminar El Registro?";
         this.displayEliminarBus = true;
         this.idDelReg=idbus;
-        console.log(idbus);
     }
 
     /* ELIMINAR REGISTRO BUS DE LA BD */ 
     _eliminarBus(){
         this.mensaje ="";        
-       
         /* CONSULTA ELIMINAR BUS*/
-        this.busService.deleteBus(this.idDelReg).subscribe(
-            realizar => { this.getallbusbyemidsuemid(1,1); this.displayEliminarBus=false;},
+        this.procEliminaBus(this.idDelReg);
+
+        /*this.busService.deleteBus(this.idDelReg).subscribe(
+            realizar => { this.getallbusbyemidsuemid(this.emid,this._suemid); this.displayEliminarBus=false;},
             error => {console.log(error);}
-        );
-        
+        );*/
         this.displayEliminarBus = false;
-        this.idDelReg=0;
     }
 
     cancelEliminar(){
         this.mensaje = "";
         this.displayEliminarBus=false;
-        this.idDelReg=0; /* REINICIANDO VARIABLE*/
         /*BORRAR DE MEMORIA EL OBJETO*/
     }
 
 
 
     /* MOSTRAR DATOS RECUPERADOS TELEFONO MOVIL EN FORMULARIO */ 
-    mformTeleMovil(TelMovil:any){
-        console.log(TelMovil);
-    }
+        mformTeleMovil(TelMovil:any){
+            console.log(TelMovil);
+        }
+    
+    /* CARGANDO DATOS A DATATABLES */
+        /* PARA EDITAR FORM BUSPERSONA */
+            mformBusPer(objBuPer:any){
+                console.log(objBuPer);
+            }
+        /* MOSTRAR TODOS LOS BUSES EN GRILLA PRINCIPAL*/
+            mgBus(){
+                this._gbus=[];
+                for(let bus of this._bus){
+                    this._gbus.push({
+                        nro : 0, 
+                        BuId:bus.BuId, 
+                        SuEmId:bus.SuEmId,
+                        BuDescripcion : bus.BuDescripcion, 
+                        BuPlaca : bus.BuPlaca, 
+                        BuMarca : bus.BuMarca, 
+                        BuCapacidad : bus.BuCapacidad
+                    });
+                }
+                for(let i=0; i<this._bus.length;i++){
+                    this._gbus[i].nro=i+1;
+                }
+            }
+        
+        /* TABLA EMPPER GRILLA ASIGNAR BUSPERSONA */
+            mgEmprPers(arrEmpPer=[]){
+                this.arrEmpPer=[];
+                for(let empper of arrEmpPer){
+                    this.arrEmpPer.push({
+                        nro:0,
+                        EmPeTipo:empper.EmPeTipo,
+                        Id:empper.Id,
+                        PeApellidos:empper.PeApellidos,
+                        PeDNI:empper.PeDNI,
+                        PeNombres:empper.PeNombres,
+                        SuEmRSocial:empper.SuEmRSocial
+                    });
+                }
+                /* ENUMERANDO FILAS */
+                for(let i=0; i<this.arrEmpPer.length;i++){
+                    this.arrEmpPer[i].nro=i+1;
+                }
 
-    /* MOSTRAR TODOS LOS BUSES EN GRILLA PRINCIPAL*/
-    mgBus(){
-        this._gbus=[];
-        for(let bus of this._bus){
-            this._gbus.push({
-                nro : 0, 
-                BuId:bus.BuId, 
-                SuEmId:bus.SuEmId,
-                BuDescripcion : bus.BuDescripcion, 
-                BuPlaca : bus.BuPlaca, 
-                BuMarca : bus.BuMarca, 
-                BuCapacidad : bus.BuCapacidad
-            });
-        }
-        for(let i=0; i<this._bus.length;i++){
-            this._gbus[i].nro=i+1;
-        }
-    }
+                /* MOSTRANDO CARGOS arrTipoEmpPer */
+                let i=0,j=0,cen=0;
+                while(i<this.arrEmpPer.length){
+                    while(j<this.arrTipoEmpPer.length && cen==0){
+                        if(this.arrEmpPer[i].EmPeTipo==this.arrTipoEmpPer[j].id){
+                            this.arrEmpPer[i].EmPeTipo= this.arrTipoEmpPer[j].perTEmpPer;
+                            cen=1;
+                        }else if(this.arrEmpPer[i].EmPeTipo!=this.arrTipoEmpPer[j].id){
+                            j++;cen=0;
+                        }
+                    }
+                    cen=0;
+                    j=0;
+                    i++;
+                }
+            }
+
+        /* MOSTRAR SUBEMPRESAS EN COMBO */
+            mcSubEmpresas(arrsuEmp=[]){
+                this._arrsuEmp=[];
+                for(let suemp of arrsuEmp){
+                    this._arrsuEmp.push({
+                        SuEmId:suemp.SuEmId,
+                        SuEmRSocial:suemp.SuEmRSocial,
+                        SuEmRuc:suemp.SuEmRuc,
+                        SuEmDireccion:suemp.SuEmDireccion,
+                        SuEmTiempoVuelta:suemp.SuEmTiempoVuelta
+                    });
+                }
+            }
+
+        /* MOSTRAR GRILLA BUSPERSONA */
+            mgBusPer(arrBusPers=[]){
+                this._gbusPer=[];
+                for(let bus of arrBusPers){
+                    this._gbusPer.push({
+                        nro: 0,
+                        /*PeId:bus.PeId,BuId:bus.BuId,BuPeTipo:bus.BuPeTipo,UsId:bus.UsId*/
+                        EmPeTipo:bus.EmPeTipo,
+                        BuPeId:bus.Id,
+                        PeApellidos:bus.PeApellidos,
+                        PeDNI:bus.PeDNI,
+                        PeEmail:bus.PeEmail,
+                        PeFecNac:bus.PeFecNac,
+                        PeFechaIng:bus.PeFechaIng,
+                        PeNombres:bus.PeNombres,
+                        PeSexo:bus.PeSexo,
+                        SuEmRSocial:bus.SuEmRSocial,
+                    });
+                }
+                for(let i=0; i<arrBusPers.length; i++){
+                    this._gbusPer[i].nro=i+1;
+                }
+                /*console.log(this._gbusPer);*/
+            }
+        
+        /* MOSTRAR TELEFONOS ASIGNADOS */
+            mgTelAsig(arrTelAsig=[]){
+                this.arrTelAsig=[];
+
+                for(let telasig of arrTelAsig){
+                    this.arrTelAsig.push({
+                        nro: 0,
+                        BuId:telasig.BuId,
+                        BuPlaca:telasig.BuPlaca,
+                        EmConsorcio:telasig.EmConsorcio,
+                        EmId:telasig.EmId,
+                        SuEmRSocial:telasig.SuEmRSocial,
+                        TeId:telasig.TeId,
+                        TeImei:telasig.TeImei,
+                        TeMarca:telasig.TeMarca,
+                    });
+                }
+                for(let i=0; i<arrTelAsig.length; i++){
+                    this.arrTelAsig[i].nro=i+1;
+                }
+                /*console.log(this.arrTelAsig);*/
+            }
 
     /* FUNCIONES - SELECCION UNA FILA DE UN DATATABLE */
         /* TABLE BUS  - SELECCIONA REGISTRO CABECERA Y MUESTRA LOS DETALLES DEL BUS*/
             onRowSelectBus(event){
                 let emid:number, buid:number;
                 emid=this.emid;  buid=event.data.BuId;
-                console.log(emid); console.log(buid);
-                this.getallbusbypersona(emid,buid);
+                /*console.log(emid); console.log(buid);*/
+
+                this.getallbusbypersona(emid,buid); /* CONSULTANDO BUSPERSONA */
+                this.procGetAllTleMovilByBuId(buid); /* CONSULTANDO TELEFONO ASIGNADO A LA PLACA */
                 
                 this.BuId=event.data.BuId;
+                console.log(this.BuId);
                 this.BuPlaca=event.data.BuPlaca;
             }
 
@@ -432,16 +547,20 @@ export class BusComponent implements OnInit{
 
          /* CONDICIONAL SI NO OPE */
         if(this.bus.BuActivo=="si"){
-            this.bus.BuActivo=true;
+            /*this.bus.BuActivo=true;*/
+            this.bus.BuActivo=1;
         }else if(this.bus.BuActivo=="no"){
-            this.bus.BuActivo=false;
+            /*this.bus.BuActivo=false;*/
+            this.bus.BuActivo=0;
         }
 
         /* CONDICIONAL SI NO ACT */
         if(this.bus.BuOperatividad=="si"){
-            this.bus.BuOperatividad=true;
+            /*this.bus.BuOperatividad=true;*/
+            this.bus.BuOperatividad=1;
         }else if(this.bus.BuOperatividad=="no"){
-            this.bus.BuOperatividad=false;
+            /*this.bus.BuOperatividad=false;*/
+            this.bus.BuOperatividad=0;
         }
 
          this.objBus={
@@ -476,10 +595,13 @@ export class BusComponent implements OnInit{
             this.objBus.BuId=this.busId;
         }
 
-        console.log(this.objBus);
-        /*SERVICIO SAVE BD*/
+        /*console.log(this.objBus);*/
+        /*SERVICIO SAVE BD  */
         this.busService.saveBus(this.objBus).subscribe(
-                    realizar => {this.getallbusbyemidsuemid(1,1);},
+                    realizar => {
+                                    /*this.getallbusbyemidsuemid(1,1);*/
+                                    this.getallbusbyemidsuemid(this.emid,this._suemid);
+                                },
                     err => {this.errorMessage = err}
         );
 
@@ -504,51 +626,98 @@ export class BusComponent implements OnInit{
         this.mensaje="";
         this.displayAceptarNuevoBus=false;
     }
+/* TABLA TELEFONO */
+    /* DATATABLE */
+        /* BTNROW EDITAR TELEFONO */ 
+            /* BTN */
+                editarTelAsig(TeId:number){
+                    this.mensaje="¿Esta seguro de editar el registro?";
+                    this.TeId=TeId;
+                    this.displayConfEditTelAsig=true;
+                    console.log(TeId);
+                }
+            /* ACEPTAR EDITAR */
+                _editarTelAsig(){
+                    this.mensaje="";
+                    this.displayConfEditTelAsig=false;
+                    /* ABRIR VENTANA MODAL */
+                    /* PROCEDURE */
+                    this.procGetTeleMovilbyId(this.TeId);
+                    /* LIMPIAR VARIABLES INVOLUCRADAS */
+                }
+            /* CANCELAR EDITAR */
+                canceEditarTelAsig(){
+                    this.mensaje="";
+                    this.displayConfEditTelAsig=false;
+                    /* LIMPIAR VARIABLES INVOLUCRADAS */
+                }
+        /* BTNROW ELIMINAR TELEFONO */
+            /* BTN */
+                eliminarTelAsig(TeId:number){
+                    this.mensaje="¿Esta seguro de eliminar el registro?";
+                    this.TeId=TeId;
+                    this.displayConfElimTelAsig=true;
+                    console.log(TeId);
+                }
+            /* ACEPTAR EDITAR */
+                _eliminarTelAsig(){
+                    this.mensaje="";
+                    this.displayConfElimTelAsig=false;
+                    /* ABRIR VENTANA MODAL */
+                    /* PROCEDURE */
+                    this.procDeleteTeleMovil(this.TeId);
+                    /* LIMPIAR VARIABLES INVOLUCRADAS */
+                }
+            /* CANCELAR EDITAR */
+                cancelElimTelAsig(){
+                    this.mensaje="";
+                    this.displayConfElimTelAsig=false;
+                    /* LIMPIAR VARIABLES INVOLUCRADAS */
+                }
 
 /* TABLA BUSPERSONA*/
-    mgBusPer(arrBusPers=[]){
-        this._gbusPer=[];
-        for(let bus of arrBusPers){
-            this._gbusPer.push({
-                nro: 0,
-                /*PeId:bus.PeId,BuId:bus.BuId,BuPeTipo:bus.BuPeTipo,UsId:bus.UsId*/
-                EmPeTipo:bus.EmPeTipo,
-                BuPeId:bus.Id,
-                PeApellidos:bus.PeApellidos,
-                PeDNI:bus.PeDNI,
-                PeEmail:bus.PeEmail,
-                PeFecNac:bus.PeFecNac,
-                PeFechaIng:bus.PeFechaIng,
-                PeNombres:bus.PeNombres,
-                PeSexo:bus.PeSexo,
-                SuEmRSocial:bus.SuEmRSocial,
-            });
-        }
-        for(let i=0; i<arrBusPers.length; i++){
-            this._gbusPer[i].nro=i+1;
-        }
-        console.log(this._gbusPer);
-    }
+     /* DATATABLE */
+        /* EDITAR BUSPERSONA (BOTON FILA DATATABLE) */
+            /* BOTON */
+            editarBusPers(bupeid : number){
+                this.BuPeId=bupeid;
+                this.mensaje="¿Esta Seguro De Editar el Registro?";
+                this.displayEditarBusPers=true;
+            }
+            /* ACEPTAR EDITAR */
+            _editarBusPers(){
+                this.mensaje="";
+                this.displayEditarBusPers=false;
+                this.procgetBusPersonaById(this.BuPeId); 
+            }
+            /* CANCELAR EDITAR */
+            cancelEditarBusPers(){
+                this.mensaje="";
+                this.displayEditarBusPers=false;
+            }
+
+        /* ELIMINAR BUSPERSONA (BOTON FILA DATATABLE) */
+            /* BOTON */
+            eliminarBusPers(BuPeId : number){
+                this.BuPeId=BuPeId;
+                /*console.log(BuPeId);*/
+                this.mensaje="¿Esta Seguro De ELiminar el Registro?";
+                this.displayEliminarBusPers=true;
+            }
+            /* ACEPTAR ELIMINAR */
+            _eliminarBusPers(){
+                this.mensaje="";
+                /*CONSULTA Y RECUPERAR VARIABLE PA ELIMINAR */ 
+                this.displayEliminarBusPers=false;
+                this.proceEliminarBusPer(this.BuPeId);
+            }
+            /* CANCELAR ELIMINAR */
+            cancEliBusPers(){
+                this.mensaje="";
+                this.displayEliminarBusPers=false;
+            }
 
     
-
-    editarBusPers(busd : Object){}
-
-    eliminarBusPers(PeId : number){
-        this.mensaje="¿Esta Seguro De ELiminar el Registro?";
-        this.displayEliminarBusPers=true;
-    }
-    _eliminarBusPers(){
-        this.mensaje="";
-
-        /*CONSULTA Y RECUPERAR VARIABLE PA ELIMINAR */ 
-        this.displayEliminarBusPers=false;
-    }
-    cancEliBusPers(){
-        this.mensaje="";
-        this.displayEliminarBusPers=false;
-    }
-
     /* FUNCION GUARDAR - ASOCIADA A BTN GUARDAR NUEVO BUSPERSONA */
         guardarBusPer(){
             this.displayNuevoBusPersona=false;
@@ -560,6 +729,7 @@ export class BusComponent implements OnInit{
                 UsFechaReg:new Date(),
                 UsId:this.userId
             }
+            console.log(this.BuId);
             console.log(this.objBusPer);
             this.procSaveNuevoBusPer(this.objBusPer);
         }
@@ -568,7 +738,7 @@ export class BusComponent implements OnInit{
             this.displayNuevoBusPersona=false;
             this.BuPeTipo=0;
             this.EmPeId=0;
-            this.BuId=0;
+            /*this.BuId=0;*/
         }
 
     /* FUNCION ASOCIADA AL COMBO SUBEMPRESAS FORM PRINCIPAL */ 
@@ -584,10 +754,18 @@ export class BusComponent implements OnInit{
                 i++;
             }
         }
-    
+
+    /* FUNCION ASOCIA A COMBO SUBEMPRESAS (FORM NUEVO BUSPERSONA) */ 
+        _SuEmId(){
+            this.EmPeId=null;
+            this.selectedRow=[];
+            /* PROCEDURE BUSCAR TODAS LAS PERSONA(EN CADA SUBEMPRESA) POR EMID Y SUEMID */
+            this.getallempPerByEmIdSuEmId(this.emid,this.suemid);
+        }
+
     /* FUNCION ASOCIADA AL COMBO TIPO COMBUSTIBLE FORM NUEVO BUS */ 
         FunComb_Combustibles(){
-            console.log(this.BuTipoCombustible);
+            /*console.log(this.BuTipoCombustible);*/
         }
     
     /* BTN MODAL GUARDAR NUEVO TELEMOVIL */
@@ -616,6 +794,10 @@ export class BusComponent implements OnInit{
 
         cancelarTelMovil(){
             this.displayNuevoTelMovil=false;
+            this.telefono.TeMarca="";
+            this.telefono.TeImei="";
+            this.telefono.TeModelo="";
+            this.telefono.TeVersionAndroid="";
         }
 
 /*PASAR A LIBRERIA */ 

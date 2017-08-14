@@ -37,23 +37,28 @@ input{
 }
 
 
-@media(max-width:768px){
-    form{
-        width:75%;
+@media(max-width:900px){
+    /*.navbar{
+        width:60%;
+        border-radius: 35px;
     }
+    .nav-item{
+        color:red;
+    }*/
 }
 
 @media(max-width:480px){
-    form{
-        width:95%;
-    }
+    /*.navbar{
+        width:100%;
+        border-radius: 35px;
+    }*/
 }
 
-header{
+/*header{
     width: 100%;
-    height: 100px;
-    background-color:#5FCACF;
-}
+    height: 10px;
+    background-color:red;
+}*/
 
 footer{
     background-color: #00796B;
@@ -76,54 +81,94 @@ footer{
     border-radius:0;
     padding-top: 0px; 
     padding-bottom: 0px;
+    background-color: #00796B;
 }
 
-/*ICONO NAVBAR*/
+/*CONTENEDOR MENU DESPLEGABLE*/
+.dropdown-menu:hover{
+    text-decoration: none;
+    margin-right:20px;
+    padding:0;
+    /*background:#4CAF50;*/
+}
+
+/* CONTENEDR MENU DFESPLEGABLE PANTALLA NORMAL: ;*/
+.dropdown-menu{
+    /*display: block;*/
+    width: 100%;
+    /*padding:30px 30px;*/
+    margin-right:20px;
+    /*position: absolute;*/
+    /*margin:0;*/
+    background-color:#00796B;
+    /*bottom: 0;*/
+}
+
+
+/*ICONO NAVBAR IMAGEN BUS*/
 .navbar-brand{
     font-size: 13px;
-    padding-left: 10px;
+    margin:0;
+    padding:20px 20px;
+    /*padding-left: 10px;
     padding-right: 20px;
     padding-bottom: 10px;
-    padding-top : 18px;
+    padding-top : 18px;*/
 }
 
-
+/* ICONO MENU DISPOSITIVOS MOVILES */
 .navbar-toggler-right{
+    margin:10px -10px;
+    padding: 10px 10px;
+    /*float: left;
+    justify-content: flex-start;
     margin-top: 13px;
-    margin-right: -5px;
+    margin-right: -5px;*/
 }
 
-/* LISTA */
+/* NAVBAR CUANDO ESTA EN MOVIL, EL ESPACIO QUE USA 
+LA LISTA DESPLEGABLE QUE VA A ABAJO OCUPANDO ESPACIO 
+DESPLAZANDO AL FORMNULARIO*/
 .navbar-nav{
     font-size: 13px;
-    margin: 0px 0px 0px 0px; 
+    text-align:center;
+    margin:0;
+    padding: 0;
+    height: 100%;
+    width: 60%;
+}
+
+/* PERSONALIZAR BOTON PARA ABRIR SUBMENUS */
+.dropdown-toggle:hover{
+    margin: 0;
+    padding: 0;
+    /*background: red;*/
+    text-decoration: none;
 }
 
 /* ITEM LISTA*/
 .nav-item{
     display: block;
-    padding:10px;
+    padding:20px 1px; 
+    width: 150%;
     border-right: 2px solid white;
     line-height: 30px; 
-    border-top:  2px solid white;
+    /*border-top:  2px solid white;*/
     text-decoration: none;
     font-size: 14px;
+    background:red;
+    
 }
 
+/* BOTONES DEL MENU PARA DESPLEGAR */
 .dropdown{
+    padding:20px 0;
+    margin:0;
     background-color: #00796B;
     /*background: #F3F3F3;
     color: #F3F3F3;*/
-    transition: all 0.5s;
 }
 
-.dropdown-menu{
-    /*display: block;*/
-    width: 250%;
-    padding:0;
-    /*margin:0;*/
-    background-color:#00796B;
-}
 
 .nav-item:hover{
     background-color: #4CAF50;
@@ -136,9 +181,12 @@ footer{
     color:white;
 }
 
+
+/* SUB ITEM (MENU DESPLEGABLE) */
 .sub-nav-item{
     width: 100%;
     padding: 15px 20px;
+    border-top: 1px solid white;
     transition: all 0.5s;
 }
 
@@ -154,7 +202,9 @@ footer{
 }
 
 .active{
-    background: black;
+    /*background: black;*/
+    color:#4CAF50;
+    font-weight: 900;
 }
 
 #nomUsuario{

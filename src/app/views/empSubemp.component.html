@@ -4,27 +4,32 @@
     
     <!--CUERPO-->
     <div class="row">
-        <!--BTN NUEVA EMPRESA-->
-        <div class="col-xl-4 col-md-3 col-sm-4 col-xs-12">
-            <button type="button" pButton id="btnNuevo" icon="fa-file-text-o" (click)="nuevaEmpresa();" label="Nuevo Registro"></button>
-        </div>
-          
         <!--EMPRESA-->
         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+            <!--BTN NUEVA EMPRESA-->
             <div class="row">
-                <div class="table table-responsive">
-                    <p-dataTable [value]="empresas" scrollable="true"  scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectEmpresa($event)">
-                            <!--COLUMNAS-->
-                            <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                                <template let-col let-Emp="rowData" pTemplate="body" >
-                                    <button id="btnTable" type="button" pButton (click)="editarEmpresa(Emp.EmId, Emp.EmTipo)" icon="fa-pencil-square-o"></button>	
-                                    <button id="btnTable" type="button" pButton (click)="eliminarEmpresa(Emp.EmId)" icon="fa-trash" ></button>
-                                </template>          
-                            </p-column>
-                            <p-column field="Nro" header="N°" [style]="{'width':'2em','text-align':'center'}"></p-column>
-                            <p-column field="EmConsorcio" header="Consorcio" [style]="{'width':'12em'}" ></p-column>
-                            <p-column field="Tipo" header="Tipo" [style]="{'width':'6em','text-align':'center'}" ></p-column>
-                    </p-dataTable>
+                <div class="col-xl-4 col-md-3 col-sm-4 col-xs-12">
+                    <button type="button" pButton id="btnNuevo" icon="fa-file-text-o" (click)="nuevaEmpresa();" label="Nuevo Registro"></button>
+                </div>
+            </div>
+            
+            <!--EMPRESA-->
+            <div class="row">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="table table-responsive">
+                        <p-dataTable [value]="empresas" scrollable="true"  scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectEmpresa($event)" emptyMessage="No Hay Registros">
+                                <!--COLUMNAS-->
+                                <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                                    <template let-col let-Emp="rowData" pTemplate="body" >
+                                        <button id="btnTable" type="button" pButton (click)="editarEmpresa(Emp.EmId, Emp.EmTipo)" icon="fa-pencil-square-o"></button>	
+                                        <button id="btnTable" type="button" pButton (click)="eliminarEmpresa(Emp.EmId)" icon="fa-trash" ></button>
+                                    </template>          
+                                </p-column>
+                                <p-column field="Nro" header="N°" [style]="{'width':'3em','text-align':'center'}"></p-column>
+                                <p-column field="EmConsorcio" header="Nombre" [style]="{'width':'16em'}" ></p-column>
+                                <p-column field="Tipo" header="Tipo" [style]="{'width':'8em','text-align':'center'}" ></p-column>
+                        </p-dataTable>
+                    </div>
                 </div>
             </div>
         </div>
@@ -34,14 +39,15 @@
             <!--BTN NUEVA SUBEMPRESA-->
             <div class="row">
                 <div class="col-xl-4 col-md-3 col-sm-4 col-xs-12">
-                    <button type="button" pButton id="btnNuevo" icon="fa-file-text-o" (click)="nuevaSubEmpresa();" [disabled]="EmId==0" label="Agregar Empresa"></button>
+                    <button type="button" pButton id="btnNuevo" icon="fa-file-text-o" (click)="nuevaSubEmpresa();" [disabled]="selectRow==false" label="Agregar Empresa"></button>
                 </div>
             </div>
+
             <!--TABLA SUBEMPRESA-->
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="table table-responsive">
-                        <p-dataTable [value]="subempresas" [rows]="4" scrollable="true"  scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectSubEmp($event)">
+                        <p-dataTable [value]="subempresas" [rows]="4" scrollable="true"  scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectSubEmp($event)" emptyMessage="No Hay Registros">
                                 <!--COLUMNAS-->
                                 <p-column styleClass="col-button" [style]="{'width':'3em'}">
                                     <template let-col let-ObjSubEmp="rowData" pTemplate="body" >
@@ -62,6 +68,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 

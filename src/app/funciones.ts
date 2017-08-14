@@ -21,7 +21,7 @@
         return hora;
     }
     
-    //COMPLETANDO CEROS EN CASO DE NECESITAR PARA HORAS Y FECHAS   2017/
+    //COMPLETANDO CEROS EN CASO DE NECESITAR PARA HORAS  2017/
     export function cCeroHora(h:string) :string{
             //DIVIDIRLO EN PARTES Y COMPLETAR LOS CEROS PARA QUE LOS ELEMENTOS SEAN TODOS PARES
             let hora : string, _hora :string, resultado, i=0;
@@ -111,13 +111,30 @@
     //CONVERTIR DATE A STRING PARA FECHA  - ---   BD A GRILLA
     export function _fecha(fecha: Date) :string{
         let fechaProg : string; let _fechaProg : string; let _fecha = new Date(fecha);  
-        //_fechaProg=(_fecha.getFullYear()).toString() +" / "+ (_fecha.getMonth() +1 ).toString() +" / "+(_fecha.getDate()).toString() ;
+        /* 
+         //_fechaProg=(_fecha.getFullYear()).toString() +" / "+ (_fecha.getMonth() +1 ).toString() +" / "+(_fecha.getDate()).toString() ;
+        */
         _fechaProg=(_fecha.getDate()).toString() +" / "+ (_fecha.getMonth() +1 ).toString() +" / "+(_fecha.getFullYear()).toString() ;
         _fechaProg=cCeroFecha(_fechaProg);
         return  _fechaProg;
     }
 
 
+    /* COMPLETAR LA HORA EN CASO NECESARIO (PUEDEN BORRAR LOS SEGUNDOS) */
+    export function corrigiendoHora(hora:string):Date{
+         let thoy:Date,  otra:Date, horaTarjeta:string;
+            thoy=new Date();          
+            //COMPLETANDO LOS SEGUNDOS SI ES NECESARIO
+            if(hora.length<=5){
+                hora = hora+":00"; 
+            }
+            horaTarjeta=hora;
+            let resultado=horaTarjeta.split(':');
+            otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));
+        return otra;
+    }
+
+    /* SACAR LA FECHA ACTUAL DEL SISTEMA */
     export function fechaActual():string{
         let fecha;
         

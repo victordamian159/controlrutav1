@@ -86,13 +86,11 @@ export class BusService{
             }
         /* ELIMINAR BUSPERSONA*/
             deleteBusPersona(id:number){
-                return this.http.delete(this.baseUrl2+ "delete/"+id)
+                return this.http.delete(this.baseUrl2+id)
                                     .map( (r:Response) => r.json() )
                                     .catch( (error:any) => Observable.throw(error.json().error || 'Error en el servidor' ))
             }
         
-
-
     /* CAPTURADOR DE ERROR*/
         handleError (error: any) {
             // log error
