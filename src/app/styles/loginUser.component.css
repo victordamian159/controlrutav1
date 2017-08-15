@@ -1,0 +1,29 @@
+ .loginContainer{
+     margin:auto;
+     width: 80%;
+     padding: 50px 0;
+     max-width: 500px;
+ }
+
+ .form-control{
+     width: 100%;
+ }
+
+.col{
+    margin-top:10px;
+    margin-left:80px;
+    margin-right:80px;
+    margin-bottom:0px;
+}
+
+/*APARIENCIA BOTON NUEVO (ARRIBA DE GRILLA PRINCIPAL)*/
+#btnLogin{
+    padding:4px;
+    width: 100%;
+    background: #4CAF50; 
+}
+
+h3{
+    text-align: center;
+    color:#00796B;
+}

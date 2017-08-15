@@ -20,7 +20,7 @@
                 </div>
             <!--NUEVO REGISTRO-->
                 <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
-                    <button id="btnNuevo" pButton icon="fa-user-plus" (click)="nuevoEmpPer(); vincularPersona();" label="Integrar Persona" ></button>
+                    <button id="btnNuevo" pButton icon="fa-user-plus" [disabled]="suemid==0" (click)="nuevoEmpPer(); vincularPersona();" label="Integrar Persona" ></button>
                 </div>
         </div>
         
@@ -29,10 +29,10 @@
             <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="row">
                     <div class="table table-responsive">
-                        <p-dataTable [value]="arrEmpPer" [globalFilter]="filtroGlobal" scrollable="true" emptyMessage="No Hay Registros" scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectPerEmp($event)">
+                        <p-dataTable [value]="arrEmpPer" [globalFilter]="filtroGlobal" scrollable="true" [(selection)]="selectedRow" emptyMessage="No Hay Registros" scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectPerEmp($event)">
                             <p-column styleClass="col-button" [style]="{'width':'3em'}">
                                 <template let-col  let-emp="rowData"  pTemplate="body">
-                                        <button type="button" pButton class="btn" (click)=  "editarEmpPer(emp.Id)" icon="fa-pencil-square-o" > </button>
+                                        <button type="button" pButton class="btn"  (click)=  "editarEmpPer(emp.Id)" icon="fa-pencil-square-o" > </button>
                                         <button type="button" pButton class="btn" (click)=  "eliminarEmpPer(emp.Id)" icon="fa-trash" > </button>                  
                                 </template>
                             </p-column>
@@ -65,6 +65,7 @@
                 <button id="btnNuevo" pButton icon="fa-user-plus" [disabled]="nombre=='x'" (click)="nuevoUserSystem();" label="Nuevo Usuario"></button>
             </div>
         </div>
+
         <!--TABLA USUARIO DEL SISTEMA-->
         <div class="row">
             <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
@@ -73,8 +74,8 @@
                         <p-dataTable [value]="arrAllUser" [globalFilter]="filtroGlobal3" scrollable="true" emptyMessage="No Hay Registros" scrollWidth="100%" >
                             <p-column styleClass="col-button" [style]="{'width':'3em'}">
                                 <template let-col  let-usersystem="rowData"  pTemplate="body">
-                                        <button pButton class="btn" (click)="editarUserSystem(usersystem.Id)" icon="fa-pencil-square-o" > </button>
-                                        <button pButton class="btn" (click)="eliminarUserSystem(usersystem.Id)" icon="fa-trash" > </button>                  
+                                        <!--<button pButton class="btn" (click)="editarUserSystem(usersystem.UsId)" [disabled]="EmPeId==-1" icon="fa-pencil-square-o" > </button>-->
+                                        <button pButton class="btn" (click)="eliminarUserSystem(usersystem.UsId)" icon="fa-trash" > </button>                  
                                 </template>
                             </p-column>
                             <p-column field="Nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
@@ -90,7 +91,7 @@
 
 
 <!--FORMULARIOS-->
-    <!-- NUEVO REGISTRO EMPRESAPERSONA  -- AGREGANDO (BUSCANDO) UN USUARIO PARA AGREGARLO A LA SUBEMPRESA CON UN CARGO-->
+    <!-- NUEVO REGISTRO EMPRESAPERSONA AGREGANDO (BUSCANDO) UN USUARIO PARA AGREGARLO A LA SUBEMPRESA CON UN CARGO-->
     <p-dialog [(visible)]="displayNuevaEmpPersona" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
         <!-- COMBO SUEMPS - FILTRO - BTNNUEVAPERSONA - PERSONASTABLA-->
         <div class="row">
@@ -101,31 +102,37 @@
                         <!--COMBO + FILTRO + BTNNUEVAPER-->
                         <div class="row">
                             <!--COMBO SUBEMPRESAS-->
-                                <div class="col-xl-4 col-md-4 col-sm-4 col-sx-12">                 
-                                    <select class="form-control" required [(ngModel)]="_suemid" (change)="SuEmId($event)">
+                                <div class="col-xl-3 col-md-3 col-sm-6 col-sx-12">                 
+                                    <select class="form-control" required [(ngModel)]="_suemid" (change)="SuEmId($event)" #subempid="ngModel">
                                         <!--<option value="" disabled selected hidden>Please Choose...</option>-->
                                         <option *ngFor="let suem of _arrsuEmp" [value]="suem.SuEmId">
                                             {{suem.SuEmRSocial}}
                                         </option>
                                     </select> 
+                                    <div id="validation" [hidden]="!subempid.touched || subempid.valid ">
+                                        obligatorio
+                                    </div>
                                 </div>
                             
                             <!--COMBO TIPO PERSONA EN LA EMPRESA-->
-                                <div class="col-xl-4 col-md-4 col-sm-4 col-sx-12">                 
-                                    <select class="form-control" required [(ngModel)]="idTiEmpPer" (change)="idTipEmpPer($event)">
+                                <div class="col-xl-3 col-md-3 col-sm-6 col-sx-12">                 
+                                    <select class="form-control" required [(ngModel)]="idTiEmpPer" (change)="idTipEmpPer($event)" #tipocargoempper="ngModel">
                                         <option *ngFor="let tEmp of arrTipoEmpPer" [value]="tEmp.id">
                                             {{tEmp.perTEmpPer}}
                                         </option>
                                     </select> 
+                                    <div id="validation" [hidden]="!tipocargoempper.touched || tipocargoempper.valid ">
+                                        obligatorio
+                                    </div>
                                 </div>
 
                             <!--FILTRO-->
-                                <div class="col-xl-4 col-md-4 col-sm-4 col-sx-12">
+                                <div class="col-xl-3 col-md-3 col-sm-6 col-sx-12">
                                     <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal2/>
                                 </div>
 
                             <!--BTN NUEVA ASIGNACION-->
-                                <div class="col-xl-4 col-md-4 col-sm-4 col-sx-12">
+                                <div class="col-xl-3 col-md-3 col-sm-6 col-sx-12">
                                     <button id="btn" type="button" (click)="nuevaPersona();" pButton icon="fa-file-text-o" label="Nueva Persona"></button>
                                 </div>
                         </div>
@@ -135,7 +142,7 @@
                         <!--PERSONASTABLA-->
                         <div class="row">
                             <div class="table table-responsive">                               
-                                <p-dataTable [value]="personalArr" [globalFilter]="filtroGlobal2" (onRowSelect)="onRowSelPers($event)" emptyMessage="Lista vacia" scrollable="true" scrollWidth="100%" selectionMode="single" >                            
+                                <p-dataTable [value]="personalArr" [globalFilter]="filtroGlobal2" (onRowSelect)="onRowSelPers($event)" [(selection)]="selectRowPersona" emptyMessage="Lista vacia" scrollable="true" scrollWidth="100%" selectionMode="single" >                            
                                     <p-column styleClass="col-button" [style]="{'width':'2em'}">
                                         <template let-col let-per="rowData" pTemplate="body">                                                           
                                             <button type="button" pButton (click)="eliminarPersona(per.PeId)" icon="fa-trash"> </button>
@@ -154,14 +161,13 @@
                 </div>
             </div>
         </div>
-
         
         <div class="row">
             <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
-                <button id="btn" type="button" (click)="guardarEmpPersona();" pButton icon="fa-save" label="Guardar"></button>
+                <button id="btn" type="button" (click)="guardarEmpPersona(); subempid.reset(); tipocargoempper.reset();" [disabled]="!this.selectPersona || !subempid.valid || !tipocargoempper.valid" pButton icon="fa-save" label="Guardar"></button>
             </div>
             <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
-                <button id="btn" type="button" (click)="cancelarEmpPersona();" pButton icon="fa-close" label="Cancelar"></button>
+                <button id="btn" type="button" (click)="cancelarEmpPersona(); subempid.reset(); tipocargoempper.reset();" pButton icon="fa-close" label="Cancelar"></button>
             </div>
             <!--<div class="col-xl-4 col-md-4 col-sm-4 col-sx-12">
                 <button id="btn" type="button" (click)="nuevaPersona()" pButton icon="fa-user-plus" label="Agregar Persona"></button>
@@ -176,16 +182,24 @@
             <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="container">
                     <div class="form-group">
-                        <input type="text" class="form-control" maxlength="40" placeholder="Nombres" [(ngModel)]="persona.nombres"/>
+                        <label>Nombres:</label>
+                        <input type="text" class="form-control" maxlength="40" [(ngModel)]="persona.nombres" #nompersona="ngModel" required/>
+                        <div id="validation" [hidden]="!nompersona.touched || nompersona.valid">Error en los datos</div>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" maxlength="60" placeholder="Apellidos" [(ngModel)]="persona.apellidos"/>
+                        <label>Apellidos:</label>
+                        <input type="text" class="form-control" maxlength="60" [(ngModel)]="persona.apellidos" #apepersona="ngModel" required/>
+                        <div id="validation" [hidden]="!apepersona.touched || apepersona.valid">Error en los datos</div>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" maxlength="8" placeholder="DNI" [(ngModel)]="persona.dni"/>
+                        <label>DNI:</label>
+                        <input type="text" class="form-control" maxlength="8" [(ngModel)]="persona.dni" #dnipersona="ngModel" required/>
+                        <div id="validation" [hidden]="!dnipersona.touched || dnipersona.valid">Error en los datos</div>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" maxlength="10" placeholder="Nro. Tel. Celular" [(ngModel)]="persona.nrocel"/>
+                        <label>Nro Celular:</label>
+                        <input type="text" class="form-control" maxlength="10" [(ngModel)]="persona.nrocel" #nrocelpersona="ngModel" required/>
+                        <div id="validation" [hidden]="!nrocelpersona.touched || nrocelpersona.valid">Error en los datos</div>
                     </div>
                 </div>
             </div>
@@ -193,10 +207,10 @@
 
         <div class="row">
             <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
-                <button id="btn" type="button" (click)="guardarNuevaPersona()" pButton icon="fa-save" label="Guardar"></button>
+                <button id="btn" type="button" [disabled]="!nompersona.valid || !apepersona.valid || !dnipersona.valid || !nrocelpersona.valid" (click)="guardarNuevaPersona(); nompersona.reset();  apepersona.reset();  dnipersona.reset();  nrocelpersona.reset(); " pButton icon="fa-save" label="Guardar"></button>
             </div>
             <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
-                <button id="btn" type="button" (click)="cancelarNuevaPersona()" pButton icon="fa-close" label="Cancelar"></button>
+                <button id="btn" type="button" (click)="cancelarNuevaPersona(); nompersona.reset();  apepersona.reset();  dnipersona.reset();  nrocelpersona.reset();" pButton icon="fa-close" label="Cancelar"></button>
             </div>
         </div>
     </p-dialog>
@@ -209,11 +223,20 @@
                 <div class="container">
                     <div class="form-group">
                         <label>Usuario:</label>
-                        <input type="text" class="form-control" maxlength="20" [(ngModel)]="userSystem.nomUser"/>
+                        <input type="text" class="form-control" maxlength="25" [(ngModel)]="userSystem.nomUser" required #nickuser="ngModel" />
+                        <span *ngIf="!nickuser.valid && nickuser.touched" id="validation" style="display: inline-block; font-size: 80%;" >
+                            <div [hidden]="!nickuser.errors.required"> Obligatorio </div>
+                            <div [hidden]="!nickuser.errors.maxlength"> Maximo 25 Caracteres </div>
+                        </span>
                     </div>
                     <div class="form-group">
                         <label>Contraseña:</label>
-                        <input type="text" class="form-control" maxlength="20" [(ngModel)]="userSystem.password"/>
+                        <input type="text" class="form-control" minlength="10" maxlength="25" [(ngModel)]="userSystem.password" required #password="ngModel" />
+                        <span *ngIf="!password.valid && password.touched" id="validation" style="display: inline-block; font-size: 80%;" >
+                            <div [hidden]="!password.errors.required"> Obligatorio </div>
+                            <div [hidden]="!password.errors.minlength"> Minimo 10 Caracteres </div>
+                            <div [hidden]="!password.errors.maxlength"> Maximo 25 Caracteres </div>
+                        </span> 
                     </div>
                 </div>
             </div>
@@ -221,15 +244,39 @@
 
         <div class="row">
             <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
-                <button id="btn" type="button" (click)="guardarNewUserSystem();" pButton icon="fa-save" label="Guardar"></button>
+                <button id="btn" type="button" [disabled]="!nickuser.valid || !password.valid" (click)="guardarNewUserSystem(); nickuser.reset(); password.reset();" pButton icon="fa-save" label="Guardar"></button>
             </div>
             <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
-                <button id="btn" type="button" (click)="cancelarNewUserSystem();" pButton icon="fa-close" label="Cancelar"></button>
+                <button id="btn" type="button" (click)="cancelarNewUserSystem(); nickuser.reset(); password.reset();" pButton icon="fa-close" label="Cancelar"></button>
             </div>
         </div>
     </p-dialog>
 <!--VENTANAS CONFIRMACION-->
 
+    <!--CONFIRMACION EDITAR EMPRESA_PERSONA--> 
+        <p-dialog [(visible)]="displayConfEditEmpPer" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
+            {{mensaje}}
+            <div class="btn_Modal row ">
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xm-12">
+                    <button class="btn_modal" type="button" pButton icon="fa-save" label="Editar" (click)="aceptarEditEmpPer()"></button>
+                </div>
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xm-12"> 
+                    <button class="btn_modal" type="button" pButton icon="fa-close" label="Cancelar" (click)="cancelEditEmpPer()"></button>
+                </div>
+            </div>
+        </p-dialog>
 
+    <!--CONFIRMACION ELIMINAR EMPRESA_PERSONA--> 
+        <p-dialog [(visible)]="displayConfElimEmpPer" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
+            {{mensaje}}
+            <div class="btn_Modal row ">
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xm-12">
+                    <button class="btn_modal" type="button" pButton icon="fa-trash-o" label="Eliminar" (click)="aceptarElimEmpPer()"></button>
+                </div>
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xm-12"> 
+                    <button class="btn_modal" type="button" pButton icon="fa-close" label="Cancelar" (click)="cancelElimEmpPer()"></button>
+                </div>
+            </div>
+        </p-dialog>
 
 

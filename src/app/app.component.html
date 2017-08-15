@@ -31,15 +31,7 @@
 
                 <!--OPERACIONES-->
                 <li class="nav-item dropdown">
-                    <a  href="#" 
-                        class="dropdown-toggle" 
-                        data-toggle="dropdown" 
-                        role="button" 
-                        aria-haspopup="true" 
-                        aria-expanded="true">
-                            Operaciones 
-                        <span class="caret"></span>
-                    </a>
+                    <a  href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Operaciones <span class="caret"></span></a>
 
                     <!--MENU-->
                     <ul class="dropdown-menu">
@@ -72,14 +64,18 @@
             </ul>   
         </div>
 
-        <!--
-        <div class="navbar-collapse collapse" id="userLogout">
-            <li id="nomUsuario"><a>Usuario:{{nombre}}</a></li>
+        <!---->
+        <div id="user_Logout">
+            <li id="nomUser">
+                <a>Usuario:{{nombre}}</a>
+            </li>
+            <li id="btn_logout" >
+                <a href="#" routerLink="/login">Cerrar Sesion</a>
+            </li>
         </div>
-        <div class="navbar-collapse collapse" id="userLogout">
-            <li class="nav-item "><a href="#" routerLink="/login">Cerrar Sesion</a></li>
-        </div>
-        -->
+        
+        
+        
         
     </nav>
 

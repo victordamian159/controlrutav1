@@ -1,7 +1,7 @@
 import {Component, OnInit ,ElementRef} from '@angular/core';
 import {Message} from 'primeng/primeng';
 //import {puntoscontrol, puntosTrazaRuta} from 'app/variables';
-
+import {GlobalVars} from 'app/variables'
 
 //para rest 
 import {PuntoControlService} from '../service/pcontrol.service';
@@ -29,7 +29,7 @@ export class PcontrolComponent implements OnInit{
         PuCoDescripcion:"",
         PuCoTiempoBus : "",
         PuCoClase : "",
-        UsId : 0,
+        UsId : 3,
         UsFechaReg : ""
     }
     // para mostrar grilla con el FOR
@@ -177,12 +177,36 @@ export class PcontrolComponent implements OnInit{
     private _ruid:number;
     private rutas:any=[];
     private emID : number;
+    private emid:number;
+    private userId:number;
 
     constructor( 
         private pcontrolService: PuntoControlService,
         //public el: ElementRef 
-        private rutaService: RutaService
-    ){}
+        private rutaService: RutaService,
+        public ClassGlobal:GlobalVars
+    ){
+        this.emid=this.ClassGlobal.GetEmId();
+        this.userId=this.ClassGlobal.GetUsId();
+        this.activeAddMarker = 0; //addmarker desactivado
+        //tambien cuando ya se a guardado los puntos en la BD
+        this.emID = this.emid;  /* ID EMPRESA */
+        this._ruid =0; /* INICIANDO RUID PARA DESHABILITAR EL BOTON NUEVO PUNTO */
+        this._PuCoId=0; /* USADO PARA ACTIVAR Y DESACTIVAR EL BOTON NUEVO PUNTO CONTROL*/
+        //DESACTIVANDO BOTONES (MAPA)
+         this.desGuardarPCD_BD=true;
+         this.desBorrarPCDet=true;
+         this.desDeshacerPCDet=true;
+         this.desEditarPCDetMarker=true;
+         this.desNuevosPuntos =true;
+
+        /* INICIAR HIDDEN BOTONES */
+         this.ocNuevo=false;
+         this.ocGuardar=true;
+         this.ocEditar=false;
+         this.ocCancelar=true;
+         this.ocBorrar=false;
+    }
 
     //iniciar 
     ngOnInit(){
@@ -192,27 +216,10 @@ export class PcontrolComponent implements OnInit{
             gestureHandling: 'greedy'
         };
 
-        this.emID = 1;  /* ID EMPRESA */
-        this._ruid =0; /* INICIANDO RUID PARA DESHABILITAR EL BOTON NUEVO PUNTO */
-        this._PuCoId=0; /* USADO PARA ACTIVAR Y DESACTIVAR EL BOTON NUEVO PUNTO CONTROL*/
+        
         this.getallrutasbyem(this.emID); /* RUTAS DE LA EMPRESA */
-   
-        this.activeAddMarker = 0; //addmarker desactivado
-        //tambien cuando ya se a guardado los puntos en la BD
-
-        //DESACTIVANDO BOTONES (MAPA)
-         this.desGuardarPCD_BD=true;
-         this.desBorrarPCDet=true;
-         this.desDeshacerPCDet=true;
-         this.desEditarPCDetMarker=true;
-         this.desNuevosPuntos =true;
-
-         /* INICIAR HIDDEN BOTONES */
-         this.ocNuevo=false;
-         this.ocGuardar=true;
-         this.ocEditar=false;
-         this.ocCancelar=true;
-         this.ocBorrar=false;
+        console.log(this.emid);
+        console.log(this.userId);    
     }
 
    
@@ -756,7 +763,7 @@ export class PcontrolComponent implements OnInit{
             RuId : this.pcMaestro.RuId,
             PuCoTiempoBus : this.hora(this.timeRec),
             PuCoClase :  this.pcMaestro.PuCoClase,
-            UsId : this.pcMaestro.UsId,
+            UsId : this.userId,
             UsFechaReg : new Date()
         }
 
@@ -887,7 +894,7 @@ export class PcontrolComponent implements OnInit{
                         PuCoDeLongitud : Number(this.y),
                         PuCoDeDescripcion : this.pcDetalle.PuCoDeDescripcion,
                         PuCoDeHora : this.fecha(this.pcDetalle.PuCoDeHora),
-                        UsId : 0,
+                        UsId : this.userId,
                         UsFechaReg : new Date(),
                         PuCoDeOrden : this.n //segun se vaya agregando al final
                     });
@@ -899,7 +906,7 @@ export class PcontrolComponent implements OnInit{
                         PuCoDeLongitud : Number(this.y),
                         PuCoDeDescripcion : this.pcDetalle.PuCoDeDescripcion,
                         PuCoDeHora : this.fecha(this.pcDetalle.PuCoDeHora),
-                        UsId : 0,
+                        UsId : this.userId,
                         UsFechaReg : new Date(),
                         PuCoDeOrden : this.pcDetalle.PuCoDeOrden-- 
                 });
@@ -928,7 +935,7 @@ export class PcontrolComponent implements OnInit{
                         PuCoDeLongitud : Number(this.y),
                         PuCoDeDescripcion : this.pcDetalle.PuCoDeDescripcion,
                         PuCoDeHora : this.fecha(this.pcDetalle.PuCoDeHora),
-                        UsId : 0,
+                        UsId : this.userId,
                         UsFechaReg : new Date(),
                         PuCoDeOrden : (this.ordenMayor+1) //segun se vaya agregando al final
                     });
@@ -949,7 +956,7 @@ export class PcontrolComponent implements OnInit{
                         PuCoDeLongitud : Number(this.y),
                         PuCoDeDescripcion : this.pcDetalle.PuCoDeDescripcion,
                         PuCoDeHora : this.fecha(this.pcDetalle.PuCoDeHora),
-                        UsId : 0,
+                        UsId : this.userId,
                         UsFechaReg : new Date(),
                         PuCoDeOrden : this.pcDetalle.PuCoDeOrden-- 
                 });

@@ -397,6 +397,16 @@ export class BusComponent implements OnInit{
     /* MOSTRAR DATOS RECUPERADOS TELEFONO MOVIL EN FORMULARIO */ 
         mformTeleMovil(TelMovil:any){
             console.log(TelMovil);
+            this.telefono.TeMarca=TelMovil.TeMarca;
+            this.telefono.TeImei=TelMovil.TeImei;
+            this.telefono.TeModelo=TelMovil.TeModelo;
+            this.telefono.TeVersionAndroid=TelMovil.TeVersionAndroid;
+            /* 
+                TeMarca:this.telefono.TeMarca,
+                TeImei:this.telefono.TeImei,
+                TeModelo:this.telefono.TeModelo,
+                TeVersionAndroid:this.telefono.TeVersionAndroid,
+            */
         }
     
     /* CARGANDO DATOS A DATATABLES */
@@ -495,6 +505,23 @@ export class BusComponent implements OnInit{
                 for(let i=0; i<arrBusPers.length; i++){
                     this._gbusPer[i].nro=i+1;
                 }
+
+                /* MOSTRANDO CARGOS arrTipoEmpPer */
+                let i=0,j=0,cen=0;
+                while(i<this._gbusPer.length){
+                    while(j<this.arrTipoEmpPer.length && cen==0){
+                        if(this._gbusPer[i].EmPeTipo==this.arrTipoEmpPer[j].id){
+                            this._gbusPer[i].EmPeTipo= this.arrTipoEmpPer[j].perTEmpPer;
+                            cen=1;
+                        }else if(this._gbusPer[i].EmPeTipo!=this.arrTipoEmpPer[j].id){
+                            j++;cen=0;
+                        }
+                    }
+                    cen=0;
+                    j=0;
+                    i++;
+                }
+
                 /*console.log(this._gbusPer);*/
             }
         
@@ -633,7 +660,7 @@ export class BusComponent implements OnInit{
                 editarTelAsig(TeId:number){
                     this.mensaje="¿Esta seguro de editar el registro?";
                     this.TeId=TeId;
-                    this.displayConfEditTelAsig=true;
+                    this.displayConfEditTelAsig=true;/* CONFIRMAR */
                     console.log(TeId);
                 }
             /* ACEPTAR EDITAR */
@@ -641,6 +668,8 @@ export class BusComponent implements OnInit{
                     this.mensaje="";
                     this.displayConfEditTelAsig=false;
                     /* ABRIR VENTANA MODAL */
+                    this.titulo="Editando Movil a la Placa "+this.BuPlaca;
+                    this.displayNuevoTelMovil=true;/* MODAL NUEVO TEL */
                     /* PROCEDURE */
                     this.procGetTeleMovilbyId(this.TeId);
                     /* LIMPIAR VARIABLES INVOLUCRADAS */
@@ -648,7 +677,9 @@ export class BusComponent implements OnInit{
             /* CANCELAR EDITAR */
                 canceEditarTelAsig(){
                     this.mensaje="";
+                    this.titulo="";
                     this.displayConfEditTelAsig=false;
+                    this.displayNuevoTelMovil=false;/* MODAL NUEVO TEL */
                     /* LIMPIAR VARIABLES INVOLUCRADAS */
                 }
         /* BTNROW ELIMINAR TELEFONO */

@@ -137,7 +137,7 @@
             <!--TIEMPO RECORRIDO-->
             <div class="form-group">
                 <label class="control-label" for="timeb">Tiempo de Recorrido:</label>
-                <input class="form-control" id="timeb" name="timebus"  type="text" [(ngModel)]="timeRec" 
+                <input class="form-control" id="timeb" name="timebus"  type="text" maxlength="8" [(ngModel)]="timeRec" 
                     pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})"  #time="ngModel" required/>
                 <div id="validation" [hidden]="!time.touched || time.valid ">
                     Error en los datos

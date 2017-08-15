@@ -1,18 +1,23 @@
-<div class="container">
-    <div class="row"><label>Iniciar Sesion</label></div>
+<div class="loginContainer">
+    <h3>Iniciar Sesion</h3>
     <!--INPUTS-->
     <div class="row">
-        <div class="form-group">
-            <label>Nombre de Usuario</label>
-            <input type="text" class="form-control" [(ngModel)]="LoginUser.Usuario">
+        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="form-group">
+                <label>Nombre de Usuario</label>
+                <input type="text" class="form-control" [(ngModel)]="LoginUser.Usuario">
+            </div>
         </div>
-        <div class="form-group">
-            <label>Contraseña</label>
-            <input type="text" class="form-control" [(ngModel)]="LoginUser.Password">
+        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="form-group">
+            
+                <label>Contraseña</label>
+                <input type="text" class="form-control" [(ngModel)]="LoginUser.Password">
+            </div>
         </div>
     </div>
     <!--BOTONES-->
     <div class="row">
-        <button class="form-control" pButton icon="fa-check" (click)="login()" label="Iniciar Sesion"></button>
+        <button id="btnLogin" class="form-control" pButton icon="fa-check" (click)="login()" label="Iniciar Sesion"></button>
     </div>
 </div>

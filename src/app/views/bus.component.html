@@ -66,9 +66,9 @@
                         </template>
                     </p-column>
                     <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
-                    <p-column field="PeApellidos" header="Placa" [style]="{'width':'10em','text-align':'center'}"></p-column>
-                    <p-column field="PeNombres" header="Persona" [style]="{'width':'10em','text-align':'center'}"></p-column>
-                    <p-column field="EmPeTipo" header="Cargo Emp" [style]="{'width':'10em','text-align':'left'}"></p-column>
+                    <p-column field="PeApellidos" header="Placa" [style]="{'width':'13em','text-align':'center'}"></p-column>
+                    <p-column field="PeNombres" header="Persona" [style]="{'width':'13em','text-align':'center'}"></p-column>
+                    <p-column field="EmPeTipo" header="Cargo Emp" [style]="{'width':'6em','text-align':'center'}"></p-column>
                 </p-dataTable>
             </div>
             
@@ -377,15 +377,21 @@
                     <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="form-group">
                             <label class="control-label">Marca:</label>
-                            <input class="form-control" type="text" [(ngModel)]="telefono.TeMarca" #martel="ngModel"/>
+                            <input class="form-control" type="text" [(ngModel)]="telefono.TeMarca" maxlength="45" required #martel="ngModel"/>
                         </div>
+                        <span *ngIf="!martel.valid && (martel.touched || martel.dirty)"  >  
+                            <div id="validation" [hidden]="!martel.errors.required"> obligatorio </div>
+                        </span> 
                     </div>
 
                     <!--IMEI-->
                     <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="form-group">
                             <label class="control-label" >Imei:</label>
-                            <input class="form-control" type="text" [(ngModel)]="telefono.TeImei" #imei="ngModel" />
+                            <input class="form-control" type="text" [(ngModel)]="telefono.TeImei" maxlength="15"  required #imei="ngModel" />
+                            <span *ngIf="!imei.valid && (imei.touched || imei.dirty)"  >  
+                                <div id="validation" [hidden]="!imei.errors.required"> obligatorio </div>
+                            </span> 
                         </div>
                     </div>
         
@@ -393,7 +399,10 @@
                     <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="form-group">
                             <label class="control-label" >Modelo:</label>
-                            <input class="form-control" type="text" [(ngModel)]="telefono.TeModelo" #modelo="ngModel" />
+                            <input class="form-control" type="text" [(ngModel)]="telefono.TeModelo" maxlength="45"  required #modelo="ngModel" />
+                            <span *ngIf="!modelo.valid && (modelo.touched || modelo.dirty)"  >  
+                                <div id="validation" [hidden]="!modelo.errors.required"> obligatorio </div>
+                            </span> 
                         </div>
                     </div>
 
@@ -401,7 +410,10 @@
                     <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="form-group">
                             <label class="control-label">Ver. Android:</label>
-                            <input class="form-control" type="text" [(ngModel)]="telefono.TeVersionAndroid"  #verAndro="ngModel" />   
+                            <input class="form-control" type="text" [(ngModel)]="telefono.TeVersionAndroid" maxlength="10"  #verAndro="ngModel" /> 
+                            <span *ngIf="!verAndro.valid && (verAndro.touched || verAndro.dirty)"  >  
+                                <div id="validation" [hidden]="!verAndro.errors.required"> obligatorio </div>
+                            </span>   
                         </div>
                     </div>
                 </div> 
@@ -409,11 +421,11 @@
 
             <!--PIE-->
             <div class="row">
-                <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
-                    <button id="btn" type="button" pButton label="Guardar"  (click)= "guardarTelMovil();"></button>
+                <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">                                                                                                         
+                    <button id="btn" type="button" pButton label="Guardar"  (click)= "guardarTelMovil(); martel.reset(); imei.reset(); modelo.reset(); verAndro.reset();" [disabled]="!martel.valid || !imei.valid || !modelo.valid || !verAndro.valid"></button>
                 </div>
                 <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
-                    <button id="btn" type="button" pButton label="Cancelar" (click)="cancelarTelMovil();"></button>
+                    <button id="btn" type="button" pButton label="Cancelar" (click)="cancelarTelMovil(); martel.reset(); imei.reset(); modelo.reset(); verAndro.reset();"></button>
                 </div>
             </div>
         </p-dialog>

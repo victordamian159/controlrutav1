@@ -16,22 +16,17 @@ export class AppComponent implements OnInit {
   private nombre:string;
 
   ngOnInit(){
-    //this.ocultarNavBar();
     console.log(this.dataUser);
-    console.log(this.userid);
-    console.log(this.emid);
-    console.log(this.nombre);
   }
   constructor(public ClassGlobal:GlobalVars){
-
     this.dataUser=this.ClassGlobal.GetDatosUsuario();
-    this.nombre=this.dataUser[0].PeNombres;
-    this.userid=this.ClassGlobal.GetUsId();
-    this.emid=this.ClassGlobal.GetEmId();
+    if(this.dataUser!=null || this.dataUser!=undefined){
+      this.nombre=this.dataUser[0].PeNombres;
+      this.userid=this.ClassGlobal.GetUsId();
+      this.emid=this.ClassGlobal.GetEmId();
+    }
   }
-
 }
-
 
 
 

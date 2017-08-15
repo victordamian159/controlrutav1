@@ -98,7 +98,12 @@ export class PersComponent implements OnInit{
                 let nwpersona:any;
                 this.personaService.newPersona().subscribe(
                     data => {nwpersona=data; this.peid=0;
-                             this.personal=nwpersona; this.PeEstCivil=""; this.PeSexo="";  }
+                             this.personal=nwpersona; 
+                             this.personal.PeFecNac="";
+                             this.personal.getPeFechaIng="";
+                             this.personal.PeFechaSal="";
+                             this.PeEstCivil=""; 
+                             this.PeSexo="";  }
                 );
             }
 

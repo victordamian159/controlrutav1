@@ -55,12 +55,13 @@ row{
 /* MODIFICANDO ESTILO PARA LOS INPUTS Y SU VALIDACION */
 .form-group{
     margin:0;
-    padding-bottom:18px;
+   padding-bottom:18px;
     padding-top:10px; 
 }
 
 .form-control{
     width: 100%;
+    /*margin-bottom:10px;*/
 }
 
 /* TEXTO VALIDACION BAJO EL INPUT */

@@ -3,6 +3,7 @@ import {Message} from 'primeng/primeng';
 //import {Ruta, RutaDetalle} from 'app/variables';
 //import {puntosTrazaRuta} from 'app/variables'
 import { RutaService } from '../service/ruta.service';
+import {GlobalVars} from 'app/variables'
 
 declare var google: any;
 
@@ -148,12 +149,13 @@ export class RutaComponent implements OnInit{
 
     /* OTRAS VARIABLES */
     emID : number;
-
+    em_id:number;
+    user_Id:number;
 //FUNCIONES
 
     /* VALORES INICIALES */
     ngOnInit(){
-        this.emID=1;
+        
 
         /* MAPA GOOGLE*/
         this.options = {
@@ -163,16 +165,21 @@ export class RutaComponent implements OnInit{
             //rotateControl: true,
         };
     
-        /* OCULTAR BOTONES MAPA */
-        this.actBtnBorrar=false;
-        this.actBtnEditar=true;
-        this.actBtnGuardar=false;
-        this.actBtnAtras=false;
-        this.actBtnNuevo=false;
+       
 
         /* CONSULTA RUTAS X EMID */
         this.getAllRutaByEm(this.emID);
         this.infoWindow = new google.maps.InfoWindow();
+
+        
+    }
+
+    //LLAMAR A RUTA SERVICE PARA USAR LOS PROCEDIMIENTOS ALMACENADOS
+    constructor(private rutaService: RutaService,public ClassGlobal:GlobalVars){
+        this.em_id=this.ClassGlobal.GetEmId();
+        this.user_Id=this.ClassGlobal.GetUsId();
+
+        this.emID=this.em_id;
 
         /*DESACTIVADO AGREGAR MARCADORES*/
         this.activarAddMarker = 0; 
@@ -185,6 +192,13 @@ export class RutaComponent implements OnInit{
     
         /* CENTINELA, ATENCION TRAZA NO PERMITIDA (SOLO 2 NODOS Y 1 LINEA) */
         this.cen_2=0;
+
+         /* OCULTAR BOTONES MAPA */
+        this.actBtnBorrar=false;
+        this.actBtnEditar=true;
+        this.actBtnGuardar=false;
+        this.actBtnAtras=false;
+        this.actBtnNuevo=false;
     }
 
     /*CLICK SOBRE OBJETO*/
@@ -1058,9 +1072,6 @@ export class RutaComponent implements OnInit{
         );
     }
 
-    //LLAMAR A RUTA SERVICE PARA USAR LOS PROCEDIMIENTOS ALMACENADOS
-    constructor(private rutaService: RutaService){}
-
     /* Nuevo Registro (BOTON NUEVO - CABECERA) */
     nuevaRutaMaestro(){
         this.displayNuevaRutaModal = true; 
@@ -1083,7 +1094,8 @@ export class RutaComponent implements OnInit{
                     RuRegMunicipal : this.Ruta2.RuRegMunicipal,
                     RuKilometro : this.Ruta2.RuKilometro, 
                     RuActivo : this.Ruta2.RuActivo, 
-                    UsId: 0,UsFechaReg: this.Ruta2.UsId
+                    UsId: this.user_Id,
+                    UsFechaReg: new Date()
                 }
             });
     }
@@ -1092,9 +1104,6 @@ export class RutaComponent implements OnInit{
     saveRutaMaestro(){
          //NUEVO REGISTRO
          if(this._RuId == 0){
-            //capturando la fecha actual       
-            this.Ruta.UsFechaReg = new Date();
-
             this.Ruta2.RuId = this.Ruta.RuId,
             this.Ruta2.EmId = this.Ruta.EmId,
             this.Ruta2.RuDescripcion = this.Ruta.RuDescripcion,
@@ -1102,8 +1111,8 @@ export class RutaComponent implements OnInit{
             this.Ruta2.RuRegMunicipal = this.Ruta.RuRegMunicipal,
             this.Ruta2.RuKilometro = this.Ruta.RuKilometro,
             this.Ruta2.RuActivo = this.Ruta.RuActivo,
-            this.Ruta2.UsId = this.Ruta.UsId,
-            this.Ruta2.UsFechaReg = this.Ruta.UsFechaReg
+            this.Ruta2.UsId = this.user_Id,
+            this.Ruta2.UsFechaReg = new Date()
         
         //EDITAR UN REGISTRO
         }else if(this._RuId != 0){
@@ -1259,7 +1268,7 @@ export class RutaComponent implements OnInit{
                         RuDeOrden:n,
                         RuId:this.indiceRowTabla,
                         UsFechaReg:new Date(),
-                        UsId:0, 
+                        UsId:this.user_Id, 
                         RuDeId:0
                 });
             }
