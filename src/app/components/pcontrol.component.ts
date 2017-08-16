@@ -218,8 +218,8 @@ export class PcontrolComponent implements OnInit{
 
         
         this.getallrutasbyem(this.emID); /* RUTAS DE LA EMPRESA */
-        console.log(this.emid);
-        console.log(this.userId);    
+        /*console.log(this.emid);
+        console.log(this.userId);    */
     }
 
    
@@ -444,7 +444,7 @@ export class PcontrolComponent implements OnInit{
             this.desEditarPCDetMarker= true;
             this.desNuevosPuntos= true;
         }
-        console.log(this.j);
+        /*console.log(this.j);*/
         //CONDICIONAL AGREGAR MARCADORES addmarker activado
         if(this.activeAddMarker == 1){ 
 
@@ -572,7 +572,6 @@ export class PcontrolComponent implements OnInit{
         for(let i=0;i<arrPC.length;i++){
             this.miniLista[i].nro=i+1;
         }
-        console.log(this.miniLista);
     }
 
     //CARGAR LA RUTA AL MAPA
@@ -883,10 +882,13 @@ export class PcontrolComponent implements OnInit{
 
        //CASO NUEVOS PUNTOS DE CONTROL DE CERO O CUANDO SE PRESIONA EL BOTON BORRAR (TODO LOS PUNTOS)
 
-       //NUEVO REGISTRO Y EL ARRAY PARA LA BD ESTA VACIO                   EXISTE AL MENOS UN NUEVO PUNTO
+       /* NUEVA LISTA DE P.CONTROL */
        if(this.editando == 0 ){
-            if(this.disabledInputPos == true){ //activado el  textbox (se puede ingresar una posicion manualmente)
-                //cargando los puntos control detalle a un array para ser mostrados y poder mandarlos al servidor REST
+
+            /* ORDEN AUTOMATICA */
+            if(this.disabledInputPos == true){ 
+    
+                /* ARRAY  DE PUNTOS */
                 this.pCArrayDetalleBD.push({
                         PuCoDeId : 0,
                         PuCoId : this.idFilaSeleccionada,
@@ -898,8 +900,19 @@ export class PcontrolComponent implements OnInit{
                         UsFechaReg : new Date(),
                         PuCoDeOrden : this.n //segun se vaya agregando al final
                     });
-            }else if(this.disabledInputPos==false){//desactivado el  textbox (no se puede ingresar una posicion manualmente)
-                this.pCArrayDetalleBD.splice(this.pcDetalle.PuCoDeOrden-1,0,{
+
+                this.miniLista.push({
+                    nro:this.pCArrayDetalleBD.length,
+                    PuCoDeDescripcion:this.pcDetalle.PuCoDeDescripcion,
+                    PuCoDeHora:this.pcDetalle.PuCoDeHora
+                });
+
+            /* ORDEN MANUAL */
+            }else if(this.disabledInputPos==false){
+                let pos:number; pos=this.pcDetalle.PuCoDeOrden;
+                
+                /* ARRAY  DE PUNTOS */
+                this.pCArrayDetalleBD.splice(pos-1,0,{
                         PuCoDeId : 0,
                         PuCoId : this.idFilaSeleccionada,
                         PuCoDeLatitud : Number(this.x),
@@ -910,14 +923,25 @@ export class PcontrolComponent implements OnInit{
                         UsFechaReg : new Date(),
                         PuCoDeOrden : this.pcDetalle.PuCoDeOrden-- 
                 });
+
+                console.log("manual: "+(pos-1));
+                 console.log(this.miniLista.length);
+
+                this.miniLista.splice(pos-1,0,{
+                    nro:this.pCArrayDetalleBD.length,
+                    PuCoDeDescripcion:this.pcDetalle.PuCoDeDescripcion,
+                    PuCoDeHora:this.pcDetalle.PuCoDeHora
+                });
+
                 //actualizando orden de los demas puntos de control
                 let n = this.pcDetalle.PuCoDeOrden; // n = 4
                 while( n <this.pCArrayDetalleBD.length){  //4 < 8
                     this.pCArrayDetalleBD[n].PuCoDeOrden =   (n+1); 
                     n++;
                 }
+
+                console.log(this.miniLista);
             }
-            
        
        //CASO PUNTOS EXISTENTES Y SE NECESITA AGREGAR NUEVOS PUNTOS, SI SE PRESIONA EL BOTON BORRAR NO SE TIENE QUE PASAR POR ACA
        //SE ESTA EDITANDO Y ARRAY EXISTEN AL MENOS UN PUNTO EN EL ARRAY 

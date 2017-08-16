@@ -37,7 +37,7 @@ input{
 }
 
 
-@media(max-width:900px){
+@media(max-width:991px){
     /*.navbar{
         width:60%;
         border-radius: 35px;
@@ -45,20 +45,23 @@ input{
     .nav-item{
         color:red;
     }*/
+    #nomUser{
+        display: none;
+    }
+    #btn_logout{
+        display: none;
+    }
+
+   
 }
 
 @media(max-width:480px){
     /*.navbar{
         width:100%;
         border-radius: 35px;
-    }*/
+    }
+    */
 }
-
-/*header{
-    width: 100%;
-    height: 10px;
-    background-color:red;
-}*/
 
 footer{
     background-color: #00796B;
@@ -212,43 +215,47 @@ DESPLAZANDO AL FORMNULARIO*/
     padding: 17px 20px; 
 }
 
-#user_Logout{
-    display: flex;
-    justify-content: flex-end;
-}
+/* NARBAR NORMAL ESCRITORIO */ 
+    #user_Logout{
+        display: flex;
+        justify-content: flex-end;
+    }
 
-#nomUser{
-    list-style:none;
-    font-size: 13px;
-    margin: 0;
-    margin-top:20px;
-    margin-right: 20px;
-    padding: 0;
-}
+    #nomUser{
+        list-style:none;
+        font-size: 13px;
+        margin: 0;
+        margin-top:20px;
+        margin-right: 20px;
+        padding: 0;
+    }
 
-#btn_logout{
-    border-left: 1px solid white;
-    margin:0;
-    margin-top:3px;
-    font-size: 14px;
-    list-style:none;
-    padding: 7px 50px;
-    /*width: 100%;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: pre;*/
-    text-align: center;
-   /* width: 40px;
-    height: 20px;*/
-}
+    #btn_logout{
+        border-left: 1px solid white;
+        margin:0;
+        margin-top:3px;
+        font-size: 14px;
+        list-style:none;
+        padding: 7px 50px;
+        /*width: 100%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: pre;*/
+        text-align: center;
+    /* width: 40px;
+        height: 20px;*/
+    }
 
-#btn_logout:hover{
-    background:#4CAF50;
-    text-decoration: none;
-    color:white;
-    font-size: 14px;
-    padding: 7px 50px;
-    margin:0;
-    margin-top:3px;
-    text-align: center;
-}
+    #btn_logout:hover{
+        background:#4CAF50;
+        text-decoration: none;
+        color:white;
+        font-size: 14px;
+        padding: 7px 50px;
+        margin:0;
+        margin-top:3px;
+        text-align: center;
+    }
+
+/* NARBAR MODO MOVIL */
+   
