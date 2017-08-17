@@ -5,7 +5,7 @@ import {RutaService} from '../service/ruta.service';
 import {PuntoControlService} from '../service/pcontrol.service'; 
 import {ProgramacionService} from '../service/prog.service';
 import {GlobalVars} from 'app/variables'
-import {hora,_hora,_cCeroFecha,cCeroHora,corrigiendoHora,fecha,_fecha} from 'app/funciones';
+import {hora,_hora,_cCeroFecha,cCeroHora,corrigiendoHora,fecha,_fecha,fechaActual1,editf1} from 'app/funciones';
 
 
 @Component({
@@ -172,6 +172,7 @@ export class TcontrolComponent implements OnInit{
         this.getallplacasbusbyemsuem(this.emID,0); /*TODAS LAS PLACAS POR EMID, EL CERO ES PARA TODOS LOS SUEMID*/
         this.getallprogramacionbyem(this.emID,0); //PROGRAMACION X EMP Y POR AÑO(ACLARAR ESTO)
         this.getAllRutaByEm(this.emID);
+        console.log(editf1(fechaActual1()));
     }
     
 
@@ -570,7 +571,8 @@ export class TcontrolComponent implements OnInit{
                 }
                 fechIni=this._programacion[i].PrFechaInicio.split("/");
                 fechIni=fechIni.join("-");
-                this.tarjeta._TaCoFecha=fechIni;
+                /*this.tarjeta._TaCoFecha=fechIni;*/
+                this.tarjeta._TaCoFecha=editf1(fechaActual1());
             }
 
             //SELECCIONAR PLACA DE BUS COMBOBOX

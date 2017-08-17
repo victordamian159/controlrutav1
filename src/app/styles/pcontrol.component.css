@@ -68,7 +68,7 @@
 /*USADO EN LOS BOTONES DE LAS VENTANAS MODALES*/
 .container{
     margin-bottom: 20px;
-    max-width: 800px;
+    max-width: 600px;
 }
 
 /*USADO EN LOS BOTONES DE LAS VENTANAS MODALES*/
@@ -118,16 +118,10 @@ row{
 }
 
 .cont_modal{
-    overflow-y: auto; 
+    overflow-y: hidden; 
     overflow-x: auto;
-    height:500px;
+    height:380px;
     width: 100%;
-
-    /*overflow-y: visible; 
-    overflow-x: hidden;
-    height:350px;
-    height:100%;
-    width: 100%;*/
 }
 
 .form-control{

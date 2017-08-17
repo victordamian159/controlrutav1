@@ -2,23 +2,22 @@
     <!--TITULO-->
     <div class="titulo">Puntos de Control</div>
 
-
     <!--BUSQUEDA + RUTAS-->
     <div class="row ">
         <!--COMBO RUTAS-->
-        <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
+        <div class="col-xl-2 col-md-2 col-sm-4 col-xs-12">
             <select class="form-control" required [(ngModel)]="_ruid" (change)="_rutaid($event)" #rutaid="ngModel">
                 <option *ngFor="let ruta of rutas" [value]="ruta.RuId">{{ruta.RuDescripcion}}</option>
             </select>
         </div>
         
         <!--BUSQUEDA SOBRE DATATABLE-->
-        <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
+        <div class="col-xl-2 col-md-2 col-sm-4 col-xs-12">
             <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
         </div>
 
         <!--BOTON NUEVO REGISTRO-->
-        <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
+        <div class="col-xl-2 col-md-2 col-sm-4 col-xs-12">
             <button id="btnNuevo" type="button" (click)="newPuntoControlMaestro()" [disabled]="_ruid==0" pButton icon="fa-file-text-o" label="Nuevos Puntos"></button>
         </div>
 
@@ -90,35 +89,82 @@
 <!--VENTANAS MODALES-->
 
     <!--FORMULARIOS MODALES-->
-        <!--MODAL DETALLE REGISTRO PUNTO CONTROL CABECERA-->
-        <p-dialog [(visible)]="displayDetallePC" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
-            <div>  
+        <!--MODAL DETALLE REGISTRO PUNTO CONTROL CABECERA (SOLO PARA VISUALIZACION)-->
+        <p-dialog [(visible)]="displayReaderDetPC" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
+            <div class="row">
                 <div class="cont_modal">
                     <div class="container">
-                        <div class="table table-responsive">                               
-                            <p-dataTable [value]="pCDetalleMostrar" [pageLinks]="4" emptyMessage="Lista vacia"
-                                 scrollable="true" scrollWidth="auto" selectionMode="single" >        
-                                <p-column styleClass="col-button" [style]="{'width':'6em'}">
-                                    <template let-col let-pcDetalle="rowData" pTemplate="body">                                        
-                                        <button id="btnTable"  type="button" pButton class="btn" (click)="editarDetalle(pcDetalle.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
-                                        <button id="btnTable"  type="button" pButton class="btn" (click)="eliminarDetalle(pcDetalle.PuCoDeId)" icon="fa-trash"> </button>
-                                    </template>
-                                </p-column>
-                                <p-column field="PuCoDeOrden"      header="N°"   [style]="{'width':'4em','text-align':'center'}"  ></p-column>
-                                <p-column field="PuCoDeDescripcion" header="Lugar"  [style]="{'width':'12em'}"></p-column>
-                                <p-column field="PuCoDeHora"        header="Hora"      [style]="{'width':'6em'}"></p-column>
-                            </p-dataTable>                  
-                        </div>        
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xm-12">   
+                            <div class="row">
+                                <div class="col-xl-12 col-md-12 col-sm-12 col-xm-12">
+                                    <div class="form-group">                               
+                                        <p-dataTable [value]="pCDetalleMostrar" emptyMessage="Lista vacia" scrollable="true" scrollHeight="340px" >        
+                                            <!--
+                                                <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                                                    <template let-col let-pcDetalle="rowData" pTemplate="body">                                        
+                                                        <button id="btnTable"  type="button" pButton class="btn" (click)="editarDetalle(pcDetalle.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
+                                                        <button id="btnTable"  type="button" pButton class="btn" (click)="eliminarDetalle(pcDetalle.PuCoDeId)" icon="fa-trash"> </button>
+                                                    </template>
+                                                </p-column>
+                                            -->
+                                            <p-column field="PuCoDeOrden"      header="N°"   [style]="{'width':'2em','text-align':'center'}"  ></p-column>
+                                            <p-column field="PuCoDeDescripcion" header="Lugar"  [style]="{'width':'5em'}"></p-column>
+                                            <p-column field="PuCoDeHora"        header="Hora"      [style]="{'width':'4em'}"></p-column>
+                                        </p-dataTable>                  
+                                    </div>      
+                                </div>
+                            </div>
+                        </div>
                     </div>      
                 </div>
             </div>
 
             <!--BOTONES-->
-            <div class="btn_Modal row">
+            <div class="btn_Modal row ">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-sx-12">
                     <button id="btn" type="button" (click)="cerrarTablaDetalle()" pButton icon="fa-close" label="Cerrar"></button>
                 </div>
             </div>
+            
+        </p-dialog>
+
+         <!--MODAL DETALLE REGISTRO PUNTO CONTROL CABECERA (SOLO PARA EDITAR LA TABLA)-->
+        <p-dialog [(visible)]="displayEditDetPC" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
+            <div class="row">
+                <div class="cont_modal">
+                    <div class="container">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xm-12">   
+                            <div class="row">
+                                <div class="col-xl-12 col-md-12 col-sm-12 col-xm-12">
+                                    <div class="form-group">                               
+                                        <p-dataTable [value]="pCDetalleMostrar" emptyMessage="Lista vacia" scrollable="true" scrollHeight="340px">        
+                                            <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                                                <template let-col let-pcDetalle="rowData" pTemplate="body">                                        
+                                                    <button id="btnTable"  type="button" pButton class="btn" (click)="editarDetalle(pcDetalle.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
+                                                    <button id="btnTable"  type="button" pButton class="btn" (click)="eliminarDetalle(pcDetalle.PuCoDeId)" icon="fa-trash"> </button>
+                                                </template>
+                                            </p-column>
+                                            <p-column field="PuCoDeOrden"      header="N°"   [style]="{'width':'2em','text-align':'center'}"  ></p-column>
+                                            <p-column field="PuCoDeDescripcion" header="Lugar"  [style]="{'width':'5em'}"></p-column>
+                                            <p-column field="PuCoDeHora"        header="Hora"      [style]="{'width':'4em'}"></p-column>
+                                        </p-dataTable>                  
+                                    </div>      
+                                </div>
+                            </div>
+                        </div>
+                    </div>      
+                </div>
+            </div>
+
+            <!--BOTONES-->
+                <div class="btn_Modal row">
+                    <div class="col-xl-6 col-md-6 col-sm-12 col-sx-12">
+                        <button id="btn" type="button" (click)="canEditTDet()" pButton icon="fa-close" label="Cancelar"></button>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-12 col-sx-12">
+                        <button id="btn" type="button" (click)="saveEditTDet()" pButton icon="fa-save" label="Guardar"></button>
+                    </div>
+                </div>
         </p-dialog>
 
         <!--MODAL BOTON  NUEVO PC CABECERA, SEGUN EL CASO ES NUEVA TABLA O EDITARLA-->
@@ -169,7 +215,7 @@
 
         <!--CORREGIR AGREGAR VALIDACION -->
         <!--NUEVO PUNTO DE CONTROL DETALLE ADDMARKER-->
-        <p-dialog [(visible)]="displayNuevoPunto" [resizable]="false" modal="modal" width="80%" height="550" responsive="true"  [closable]="false">
+        <p-dialog [(visible)]="displayNuevoPunto" [resizable]="false" modal="modal" width="100%" height="500" responsive="true"  [closable]="false">
             <!--CONDICIONAL-->
             <div *ngIf="selectedPosition">
 
@@ -184,7 +230,7 @@
                                     <div class="col-xl-7 col-md-7 col-sm-6 col-xs-12">
                                         <!-- LISTA DE PUNTO AGREGADOS -->
                                         <div class=" form-group ">
-                                            <p-dataTable [value]="miniLista" scrollable="true" scrollHeight="260px" emptyMessage="Lista Vacia" >
+                                            <p-dataTable [value]="miniLista" scrollable="true" scrollHeight="370px" emptyMessage="Lista Vacia" >
                                                 <p-column field="nro" header="N°" [style]="{'width':'2em'}" ></p-column>
                                                 <p-column field="PuCoDeDescripcion" header="Nombre" [style]="{'width':'5em'}" ></p-column>
                                                 <p-column field="PuCoDeHora" header="Tiempo" [style]="{'width':'3em'}" ></p-column>
@@ -340,7 +386,7 @@
             
         </p-dialog>
 
-        <!-- MOSTRAR EN LA PANTALLA CONFIRMAR EDITAR CABECERA-->
+        <!-- MOSTRAR EN LA PANTALLA CONFIRMAR EDITAR DETALLE-->
         <p-dialog [(visible)]="displayEditarCabecera" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <div class="btn_Modal row ">

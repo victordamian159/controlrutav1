@@ -1,4 +1,4 @@
-    //CONVERTIR STRING A DATE FORMULARIO A BD  HORAS
+    //CONVERTIR HORA DE STRING A DATE FORMULARIO A LA BD  
     export function hora(fecha : string) : Date{
             //FECHA               
             let thoy:Date,  otra:Date, horaTarjeta:string;
@@ -14,10 +14,15 @@
 
     //CONVERTIR DATE A STRING DE BD A FORMULARIO HORAS
     export function _hora(fecha : Date) :string{
-        let hora : string; let _hora : string; let _fecha = new Date(fecha);
-        _hora =  (_fecha.getHours() - 1).toString();// restando 1 hora (CORREGIR EN EL BACKEND)
-            hora = _hora + ":"+_fecha.getMinutes()+":"+_fecha.getSeconds();
-            hora = cCeroHora(hora);
+        let hora : string; let _hora : string; let _min : string; let _seg : string; let _fecha = new Date(fecha);
+
+        _hora =  (_fecha.getHours()).toString();
+        _min =  (_fecha.getMinutes()).toString();
+        _seg =  (_fecha.getSeconds()).toString();
+
+        /*hora = _hora + ":"+_fecha.getMinutes()+":"+_fecha.getSeconds();*/
+        hora = _hora+":"+_min+":"+_seg;
+        hora = cCeroHora(hora); /* COMPLETANDO CERO EN LOS MINUTOS O  SEGUNDOS */
         return hora;
     }
     
@@ -134,9 +139,37 @@
         return otra;
     }
 
-    /* SACAR LA FECHA ACTUAL DEL SISTEMA */
-    export function fechaActual():string{
-        let fecha;
-        
-        return fecha;
+    /* SACAR LA FECHA ACTUAL DEL SISTEMA dd-mm-yyyy */
+    export function fechaActual1():string{
+        let _fecha:string, fecha=new Date(),dia=fecha.getDate(), mes=fecha.getMonth()+1, año=fecha.getFullYear();
+        let _dia:string,_mes:string,_año:string;
+
+        _dia=dia.toString(); _mes=mes.toString(); _año=año.toString();
+        _fecha=_dia+"-"+_mes+"-"+_año;
+        _fecha =_cCeroFecha(_fecha);
+        return _fecha;
+    }
+    /* yyyy-mm-dd */
+    export function editf1(f1:string):string{
+        let _f1:string,arrf1:any,_arrf1:any,aux:any,d:string,m:string,a:string;
+        arrf1=f1.split("-");    d=arrf1[0]; m=arrf1[1]; a=arrf1[2];
+        _f1=a+"-"+m+"-"+d;
+        return _f1;
+    }
+
+    /* SACAR LA FECHA ACTUAL DEL SISTEMA dd/mm/yyyy */
+    export function fechaActual2():string{
+        let _fecha:string, fecha=new Date(),dia=fecha.getDate(), mes=fecha.getMonth()+1, año=fecha.getFullYear();
+        let _dia:string,_mes:string,_año:string;
+        _dia=dia.toString(); _mes=mes.toString(); _año=año.toString();
+        _fecha=_dia+"/"+_mes+"/"+_año;
+        _fecha =cCeroFecha(_fecha);
+        return _fecha;
+    }
+    /* yyyy/mm/dd */
+    export function editf2(f1:string):string{
+        let _f1:string,arrf1:any,_arrf1:any,aux:any,d:string,m:string,a:string;
+        arrf1=f1.split("-");    d=arrf1[0]; m=arrf1[1]; a=arrf1[2];
+        _f1=a+"/"+m+"/"+d;
+        return _f1;
     }

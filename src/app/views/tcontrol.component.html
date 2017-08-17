@@ -223,7 +223,7 @@
                     </div>
                 </div>
                 
-                <!--LISTA HORA DE SALIDA, TIEMPO INTERMEDIOS-->
+                <!--LISTA HORA DE SALIDA-->
                 <div class="form-group">
                     <label >Hora Salida:</label>
                     <input class="form-control" type="time"[(ngModel)]="tarjeta._TaCoHoraSalida"  step="1"  required #hsal="ngModel" />
@@ -234,7 +234,12 @@
                 <!--TIEMPO INTERMEDIOS-->
                 <div class="form-group">
                     <label >Tiempo Intermedio:</label>
-                    <input class="form-control" type="text"[(ngModel)]="timeInter"/>
+                    <input class="form-control" type="text"[(ngModel)]="timeInter"
+                    pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})"  #timeInterm="ngModel" required/>
+                    
+                    <div id="validation" [hidden]="!timeInterm.touched || timeInterm.valid ">
+                        Error en los datos (HH:MM:SS)
+                    </div>
                 </div> 
                 
                 <!--LISTA CUOTA POR VUELTA-->
@@ -295,13 +300,13 @@
         <!--BOTONES-->
         <div class=" btn_Modal row ">
             <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
-                <button class="btn_modal" type="text" pButton icon="fa-fast-backward" (click)="btnAtrasMultiTarj(); PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset();" label="Atras"></button>
+                <button class="btn_modal" type="text" pButton icon="fa-fast-backward" (click)="btnAtrasMultiTarj(); PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset(); timeInterm.reset();" label="Atras"></button>
             </div>
             <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
-                <button class="btn_modal" type="text" pButton icon="fa-save" (click)="guardarMultiTarjetas(); PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset();" [disabled]="!PC.valid || !PROG.valid || !hsal.valid || !cuota.valid || !fprog.valid || this.actRadioButton" label="Guardar"></button>
+                <button class="btn_modal" type="text" pButton icon="fa-save" (click)="guardarMultiTarjetas(); PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset(); timeInterm.reset();" [disabled]="!PC.valid || !PROG.valid || !hsal.valid || !cuota.valid || !timeInterm.valid || !fprog.valid || this.actRadioButton" label="Guardar"></button>
             </div>
             <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelarMultiTarjeta(); PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset();" label="Cancelar"></button>
+                <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelarMultiTarjeta(); PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset(); timeInterm.reset();" label="Cancelar"></button>
             </div>
         </div>
     </p-dialog>
@@ -372,119 +377,3 @@
                 </div>
             </div>
      </p-dialog>  
-
-
-
-
-
-
-
-
-<!--
-    <div class="contenedor" style="overflow-y: auto; height:350px; ">
-    <button type="text" (click)="nuevaAsignaTarjeta()" pButton label="Nuevo" data-toggle="modal" ></button>
-    <div [hidden]="!PROG.touched || PROG.valid ">Error, revise los datos ingresados</div>
-    <div class="col-3"><label for="cuota" class="col-1 col-form-label">Estado:</label></div>
-    <option *ngFor="let prog of _programacion" [ngValue]="prog.prId">{{prog.prDescripcion}}</option>
-    <label class="control-label" for="hora" for="hora" class="col-1 col-form-label">Salida:</label>
-    <div class="row">modal footer  VACIO  PC PROG fprog hsal cuota</div>
--->
-
-<!--CUOTA
-<div class="form-group row">
-    <div class="form-group">    
-        <label class="control-label" for="cuota">Cuota:</label>
-        <input class="form-control" type="number"  id="cuota"  [(ngModel)]="tarjeta._TaCoCuota">
-    </div>     
-</div>-->
-
- <!--EDITAR TARJETA DE CONTROL SELECCIONADA
-     <p-dialog header="Editando Tarjeta Asignada" [(visible)]="displayEditarTarjeta" [resizable]="false" modal="modal" width="100%" [closable]= false>
-            <div class="container"> 
-                <div class="row">
-                    <div class="cont_modal">
-                        <div class="row">
-                            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                               
-                                <div class="form-group">
-                                    <label>Listado de Puntos de Control:</label>
-                                    <select class="form-control" [(ngModel)]="puntoControl" (change)="puntosControlId($event)" required #PC="ngModel">
-                                        <option *ngFor="let punto of _puntosControl" [ngValue]="punto" selected="selected">
-                                            {{punto.PuCoDescripcion}} / {{punto.PuCoTiempoBus}}
-                                        </option>
-                                    </select>  
-                                    <div id="validation" [hidden]="!PC.touched || PC.valid ">
-                                        Error, revise los datos ingresados
-                                    </div>
-                                </div>
-                             
-                                <div class="form-group">
-                                    <label>Programaciones:</label>
-                                    <select class="form-control" required [(ngModel)]="_prId" (change)="programacionId($event)"   #PROG="ngModel">
-                                        <option *ngFor="let prog of _programacion" [value]="prog.prId">
-                                            {{prog.prDescripcion}}
-                                        </option>
-                                    </select> 
-                                    <div id="validation" [hidden]="!PROG.touched || PROG.valid ">
-                                        Error, revise los datos ingresados
-                                    </div>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label >Hora Salida:</label>
-                                    <input class="form-control" type="time"[(ngModel)]="tarjeta._TaCoHoraSalida"  step="1"  required #hsal="ngModel" />
-                                    <span *ngIf="!hsal.valid && (hsal.touched || hsal.dirty)"  >  
-                                        <div id="validation" [hidden]="!hsal.errors.required"> obligatorio </div>
-                                    </span>   
-                                </div>                
-                            </div>
-
-                            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12"> 
-                               
-                                <div class="form-group">    
-                                    <label>Cuota por vuelta:</label>
-                                    <input class="form-control" type="number" value="0" [(ngModel)]="tarjeta._TaCoCuota" required #cuota="ngModel" />
-                                    <span *ngIf="!cuota.valid && (cuota.touched || cuota.dirty)"  >  
-                                        <div id="validation" [hidden]="!cuota.errors.required"> obligatorio </div>
-                                    </span>   
-                                </div>    
-                                
-                                <div class="form-group">
-                                    <label>Programacion por Fecha:</label>
-                                    <div class="row">
-                                        <div class="col-xl-9 col-md-9 col-sm-12 col-xs-12">
-                                            <input class="form-control" name="fecha" type="date" [(ngModel)]="tarjeta._TaCoFecha" required #fprog="ngModel" />
-                                        </div>
-                                        <div class="col-xl-3 col-md-3 col-sm-12 col-xs-12">
-                                            <button class="btn_modal" type="button" (click)="buscarxFecha()" pButton icon="fa-search" [disabled]="!fprog.valid"></button>
-                                        </div>
-                                    </div>
-                                    <div id="validation" [hidden]="fprog.valid || !fprog.touched">
-                                            Error, revise los datos ingresados
-                                    </div> 
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label>Estado de la Tarjeta:</label>
-                                    <div class="row">
-                                        <p-radioButton class="radioButton" value="0" label="No Asignado" [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton>
-                                        <p-radioButton class="radioButton" value="1" label="Asignar"     [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton>
-                                        <p-radioButton class="radioButton" value="2" label="Ausente"     [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">    
-                    <button class="btn_modal" type="button" icon="fa-save" pButton  (click)="guardarTarjeta()" label="Guardar"></button>
-                </div>
-                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                    <button class="btn_modal" type="button" icon="fa-close" pButton  (click)="cancelarEditarTarjeta()" label="Cancelar"></button>
-                </div>
-            </div>
-     </p-dialog>-->
-
