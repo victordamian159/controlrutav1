@@ -105,6 +105,7 @@
     <p-dialog header="Asignando Nueva Tarjeta" [resizable]="false" [(visible)]="displayAsignarTarjeta" modal="modal" width="380" [closable]= false>
         <!--CONTENIDO-->
         <div class="cont_modal">
+
             <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                 <!--Listado de Puntos de Control-->
                 <div class="form-group">
@@ -118,22 +119,8 @@
                         Error, revise los datos ingresados
                     </div>
                 </div>
-                <!--Cuota por vuelta-->
-                <div class="form-group">    
-                    <label>Cuota por vuelta:</label>
-                    <input class="form-control" type="number" value="0" [(ngModel)]="tarjeta._TaCoCuota" required #cuota="ngModel" />
-                    <span *ngIf="!cuota.valid && (cuota.touched || cuota.dirty)"  >  
-                        <div id="validation" [hidden]="!cuota.errors.required"> obligatorio </div>
-                    </span>   
-                </div>    
-                <!--Hora Salida:-->
-                <div class="form-group">
-                    <label >Hora Salida:</label>
-                    <input class="form-control" type="time"[(ngModel)]="tarjeta._TaCoHoraSalida"  step="1"  required #hsal="ngModel" />
-                    <span *ngIf="!hsal.valid && (hsal.touched || hsal.dirty)"  >  
-                        <div id="validation" [hidden]="!hsal.errors.required"> obligatorio </div>
-                    </span>   
-                </div>                
+                 
+                         
             </div>
 
             <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">      
@@ -187,6 +174,24 @@
                         <p-column field="nroPlaca" header="Placa" [style]="{'width':'6em'}" ></p-column>
                     </p-dataTable>
                 </div>
+                
+                <!--Hora Salida:-->
+                <div class="form-group">
+                    <label >Hora Salida:</label>
+                    <input class="form-control" type="time"[(ngModel)]="tarjeta._TaCoHoraSalida"  step="1"  required #hsal="ngModel" />
+                    <span *ngIf="!hsal.valid && (hsal.touched || hsal.dirty)"  >  
+                        <div id="validation" [hidden]="!hsal.errors.required"> obligatorio </div>
+                    </span>   
+                </div>       
+
+                <!--Cuota por vuelta-->
+                <div class="form-group">    
+                    <label>Cuota por vuelta:</label>
+                    <input class="form-control" type="number" value="0" [(ngModel)]="tarjeta._TaCoCuota" required #cuota="ngModel" />
+                    <span *ngIf="!cuota.valid && (cuota.touched || cuota.dirty)"  >  
+                        <div id="validation" [hidden]="!cuota.errors.required"> obligatorio </div>
+                    </span>   
+                </div>   
             </div>
         </div>
 
@@ -242,14 +247,7 @@
                     </div>
                 </div> 
                 
-                <!--LISTA CUOTA POR VUELTA-->
-                <div class="form-group">    
-                    <label>Cuota por vuelta:</label>
-                    <input class="form-control" type="number" value="0" [(ngModel)]="tarjeta._TaCoCuota" required #cuota="ngModel" />
-                    <span *ngIf="!cuota.valid && (cuota.touched || cuota.dirty)"  >  
-                        <div id="validation" [hidden]="!cuota.errors.required"> obligatorio </div>
-                    </span>   
-                </div>    
+                
 
                 <!--LISTA PROGRAMACION ELEGIDA-->
                 <div class="form-group">
@@ -282,8 +280,7 @@
                 
                 <!--ESTADO DE LA TARJETA-POR DEFECTO PONER A TODOS ASIGNAR -->
 
-                <!-- -> LISTA DE PLACAS - PROGRAMACION, AL ELEGIR UNA 
-                        PLACA MULTIPLICARLO POR EL NRO DE TARJETAS
+                <!-- -> LISTA DE PLACAS - PROGRAMACION, AL ELEGIR UNA  PLACA MULTIPLICARLO POR EL NRO DE TARJETAS
                     -> ORDEN SORTEO DE LAS PLACAS-->
                 <div class=" form-group ">
                     <label>Orden de las Placas:</label>
@@ -294,6 +291,14 @@
                         <p-column field="nroPlaca" header="Placa" [style]="{'width':'6em'}" ></p-column>
                     </p-dataTable>
                 </div>
+                <!-- CUOTA POR VUELTA-->
+                <div class="form-group">    
+                    <label>Cuota por vuelta:</label>
+                    <input class="form-control" type="number" value="0" [(ngModel)]="tarjeta._TaCoCuota" required #cuota="ngModel" />
+                    <span *ngIf="!cuota.valid && (cuota.touched || cuota.dirty)"  >  
+                        <div id="validation" [hidden]="!cuota.errors.required"> obligatorio </div>
+                    </span>   
+                </div>    
             </div>
         </div>
 

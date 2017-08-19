@@ -173,3 +173,14 @@
         _f1=a+"/"+m+"/"+d;
         return _f1;
     }
+
+
+    /* HORA ACTUAL */
+    export function horaAct():string{
+        let horaAct=new Date(), hora=horaAct.getHours(), min=horaAct.getMinutes(), seg=horaAct.getSeconds(), _horaAct:string; 
+
+        _horaAct=hora.toString() +":"+ min.toString() +":"+ seg.toString();
+        _horaAct=cCeroHora(_horaAct);
+
+        return _horaAct;
+    }

@@ -97,8 +97,6 @@ export class ProgComponent implements OnInit{
         private nroDias:any[]=[];
         private calendario:any[]=[];
 
-   
-
     /* DISPLAY VENTANAS MODALES */
         private displayNuevaProgramacion: boolean = false;
         private displayProgramacionBase: boolean = false;
@@ -122,7 +120,10 @@ export class ProgComponent implements OnInit{
                     this.userid=this.ClassGlobal.GetUsId();
                     this.progMaestro.EmId = 1; /* ELIMINAR ESTO */
                 }
-    
+    /* FUNCION VALIDAR FECHA DE INICIO DE LA PROGRAMACION 
+    funcValidaFIni(fant:string, nfini:string){
+
+    }*/
     /* FUNCION -> FORMA DE SORTEO MANUAL O AUTOMATICO */
         tipoProgramacion($event){
             this.ordenSorteo=[];/* LIMPIANDO ARRAY DE SORTEOS */

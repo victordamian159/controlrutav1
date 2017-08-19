@@ -5,7 +5,7 @@ import {RutaService} from '../service/ruta.service';
 import {PuntoControlService} from '../service/pcontrol.service'; 
 import {ProgramacionService} from '../service/prog.service';
 import {GlobalVars} from 'app/variables'
-import {hora,_hora,_cCeroFecha,cCeroHora,corrigiendoHora,fecha,_fecha,fechaActual1,editf1} from 'app/funciones';
+import {hora,_hora,_cCeroFecha,cCeroHora,corrigiendoHora,fecha,_fecha,fechaActual1,editf1,horaAct} from 'app/funciones';
 
 
 @Component({
@@ -328,9 +328,7 @@ export class TcontrolComponent implements OnInit{
     //ABRIR MODAL ASIGNAR NUEVA TARJETA CONTROL
     nuevaAsignaTarjeta(){
         //this.tarjeta._TaCoId=0; PONIENDO TACOID A CERO PARA INDICAR Q ES NUEVO REGISTRO
-        let horaAct=new Date(), hora=horaAct.getHours(), min=horaAct.getMinutes(), seg=horaAct.getSeconds(), _horaAct:string; 
-        _horaAct=hora.toString() +":"+ min.toString() +":"+ seg.toString();
-        _horaAct=cCeroHora(_horaAct);
+        console.log(horaAct());
 
         /* PROCEDURE NUEVA TARJETA CABECERA UNA O MULTIPLE */
         this.tcontrolservice.newTarjetaControl() .subscribe(
@@ -344,7 +342,7 @@ export class TcontrolComponent implements OnInit{
                                 _PrId :this._tarjeta.PrId,
                                 _TaCoNroVuelta:this._tarjeta.TaCoNroVuelta,
                                 _TaCoFecha :"",
-                                _TaCoHoraSalida :_horaAct,
+                                _TaCoHoraSalida :horaAct(),
                                 _TaCoCuota :this._tarjeta.TaCoCuota,
                                 _UsId :this._tarjeta.UsId,
                                 _UsFechaReg :this._tarjeta.UsFechaReg
@@ -445,7 +443,7 @@ export class TcontrolComponent implements OnInit{
                     EmId:puntos.EmId,
                     PuCoClase:puntos.PuCoClase,
                     PuCoId:puntos.PuCoId,
-                    PuCoTiempoBus:this._hora(puntos.PuCoTiempoBus),
+                    PuCoTiempoBus:_hora(puntos.PuCoTiempoBus),
                     /*RuDescripcion:puntos.RuDescripcion,*/
                     RuId:puntos.RuId,
                     PuCoDescripcion:puntos.PuCoDescripcion
@@ -465,7 +463,7 @@ export class TcontrolComponent implements OnInit{
                     BuPlaca:TarjControl.BuPlaca,
                     BuDescripcion:TarjControl.BuDescripcion,
                     TaCoFecha:_fecha(TarjControl.TaCoFecha),
-                    TaCoHoraSalida:this._hora(TarjControl.TaCoHoraSalida),
+                    TaCoHoraSalida:_hora(TarjControl.TaCoHoraSalida),
                     TaCoId:TarjControl.TaCoId,
                     PuCoId:TarjControl.PuCoId
                 });
@@ -488,11 +486,11 @@ export class TcontrolComponent implements OnInit{
                     PuCoDeId:tDetalle.PuCoDeId, 
                     TaCoDeDescripcion:tDetalle.TaCoDeDescripcion, 
                     TaCoDeFecha:tDetalle.TaCoDeFecha, 
-                    TaCoDeHora: this._hora(tDetalle.TaCoDeHora), 
+                    TaCoDeHora: _hora(tDetalle.TaCoDeHora), 
                     TaCoDeId:tDetalle.TaCoDeId, 
                     TaCoDeLatitud:tDetalle.TaCoDeLatitud, 
                     TaCoDeLongitud:tDetalle.TaCoDeLongitud, 
-                    TaCoDeTiempo: this._hora(tDetalle.TaCoDeTiempo), 
+                    TaCoDeTiempo: _hora(tDetalle.TaCoDeTiempo), 
                     TaCoId:tDetalle.TaCoId, 
                     UsFechaReg:tDetalle.UsFechaReg, 
                     UsId:tDetalle.UsId
@@ -553,6 +551,7 @@ export class TcontrolComponent implements OnInit{
                 //PASANDO DATOS AL OBJETO
                     this.tarjeta._RuId = ruID;
                     this.tarjeta._PuCoId = this.idPunto;
+                    this.tarjeta._TaCoFecha=editf1(fechaActual1());
                 //CONSULTANDO TODOS LOS PUNTOS DE CONTROL(DETALLE) USARLOS PARA INICIAR LA TAREJTADETALLE
                     this.getallpuntocontroldetallebypuco(this.idPunto);
             }
@@ -560,19 +559,6 @@ export class TcontrolComponent implements OnInit{
             /* SELECCIONAR PROGRAMACION COMBOBOX -> PROG ID */
             programacionId(event:Event){
                 this.tarjeta._prId=this._prId;
-                let i=0,cen=0,fechIni:any;
-                while(i<this._programacion.length &&cen==0){
-                    //console.log(i);
-                    if(this._prId==this._programacion[i].prId){
-                        cen=1;
-                    }else if(this._prId!=this._programacion[i].prId){
-                        i++; cen=0;
-                    }
-                }
-                fechIni=this._programacion[i].PrFechaInicio.split("/");
-                fechIni=fechIni.join("-");
-                /*this.tarjeta._TaCoFecha=fechIni;*/
-                this.tarjeta._TaCoFecha=editf1(fechaActual1());
             }
 
             //SELECCIONAR PLACA DE BUS COMBOBOX
@@ -988,9 +974,10 @@ export class TcontrolComponent implements OnInit{
 
     /* EN OBSERVACION */
     //CONVERTIR DATE A STRING DE BD A FORMULARIO HORAS
-    _hora(fecha : Date) :string{
+    _ho_ra(fecha : Date) :string{
         let hora : string; let _hora : string; let _fecha = new Date(fecha);
         _hora =  (_fecha.getHours()).toString();
+        
             hora = _hora + ":"+_fecha.getMinutes()+":"+_fecha.getSeconds();
             hora = cCeroHora(hora);
         return hora;
