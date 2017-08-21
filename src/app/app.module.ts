@@ -37,7 +37,7 @@ import {RutaService} from './service/ruta.service';
 import {ProgramacionService} from './service/prog.service';
 import {PuntoControlService} from './service/pcontrol.service';
 import {PlacasService} from './service/placas.service';
-import {TControlService}  from './service/tcontrol.service';
+import {TControlService}  from './service/tcontrol.service';654321
 import {BusService} from './service/bus.service';
 import {EmpPerService} from './service/empresapersonal.service';
 import {PersService}  from './service/personal.service';
@@ -45,14 +45,14 @@ import {EmpSubEmpService} from './service/empSubemp.service';
 import {TeleMovilService} from './service/telefono.service';
 import {UserSystemService} from './service/usuarioSistema.service';
 
-/* PARA EL LOGIN   BORRAR DESPUES DE TERMINAR DE PROGRAMARLO*/
+/* PARA EL LOGIN   BORRAR DESPUES DE TERMINAR DE PROGRAMARLO
 import { AlertComponent } from './login/_directives/alert.component';
-/*import { AuthGuard } from './login/guards/auth.guard';*/
+/*import { AuthGuard } from './login/guards/auth.guard';
 import { AlertService} from './login/services/alert.service';
 import { AuthenticationService } from './login/services/authentication.service';
 import { UserService } from './login/services/user.service';
 import { LoginComponent} from "./login/_login/_login.component";
-import { RegisterComponent } from "./login/register/register.component";
+import { RegisterComponent } from "./login/register/register.component";*/
 
 // used to create fake backend
 /*import { fakeBackendProvider } from './login/helper/fake-backend';
@@ -78,9 +78,9 @@ import { BaseRequestOptions } from '@angular/http';*/
     EmpPerComponent,
     PersComponent,
     menuComponent,
-    LoginComponent,
+    /*LoginComponent,
     RegisterComponent,
-    AlertComponent,
+    AlertComponent,*/
     loginUserComponent,
     
     //InMemoryWebApiModule.forRoot()
@@ -124,9 +124,9 @@ import { BaseRequestOptions } from '@angular/http';*/
       PlacasService,
       TControlService,
       AuthGuard,
-      AlertService,
+      /*AlertService,
       AuthenticationService,
-      UserService,
+      UserService,*/
       BusService,
       EmpPerService,
       EmpSubEmpService,
