@@ -103,18 +103,18 @@
         margin-top:20px;
     }
 
-/*ipad PRO*/
+
+/* RESPONSIVE */
+    /*ipad PRO*/
     @media(max-width:1100px){ 
         .container{max-height: 350px;
                    max-width: 670px;}
     }
- /* ipad*/
+    
+    /* ipad*/
     @media(max-width:600px){ 
-        .container{
-            max-height: 350px;
-            max-width: 420px;
-        }
-        
+        .container{max-height: 350px;
+                   max-width: 420px;}
         .form-control{
             width: 100%;
         }
@@ -124,43 +124,55 @@
             margin: 0;
         }
     }
-/* iphone 6 plus*/
+
+    /* iphone 6 plus*/
     @media(max-width:480px){ 
         .container{max-height: 320px;max-width: 360px;}
-        
         .form-control{
             width: 100%;
         }
         .col-xs-12{
             /*background: yellow;*/
-            padding: 0;
+            padding: 0 8px;
             margin: 0;
         }
     }
 
     /* iphone 6 */
     @media(max-width:380px){ 
-        .container{max-height: 260px;max-width: 240px;}
-        
+        .container{max-height: 260px;max-width: 340px;}
         .form-control{
             width: 100%;
         }
         .col-xs-12{
             /*background: red;*/
-            padding: 0;
+            padding: 0 8px;
             margin: 0;
         }
     }
 
     /* iphone 5 */
-    @media(max-width:320px){
+    @media(max-width:320px){ 
         .container{max-height: 200px;max-width: 300px;}
         .form-control{
             width: 100%;
         }
         .col-xs-12{
             /*background: blue;*/
-            padding: 0;
+            padding: 0 8px;
+            margin: 0;
+        }
+    }
+
+    /* iphone 4 */
+    @media(max-height:480px){
+        .container{max-height: 160px;max-width: 280px;}
+        .form-control{
+            width: 100%;
+        }
+        .col-xs-12{
+            /*background: blue;*/
+            padding: 0 8px;
             margin: 0;
         }
     }

@@ -702,7 +702,7 @@ export class TcontrolComponent implements OnInit{
                         /* ABRIENDO MODAL VARIAS TARJETAS */
                         console.log("En Programacion");
                         console.log(this.nroTarjetas);
-                        this.titulo="Asignando Multiples Tarjetas :  "+this.nroTarjetas;
+                        this.titulo="Asignando Multi-Tarjeta :  "+this.nroTarjetas;
 
                         /* ABRIENDO MODAL MULTITARJETA */
                         this.displayAsigMultiTarj=true;
