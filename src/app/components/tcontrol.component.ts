@@ -269,10 +269,12 @@ export class TcontrolComponent implements OnInit{
                         this.puntosControlDet=data; 
                         if(this.puntosControlDet.length==0){
                             this.mensaje="No Hay Puntos de Control";
-                            this.displayErrorNoHayPCModalNuevo=true;
+                            this.displayHayPCModalNuevo=true;
+                            this.displayErrorNoHayPCModalNuevo=false;
                         }else if(this.puntosControlDet.length>0){
                             this.mensaje="Puntos de Control Correcto";
-                            this.displayHayPCModalNuevo=true;
+                            this.displayErrorNoHayPCModalNuevo=true;
+                            this.displayHayPCModalNuevo=false;
                         }
                     }
         );
@@ -409,8 +411,8 @@ export class TcontrolComponent implements OnInit{
 
             //AQUI SE ACTUALIZA EL BUID POR SU PLACA
             for(let progD of programacion){
-                //FILTRANDO SI ESTA ASIGNADO, SI LO ESTA NO SE PUEDE MOSTRAR
-                if(progD.PrDeAsignadoTarjeta != 1){
+                /*/FILTRANDO SI ESTA ASIGNADO, SI LO ESTA NO SE PUEDE MOSTRAR
+                if(progD.PrDeAsignadoTarjeta != 1){}*/
                     this._progDetalle.push({
                         nro:0,
                         BuId:progD.BuId,
@@ -426,7 +428,7 @@ export class TcontrolComponent implements OnInit{
                             PrDeBase:progD.PrDeBase,
                         */
                     });
-                }
+                
             }
 
             /* ENUMERANDO FILAS DE LA TABLA DE PROG, TABLA ASIG NUEVA PROGRAMACION */
@@ -520,11 +522,19 @@ export class TcontrolComponent implements OnInit{
             /* SELECCIONAR PLACA DE SORTEO (LISTA DE PLACAS DE SORTEO) */
             onRowPlaca(event){    
                 let obj = event.data; //ID DE LA PLACA EN LA BD
-                this.actRadioButton=false; /* ACTIVANDO RADIO BUTTONS, NO ASIGNADO - ASIGNAR - AUSENTE */
-                this.val=0; /* REINICIANDO A CERO EL VALOR DEL RADIO BUTTON */
+                
+                /*this.val=2;  REINICIANDO A CERO EL VALOR DEL RADIO BUTTON */
                 this._prDeId = obj.PrDeId; /* PROGRAMACIONDETALLE ID */
                 this.tarjeta._BuId=obj.BuId; /* ID DE LA PLACA SELCCIONADA */
-                this.val = obj.PrDeAsignadoTarjeta; /* VALOR DE RADIOBUTTON SELECCIONADO */
+                if(obj.PrDeAsignadoTarjeta==0){
+                    this.val=1;
+                    this.actRadioButton=false; /* ACTIVANDO RADIO BUTTONS, NO ASIGNADO - ASIGNAR - AUSENTE */
+                }else{
+                    this.val = obj.PrDeAsignadoTarjeta; /* VALOR DE RADIOBUTTON SELECCIONADO */
+                    this.actRadioButton=true;
+                    
+                }
+                
             }
 
     /* FUNCIONES DE COMBOBOX */
@@ -544,21 +554,28 @@ export class TcontrolComponent implements OnInit{
             puntosControlId(event:Event){
                 /* AL HACER CLIC SOBRE EL COMBO DEVUELVE UN OBJETO SEGUN OPCION SELECCIONADA  -> this.puntoControl */
                 this._pcId=this.puntoControl.PuCoId;
-                this.idPunto = this.puntoControl.PuCoId;
+                /*this.idPunto = this.puntoControl.PuCoId;*/
+                let PuCoId = this.puntoControl.PuCoId;
                 let ruID = this.puntoControl.RuId;
                 this.tVueltaBus=this.puntoControl.PuCoTiempoBus
 
+                this._prId=this._programacion[this._programacion.length-1].prId;
+                this.tarjeta._prId=this._prId;
+                console.log(this.tarjeta._prId);
                 //PASANDO DATOS AL OBJETO
                     this.tarjeta._RuId = ruID;
-                    this.tarjeta._PuCoId = this.idPunto;
+                    /*this.tarjeta._PuCoId = this.idPunto;*/
+                    this.tarjeta._PuCoId = PuCoId;
                     this.tarjeta._TaCoFecha=editf1(fechaActual1());
                 //CONSULTANDO TODOS LOS PUNTOS DE CONTROL(DETALLE) USARLOS PARA INICIAR LA TAREJTADETALLE
-                    this.getallpuntocontroldetallebypuco(this.idPunto);
+                    /* this.getallpuntocontroldetallebypuco(this.idPunto); */
+                    this.getallpuntocontroldetallebypuco(PuCoId);
             }
 
             /* SELECCIONAR PROGRAMACION COMBOBOX -> PROG ID */
             programacionId(event:Event){
                 this.tarjeta._prId=this._prId;
+                console.log(this.tarjeta._prId);
             }
 
             //SELECCIONAR PLACA DE BUS COMBOBOX
@@ -687,6 +704,7 @@ export class TcontrolComponent implements OnInit{
     /* FUNCIONES VARIADAS */
             /* FUNCION ESCOGER VENTANA DE SOLO UNA TARJETA O VENTANA VARIAS TARJETAS A LA VEZ */
             funcNroTarjetas(){
+                this.mensaje="";
                 /* CONDICION MAXIMO Y MINIMO NROTARJETAS ASIGNAR PERMITIDOS */
                 if(this.nroTarjetas>=1 && this.nroTarjetas<=5){
                     /* CONDICION NRO DE TARJETAS */

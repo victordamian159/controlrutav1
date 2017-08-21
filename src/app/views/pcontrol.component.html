@@ -280,7 +280,7 @@
                                         <div class="form-group ">
                                             <!--<div class="ui-grid-col-3"><label  for="time">Tiempo:</label></div>-->
                                             <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                                <label>Tiempo(hh:mm:ss):</label>
+                                                <label>Tiempo(HH:MM:SS):</label>
                                                 <input type="text" class="form-control" [(ngModel)]="pcDetalle.PuCoDeHora" maxlength="8"
                                                 pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})"  #timepc="ngModel" required/>
                                                 <div id="validation" [hidden]="!timepc.touched || timepc.valid ">
@@ -292,7 +292,7 @@
                                         <!--BOTONES VENTANA-->
                                         <div class="btn_Modal row " >
                                             <div class="col-xl-6 col-md-6 col-sm-6 col-sm-6">
-                                                <button class="btn_modal" pButton icon="fa-plus"  label="Agregar" (click)="guardarPuntoControlDetalle(); nombpc.reset(); timepc.reset();" ></button>
+                                                <button class="btn_modal" pButton icon="fa-plus"  label="Agregar" (click)="guardarPuntoControlDetalle(); nombpc.reset(); timepc.reset();" [disabled]="!nombpc.valid || !timepc.valid "></button>
                                             </div>
                                             <div class="col-xl-6 col-md-6 col-sm-6 col-sm-6">    
                                                 <button class="btn_modal" pButton icon="fa-close" label="Cancelar" (click)="cancelarPuntoControlDetalle(); nombpc.reset(); timepc.reset();"></button>

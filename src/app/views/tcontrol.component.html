@@ -119,6 +119,8 @@
                                             {{punto.PuCoDescripcion}} / {{punto.PuCoTiempoBus}}
                                         </option>
                                     </select>  
+                                    <div [hidden]="displayErrorNoHayPCModalNuevo" style="color:red;padding: 0;margin: 0;position: absolute;">{{mensaje}}</div>
+                                    <div [hidden]="displayHayPCModalNuevo" style="color:green;padding: 0;padding: 0;position: absolute;">{{mensaje}}</div>
                                     <div id="validation" [hidden]="!PC.touched || PC.valid ">
                                         Error, revise los datos ingresados
                                     </div>
@@ -145,27 +147,16 @@
                                 <div class="form-group">
                                     <label>Programacion por Fecha:</label>
                                     <div class="form-inline">
-                                        
+                                        <div class="col-xl-9 col-md-9 col-sm-12 col-xs-12">
                                             <input class="form-control" name="fecha" type="date" [(ngModel)]="tarjeta._TaCoFecha" required #fprog="ngModel" />
-                                       
+                                        </div>
+                                        <div class="col-xl-3 col-md-3 col-sm-12 col-xs-12">
                                             <button class="btn_modal" type="button" (click)="buscarxFecha()" pButton icon="fa-search" [disabled]="!fprog.valid"></button>
-                                      
+                                        </div>
                                     </div>
                                     <div id="validation" [hidden]="fprog.valid || !fprog.touched">
                                             Error, revise los datos ingresados
                                     </div> 
-                                </div>
-                            </div>
-
-                            <!--Estado de la Tarjeta-->
-                            <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
-                                <div class="form-group">
-                                    <label>Estado de la Tarjeta:</label>
-                                    <div class="row">
-                                        <!--<p-radioButton class="radioButton" value="0" label="No Asignado" [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton>-->
-                                        <p-radioButton class="radioButton" value="1" label="Asignar"     [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton>
-                                        <p-radioButton class="radioButton" value="2" label="Ausente"     [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton>
-                                    </div>
                                 </div>
                             </div>
                             
@@ -181,11 +172,23 @@
                                     </p-dataTable>
                                 </div>
                             </div>
-                            
-                            <!--Hora Salida:-->
+
+                            <!--Estado de la Tarjeta-->
                             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                 <div class="form-group">
-                                    <label >Hora Salida:</label>
+                                    <label>Estado de la Tarjeta:</label>
+                                    <div class="row">
+                                        <!--<p-radioButton class="radioButton" value="0"  label="No Asignado" [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton>-->
+                                        <p-radioButton class="radioButton" value="1"  label="Asignar"     [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton>
+                                        <p-radioButton class="radioButton" value="2"  label="Ausente"     [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!--Hora Salida(HH:MM:SS):-->
+                            <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label >Hora Salida(HH:MM:SS):</label>
                                     <input class="form-control" type="time"[(ngModel)]="tarjeta._TaCoHoraSalida"  step="1"  required #hsal="ngModel" />
                                     <span *ngIf="!hsal.valid && (hsal.touched || hsal.dirty)"  >  
                                         <div id="validation" [hidden]="!hsal.errors.required"> obligatorio </div>
@@ -239,12 +242,14 @@
                                 <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                         <label>Listado de Puntos de Control:</label>
-                                        <select class="form-control" [(ngModel)]="puntoControl" (change)="puntosControlId($event)" required #PC="ngModel">
+                                        <select class="form-control" [(ngModel)]="puntoControl" (change)="puntosControlId($event)" required #MPC="ngModel">
                                             <option *ngFor="let punto of _puntosControl" [ngValue]="punto" selected="selected">
                                                 {{punto.PuCoDescripcion}} / {{punto.PuCoTiempoBus}}
                                             </option>
                                         </select>  
-                                        <div id="validation" [hidden]="!PC.touched || PC.valid ">
+                                        <div [hidden]="displayErrorNoHayPCModalNuevo" style="color:red;padding: 0;margin: 0;position: absolute;">{{mensaje}}</div>
+                                        <div [hidden]="displayHayPCModalNuevo" style="color:green;padding: 0;margin: 0;position: absolute;">{{mensaje}}</div>
+                                        <div id="validation" [hidden]="!MPC.touched || MPC.valid ">
                                             Error, revise los datos ingresados
                                         </div>
                                     </div>
@@ -253,10 +258,10 @@
                                 <!--LISTA HORA DE SALIDA-->
                                 <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
-                                        <label >Hora Salida:</label>
-                                        <input class="form-control" type="time"[(ngModel)]="tarjeta._TaCoHoraSalida"  step="1"  required #hsal="ngModel" />
-                                        <span *ngIf="!hsal.valid && (hsal.touched || hsal.dirty)"  >  
-                                            <div id="validation" [hidden]="!hsal.errors.required"> obligatorio </div>
+                                        <label >Hora Salida(HH:MM:SS):</label>
+                                        <input class="form-control" type="time"[(ngModel)]="tarjeta._TaCoHoraSalida"  step="1"  required #Mhsal="ngModel" />
+                                        <span *ngIf="!Mhsal.valid && (Mhsal.touched || Mhsal.dirty)"  >  
+                                            <div id="validation" [hidden]="!Mhsal.errors.required"> obligatorio </div>
                                         </span>   
                                     </div> 
                                 </div>
@@ -264,11 +269,11 @@
                                 <!--TIEMPO INTERMEDIOS-->
                                 <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
-                                        <label >Tiempo Intermedio:</label>
+                                        <label >Tiempo Intermedio(HH:MM:SS):</label>
                                         <input class="form-control" type="text"[(ngModel)]="timeInter"
-                                        pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})"  #timeInterm="ngModel" required/>
+                                        pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})"  #MtimeInterm="ngModel" required/>
                                         
-                                        <div id="validation" [hidden]="!timeInterm.touched || timeInterm.valid ">
+                                        <div id="validation" [hidden]="!MtimeInterm.touched || MtimeInterm.valid ">
                                             Error en los datos (HH:MM:SS)
                                         </div>
                                     </div> 
@@ -278,12 +283,12 @@
                                 <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                         <label>Programaciones:</label>
-                                        <select class="form-control" required [(ngModel)]="_prId" (change)="programacionId($event)"   #PROG="ngModel">
+                                        <select class="form-control" required [(ngModel)]="_prId" (change)="programacionId($event)"   #MPROG="ngModel">
                                             <option *ngFor="let prog of _programacion" [value]="prog.prId">
                                                 {{prog.prDescripcion}}
                                             </option>
                                         </select> 
-                                        <div id="validation" [hidden]="!PROG.touched || PROG.valid ">
+                                        <div id="validation" [hidden]="!MPROG.touched || MPROG.valid ">
                                             Error, revise los datos ingresados
                                         </div>
                                     </div>
@@ -295,13 +300,13 @@
                                         <label>Programacion por Fecha:</label>
                                         <div class="form-inline">
                                             <div class="col-xl-9 col-md-9 col-sm-12 col-xs-12">
-                                                <input class="form-control" name="fecha" type="date" [(ngModel)]="tarjeta._TaCoFecha" required #fprog="ngModel" />
+                                                <input class="form-control" name="fecha" type="date" [(ngModel)]="tarjeta._TaCoFecha" required #Mfprog="ngModel" />
                                             </div>
                                             <div class="col-xl-3 col-md-3 col-sm-12 col-xs-12">
                                                 <button class="btn_modal" type="button" (click)="buscarxFecha()" pButton icon="fa-search" [disabled]="!fprog.valid"></button>
                                             </div>
                                         </div>
-                                        <div id="validation" [hidden]="fprog.valid || !fprog.touched">
+                                        <div id="validation" [hidden]="Mfprog.valid || !Mfprog.touched">
                                                 Error, revise los datos ingresados
                                         </div> 
                                     </div>
@@ -327,9 +332,9 @@
                                 <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">    
                                         <label>Cuota por vuelta:</label>
-                                        <input class="form-control" type="number" value="0" [(ngModel)]="tarjeta._TaCoCuota" required #cuota="ngModel" />
-                                        <span *ngIf="!cuota.valid && (cuota.touched || cuota.dirty)"  >  
-                                            <div id="validation" [hidden]="!cuota.errors.required"> obligatorio </div>
+                                        <input class="form-control" type="number" value="0" [(ngModel)]="tarjeta._TaCoCuota" required #Mcuota="ngModel" />
+                                        <span *ngIf="!Mcuota.valid && (Mcuota.touched || Mcuota.dirty)"  >  
+                                            <div id="validation" [hidden]="!Mcuota.errors.required"> obligatorio </div>
                                         </span>   
                                     </div>
                                 </div>    
@@ -343,13 +348,13 @@
         <!--BOTONES-->
         <div class=" btn_Modal row ">
             <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
-                <button class="btn_modal" type="text" pButton icon="fa-fast-backward" (click)="btnAtrasMultiTarj(); PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset(); timeInterm.reset();" label="Atras"></button>
+                <button class="btn_modal" type="text" pButton icon="fa-fast-backward" (click)="btnAtrasMultiTarj(); MPC.reset(); MPROG.reset(); Mhsal.reset(); Mcuota.reset(); Mfprog.reset(); MtimeInterm.reset();" label="Atras"></button>
             </div>
             <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
-                <button class="btn_modal" type="text" pButton icon="fa-save" (click)="guardarMultiTarjetas(); PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset(); timeInterm.reset();" [disabled]="!PC.valid || !PROG.valid || !hsal.valid || !cuota.valid || !timeInterm.valid || !fprog.valid || this.actRadioButton" label="Guardar"></button>
+                <button class="btn_modal" type="text" pButton icon="fa-save" (click)="guardarMultiTarjetas(); MPC.reset(); MPROG.reset(); Mhsal.reset(); Mcuota.reset(); Mfprog.reset(); MtimeInterm.reset();" [disabled]="!MPC.valid || !MPROG.valid || !Mhsal.valid || !Mcuota.valid || !MtimeInterm.valid || !Mfprog.valid || this.actRadioButton" label="Guardar"></button>
             </div>
             <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelarMultiTarjeta(); PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset(); timeInterm.reset();" label="Cancelar"></button>
+                <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelarMultiTarjeta(); MPC.reset(); MPROG.reset(); Mhsal.reset(); Mcuota.reset(); Mfprog.reset(); MtimeInterm.reset();" label="Cancelar"></button>
             </div>
         </div>
     </p-dialog>
@@ -391,7 +396,7 @@
             </div>
      </p-dialog>  
 
-     <!--MODAL VALIDO LISTA DE PUNTOS DE CONTROL DETALLE-->
+     <!--MODAL VALIDO LISTA DE PUNTOS DE CONTROL DETALLE
      <p-dialog [(visible)] = "displayHayPCModalNuevo" [resizable]="false" modal="modal" width="100%" [closable]=false>
             {{mensaje}}
             <div class=" btn_Modal row ">
@@ -399,9 +404,9 @@
                     <button class="btn_modal" type="text" pButton icon="fa-check" (click)="aceptarHayPC()" label=" Aceptar"></button>
                 </div>
             </div>
-     </p-dialog>  
+     </p-dialog>  -->
 
-     <!--MODAL NO VALIDO LISTA DE PUNTOS DE CONTROL DETALLE-->
+     <!--MODAL NO VALIDO LISTA DE PUNTOS DE CONTROL DETALLE
      <p-dialog [(visible)] = "displayErrorNoHayPCModalNuevo" [resizable]="false" modal="modal" width="100%" [closable]=false>
             {{mensaje}}
             <div class=" btn_Modal row ">
@@ -409,7 +414,7 @@
                     <button class="btn_modal" type="text" pButton icon="fa-check" (click)="aceptarErrorNoHayPC()" label=" Aceptar"></button>
                 </div>
             </div>
-     </p-dialog>  
+     </p-dialog>  -->
 
      <!--MODAL NO HAY TARJETAS DE CONTROL ASIGNADAS-->
      <p-dialog [(visible)] = "displayNoTarjetasAsignadas" [resizable]="false" modal="modal" width="100%" [closable]=false>
