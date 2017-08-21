@@ -2,20 +2,10 @@
 <!--PRINCIPAL-->
 <div class="contenedor">
         <!--TABLA NUEVO BUS -->
-            <div id=titulo>Bus</div>
+            <div id="titulo">Bus</div>
 
             <!-- FILTRO - NUEVOBUS - SUBEMPRESA -->
             <div class="row">
-                <!--FILTRO-->
-                <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
-                    <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
-                </div>
-
-                <!--BOTON NUEVO-->
-                <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
-                    <button id="btnNuevo" (click)="nuevoBus()" [disabled]="_suemid==0" pButton icon="fa-file-text-o" label="Agregar Bus"></button>
-                </div>
-
                 <!--COMBO SUBEMPRESAS-->
                 <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
                     <select class="form-control" required [(ngModel)]="_suemid" (change)="SuEmId($event)">
@@ -25,26 +15,40 @@
                         </option>
                     </select> 
                 </div>
+
+                <!--FILTRO-->
+                <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
+                    <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+                </div>
+
+                <!--BOTON NUEVO-->
+                <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
+                    <button class="form-control" id="btnNuevo" (click)="nuevoBus()" [disabled]="_suemid==0" pButton icon="fa-file-text-o" label="Agregar Bus"></button>
+                </div>
+
+                
             </div>
 
             <!--TABLA BUS-->
-            <div class="row table table-responsive">
-                <p-dataTable [value]="_gbus" [rows]="5"  [globalFilter]="filtroGlobal" scrollable="true" emptyMessage="No Hay Registros" 
-                scrollWidth="100%" [paginator]="true" selectionMode="single" (onRowSelect)="onRowSelectBus($event)"  >
-                    
-                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                        <template let-col  let-objBus="rowData"  pTemplate="body">
-                                <button type="button" pButton class="btn" (click)= "editarBus(objBus.BuId)" icon="fa-pencil-square-o" > </button>                  
-                                <button type="button" pButton class="btn" (click)= "eliminarBus(objBus.BuId)" icon="fa-trash">  </button>
-                        </template>
-                    </p-column>
-                    <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
-                    <p-column field="BuDescripcion" header="Descripcion" [style]="{'width':'15em'}"></p-column>
-                    <p-column field="BuPlaca" header="Placa" [style]="{'width':'8em','text-align':'center'}" ></p-column>
-                    <p-column field="BuMarca" header="Marca" [style]="{'width':'8em'}"></p-column>
-                    <p-column field="BuCapacidad" header="Cap." [style]="{'width':'4em','text-align':'center'}"></p-column>
-                    
-                </p-dataTable>
+            <div class="row">
+                <div class="table table-responsive">
+                    <p-dataTable [value]="_gbus" [rows]="5"  [globalFilter]="filtroGlobal" scrollable="true" emptyMessage="No Hay Registros" 
+                                scrollWidth="100%" [paginator]="true" selectionMode="single" (onRowSelect)="onRowSelectBus($event)"  >
+                        
+                        <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                            <template let-col  let-objBus="rowData"  pTemplate="body">
+                                    <button pButton class="btn" (click)= "editarBus(objBus.BuId)" icon="fa-pencil-square-o" > </button>                  
+                                    <button pButton class="btn" (click)= "eliminarBus(objBus.BuId)" icon="fa-trash">  </button>
+                            </template>
+                        </p-column>
+                        <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
+                        <p-column field="BuDescripcion" header="Descripcion" [style]="{'width':'15em'}"></p-column>
+                        <p-column field="BuPlaca" header="Placa" [style]="{'width':'8em','text-align':'center'}" ></p-column>
+                        <p-column field="BuMarca" header="Marca" [style]="{'width':'8em'}"></p-column>
+                        <p-column field="BuCapacidad" header="Cap." [style]="{'width':'4em','text-align':'center'}"></p-column>
+                        
+                    </p-dataTable>
+                </div>
             </div>
         
 
@@ -57,23 +61,25 @@
             </div>
 
             <!--TABLA ASIGNAR BUSPERSONA-->
-            <div class="row table table-responsive">
-                <p-dataTable [value]="_gbusPer" [rows]="2"  emptyMessage="No Hay Registros" scrollable="true" scrollWidth="100%" selectionMode="single">
-                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                        <template let-col  let-objBusPer="rowData"  pTemplate="body">
-                                <button type="button" pButton class="btn" (click)=  "editarBusPers(objBusPer.BuPeId)" icon="fa-pencil-square-o" > </button>                  
-                                <button type="button" pButton class="btn" (click)= "eliminarBusPers(objBusPer.BuPeId)" icon="fa-trash">  </button>
-                        </template>
-                    </p-column>
-                    <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
-                    <p-column field="PeApellidos" header="Placa" [style]="{'width':'13em','text-align':'center'}"></p-column>
-                    <p-column field="PeNombres" header="Persona" [style]="{'width':'13em','text-align':'center'}"></p-column>
-                    <p-column field="EmPeTipo" header="Cargo Emp" [style]="{'width':'6em','text-align':'center'}"></p-column>
-                </p-dataTable>
+            <div class="row">
+                <div class=" table table-responsive">
+                    <p-dataTable [value]="_gbusPer" [rows]="2"  emptyMessage="No Hay Registros" scrollable="true" scrollWidth="100%" selectionMode="single">
+                        <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                            <template let-col  let-objBusPer="rowData"  pTemplate="body">
+                                    <button pButton class="btn" (click)=  "editarBusPers(objBusPer.BuPeId)" icon="fa-pencil-square-o" > </button>                  
+                                    <button pButton class="btn" (click)= "eliminarBusPers(objBusPer.BuPeId)" icon="fa-trash">  </button>
+                            </template>
+                        </p-column>
+                        <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
+                        <p-column field="PeApellidos" header="Placa" [style]="{'width':'13em','text-align':'center'}"></p-column>
+                        <p-column field="PeNombres" header="Persona" [style]="{'width':'13em','text-align':'center'}"></p-column>
+                        <p-column field="EmPeTipo" header="Cargo Emp" [style]="{'width':'6em','text-align':'center'}"></p-column>
+                    </p-dataTable>
+                </div>
             </div>
             
         <!--TABLA TELEFONO -->
-            <div id=titulo>Telefono Movil Asignado a Cada Placa</div>
+            <div id=titulo>Telefono Movil Asignado</div>
             <div class="row">
                 <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                     <button id="btnNuevo" (click)="nuevoTelMovPersona()" pButton icon="fa-file-text-o" [disabled]="BuPlaca=='none'" label="Asignar Telefono"></button>
@@ -81,28 +87,30 @@
             </div>
 
             <!--AGREGANDO TELEFONO AL SISTEMA-->
-            <div class="row table table-responsive">
-                <p-dataTable [value]="arrTelAsig" [rows]="3" emptyMessage="No Hay Registros" scrollable="true" scrollWidth="100%" selectionMode="single">
-                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                        <template let-col  let-objTel="rowData"  pTemplate="body">
-                                <button type="button" pButton class="btn" (click)= "editarTelAsig(objTel.TeId)" icon="fa-pencil-square-o" > </button>                  
-                                <button type="button" pButton class="btn" (click)= "eliminarTelAsig(objTel.TeId)" icon="fa-trash">  </button>
-                        </template>
-                    </p-column>
-                    <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
-                    <p-column field="TeMarca" header="Marca" [style]="{'width':'7em'}"></p-column>
-                    <p-column field="TeImei" header="Imei" [style]="{'width':'9em','text-align':'center'}" ></p-column>
-                    <p-column field="EmConsorcio" header="Consorcio" [style]="{'width':'12em'}"></p-column>
-                    <p-column field="SuEmRSocial" header="Emp. Asociada" [style]="{'width':'12em'}"></p-column>
-                    <p-column field="BuPlaca" header="Placa" [style]="{'width':'6em','text-align':'center'}"></p-column>
-                </p-dataTable>
+            <div class="row">
+                <div class="table table-responsive">
+                    <p-dataTable [value]="arrTelAsig" [rows]="3" emptyMessage="No Hay Registros" scrollable="true" scrollWidth="100%" selectionMode="single">
+                        <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                            <template let-col  let-objTel="rowData"  pTemplate="body">
+                                    <button pButton class="btn" (click)= "editarTelAsig(objTel.TeId)" icon="fa-pencil-square-o" > </button>                  
+                                    <button pButton class="btn" (click)= "eliminarTelAsig(objTel.TeId)" icon="fa-trash">  </button>
+                            </template>
+                        </p-column>
+                        <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
+                        <p-column field="TeMarca" header="Marca" [style]="{'width':'7em'}"></p-column>
+                        <p-column field="TeImei" header="Imei" [style]="{'width':'9em','text-align':'center'}" ></p-column>
+                        <p-column field="EmConsorcio" header="Consorcio" [style]="{'width':'12em'}"></p-column>
+                        <p-column field="SuEmRSocial" header="Emp. Asociada" [style]="{'width':'12em'}"></p-column>
+                        <p-column field="BuPlaca" header="Placa" [style]="{'width':'6em','text-align':'center'}"></p-column>
+                    </p-dataTable>
+                </div>
             </div>
 </div>
     
     <!--MODAL NUEVO BUS-->
         <p-dialog [(visible)]="displayNuevoBus" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
             <!--TITULO-->
-            <p-header> {{titulo}} : {{SuEmRSocial}} </p-header>
+            <p-header> {{titulo}}  {{SuEmRSocial}} </p-header>
             
             <!--CUERPO-->     
             <div class="row">
@@ -297,12 +305,12 @@
             </div>
 
             <!--PIE-->
-            <div class="row">
+            <div class="btn_Modal row">
                 <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
-                    <button id="btn" type="button" pButton label="Guardar" [disabled]="!placa.valid || !anio.valid || !motor.valid || !tipoCos.valid ||  !soat.valid || !mod.valid || !oper.valid || !act.valid || !fingreso.valid || !descr.valid || !marca.valid || !tipo.valid" (click)= "guardarbus(); placa.reset(); anio.reset(); motor.reset(); tipoCos.reset();  soat.reset(); mod.reset(); oper.reset(); act.reset(); fingreso.reset(); descr.reset(); marca.reset(); tipo.reset();"></button>
+                    <button class="btn_modal" pButton label="Guardar" [disabled]="!placa.valid || !anio.valid || !motor.valid || !tipoCos.valid ||  !soat.valid || !mod.valid || !oper.valid || !act.valid || !fingreso.valid || !descr.valid || !marca.valid || !tipo.valid" (click)= "guardarbus(); placa.reset(); anio.reset(); motor.reset(); tipoCos.reset();  soat.reset(); mod.reset(); oper.reset(); act.reset(); fingreso.reset(); descr.reset(); marca.reset(); tipo.reset();"></button>
                 </div>
                 <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
-                    <button id="btn" type="button" pButton label="Cancelar" (click)="cancelarbus(); placa.reset(); anio.reset(); motor.reset(); tipoCos.reset();  soat.reset(); mod.reset(); oper.reset(); act.reset(); fingreso.reset(); descr.reset(); marca.reset(); tipo.reset(); "></button>
+                    <button class="btn_modal" pButton label="Cancelar" (click)="cancelarbus(); placa.reset(); anio.reset(); motor.reset(); tipoCos.reset();  soat.reset(); mod.reset(); oper.reset(); act.reset(); fingreso.reset(); descr.reset(); marca.reset(); tipo.reset(); "></button>
                 </div>
             </div>
         </p-dialog>
@@ -311,121 +319,135 @@
         <p-dialog [(visible)]="displayNuevoBusPersona" modal="modal"  [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
             <p-header>{{titulo}}</p-header>
             <div class="row">
+                <div class="cont_modal">
                 <div class="container">
-                    <div class="row">
-                        <!--PLACA SELECCIONADA-->
-                            <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12" style="font-size: 200%">
-                                Placa: {{BuPlaca}}
-                            </div>
-                        <!--COMBO SUBEMPRESAS-->
-                            <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
-                                <select class="form-control" required [(ngModel)]="suemid" (change)="_SuEmId();">
-                                    <option *ngFor="let suem of _arrsuEmp" [value]="suem.SuEmId">
-                                        {{suem.SuEmRSocial}}
-                                    </option>
-                                </select> 
-                            </div>
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <!--PLACA SELECCIONADA-->
+                                <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12" style="font-size: 200%">
+                                    Placa: {{BuPlaca}}
+                                </div>
+                            <!--COMBO SUBEMPRESAS-->
+                                <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
+                                    <select class="form-control" required [(ngModel)]="suemid" (change)="_SuEmId();">
+                                        <option *ngFor="let suem of _arrsuEmp" [value]="suem.SuEmId">
+                                            {{suem.SuEmRSocial}}
+                                        </option>
+                                    </select> 
+                                </div>
 
-                        <!--COMBO BUSPERSONA TIPO-->
-                            <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
-                                <select class="form-control" required [(ngModel)]="BuPeTipo">
-                                    <option *ngFor="let bupeti of arrBuPeTipo" [value]="bupeti.id">
-                                        {{bupeti.cargo}}
-                                    </option>
-                                </select> 
-                            </div>
+                            <!--COMBO BUSPERSONA TIPO-->
+                                <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
+                                    <select class="form-control" required [(ngModel)]="BuPeTipo">
+                                        <option *ngFor="let bupeti of arrBuPeTipo" [value]="bupeti.id">
+                                            {{bupeti.cargo}}
+                                        </option>
+                                    </select> 
+                                </div>
+                        </div>
+
+                        <!--DATATABLE BUSPERSONA-->
+                        <div class="row">
+                            <!--TABLA PERSONAS DENTRO DE LAS DIFERENTES SUBEMPRESAS-->
+                                <div class="table table-responsive">                               
+                                    <p-dataTable [value]="arrEmpPer" emptyMessage="Lista vacia" scrollable="true" scrollWidth="auto" selectionMode="single" [(selection)]="selectedRow" (onRowSelect)="onRowSelectEmpPer($event)" >        
+                                        <!--
+                                            <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                                                <template let-col let-persubemp="rowData" pTemplate="body">                                        
+                                                    <button id="btnTable"  pButton class="btn" (click)="editPerSubEmp(persubemp.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
+                                                    <button id="btnTable"  pButton class="btn" (click)="elimPerSubEmp(persubemp.PuCoDeId)" icon="fa-trash"> </button>
+                                                </template>
+                                            </p-column>
+                                        -->
+                                        <p-column field="nro" header="N°" [style]="{'width':'3em'}"  ></p-column>
+                                        <p-column field="PeNombres" header="Nombres" [style]="{'width':'8em'}"  ></p-column>
+                                        <p-column field="PeApellidos" header="Apellidos"  [style]="{'width':'8em'}"></p-column>
+                                        <p-column field="EmPeTipo" header="Cargo" [style]="{'width':'6em','text-align':'center'}"></p-column>
+                                    </p-dataTable>                  
+                                </div>       
+                        </div> 
                     </div>
-
-                    <!--DATATABLE BUSPERSONA-->
-                    <div class="row">
-                        <!--TABLA PERSONAS DENTRO DE LAS DIFERENTES SUBEMPRESAS-->
-                            <div class="table table-responsive">                               
-                                <p-dataTable [value]="arrEmpPer" emptyMessage="Lista vacia" scrollable="true" scrollWidth="auto" selectionMode="single" [(selection)]="selectedRow" (onRowSelect)="onRowSelectEmpPer($event)" >        
-                                    <!--
-                                        <p-column styleClass="col-button" [style]="{'width':'6em'}">
-                                            <template let-col let-persubemp="rowData" pTemplate="body">                                        
-                                                <button id="btnTable"  type="button" pButton class="btn" (click)="editPerSubEmp(persubemp.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
-                                                <button id="btnTable"  type="button" pButton class="btn" (click)="elimPerSubEmp(persubemp.PuCoDeId)" icon="fa-trash"> </button>
-                                            </template>
-                                        </p-column>
-                                    -->
-                                    <p-column field="nro" header="N°" [style]="{'width':'3em'}"  ></p-column>
-                                    <p-column field="PeNombres" header="Nombres" [style]="{'width':'8em'}"  ></p-column>
-                                    <p-column field="PeApellidos" header="Apellidos"  [style]="{'width':'8em'}"></p-column>
-                                    <p-column field="EmPeTipo" header="Cargo" [style]="{'width':'6em','text-align':'center'}"></p-column>
-                                </p-dataTable>                  
-                            </div>       
-                    </div> 
+                </div>
                 </div>
             </div>
-            
-            <div class="row">
-                <button type="button" pButton label="Guardar" (click)="guardarBusPer()"></button>
-                <button type="button" pButton label="Cancelar" (click)="cancelarBusPer()"></button>
+
+            <div class="btn_Modal row">
+                <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">  
+                    <button class="btn_modal" pButton label="Guardar" (click)="guardarBusPer()"></button>
+                </div>
+                <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">  
+                    <button class="btn_modal" pButton label="Cancelar" (click)="cancelarBusPer()"></button>
+                </div>
             </div>
-            
         </p-dialog>
     
     <!--MODAL NUEVO TELEFONO-->
-        <p-dialog  [(visible)]="displayNuevoTelMovil" modal="modal" [resizable]="false" width="400" height="100%" responsive="true" [closable]="false">
+        <p-dialog  [(visible)]="displayNuevoTelMovil" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
             <!--TITULO-->
             <p-header> {{titulo}} </p-header>
             <!--CUERPO-->
-            <div class="cont_modal">
-                <div class="row">
-                    <!--MARCA-->
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="form-group">
-                            <label class="control-label">Marca:</label>
-                            <input class="form-control" type="text" [(ngModel)]="telefono.TeMarca" maxlength="45" required #martel="ngModel"/>
-                        </div>
-                        <span *ngIf="!martel.valid && (martel.touched || martel.dirty)"  >  
-                            <div id="validation" [hidden]="!martel.errors.required"> obligatorio </div>
-                        </span> 
-                    </div>
+            <div class="row">
+                <div class="cont_modal">
+                    <div class="container">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="row">
+                                <!--MARCA-->
+                                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Marca:</label>
+                                        <input class="form-control" type="text" [(ngModel)]="telefono.TeMarca" maxlength="45" required #martel="ngModel"/>
+                                        <span *ngIf="!martel.valid && (martel.touched || martel.dirty)"  >  
+                                            <div id="validation" [hidden]="!martel.errors.required"> obligatorio </div>
+                                        </span> 
+                                    </div>
+                                    
+                                </div>
 
-                    <!--IMEI-->
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="form-group">
-                            <label class="control-label" >Imei:</label>
-                            <input class="form-control" type="text" [(ngModel)]="telefono.TeImei" maxlength="15"  required #imei="ngModel" />
-                            <span *ngIf="!imei.valid && (imei.touched || imei.dirty)"  >  
-                                <div id="validation" [hidden]="!imei.errors.required"> obligatorio </div>
-                            </span> 
-                        </div>
-                    </div>
-        
-                    <!--MODELO-->
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="form-group">
-                            <label class="control-label" >Modelo:</label>
-                            <input class="form-control" type="text" [(ngModel)]="telefono.TeModelo" maxlength="45"  required #modelo="ngModel" />
-                            <span *ngIf="!modelo.valid && (modelo.touched || modelo.dirty)"  >  
-                                <div id="validation" [hidden]="!modelo.errors.required"> obligatorio </div>
-                            </span> 
-                        </div>
-                    </div>
+                                <!--IMEI-->
+                                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label" >Imei:</label>
+                                        <input class="form-control" type="text" [(ngModel)]="telefono.TeImei" maxlength="15"  required #imei="ngModel" />
+                                        <span *ngIf="!imei.valid && (imei.touched || imei.dirty)"  >  
+                                            <div id="validation" [hidden]="!imei.errors.required"> obligatorio </div>
+                                        </span> 
+                                    </div>
+                                </div>
+                    
+                                <!--MODELO-->
+                                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label" >Modelo:</label>
+                                        <input class="form-control" type="text" [(ngModel)]="telefono.TeModelo" maxlength="45"  required #modelo="ngModel" />
+                                        <span *ngIf="!modelo.valid && (modelo.touched || modelo.dirty)"  >  
+                                            <div id="validation" [hidden]="!modelo.errors.required"> obligatorio </div>
+                                        </span> 
+                                    </div>
+                                </div>
 
-                    <!--VERSION ANDROID-->
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="form-group">
-                            <label class="control-label">Ver. Android:</label>
-                            <input class="form-control" type="text" [(ngModel)]="telefono.TeVersionAndroid" maxlength="10"  #verAndro="ngModel" /> 
-                            <span *ngIf="!verAndro.valid && (verAndro.touched || verAndro.dirty)"  >  
-                                <div id="validation" [hidden]="!verAndro.errors.required"> obligatorio </div>
-                            </span>   
+                                <!--VERSION ANDROID-->
+                                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Ver. Android:</label>
+                                        <input class="form-control" type="text" [(ngModel)]="telefono.TeVersionAndroid" maxlength="10"  #verAndro="ngModel" /> 
+                                        <span *ngIf="!verAndro.valid && (verAndro.touched || verAndro.dirty)"  >  
+                                            <div id="validation" [hidden]="!verAndro.errors.required"> obligatorio </div>
+                                        </span>   
+                                    </div>
+                                </div>
+                            </div> 
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
 
             <!--PIE-->
-            <div class="row">
+            <div class="btn_Modal row">
                 <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">                                                                                                         
-                    <button id="btn" type="button" pButton label="Guardar"  (click)= "guardarTelMovil(); martel.reset(); imei.reset(); modelo.reset(); verAndro.reset();" [disabled]="!martel.valid || !imei.valid || !modelo.valid || !verAndro.valid"></button>
+                    <button class="btn_modal" pButton label="Guardar"  (click)= "guardarTelMovil(); martel.reset(); imei.reset(); modelo.reset(); verAndro.reset();" [disabled]="!martel.valid || !imei.valid || !modelo.valid || !verAndro.valid"></button>
                 </div>
                 <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
-                    <button id="btn" type="button" pButton label="Cancelar" (click)="cancelarTelMovil(); martel.reset(); imei.reset(); modelo.reset(); verAndro.reset();"></button>
+                    <button class="btn_modal" pButton label="Cancelar" (click)="cancelarTelMovil(); martel.reset(); imei.reset(); modelo.reset(); verAndro.reset();"></button>
                 </div>
             </div>
         </p-dialog>
@@ -435,7 +457,7 @@
         <p-dialog [(visible)]="displayAceptarNuevoBus" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <div class="row">
-                <button type="button" pButton label="Aceptar" (click)="aceptarNuevoBus()"></button>
+                <button pButton label="Aceptar" (click)="aceptarNuevoBus()"></button>
             </div>
         </p-dialog>
 
@@ -443,8 +465,8 @@
         <p-dialog [(visible)]="displayEliminarBus" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <div class="row">
-                <button type="button" pButton label="Aceptar" (click)="_eliminarBus()"></button>
-                <button type="button" pButton label="Cancelar" (click)="cancelEliminar()"></button>
+                <button pButton label="Aceptar" (click)="_eliminarBus()"></button>
+                <button pButton label="Cancelar" (click)="cancelEliminar()"></button>
             </div>
         </p-dialog>
 
@@ -452,7 +474,7 @@
         <p-dialog [(visible)]="displayAceptarNuevoBusD" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <div class="row">
-                <button type="button" pButton label="Aceptar" (click)="aceptarNuevoBusD()"></button>
+                <button pButton label="Aceptar" (click)="aceptarNuevoBusD()"></button>
             </div>
         </p-dialog>
 
@@ -460,8 +482,8 @@
         <p-dialog [(visible)]="displayEliminarBusPers" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <div class="row">
-                <button type="button" pButton label="Aceptar" (click)="_eliminarBusPers()"></button>
-                <button type="button" pButton label="Cancelar" (click)="cancEliBusPers()"></button>
+                <button pButton label="Aceptar" (click)="_eliminarBusPers()"></button>
+                <button pButton label="Cancelar" (click)="cancEliBusPers()"></button>
             </div>
         </p-dialog>
 
@@ -469,8 +491,8 @@
         <p-dialog [(visible)]="displayEditarBusPers" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <div class="row">
-                <button type="button" pButton label="Aceptar" (click)="_editarBusPers()"></button>
-                <button type="button" pButton label="Cancelar" (click)="cancelEditarBusPers()"></button>
+                <button pButton label="Aceptar" (click)="_editarBusPers()"></button>
+                <button pButton label="Cancelar" (click)="cancelEditarBusPers()"></button>
             </div>
         </p-dialog>
 
@@ -479,8 +501,8 @@
         <p-dialog [(visible)]="displayConfElimTelAsig" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <div class="row">
-                <button type="button" pButton label="Aceptar" (click)="_eliminarTelAsig()"></button>
-                <button type="button" pButton label="Cancelar" (click)="cancelElimTelAsig()"></button>
+                <button pButton label="Aceptar" (click)="_eliminarTelAsig()"></button>
+                <button pButton label="Cancelar" (click)="cancelElimTelAsig()"></button>
             </div>
         </p-dialog>
 
@@ -488,7 +510,7 @@
         <p-dialog [(visible)]="displayConfEditTelAsig" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
             {{mensaje}}
             <div class="row">
-                <button type="button" pButton label="Aceptar" (click)="_editarTelAsig()"></button>
-                <button type="button" pButton label="Cancelar" (click)="canceEditarTelAsig()"></button>
+                <button pButton label="Aceptar" (click)="_editarTelAsig()"></button>
+                <button pButton label="Cancelar" (click)="canceEditarTelAsig()"></button>
             </div>
         </p-dialog>

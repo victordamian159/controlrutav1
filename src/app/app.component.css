@@ -38,21 +38,55 @@ input{
 
 
 @media(max-width:991px){
-    /*.navbar{
-        width:60%;
-        border-radius: 35px;
+    /* BARRA HORIZONTAL MODO MOVIL */
+    .navbar{
+        width: 100%;
     }
-    .nav-item{
-        color:red;
-    }*/
+
+    /* CONTENEDOR DE LOS MENUS*/
+    .navbar-nav{
+        margin:0;
+        padding: 0;
+        /*border-right: 3px solid orange;*/
+    }
     #nomUser{
         display: none;
     }
     #btn_logout{
         display: none;
     }
+    .navbar-nav .nav-item{
+        border-top: 2px solid white;
+        border-right:none !important;
+        /*max-width: 1000px;*/
+        text-decoration-style: none;
+        margin: 0;
+        padding: 20px 0;
+        width: 100%;
+    }
 
-   
+    /* ITEMs DE LOS MENUS SUB ITEM (MENU DESPLEGABLE) */
+    .navbar-nav .nav-item .sub-nav-item{
+        list-style: square inside;
+        height: 68px;
+        padding-left: 30px;
+        padding-top: 21px;
+        margin: 0;
+        width: 100%;
+        border-top: 1px solid #4CAF50;
+        transition: all 0.5s;
+    }
+
+    /* CONTENEDR MENU DFESPLEGABLE PANTALLA MOVIL: ;*/
+    .dropdown-menu{
+        margin-top:18px;
+        margin-bottom: -20px;
+        padding: 0;
+        /*border-top: 2px solid blue;*/
+    }
+    .dropdown{
+        width:100%;
+    }
 }
 
 @media(max-width:480px){
@@ -72,7 +106,7 @@ footer{
     position:fixed;
     /*font-family:"Times New Roman", Times, serif;*/
     text-align:center;
-    font-size: 10px;
+    font-size: 6px;
     font:menu;
     color:#fff;
 }
@@ -108,15 +142,12 @@ footer{
 }
 
 
-/*ICONO NAVBAR IMAGEN BUS*/
+/*ICONO NAVBAR IMAGEN BUS - USADO PARA DARLE ALTURA AL NAVBAR MODO MOVIL(CORREGIR ESTO)*/
 .navbar-brand{
     font-size: 13px;
     margin:0;
-    padding:20px 20px;
-    /*padding-left: 10px;
-    padding-right: 20px;
-    padding-bottom: 10px;
-    padding-top : 18px;*/
+    padding: 0;
+    height: 68px;
 }
 
 /* ICONO MENU DISPOSITIVOS MOVILES */
@@ -138,7 +169,7 @@ DESPLAZANDO AL FORMNULARIO*/
     margin:0;
     padding: 0;
     height: 100%;
-    width: 60%;
+   
 }
 
 /* PERSONALIZAR BOTON PARA ABRIR SUBMENUS */
@@ -150,59 +181,56 @@ DESPLAZANDO AL FORMNULARIO*/
 }
 
 /* ITEM LISTA*/
-.nav-item{
-    display: block;
-    padding:20px 1px; 
-    width: 150%;
-    border-right: 2px solid white;
-    line-height: 30px; 
-    /*border-top:  2px solid white;*/
-    text-decoration: none;
-    font-size: 14px;
-    background:red;
-    
-}
+    .nav-item{
+        display: block;
+        padding:0;
+        margin:0; 
+        width: 140px;
+        /*max-width: 180px;*/
+        border-right: 1px solid white;
+        /*line-height: 30px; 
+        border-top:  2px solid white;*/
+        text-decoration: none;
+        font-size: 14px;
+    }
+    .nav-item:hover{
+        background-color: #4CAF50;
+    }
+    /*PONIENDO CURSOR SOBRE UNA ETIQUETA*/
+    .nav-item a:hover{
+        text-decoration: none;
+        color:white;
+    }
 
-/* BOTONES DEL MENU PARA DESPLEGAR */
+/* BOTONES DEL MENU PARA DESPLEGAR - btn abrir MENU */
 .dropdown{
     padding:20px 0;
     margin:0;
     background-color: #00796B;
-    /*background: #F3F3F3;
-    color: #F3F3F3;*/
-}
-
-
-.nav-item:hover{
-    background-color: #4CAF50;
-    
-}
-
-/*PONIENDO CURSOR SOBRE UNA ETIQUETA*/
-.nav-item a:hover{
-    text-decoration: none;
-    color:white;
 }
 
 
 /* SUB ITEM (MENU DESPLEGABLE) */
-.sub-nav-item{
-    width: 100%;
-    padding: 15px 20px;
-    border-top: 1px solid white;
-    transition: all 0.5s;
-}
+    .sub-nav-item{
+        width: 250px;
+        height: 68px;
+        padding: 17px 20px;
+        margin: auto;    
+        border-top: 1px solid white;
+        transition: all 0.5s;
+        background: #00796B;
+    }
 
-.sub-nav-item:hover{
-    background-color: #4CAF50;
-}
+    .sub-nav-item:hover{
+        background-color: #4CAF50;
+    }
 
-.sub-nav-item a{
-    font-size: 14px;
-    margin: 0;
-    padding:0;
-    text-align: center;
-}
+    .sub-nav-item a{
+        font-size: 14px;
+        margin: 0;
+        padding:0;
+        text-align: center;
+    }
 
 .active{
     /*background: black;*/
@@ -257,5 +285,10 @@ DESPLAZANDO AL FORMNULARIO*/
         text-align: center;
     }
 
-/* NARBAR MODO MOVIL */
-   
+
+
+/* NARBAR MODO MOVIL 
+   #navbarNavDropdown{
+       padding-top: 40px;
+       position: initial;
+   }*/

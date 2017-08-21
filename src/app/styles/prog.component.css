@@ -1,81 +1,61 @@
-/*table, th,td{
-    border: 1px solid black;
-    border-collapse: collapse;
-}
-
-
-th, td{
-    padding: 10px;
-    text-align: center;
-}*/
-/*.table-container
-{
-    width: 100%;
-    overflow-y: auto;
-    _overflow: auto;
-    margin: 0 0 1em;
-}*/
-
-table {
-    border-collapse: collapse;
-    border-spacing: 0;
-    /*width: 100%;*/
-    border: 1px solid #ddd;
-}
-
-th, td {
-    border: none;
-    text-align: center;
-    padding: 8px;
-}
-
-tr:nth-child(even){
-    background-color: #f2f2f2;
-    width: 100%;
-}
-
-/* BOTON MODAL NUEVO 
-#btn{
-    width: 100%;
-    padding: 10px 50px;
-    margin:0;
-}*/
-
-/* COLOR BOTONES DE FILA DEL DATATABLE */
-#btnTable{
-    background-color: #4CAF50;
-}
-
-/*APARIENCIA BOTON NUEVO (ARRIBA DE GRILLA PRINCIPAL)*/
-#btnNuevo{
-    padding:4px;
-    width: 100%;
-    background: #4CAF50; 
-}
-
-.win_modal{
-    padding: 10px 20px;
-    height:380px;
-    width: 100%;
-    overflow-y: auto;
+#titulo{
+    color: black;
+    margin-top:20px;
+    margin-bottom:10px;
+    text-decoration: none;
+    text-align: left;
 }
 
 .contenedor{
     margin-top:20px;
-    margin-left:40px;
-    margin-right:40px;
+    margin-left:30px;
+    margin-right:30px;
     margin-bottom:60px;
 }
 
-/*.col{
-    margin-top:0px;
-    margin-left:80px;
-    margin-right:80px;
-    margin-bottom:0px;
-}*/
+#btn{
+    width: 100%;
+    padding: 10px 50px;
+    margin:0;
+}
 
-.table{
-    margin-top:20px;
+/*.win_modal{}*/
+
+.form-control{
+    height: 38px;
+    margin:0;
+    padding: 0;
+    margin-bottom:10px;
+    width: 100%;
+}
+
+.form-group{
+    margin:0;
+    padding-bottom:18px;
+    padding-top:10px; 
+}
+
+
+#validation{
+    color:red; 
+    margin:0; 
+    padding:0;
+    position: absolute;
+}
+
+
+/* BOTONES (GUARDAR CANCELAR + OTROS) VENTANAS MODALES */
+.btn_modal{
+    width:100%; 
+    height:40px; 
+    font-size:15px;
+    background-color:#4CAF50;
+    text-align: center;
+}
+
+/*GRUPO BOTONES DE LAS VENTANAS MODALES*/
+.btn_Modal{
+    margin-top: 30px;
 }
 
 /*APARIENCIA BOTON NUEVO (ARRIBA DE GRILLA PRINCIPAL)*/
@@ -88,71 +68,126 @@ tr:nth-child(even){
 /*USADO EN LOS BOTONES DE LAS VENTANAS MODALES*/
 .container{
     margin-bottom: 20px;
-}
-
-/*USADO EN LOS BOTONES DE LAS VENTANAS MODALES*/
-.btn_Modal{
-    margin-top: 30px;
-}
-
-/* APARIENCIA BOTONES DE LA VENTANA NUEVO */
-.btn_modal{
-    width:100%; 
-    height:40px; 
-    font-size:15px;
-    background-color:#4CAF50;
-    text-align: center;
-}
-
-/* TEXTO VALIDACION BAJO EL INPUT */
-#validation{
-    color:red; 
-    margin:0; 
-    padding:0;
-    position: absolute;
-}
-
-#titulo{
-    color: black;
-    margin-top:20px;
-    margin-bottom:20px;
-    text-decoration: none;
-    text-align: center;
-    font-size:15px;
-}
-
-/* MODIFICANDO ESTILO PARA LOS INPUTS Y SU VALIDACION */
-.form-group{
-    margin:0;
-    padding-bottom:18px;
-    padding-top:10px; 
+     max-width: 900px;
+     max-height: 350px;
 }
 
 .cont_modal{
     overflow-y: auto; 
-    overflow-x: visible;
-    height:350px;
+    overflow-x: auto;
+    height:100%;
     width: 100%;
+    margin:auto;
 }
-
-/*@media (max-width:480px){
-	.pdf{
-		width:200px !important;
-        margin:0;
-	}
+col-xl-12{
+    padding: 0;
 }
+/* ESTILOS DATATABLE + TABLEHTML */
 
-@media (max-width:360px){
-	.pdf{
-		width:100px !important;
-        margin:0;
-	}
-}
-
-@media screen and (max-width: 40em) {
-    .ui-dialog.ui-dialog-responsive {
-        width: 90% !important;
+    #btnTable{
+        background-color: #4CAF50;
     }
-}
 
-*/
+    .table{
+        margin-top:20px;
+    }
+
+    /* 30 DIAS */
+    #progTPlacas1{
+        width:3500px;
+    }
+    /* ENTRE 30  Y 20 DIAS */
+    #progTPlacas2{
+        width:2000px;
+    }
+    /* ENTRE 30  Y 20 DIAS */
+    #progTPlacas3{
+        width:1500px;
+    }
+    /* ENTRE 30  Y 20 DIAS */
+    #progTPlacas4{
+        width:750px;
+    }
+    /* ENTRE 30  Y 20 DIAS */
+    #progTPlacas5{
+        width:500px;
+    }
+
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        /*width: 100%;*/
+        border: 1px solid #ddd;
+    }
+
+    th, td {
+        border: none;
+        text-align: center;
+        padding: 8px;
+    }
+
+    tr:nth-child(even){
+        background-color: #f2f2f2;
+        width: 100%;
+    }
+
+
+/* RESPONSIVE */
+    /*ipad PRO*/
+    @media(max-width:1100px){ 
+        .container{max-height: 350px;
+                   max-width: 670px;}
+    }
+    
+    /* ipad*/
+    @media(max-width:600px){ 
+        .container{max-height: 350px;
+                   max-width: 420px;}
+        .form-control{
+            width: 100%;
+        }
+        .col-xs-12{
+            /*background: yellow;*/
+            padding: 0;
+            margin: 0;
+        }
+    }
+
+    /* iphone 6 plus*/
+    @media(max-width:480px){ 
+        .container{max-height: 320px;max-width: 360px;}
+        .form-control{
+            width: 100%;
+        }
+        .col-xs-12{
+            /*background: yellow;*/
+            padding: 0;
+            margin: 0;
+        }
+    }
+
+    /* iphone 6 */
+    @media(max-width:380px){ 
+        .container{max-height: 260px;max-width: 300px;}
+        .form-control{
+            width: 100%;
+        }
+        .col-xs-12{
+            /*background: red;*/
+            padding: 0;
+            margin: 0;
+        }
+    }
+
+    /* iphone 5 */
+    @media(max-width:320px){ 
+        .container{max-height: 200px;max-width: 240px;}
+        .form-control{
+            width: 100%;
+        }
+        .col-xs-12{
+            /*background: blue;*/
+            padding: 0;
+            margin: 0;
+        }
+    }

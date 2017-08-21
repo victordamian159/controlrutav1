@@ -11,7 +11,7 @@
 
     <!--TABLA PRINCIPAL-->
     <div class="row">
-        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+        
             <div class="table table-responsive">
                 <p-dataTable [value]="personalArr"  [globalFilter]="filtroGlobal" scrollable="true" emptyMessage="No Hay Registros"
                             scrollWidth="300" selectionMode="single" (onRowSelect)="onRowSelectPersonal($event)">
@@ -31,13 +31,13 @@
                     <p-column field="PeCelular" header="Celular" [style]="{'width':'6em','text-align':'center'}"></p-column>
                 </p-dataTable>
             </div>
-        </div>
+       
     </div>
 </div>
 
 
         <!--MODAL NUEVO PERSONAL-->
-        <p-dialog [style]="{'font-size':'14px'}" [(visible)]="displayNuevo" modal="modal" [resizable]="false" width="100%" [closable]="false">
+        <p-dialog [style]="{'font-size':'16px'}" [(visible)]="displayNuevo" modal="modal" [resizable]="false" width="100%" height="100%" [closable]="false">
             <!--ENCABEZADO-->
             <p-header>{{mensaje}}</p-header>
             <div class="row">
@@ -46,7 +46,7 @@
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="row">
                                 <!--NOMBRE -->
-                                <div class="col-xl-4 col-md-6 col-sm-6 col-xs-12">
+                                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                         <label>Nombres:</label>
                                         <input class="form-control"  type="text" maxlength="25" required #nombpers="ngModel" [(ngModel)]="personal.PeNombres"/>
@@ -57,7 +57,7 @@
                                 </div>
 
                                 <!--APELLIDO-->
-                                <div class="col-xl-4 col-md-6 col-sm-6 col-xs-12">
+                                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                         <label>Apellidos:</label>
                                         <input class="form-control" type="text" maxlength="25" required #apepers="ngModel" [(ngModel)]="personal.PeApellidos" />
@@ -68,7 +68,7 @@
                                 </div>
 
                                 <!--DNI-->
-                                <div class="col-xl-4 col-md-6 col-sm-6 col-xs-12">
+                                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                         <label >Dni:</label>
                                         <input class="form-control" type="text" maxlength="8" required #dniperso="ngModel" [(ngModel)]="personal.PeDni" />
@@ -79,7 +79,7 @@
                                 </div>
 
                                 <!--SEXO  COMBO-->
-                                <div class="col-xl-4 col-md-6 col-sm-6 col-xs-12">
+                                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                         <label>Genero:</label>
                                         <!--DROPDOWN-->
@@ -95,7 +95,7 @@
                                 </div>
 
                                 <!--ESTADO CIVIL COMBO  -->
-                                <div class="col-xl-4 col-md-6 col-sm-6 col-xs-12">
+                                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                         <label>EstadoCivil:</label>
                                         <!--DROPDOWN-->
@@ -112,7 +112,7 @@
 
                             
                                 <!--FECHA NACIMIENTO-->
-                                <div class="col-xl-4 col-md-6 col-sm-6 col-xs-12">
+                                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                         <label>Fecha Nac.:</label>
                                         <input class="form-control" type="date" [(ngModel)]="personal.PeFecNac" required #fnacpers="ngModel" />
@@ -123,7 +123,7 @@
                                 </div>
 
                                 <!--DIRECCION-->
-                                <div class="col-xl-4 col-md-6 col-sm-6 col-xs-12">
+                                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                         <label >Direccion:</label>
                                         <input class="form-control" type="text" maxlength="50" required #direcperso="ngModel" [(ngModel)]="personal.PeDireccion" />
@@ -143,7 +143,7 @@
                                 </div>-->
 
                                 <!--LICENCIA-->
-                                <div class="col-xl-4 col-md-6 col-sm-6 col-xs-12">
+                                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                         <label>Licencia:</label>
                                         <input class="form-control" type="text" maxlength="8" required #licenchoferperso="ngModel" [(ngModel)]="personal.PeTipoLicencia" />
@@ -154,7 +154,7 @@
                                 </div>
 
                                 <!--NRO CELULAR-->
-                                <div class="col-xl-4 col-md-6 col-sm-6 col-xs-12">
+                                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                         <label>Nro Movil:</label>
                                         <input class="form-control" type="text" maxlength="10" required #nromovilperso="ngModel" [(ngModel)]="personal.PeNMovil" />
@@ -166,7 +166,7 @@
 
                             
                                 <!--NRO FIJO-->
-                                <div class="col-xl-4 col-md-6 col-sm-6 col-xs-12">
+                                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                         <label>Nro Fijo:</label>
                                         <input class="form-control" type="text" maxlength="8" required #nrofijoperso="ngModel" [(ngModel)]="personal.PeNFijo" />
@@ -177,7 +177,7 @@
                                 </div>
 
                                 <!--CORREO ELECTRONICO-->
-                                <div class="col-xl-4 col-md-6 col-sm-6 col-xs-12">
+                                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                         <label >Email:</label>
                                         <input class="form-control" type="text" maxlength="30" required #emailperso="ngModel" [(ngModel)]="personal.PeEmail" />
@@ -188,7 +188,7 @@
                                 </div>
                                
                                 <!--FECHA INGRESO-->
-                                <div class="col-xl-4 col-md-6 col-sm-6 col-xs-12">
+                                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                         <label>Fecha Ingreso:</label>
                                         <input class="form-control" type="date" [(ngModel)]="personal.getPeFechaIng" required #fingresopers="ngModel" />
@@ -202,7 +202,7 @@
                                 </div>
                                 <!--{{!fingresopers.valid}}  {{!fingresopers.touched}}-->
                                 <!--FECHA SALIDA-->
-                                <div class="col-xl-4 col-md-6 col-sm-6 col-xs-12">
+                                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                         <label>Fecha Salida:</label>
                                         <input class="form-control" type="date" [(ngModel)]="personal.PeFechaSal" required #fsalidapers="ngModel" />
@@ -232,9 +232,13 @@
         <!--MODAL CONFIRMAR ELIMINAR PERSONAL-->
             <p-dialog [(visible)]="displayEliminar" [resizable]="false" modal="modal" width="100%" [closable]="false">
                 {{mensaje}}
-                <div class="row">
-                    <button type="button" pButton label="Aceptar" (click)="verificarEliminar()"></button>
-                    <button type="button" pButton label="Cancelar" (click)="cancelarEliminar()"></button>
+                <div class="btn_Modal row">
+                    <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                        <button type="button" pButton label="Aceptar" (click)="verificarEliminar()"></button>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                        <button type="button" pButton label="Cancelar" (click)="cancelarEliminar()"></button>
+                    </div>
                 </div>
             </p-dialog>
 
@@ -242,8 +246,12 @@
             <p-dialog [(visible)]="displayConfEditar" [resizable]="false" modal="modal" width="100%" [closable]="false">
                 {{mensaje}}
                 <div class="btn_Modal row">
-                    <button type="button" pButton label="Aceptar" (click)="verificarEditar()"></button>
-                    <button type="button" pButton label="Cancelar" (click)="cancelarEditar()"></button>
+                    <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                        <button type="button" pButton label="Aceptar" (click)="verificarEditar()"></button>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                        <button type="button" pButton label="Cancelar" (click)="cancelarEditar()"></button>
+                    </div>
                 </div>
             </p-dialog>
 

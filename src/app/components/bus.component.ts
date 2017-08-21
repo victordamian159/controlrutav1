@@ -298,7 +298,7 @@ export class BusComponent implements OnInit{
     /* FORM PRINCIPAL BTNNUEVO */
         /* NUEVO OBJETO BUS BTNNUEVO BUS*/ 
             nuevoBus(){
-                this.titulo="Nuevo Registro";
+                this.titulo="Agregando Unidad a ";
                 this.displayNuevoBus = true;
                 
                 /*this.busService.newBus().subscribe(data => {this.objBus=data; console.log(this.objBus);});*/
@@ -310,14 +310,14 @@ export class BusComponent implements OnInit{
                     this.arrEmpPer=[];
                     this.suemid=null;
                     this.BuPeTipo=null;
-
+                this.titulo="Asignando Persona a Unidad";
                 this.displayNuevoBusPersona=true;
                 this.procNuevoBusPer();
             }
         /* BTN NUEVO NUEVO TELEFONO MOVIL  */
             nuevoTelMovPersona(){
                 this.displayNuevoTelMovil=true;
-                this.titulo="Agregando Movil a la Placa "+this.BuPlaca;
+                this.titulo="Placa: "+this.BuPlaca;
                 this.procNuevoTeleMovil();
             }
 

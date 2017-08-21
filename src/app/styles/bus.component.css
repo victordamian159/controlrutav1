@@ -5,21 +5,18 @@
     text-decoration: none;
     text-align: left;
 }
-col{
+/*col{
     margin-top:10px;
     margin-left:80px;
     margin-right:80px;
     margin-bottom:0px;
-}
+}*/
 .contenedor{
     margin-top:20px;
-    margin-left:40px;
-    margin-right:20px;
-    margin-bottom:80px;
+    margin-left:30px;
+    margin-right:30px;
+    margin-bottom:60px;
 }
-
-
-
 
 #btn{
     width: 100%;
@@ -30,16 +27,11 @@ col{
 /*.win_modal{}*/
 
 .form-control{
+    height: 38px;
+    margin:0;
+    padding: 0;
+    margin-bottom:10px;
     width: 100%;
-}
-
-.cont_modal{
-    overflow-y: auto; 
-    overflow-x: auto;
-    height:440px;
-    /*height:100%;*/
-    width: 100%;
-    padding: 10px 20px;
 }
 
 .form-group{
@@ -48,12 +40,12 @@ col{
     padding-top:10px; 
 }
 
-row{
+/*row{
     margin-top:10px;
     margin-left:10px;
     margin-right:10px;
     margin-bottom:10px;
-}
+}*/
 
 #validation{
     color:red; 
@@ -84,14 +76,91 @@ row{
     background: #4CAF50; 
 }
 
-/*USADO EN LOS BOTONES DE LAS VENTANAS MODALES*/
-.container{
-    margin-bottom: 20px;
-}
+/* VENTANAS MODALES*/
+    .container{
+        margin-bottom: 20px;
+        
+        max-width: 900px;
+        max-height: 350px;
+    }
 
-#btnTable{
-    background-color: #4CAF50;
-}
-.table{
-    margin-top:20px;
-}
+    .cont_modal{
+        overflow-y: auto; 
+        overflow-x: auto;
+        height:100%;
+        width: 100%;
+        margin:auto;
+    }
+    col-xl-12{
+        padding: 0;
+    }
+
+/*ESTILOS TABLAS*/
+    #btnTable{
+        background-color: #4CAF50;
+    }
+    .table{
+        margin-top:20px;
+    }
+
+/*ipad PRO*/
+    @media(max-width:1100px){ 
+        .container{max-height: 350px;
+                   max-width: 670px;}
+    }
+ /* ipad*/
+    @media(max-width:600px){ 
+        .container{
+            max-height: 350px;
+            max-width: 420px;
+        }
+        
+        .form-control{
+            width: 100%;
+        }
+        .col-xs-12{
+            /*background: yellow;*/
+            padding: 0;
+            margin: 0;
+        }
+    }
+/* iphone 6 plus*/
+    @media(max-width:480px){ 
+        .container{max-height: 320px;max-width: 360px;}
+        
+        .form-control{
+            width: 100%;
+        }
+        .col-xs-12{
+            /*background: yellow;*/
+            padding: 0;
+            margin: 0;
+        }
+    }
+
+    /* iphone 6 */
+    @media(max-width:380px){ 
+        .container{max-height: 260px;max-width: 240px;}
+        
+        .form-control{
+            width: 100%;
+        }
+        .col-xs-12{
+            /*background: red;*/
+            padding: 0;
+            margin: 0;
+        }
+    }
+
+    /* iphone 5 */
+    @media(max-width:320px){
+        .container{max-height: 200px;max-width: 300px;}
+        .form-control{
+            width: 100%;
+        }
+        .col-xs-12{
+            /*background: blue;*/
+            padding: 0;
+            margin: 0;
+        }
+    }

@@ -342,6 +342,7 @@ export class PcontrolComponent implements OnInit{
              /* GUARDANDO LO EDITADO DE LA TABLA DE PTOS */ 
                 saveEditTDet(){
                     console.log(this.miniLista);
+                    console.log(this.pCArrayDetalleBD);
                 }
             /* EDITAR CONTENIDO PCTRL */
                 canEditTDet(){
@@ -916,11 +917,11 @@ export class PcontrolComponent implements OnInit{
     //VENTANA MODAL EDITAR SOLO EL NOMBRE Y TIEMPO MAS NO LA POSICION EDITAR PUNTOS CONTROL-> LLAMAR A LA FUNCIONA ELIMINAR PARA PODER BORRAR TODOS  LOS PUNTOS DE CONTROL EXISTENTES Y PODER MANDAR LA NUEVA LISTA MODIFICADA
     editarDetalle(_PuCoDeId : number){
         let i=0 /*i: variable busqueda */ 
-          ,cen=0 /*i: variable centinela */;
+          ,cen=0 /*cen: variable centinela */;
 
         /* ARRAY DE PUNTOS CONTROL */
         let puntos = this.pCDetalleMostrar;
-
+        console.log(puntos);
         /*SE PULSO EL BOTON EDITAR*/
         if(this.editando==1){   
            //BUSCANDO OBJETO X _PUCODEID EN EL ARRAY DEVUELTO
@@ -931,8 +932,10 @@ export class PcontrolComponent implements OnInit{
                    cen=1;
                }
            } 
+           
            this.pcDetalle = puntos[i];
-           this.indexPunto = i;
+           console.log(this.pcDetalle);
+           this.indexPunto = i; /* INDICE DEL PUNTO DE CONTROL MODIFICADO */
            this.displayEditarPunto = true;
         
         /*NO SE PULSO EL BOTON EDITAR*/
@@ -1115,18 +1118,25 @@ export class PcontrolComponent implements OnInit{
     editandoRegistroDetalle(){
         let pos;
         pos = this.pCArrayDetalleBD[this.indexPunto].PuCoDeOrden; //POSICION ORIGINAL
+        /* 
+            this.indexPunto INDICE DEL ELEMENTO MODIFICADO
+            this.pcDetalle  OBJETO CON LOS CAMPO MODIFICADOS
+        */
         //BUSCNADO EL INDICE EN EL ARRAY EN LA CUAL TIENE Q GUARDARSE   pCArrayDetalleBD
+        /* CARGANDO LOS CAMPOS MODIFICADOS AL ELEMENTO EN EL ARRAY */
         this.pCArrayDetalleBD[this.indexPunto].PuCoDeHora = hora(this.pcDetalle.PuCoDeHora);
         this.pCArrayDetalleBD[this.indexPunto].PuCoDeDescripcion = this.pcDetalle.PuCoDeDescripcion;
         this.pCArrayDetalleBD[this.indexPunto].PuCoDeOrden = this.pcDetalle.PuCoDeOrden;//NUEVA POSICION
 
+        /* SI SE CAMBIO LA POSICION DEL PUNTO DE CONTROL */
         if(pos != this.pcDetalle.PuCoDeOrden){
                     //              nueva posicion          objeto                                    indice objeto   
             this.reOrdenarPosicion(this.pcDetalle.PuCoDeOrden, this.pCArrayDetalleBD[this.indexPunto],this.indexPunto);
         }
-        this.actualizarOrdenPC(); 
-        /*this.mgPuntosControlDetalle();*/
-        this.procGetallptsctrldetbyPuCo(this.PuCoId);
+        
+        this.actualizarOrdenPC(); /* ESTA POR GUSTO */
+        /*this.mgPuntosControlDetalle();
+        this.procGetallptsctrldetbyPuCo(this.PuCoId);*/
         this.displayEditarPunto = false;
     }
 
@@ -1147,8 +1157,8 @@ export class PcontrolComponent implements OnInit{
     
     cancelarEditandoRegistroDetalle(){
         this.displayEditarPunto = false;
-        this.pcDetalle.PuCoDeHora = "";
-        this.pcDetalle.PuCoDeDescripcion = "";
+        /*this.pcDetalle.PuCoDeHora = "";
+        this.pcDetalle.PuCoDeDescripcion = "";*/
         //this.pcDetalle.PuCoDeHora = "";
     }
 

@@ -62,7 +62,7 @@ export class ProgComponent implements OnInit{
         private nroDiasFilaSelect: number;
         private titleNuevoProgPrimerModal:string;  
         private mensaje:string;     //MENSAJE CONFIRMACION MODAL 
-
+        private resBusUnidades:string; /* PARA EL FORMULARIO DE NUEVA PROGRAMACION */
     /* ARRAYS */
         private selectedPlacas: string[] = []; /* NO USO */
         private placas:any[]=[]; //se utiliza para almacenar lo q devuelve el rest de las placas
@@ -689,6 +689,7 @@ export class ProgComponent implements OnInit{
         
         this.bAct = bAct;
         this.bNAct= bNAct;
+        this.resBusUnidades="  Activos: "+this.bAct+"    -      No Activos: "+this.bNAct;
     }
 
 
