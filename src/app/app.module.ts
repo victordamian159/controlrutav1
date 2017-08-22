@@ -4,6 +4,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
+import {HashLocationStrategy, LocationStrategy}	from '@angular/common';
+
 
 //COmponentes primefaces// Esto lo uso para la grilla
 import {GMapModule,DataTableModule,SharedModule,DataListModule} from 'primeng/primeng';
@@ -37,7 +39,7 @@ import {RutaService} from './service/ruta.service';
 import {ProgramacionService} from './service/prog.service';
 import {PuntoControlService} from './service/pcontrol.service';
 import {PlacasService} from './service/placas.service';
-import {TControlService}  from './service/tcontrol.service';654321
+import {TControlService}  from './service/tcontrol.service';
 import {BusService} from './service/bus.service';
 import {EmpPerService} from './service/empresapersonal.service';
 import {PersService}  from './service/personal.service';
@@ -118,6 +120,7 @@ import { BaseRequestOptions } from '@angular/http';*/
 
   /*SERVICIOS*/
   providers: [
+      {provide:LocationStrategy, useClass: HashLocationStrategy},
       RutaService, 
       PuntoControlService,
       ProgramacionService,
