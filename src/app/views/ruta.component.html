@@ -63,11 +63,11 @@
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12" >
                     <div id="btnMap">
-                        <button id="btn" [hidden]="actBtnNuevo" type="button" pButton  label="Nuevo" icon="fa-file-o" (click)="nuevaRutaDetalle()" [disabled]="disButNuevaRuta"></button>
-                        <button id="btn" [hidden]="actBtnEditar" type="button" pButton label="Editar" icon="fa-edit" (click)="showmodalEditar()" [disabled]="disButEditar"></button>           
-                        <button id="btn" [hidden]="actBtnGuardar" type="button" pButton  label="Guardar" icon="fa-save" (click)="guardarPuntosRutaDetalle()" [disabled]="disButSubirRuta"></button>
-                        <button id="btn" [hidden]="actBtnAtras" type="button" pButton  label="Atras" icon="fa-mail-reply" (click)="deshacer()" [disabled]="disButDeshacer"></button>
-                        <button id="btn" [hidden]="actBtnBorrar" type="button" pButton label="Borrar" icon="fa-eraser" (click)="clear()"[disabled]="disButBorrar"></button>
+                        <button class="btn_mapa" [hidden]="actBtnNuevo" pButton  label="Nuevo" icon="fa-file-o" (click)="nuevaRutaDetalle()" [disabled]="disButNuevaRuta"></button>
+                        <button class="btn_mapa" [hidden]="actBtnEditar"  pButton label="Editar" icon="fa-edit" (click)="showmodalEditar()" [disabled]="disButEditar"></button>           
+                        <button class="btn_mapa" [hidden]="actBtnGuardar"  pButton  label="Guardar" icon="fa-save" (click)="guardarPuntosRutaDetalle()" [disabled]="disButSubirRuta"></button>
+                        <button class="btn_mapa" [hidden]="actBtnAtras"  pButton  label="Atras" icon="fa-mail-reply" (click)="deshacer()" [disabled]="disButDeshacer"></button>
+                        <button class="btn_mapa" [hidden]="actBtnBorrar" pButton label="Borrar" icon="fa-eraser" (click)="clear()"[disabled]="disButBorrar"></button>
                     </div>
                 </div>
             </div>

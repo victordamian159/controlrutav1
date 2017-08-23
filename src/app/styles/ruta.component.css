@@ -93,6 +93,15 @@ row{
     background-color:#4CAF50;
     text-align: center;
 }
+/* APARIENCIA BOTONES MAPA*/
+.btn_mapa{
+    width:100%; 
+    height:40px; 
+    font-size:15px;
+    border:none;
+    background-color:#4CAF50;
+    text-align: center;
+}
 
 /*APARIENCIA BOTON NUEVO (ARRIBA DE GRILLA PRINCIPAL)*/
 #btnNuevo{

@@ -18,7 +18,7 @@
 
         <!--BOTON NUEVO REGISTRO-->
         <div class="col-xl-2 col-md-2 col-sm-4 col-xs-12">
-            <button id="btnNuevo" type="button" (click)="newPuntoControlMaestro()" [disabled]="_ruid==0" pButton icon="fa-file-text-o" label="Nuevos Puntos"></button>
+            <button id="btnNuevo" (click)="newPuntoControlMaestro()" [disabled]="_ruid==0" pButton icon="fa-file-text-o" label="Nuevos Puntos"></button>
         </div>
 
     </div>
@@ -30,14 +30,16 @@
             <!--TABLA CABECERA-->
             <div class="row">
                 <div class="table table-responsive">
-                    <p-dataTable [value]="pCMaestroMostrar" [rows]="5" [paginator]="true" [pageLinks]="2" [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" selectionMode="single" 
-                    emptyMessage="Lista vacia"  [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">     
+                    <!--<p-dataTable [value]="pCMaestroMostrar" [rows]="5" [paginator]="true" [pageLinks]="2" [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" selectionMode="single" 
+                    emptyMessage="Lista vacia"  [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">     -->
+                    <p-dataTable [value]="pCMaestroMostrar"  [globalFilter]="filtroGlobal" scrollable="true" scrollHeight="400px" scrollWidth="100%" selectionMode="single" 
+                    emptyMessage="Lista vacia" (onRowSelect)="onRowSelectMaestro($event)"> 
 
                         <p-column styleClass="col-button" [style]="{'width':'3em'}">
                             <template let-col let-pcMostrar="rowData" pTemplate="body">
-                                <button id="btnTable" type="button" pButton (click)="editarMaestro(pcMostrar.PuCoId)" icon="fa-pencil-square-o" > </button>                  
-                                <button id="btnTable" type="button" pButton (click)="eliminarMaestro(pcMostrar.PuCoId)" icon="fa-trash">  </button>
-                                <button id="btnTable" type="button" pButton (click)="tablaDetalle(pcMostrar.PuCoId)" icon="fa-folder-open">  </button>
+                                <button id="btnTable" pButton (click)="editarMaestro(pcMostrar.PuCoId)" icon="fa-pencil-square-o" > </button>                  
+                                <button id="btnTable" pButton (click)="eliminarMaestro(pcMostrar.PuCoId)" icon="fa-trash">  </button>
+                                <button id="btnTable" pButton (click)="tablaDetalle(pcMostrar.PuCoId)" icon="fa-folder-open">  </button>
                             </template>
                         </p-column>
                         <p-column field="nro"             header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
@@ -73,11 +75,12 @@
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12" >
                     <div id="btnMap">
-                        <button id="btn" pButton icon="fa-file-o" label="Nuevo" (click)="nuevosPuntos()"    [disabled]="desNuevosPuntos" [hidden]="ocNuevo"></button>
-                        <button id="btn" pButton icon="fa-save" label="Guardar" (click)="guardarpuntosDetalleRest()" [disabled]="desGuardarPCD_BD" [hidden]="ocGuardar" ></button>
-                        <button id="btn" pButton icon="fa-edit" label="Editar"  (click)="confirmarEditarDetalle()" [disabled]="desEditarPCDetMarker" [hidden]="ocEditar"></button>
-                        <button id="btn" pButton icon="fa-eraser" label="Borrar" (click)="BorrarPuntosDetalle()" [disabled]="desBorrarPCDet" [hidden]="ocBorrar"></button>
-                        <button id="btn" pButton icon="fa-close" label="Cancelar"  [hidden]="ocCancelar" ></button>
+                        <button class="btn_mapa" pButton icon="fa-file-o" label="Nuevo" (click)="nuevosPuntos()"    [disabled]="desNuevosPuntos" [hidden]="ocNuevo"></button>
+                        <button class="btn_mapa" pButton icon="fa-save" label="Guardar" (click)="guardarpuntosDetalleRest()" [disabled]="desGuardarPCD_BD" [hidden]="ocGuardar" ></button>
+                        <button class="btn_mapa" pButton icon="fa-edit" label="Editar"  (click)="confirmarEditarDetalle()" [disabled]="desEditarPCDetMarker" [hidden]="ocEditar"></button>
+                        <button class="btn_mapa" pButton icon="fa-eraser" label="Borrar" (click)="BorrarPuntosDetalle()" [disabled]="desBorrarPCDet" [hidden]="ocBorrar"></button>
+                        <!--<button class="btn_mapa" pButton icon="fa-close" label="Cancelar"  (click)="cancelEditPtsDet()" [hidden]="ocCancelar" ></button>-->
+                        <button class="btn_mapa" pButton icon="fa-close" label="Cancelar"  (click)="cancelEditPtsDet()" [hidden]="ocCancelar" ></button>
                     </div>
                 </div>
             </div>  
@@ -102,8 +105,8 @@
                                             <!--
                                                 <p-column styleClass="col-button" [style]="{'width':'3em'}">
                                                     <template let-col let-pcDetalle="rowData" pTemplate="body">                                        
-                                                        <button id="btnTable"  type="button" pButton class="btn" (click)="editarDetalle(pcDetalle.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
-                                                        <button id="btnTable"  type="button" pButton class="btn" (click)="eliminarDetalle(pcDetalle.PuCoDeId)" icon="fa-trash"> </button>
+                                                        <button id="btnTable"  pButton class="btn" (click)="editarDetalle(pcDetalle.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
+                                                        <button id="btnTable"  pButton class="btn" (click)="eliminarDetalle(pcDetalle.PuCoDeId)" icon="fa-trash"> </button>
                                                     </template>
                                                 </p-column>
                                             -->
@@ -121,8 +124,8 @@
 
             <!--BOTONES-->
             <div class="btn_Modal row ">
-                <div class="col-xl-12 col-md-12 col-sm-12 col-sx-12">
-                    <button id="btn" type="button" (click)="cerrarTablaDetalle()" pButton icon="fa-close" label="Cerrar"></button>
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                    <button class="btn_modal" (click)="cerrarTablaDetalle()" pButton icon="fa-close" label="Cerrar"></button>
                 </div>
             </div>
             
@@ -140,8 +143,8 @@
                                         <p-dataTable [value]="pCDetalleMostrar" emptyMessage="Lista vacia" scrollable="true" scrollHeight="340px">        
                                             <p-column styleClass="col-button" [style]="{'width':'3em'}">
                                                 <template let-col let-pcDetalle="rowData" pTemplate="body">                                        
-                                                    <button id="btnTable"  type="button" pButton class="btn" (click)="editarDetalle(pcDetalle.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
-                                                    <button id="btnTable"  type="button" pButton class="btn" (click)="eliminarDetalle(pcDetalle.PuCoDeId)" icon="fa-trash"> </button>
+                                                    <button id="btnTable"  pButton class="btn" (click)="editarDetalle(pcDetalle.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
+                                                    <button id="btnTable"  pButton class="btn" (click)="eliminarDetalle(pcDetalle.PuCoDeId)" icon="fa-trash"> </button>
                                                 </template>
                                             </p-column>
                                             <p-column field="PuCoDeOrden"      header="N°"   [style]="{'width':'2em','text-align':'center'}"  ></p-column>
@@ -158,11 +161,15 @@
 
             <!--BOTONES-->
                 <div class="btn_Modal row">
-                    <div class="col-xl-6 col-md-6 col-sm-12 col-sx-12">
-                        <button id="btn" type="button" (click)="canEditTDet()" pButton icon="fa-close" label="Cancelar"></button>
+                    <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
+                        <button class="btn_modal" (click)="canEditTDet()" pButton icon="fa-close" label="Cerrar"></button>
                     </div>
-                    <div class="col-xl-6 col-md-6 col-sm-12 col-sx-12">
-                        <button id="btn" type="button" (click)="saveEditTDet()" pButton icon="fa-save" label="Guardar"></button>
+                    <!--<div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
+                        <button class="btn_modal" (click)="noGuardarEditTDet()" pButton icon="fa-close" label="No Guardar"></button>
+                    </div>-->
+                    <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
+                        <!--<button class="btn_modal" (click)="saveEditTDet()" pButton icon="fa-save" label="Guardar"></button>-->
+                        <button class="btn_modal" (click)="guardarpuntosDetalleRest(); displayEditDetPC=false;" pButton icon="fa-save" label="Guardar"></button>
                     </div>
                 </div>
         </p-dialog>
@@ -181,7 +188,7 @@
 
             <!--TIEMPO RECORRIDO-->
             <div class="form-group">
-                <label  for="timeb">Tiempo de Recorrido(hh:mm:ss):</label>
+                <label  for="timeb">Tiempo de Recorrido(HH:MM:SS):</label>
                 <input class="form-control" type="text" maxlength="8" [(ngModel)]="timeRec" 
                     pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})"  #time="ngModel" required/>
                 <div id="validation" [hidden]="!time.touched || time.valid ">
@@ -205,10 +212,10 @@
             <!--BOTONES DE LA VENTANA-->
             <div class="btn_Modal row ">
                 <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">
-                    <button class="btn_modal" type="button" pButton icon="fa-save" (click)="guardarPCMaestro(); desc.reset();  time.reset(); tipotarj.reset();" label="Guardar" [disabled]="!desc.valid || !time.valid || !tipotarj.valid"></button>
+                    <button class="btn_modal" pButton icon="fa-save" (click)="guardarPCMaestro(); desc.reset();  time.reset(); tipotarj.reset();" label="Guardar" [disabled]="!desc.valid || !time.valid || !tipotarj.valid"></button>
                 </div>
                 <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12"> 
-                    <button class="btn_modal" type="button" pButton icon="fa-close" (click)="cancelarPCMaestro(); desc.reset();  time.reset(); tipotarj.reset();" label="Cancelar"></button>
+                    <button class="btn_modal" pButton icon="fa-close" (click)="cancelarPCMaestro(); desc.reset();  time.reset(); tipotarj.reset();" label="Cancelar"></button>
                 </div>
             </div>
         </p-dialog>  
@@ -258,7 +265,7 @@
                                                         <input type="number" class="form-control" max="40" [disabled]="disabledInputPos" placeholder="Nro. Fila" [(ngModel)]=pcDetalle.PuCoDeOrden/>
                                                     </div>
                                                     <div class="col-xl-4 col-md-4 col-sm-4 col-xs-4">
-                                                        <button type="button"  (click)="activarInputPos()" style="width: 100%; height: 40px; background: #4CAF50;" pButton icon="fa-hand-o-left"></button>
+                                                        <button  (click)="activarInputPos()" style="width: 100%; height: 40px; background: #4CAF50;" pButton icon="fa-hand-o-left"></button>
                                                     </div>
                                                 </div>
                                             </div>  
@@ -278,7 +285,7 @@
                              
                                         <!--TIEMPO -->                               
                                         <div class="form-group ">
-                                            <!--<div class="ui-grid-col-3"><label  for="time">Tiempo:</label></div>-->
+                                            <!--<div class="form-group"><label  for="time">Tiempo:</label></div>-->
                                             <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                                                 <label>Tiempo(HH:MM:SS):</label>
                                                 <input type="text" class="form-control" [(ngModel)]="pcDetalle.PuCoDeHora" maxlength="8"
@@ -308,42 +315,46 @@
             </div>
         </p-dialog>
 
-        <!--EDITAR PUNTO CONTROL DETALLE, SOLO POSICION NOMBRE Y TIEMPO-->
-        <p-dialog [(visible)]="displayEditarPunto" [resizable]="false" modal="modal" width="300" responsive="true"  [closable]="false">
-            <!--posicion en la lista de puntos-->
-            <div class="form-group row">
-                <div class="ui-grid-col-3"><label for="positionTitle">N°Pos:</label></div>
-                <div class="ui-grid-col-6"><input type="text" pInputText id="posicionTitle"  [(ngModel)]=pcDetalle.PuCoDeOrden/></div>
-              
-            </div>
+        <!--EDITAR PUNTO CONTROL DETALLE, SOLO POSICION, NOMBRE Y TIEMPO    MODAL PEQUEÑO-->
+        <p-dialog [(visible)]="displayEditarPunto" [resizable]="false" modal="modal" width="300" height="420" responsive="true"  [closable]="false">
+            <div class="row">
+                <!--POSICION EN LA TARJETA-->
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label class="label-control" >N°Pos:</label>
+                        <input class="form-control" type="text" max=40 [(ngModel)]=pcDetalle.PuCoDeOrden/>
+                    </div>
+                </div>
 
-            <!--nombre punto control-->
-            <div class="form-group row">
-                <div class="ui-grid-col-3">
-                    <label for="title">Nombre:</label>
+                <!--NOMBRE PUNTOCONTROL-->
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label class="label-control">Nombre:</label>
+                        <input class="form-control" type="text" #edNombPc="ngModel" required [(ngModel)]="pcDetalle.PuCoDeDescripcion">
+                        <div id="validation" [hidden]="!edNombPc.touched || edNombPc.valid ">
+                            Error en los datos
+                        </div>
+                    </div>
                 </div>
-                <div class="ui-grid-col-9">
-                    <input type="text" pInputText id="title" [(ngModel)]="pcDetalle.PuCoDeDescripcion">
+
+                <!--TIEMPO -->                               
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label class="label-control">Tiempo(HH:MM:SS):</label>
+                        <input class="form-control" type="text" #edTimePc="ngModel" required [(ngModel)]="pcDetalle.PuCoDeHora" step="1">
+                        <div id="validation" [hidden]="!edTimePc.touched || edTimePc.valid ">
+                            Error en los datos
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <!--tiempo -->                               
-            <div class="form-group row">
-                <div class="ui-grid-col-3">
-                    <label  for="time">Tiempo(hh:mm:ss):</label>
-                </div>
-                <div class="ui-grid-col-9">
-                    <input type="text" pInputText id="time" [(ngModel)]="pcDetalle.PuCoDeHora" step="1">
-                </div>
-            </div>
-
             <!--BOTONES VENTANA-->
             <div class="btn_Modal row ">
-                <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">
-                    <button class="btn_modal" type="button" pButton label="Editar" icon="fa-edit" (click)="editandoRegistroDetalle()" ></button>
+                <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">                   
+                    <button class="btn_modal" pButton label="Editar" icon="fa-edit" [disabled]="!edNombPc.valid || !edTimePc.valid" (click)="editandoRegistroDetalle(); edNombPc.reset(); edTimePc.reset();" ></button>
                 </div>
                 <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">
-                    <button class="btn_modal" type="button" pButton label="Cancelar" icon="fa-close" (click)="cancelarEditandoRegistroDetalle()"></button>
+                    <button class="btn_modal" pButton label="Cancelar" icon="fa-close" (click)="cancelarEditandoRegistroDetalle(); edNombPc.reset(); edTimePc.reset();"></button>
                 </div>
             </div>
         </p-dialog>
@@ -356,10 +367,10 @@
             {{mensaje}}
             <div class="btn_Modal row ">
                 <div class="col-xl-6 col-md-6 col-sm-12 col-xm-12">
-                    <button class="btn_modal" type="button" pButton icon="fa-trash-o" label="Eliminar" (click)="_eliminarMaestro()"></button>
+                    <button class="btn_modal" pButton icon="fa-trash-o" label="Eliminar" (click)="_eliminarMaestro()"></button>
                 </div>
                 <div class="col-xl-6 col-md-6 col-sm-12 col-xm-12"> 
-                    <button class="btn_modal" type="button" pButton icon="fa-close" label="Cancelar" (click)="cancel_eliminarMaestro()"></button>
+                    <button class="btn_modal" pButton icon="fa-close" label="Cancelar" (click)="cancel_eliminarMaestro()"></button>
                 </div>
             </div>
         </p-dialog>
@@ -370,10 +381,10 @@
             
                 <div class="btn_Modal row ">
                     <div class="col-xl-6 col-md-6 col-sm-12 col-xm-12">
-                        <button class="btn_modal" type="button" pButton icon="fa-trash-o" label="Eliminar" (click)="_eliminarDetalle()"></button>
+                        <button class="btn_modal" pButton icon="fa-trash-o" label="Eliminar" (click)="_eliminarDetalle()"></button>
                     </div>
                     <div class="col-xl-6 col-md-6 col-sm-12 col-xm-12"> 
-                        <button class="btn_modal" type="button" pButton icon="fa-close" label="Cancelar" (click)="cancel_eliminarDetalle()"></button>
+                        <button class="btn_modal" pButton icon="fa-close" label="Cancelar" (click)="cancel_eliminarDetalle()"></button>
                     </div>
                 </div>
             
@@ -384,10 +395,10 @@
             {{mensaje}}
             <div class="btn_Modal row ">
                 <div class="col-xl-6 col-md-6 col-sm-12 col-xm-12">
-                    <button class="btn_modal" type="button" pButton icon="fa-check" label="Aceptar" (click)="editarPuntosDetalleMapa()"></button>
+                    <button class="btn_modal" pButton icon="fa-check" label="Aceptar" (click)="editarPuntosDetalleMapa()"></button>
                 </div>
                 <div class="col-xl-6 col-md-6 col-sm-12 col-xm-12"> 
-                    <button class="btn_modal" type="button" pButton icon="fa-close" label="Cancelar" (click)="cancelarEditarDetalle()"></button>
+                    <button class="btn_modal" pButton icon="fa-close" label="Cancelar" (click)="cancelarEditarDetalle()"></button>
                 </div>
             </div>
         </p-dialog>
@@ -398,7 +409,7 @@
             
                 <div class="btn_Modal row ">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-xm-12">
-                        <button class="btn_modal" type="button" pButton icon="fa-check" label="Aceptar" (click)="aceptarClickObjeto()"></button>
+                        <button class="btn_modal" pButton icon="fa-check" label="Aceptar" (click)="aceptarClickObjeto()"></button>
                     </div>
                 </div>
             
@@ -410,7 +421,7 @@
             
                 <div class="btn_Modal row ">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-xm-12">
-                        <button class="btn_modal" type="button" pButton icon="fa-check" label="Aceptar" (click)="aceptarModalAgregarMarker()"></button>
+                        <button class="btn_modal" pButton icon="fa-check" label="Aceptar" (click)="aceptarModalAgregarMarker()"></button>
                     </div>
                 </div>
             
@@ -422,7 +433,7 @@
             
                 <div class="btn_Modal row ">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-xm-12">
-                        <button class="btn_modal" type="button" pButton icon="fa-check" label="Aceptar" (click)="aceptarEditarPuntos()"></button>
+                        <button class="btn_modal" pButton icon="fa-check" label="Aceptar" (click)="aceptarEditarPuntos()"></button>
                     </div>
                 </div>
             
@@ -434,7 +445,7 @@
             
                 <div class="btn_Modal row ">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-xm-12">
-                        <button class="btn_modal" type="button" pButton icon="fa-check" label="Aceptar" (click)="aceptarErrorEditar()"></button>
+                        <button class="btn_modal" pButton icon="fa-check" label="Aceptar" (click)="aceptarErrorEditar()"></button>
                     </div>
                 </div>
             
@@ -446,7 +457,7 @@
             
                 <div class="btn_Modal row ">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-xm-12">
-                        <button class="btn_modal" type="button" pButton icon="fa-check" label="Aceptar" (click)="aceptarNoHayPuntos()"></button>
+                        <button class="btn_modal" pButton icon="fa-check" label="Aceptar" (click)="aceptarNoHayPuntos()"></button>
                     </div>
                 </div>
             
@@ -458,10 +469,10 @@
             
                 <div class="btn_Modal row ">
                     <div class="col-xl-6 col-md-6 col-sm-12 col-xm-12">
-                        <button class="btn_modal" type="button" pButton icon="fa-check" label="Aceptar" (click)="aceptarNuevosPuntos()"></button>
+                        <button class="btn_modal" pButton icon="fa-check" label="Aceptar" (click)="aceptarNuevosPuntos()"></button>
                     </div>
                     <div class="col-xl-6 col-md-6 col-sm-12 col-xm-12">
-                        <button class="btn_modal" type="button" pButton icon="fa-check" label="Cancelar" (click)="cancelarNuevosPuntos()"></button>
+                        <button class="btn_modal" pButton icon="fa-check" label="Cancelar" (click)="cancelarNuevosPuntos()"></button>
                     </div>
                 </div>
             
@@ -485,7 +496,7 @@
             
                 <div class="btn_Modal row ">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-xm-12">
-                        <button class="btn_modal" type="button" pButton icon="fa-check" label="Aceptar" (click)="verificarTiemposPc()"></button>
+                        <button class="btn_modal" pButton icon="fa-check" label="Aceptar" (click)="verificarTiemposPc()"></button>
                     </div>
                 </div>
             
@@ -496,7 +507,7 @@
             {{mensaje}}
             <div class="btn_Modal row ">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-xm-12">
-                    <button class="btn_modal" type="button" pButton icon="fa-check" label="OK" (click)="aceptarNoPuedeSelRow()"></button>
+                    <button class="btn_modal" pButton icon="fa-check" label="OK" (click)="aceptarNoPuedeSelRow()"></button>
                 </div>
             </div>
             
