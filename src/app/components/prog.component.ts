@@ -820,13 +820,24 @@ export class ProgComponent implements OnInit{
 
         //MANUAL O AUTOMATICO PROGRAMACION
         for(let i=0; i<this.programacionMaestroArrayHTML.length; i++){
-            if(this.programacionMaestroArrayHTML[i].PrTipo=="01"){
+            if(this.programacionMaestroArrayHTML[i].PrTipo=="02"){
                 this.programacionMaestroArrayHTML[i].tipo="Manual";
 
-            }else if(this.programacionMaestroArrayHTML[i].PrTipo=="02"){
+            }else if(this.programacionMaestroArrayHTML[i].PrTipo=="01"){
                 this.programacionMaestroArrayHTML[i].tipo="Automatico";
             }
         }
+
+        /*
+             this._tipoProg =[
+                        {id:"01",nTipo:"automatico"},
+                        {id:"02",nTipo:"manual"}
+                    ];
+                    this._formaProg=[
+                        {id:"01", nForma:"pescadito"},
+                        {id:"02", nForma:"escala"}
+                    ];
+        */
     }
 
     //CARGAR COLUMNAS Y ARRAY DE PROGRAMACION
