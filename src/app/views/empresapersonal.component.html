@@ -30,8 +30,8 @@
                 <p-dataTable [value]="arrEmpPer" [globalFilter]="filtroGlobal" scrollable="true" [(selection)]="selectedRow" emptyMessage="No Hay Registros" scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectPerEmp($event)">
                     <p-column styleClass="col-button" [style]="{'width':'3em'}">
                         <template let-col  let-emp="rowData"  pTemplate="body">
-                                <button type="button" pButton class="btn"  (click)=  "editarEmpPer(emp.Id)" icon="fa-pencil-square-o" > </button>
-                                <button type="button" pButton class="btn" (click)=  "eliminarEmpPer(emp.Id)" icon="fa-trash" > </button>                  
+                                <button type="button" pButton id="btnTable"  (click)=  "editarEmpPer(emp.Id)" icon="fa-pencil-square-o" > </button>
+                                <button type="button" pButton id="btnTable" (click)=  "eliminarEmpPer(emp.Id)" icon="fa-trash" > </button>                  
                         </template>
                     </p-column>
                     <p-column field="nro" header="N°" [style]="{'width':'4em','text-align':'center'}" ></p-column>
@@ -66,7 +66,7 @@
                     <p-column styleClass="col-button" [style]="{'width':'3em'}">
                         <template let-col  let-usersystem="rowData"  pTemplate="body">
                                 <!--<button pButton class="btn" (click)="editarUserSystem(usersystem.UsId)" [disabled]="EmPeId==-1" icon="fa-pencil-square-o" > </button>-->
-                                <button pButton class="btn" (click)="eliminarUserSystem(usersystem.UsId)" icon="fa-trash" > </button>                  
+                                <button pButton id="btnTable" (click)="eliminarUserSystem(usersystem.UsId)" icon="fa-trash" > </button>                  
                         </template>
                     </p-column>
                     <p-column field="Nro" header="N°" [style]="{'width':'4em','text-align':'center'}" ></p-column>
@@ -131,7 +131,7 @@
                                 <p-dataTable [value]="personalArr" [globalFilter]="filtroGlobal2" (onRowSelect)="onRowSelPers($event)" [(selection)]="selectRowPersona" emptyMessage="Lista vacia" scrollable="true" scrollWidth="100%" selectionMode="single" >                            
                                     <p-column styleClass="col-button" [style]="{'width':'4em'}">
                                         <template let-col let-per="rowData" pTemplate="body">                                                           
-                                            <button type="button" pButton (click)="eliminarPersona(per.PeId)" icon="fa-trash"> </button>
+                                            <button id="btnTable"  pButton (click)="eliminarPersona(per.PeId)" icon="fa-trash"> </button>
                                         </template>
                                     </p-column>
                                     <p-column field="nro" header="N°" [style]="{'width':'4em','text-align':'center'}"></p-column>

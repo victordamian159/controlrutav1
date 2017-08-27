@@ -355,6 +355,15 @@
                 </div>
         </p-dialog>
 
+        <!--ERROR  MENSAJE NO SE PUEDE BORRAR LA PROGRAMACION-->
+        <p-dialog [(visible)]="displayAvisoNoPuedeBorrarProg" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
+                <p>{{mensaje}}</p>
+                <div class="btn_Modal row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        <button class="btn_modal"  pButton (click)="OkProgNoPuedoBorrar()" label="Aceptar"></button>
+                    </div>
+                </div>
+        </p-dialog>
 
 
 <!---->

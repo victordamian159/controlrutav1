@@ -547,13 +547,14 @@ export class TcontrolComponent implements OnInit{
                     this._prDeId = event.data.PrDeId; /* PROGRAMACIONDETALLE ID */
                     this._BuId=event.data.BuId;
                     let val=event.data.PrDeAsignadoTarjeta;
+                    console.log(val);
                     /*this.tarjeta._BuId=obj.BuId;  ID DE LA PLACA SELCCIONADA */
                     
                     /* SI VAL=0 RADIOBUTTONS HABILITADOS */
                     if(val==0){
                         this.val=1; /* VALOR POR DEFECTO(ASIGNADO) */
-                        this.actRadioButton=false; 
-                    }else{
+                        this.actRadioButton=false; /* DISABLED:FALSE */
+                    }else if(val==1 || val==2){
                         this.val=val;
                         this.actRadioButton=true;
                         
@@ -730,8 +731,8 @@ export class TcontrolComponent implements OnInit{
 
                 /* PROCEDURE ASIGNAR TARJETA (RESIVE UN ARRAY, NORMAL FUNCIONA EN CASO DE UN SOLO OBJETO)) */
                 progUpdate ={ PrDeId : this._prDeId,  PrDeAsignadoTarjeta : 1}  /*  */ 
-
-                /*console.log(arrObj); console.log(progUpdate);
+                console.log(progUpdate);
+                /*console.log(arrObj); 
                 this.displayAsigMultiTarj=false;*/
                 
                 for(let i=0; i<this.nroTarjetas; i++){
@@ -740,11 +741,12 @@ export class TcontrolComponent implements OnInit{
                                 if(i=this.nroTarjetas-1){
                                     this.getalltarjetasbyemidpucoid(this.emID,this._PuCoId);
                                     this._pcId=this._PuCoId;
+                                    this.updateProgDetalle(progUpdate);
                                 }}, 
                         err => {this.errorMessage=err}
                     );
                 }
-                this.updateProgDetalle(progUpdate);
+                
                 
                 
                 

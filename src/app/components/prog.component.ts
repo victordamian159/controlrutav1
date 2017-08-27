@@ -100,7 +100,8 @@ export class ProgComponent implements OnInit{
         private displayNuevaProgramacion: boolean = false;
         private displayProgramacionBase: boolean = false;
         private displayProgramacion: boolean = false;
-        private displayConfirmar: boolean = false;
+        private displayConfirmar: boolean = false; /* CONFIRMAR ELIMINAR REG PROGRAMACION */
+        private displayAvisoNoPuedeBorrarProg:boolean=false;
         private displayAceptarProgNueva : boolean = false;
         private displayErrorDatos : boolean = false; // PRIMERA VENTANA MODAL PROGRAMACION
         private displayErrorTablaProgramacion : boolean=false; // ERROR EN LA TABLA DE PROGRAMACION
@@ -1071,10 +1072,15 @@ export class ProgComponent implements OnInit{
                             this.iDReg=0;
                             this.displayConfirmar=false;
                         },
-            err => {console.log(err);}
+            err => {this.mensaje="No puede borrar esta programacion, esta siendo utilizada";
+                    this.displayAvisoNoPuedeBorrarProg=true;    
+                    console.log(err);}
          );
     }
-
+    OkProgNoPuedoBorrar(){
+        this.mensaje="";
+        this.displayAvisoNoPuedeBorrarProg=false;  
+    }
     //CERRAR VENTANA MODAL PROGRAMACION TABLA 
     cerrarProg(){
         this.displayProgramacion=false;

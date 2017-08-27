@@ -37,8 +37,8 @@
                         
                         <p-column styleClass="col-button" [style]="{'width':'3em'}">
                             <template let-col  let-objBus="rowData"  pTemplate="body">
-                                    <button pButton class="btn" (click)= "editarBus(objBus.BuId)" icon="fa-pencil-square-o" > </button>                  
-                                    <button pButton class="btn" (click)= "eliminarBus(objBus.BuId)" icon="fa-trash">  </button>
+                                    <button pButton id="btnTable" (click)= "editarBus(objBus.BuId)" icon="fa-pencil-square-o" > </button>                  
+                                    <button pButton id="btnTable" (click)= "eliminarBus(objBus.BuId)" icon="fa-trash">  </button>
                             </template>
                         </p-column>
                         <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
@@ -66,8 +66,8 @@
                     <p-dataTable [value]="_gbusPer" [rows]="2"  emptyMessage="No Hay Registros" scrollable="true" scrollWidth="100%" selectionMode="single">
                         <p-column styleClass="col-button" [style]="{'width':'3em'}">
                             <template let-col  let-objBusPer="rowData"  pTemplate="body">
-                                    <button pButton class="btn" (click)=  "editarBusPers(objBusPer.BuPeId)" icon="fa-pencil-square-o" > </button>                  
-                                    <button pButton class="btn" (click)= "eliminarBusPers(objBusPer.BuPeId)" icon="fa-trash">  </button>
+                                    <button pButton id="btnTable" (click)=  "editarBusPers(objBusPer.BuPeId)" icon="fa-pencil-square-o" > </button>                  
+                                    <button pButton id="btnTable" (click)= "eliminarBusPers(objBusPer.BuPeId)" icon="fa-trash">  </button>
                             </template>
                         </p-column>
                         <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
@@ -92,8 +92,8 @@
                     <p-dataTable [value]="arrTelAsig" [rows]="3" emptyMessage="No Hay Registros" scrollable="true" scrollWidth="100%" selectionMode="single">
                         <p-column styleClass="col-button" [style]="{'width':'3em'}">
                             <template let-col  let-objTel="rowData"  pTemplate="body">
-                                    <button pButton class="btn" (click)= "editarTelAsig(objTel.TeId)" icon="fa-pencil-square-o" > </button>                  
-                                    <button pButton class="btn" (click)= "eliminarTelAsig(objTel.TeId)" icon="fa-trash">  </button>
+                                    <button pButton id="btnTable" (click)= "editarTelAsig(objTel.TeId)" icon="fa-pencil-square-o" > </button>                  
+                                    <button pButton id="btnTable" (click)= "eliminarTelAsig(objTel.TeId)" icon="fa-trash">  </button>
                             </template>
                         </p-column>
                         <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>

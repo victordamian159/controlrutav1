@@ -18,8 +18,8 @@
 
                     <p-column styleClass="col-button" [style]="{'width':'3em'}">
                         <template let-col  let-Personal="rowData"  pTemplate="body">
-                                <button  pButton class="btn" (click)=  "editarPersonal(Personal.PeId)" icon="fa-pencil-square-o" > </button>                  
-                                <button  pButton class="btn" (click)= "eliminarPersonal(Personal.PeId)" icon="fa-trash">  </button>
+                                <button  pButton id="btnTable" (click)=  "editarPersonal(Personal.PeId)" icon="fa-pencil-square-o" > </button>                  
+                                <button  pButton id="btnTable" (click)= "eliminarPersonal(Personal.PeId)" icon="fa-trash">  </button>
                         </template>
                     </p-column>
                     <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
