@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {PersService} from '../service/personal.service';
-import {_fecha,fecha,formatFech,cCeroFecha} from 'app/funciones';
+import {_fecha1,fecha,formatFech,cCeroFecha} from 'app/funciones';
 @Component({
     selector: 'app-personal',
     templateUrl	: '../views/personal.component.html',
@@ -135,15 +135,15 @@ export class PersComponent implements OnInit{
                     PeNombres : objPer.PeNombres,
                     PeApellidos : objPer.PeApellidos,
                     PeDni : objPer.PeDNI,
-                    PeFecNac : formatFech(_fecha(objPer.PeFecNac)),
+                    PeFecNac : formatFech(_fecha1(objPer.PeFecNac)),
                     PeDireccion :objPer.PeDireccion,
                     /*PeTipo :objPer.PeTipo,*/
                     PeTipoLicencia :objPer.PeTipoLicencia,
                     PeNMovil :objPer.PeCelular,
                     PeNFijo :objPer.PeTelefonoFijo,
                     PeEmail :objPer.PeEmail,
-                    getPeFechaIng :formatFech(_fecha(objPer.getPeFechaIng)),
-                    PeFechaSal :formatFech(_fecha(objPer.PeFechaSal)),
+                    getPeFechaIng :formatFech(_fecha1(objPer.getPeFechaIng)),
+                    PeFechaSal :formatFech(_fecha1(objPer.PeFechaSal)),
                     UsId:objPer.UsId,
                     UsFechaReg :objPer.UsFechaReg,
                     PeSexo:objPer.PeSexo,

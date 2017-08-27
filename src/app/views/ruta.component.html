@@ -19,8 +19,12 @@
         <div class="col-xl-6 col-md-12 col-sm-12 col-xs-12">
             <div class="row">
                 <div class="table table-responsive">
+                    <!--
                     <p-dataTable [value]="rutasPresentar" [rows]="5" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilter]="filtroGlobal" 
                         scrollable="true"  scrollWidth="100%" selectionMode="single" [(selection)]="selectedRutaPresentar" (onRowSelect)="onRowSelect($event)">
+                    -->
+                    <p-dataTable [value]="rutasPresentar"  [globalFilter]="filtroGlobal" scrollable="true" scrollHeight="400px" scrollWidth="100%" 
+                        selectionMode="single" emptyMessage="Lista vacia" (onRowSelect)="onRowSelect($event)"> 
                             <!--COLUMNAS-->
                             <p-column styleClass="col-button" [style]="{'width':'3em'}">
                                 <template let-col let-Ruta="rowData" pTemplate="body" >

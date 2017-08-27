@@ -1,77 +1,77 @@
 <!--PRINCIPAL TABLAS-->
-<div class="contenedor">
-    <!--TITULO-->
-    <div id="titulo"> Tarjetas de Control </div>
-   
-    <!--BUSQUEDA + BTNNUEVO + COMBO RUTA + COMBO PCONTROL-->
-    <div class="row">
-        <!--COMBO RUTAS-->
-        <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
-            <select class="form-control" required [(ngModel)]="_ruId" (change)="rutaId($event)"   #ruta="ngModel">
-                <!--<option value="" disabled selected hidden>Please Choose...</option>-->
-                <option *ngFor="let ruta of rutas" [value]="ruta.RuId">{{ruta.RuDescripcion}}</option>
-            </select> 
+    <div class="contenedor">
+        <!--TITULO-->
+        <div id="titulo"> Tarjetas de Control </div>
+    
+        <!--BUSQUEDA + BTNNUEVO + COMBO RUTA + COMBO PCONTROL-->
+        <div class="row">
+            <!--COMBO RUTAS-->
+            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                <select class="form-control" required [(ngModel)]="_ruId" (change)="rutaId($event)"   #ruta="ngModel">
+                    <!--<option value="" disabled selected hidden>Please Choose...</option>-->
+                    <option *ngFor="let ruta of rutas" [value]="ruta.RuId">{{ruta.RuDescripcion}}</option>
+                </select> 
+            </div>
+
+            <!--COMBO PUNTOS CONTROL-->
+            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                <select class="form-control" required [(ngModel)]="_pcId" (change)="pControlId($event)"   #pcontrol="ngModel">
+                    <!--<option value="" disabled selected hidden>Please Choose...</option>-->
+                    <option *ngFor="let punto of _puntosControl" [value]="punto.PuCoId">
+                        {{punto.PuCoDescripcion}} / {{punto.PuCoTiempoBus}}
+                    </option>
+                </select> 
+            </div>
+
+            <!--BUSQUEDA-->
+            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+            </div>
+
+            <!--NUEVO REGISTRO style="float:left"-->
+            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                <button class="form-control" id="btnNuevo" type="button"  pButton icon="fa-file-text-o" [disabled]="_ruId==0" (click)="nroAsigTarjetas()" label="Asignar Tarjeta" ></button>
+            </div>
         </div>
 
-        <!--COMBO PUNTOS CONTROL-->
-        <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
-            <select class="form-control" required [(ngModel)]="_pcId" (change)="pControlId($event)"   #pcontrol="ngModel">
-                <!--<option value="" disabled selected hidden>Please Choose...</option>-->
-                <option *ngFor="let punto of _puntosControl" [value]="punto.PuCoId">
-                    {{punto.PuCoDescripcion}} / {{punto.PuCoTiempoBus}}
-                </option>
-            </select> 
-        </div>
+        <!--TABLA CABECERA-->
+        <div class="row">
+            <!--<div class="col-xl-12 col-md-12 col-sm-12 col-xs-12"></div>-->
+                <div class=" table table-responsive">
+                    <p-dataTable [value]="_allTarjControl" [rows]="5" [paginator]="true"  [globalFilter]="filtroGlobal" [responsive]="false" emptyMessage="Lista Vacia"
+                        scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedTarjCab" (onRowSelect)="onRowSelectCabecera($event)">
+                        
+                        <!--campos de la datatable-->
+                        <p-column styleClass="col-button" [style]="{'width':'3em','height':'4em'}">
+                            <template let-col let-row="rowData" pTemplate="body">
+                                <!--<button type="button" pButton id="btnTable" (click)="editarC(row.TaCoId)" icon="fa-pencil-square-o" > </button>-->
+                                <button type="button" pButton id="btnTable" (click)="eliminarC(row.TaCoId)" icon="fa-trash" > </button>
+                            </template>
+                        </p-column>
+                        <p-column field="nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
+                        <p-column field="BuDescripcion" header="Descripcion Bus"  [style]="{'width':'17em'}"></p-column>
+                        <p-column field="BuPlaca" header="Placa"  [style]="{'width':'8em','text-align':'center'}"></p-column>
+                        <p-column field="TaCoFecha" header="Fecha"  [style]="{'width':'9em','text-align':'center'}"></p-column>
+                        <p-column field="TaCoHoraSalida" header="Salida"  [style]="{'width':'7em','text-align':'center'}"></p-column>
+                    </p-dataTable>
+                </div>
+            
+        </div>    
 
-        <!--BUSQUEDA-->
-        <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
-            <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
-        </div>
+        <!--TABLA DETALLE TARJETA CONTROL-->
+        <div class="row">
+                <div class=" table table-responsive">
+                    <p-dataTable [value]="_allTarjDetalle" [rows]="7"   [responsive]="false"
+                        scrollable="true" [paginator]="true" selectionMode="single" scrollWidth="100%" emptyMessage="Lista Vacia" >
 
-        <!--NUEVO REGISTRO style="float:left"-->
-        <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
-            <button class="form-control" id="btnNuevo" type="button"  pButton icon="fa-file-text-o" [disabled]="_ruId==0" (click)="nroAsigTarjetas()" label="Asignar Tarjeta" ></button>
+                        <p-column field="nro" header="N°"  [style]="{'width':'2em','text-align':'center'}"></p-column>
+                        <p-column field="TaCoDeDescripcion" header="Punto"  [style]="{'width':'9em'}"></p-column>
+                        <p-column field="TaCoDeHora" header="Control"  [style]="{'width':'5em','text-align':'center'}"></p-column>
+                        <p-column field="TaCoDeTiempo" header="Tiempo"  [style]="{'width':'5em','text-align':'center'}"></p-column>
+                    </p-dataTable>
+                </div>
         </div>
     </div>
-
-    <!--TABLA CABECERA-->
-    <div class="row">
-        <!--<div class="col-xl-12 col-md-12 col-sm-12 col-xs-12"></div>-->
-            <div class=" table table-responsive">
-                <p-dataTable [value]="_allTarjControl" [rows]="5" [paginator]="true"  [globalFilter]="filtroGlobal" [responsive]="false" emptyMessage="Lista Vacia"
-                    scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectCabecera($event)">
-                    
-                    <!--campos de la datatable-->
-                    <p-column styleClass="col-button" [style]="{'width':'3em','height':'4em'}">
-                        <template let-col let-row="rowData" pTemplate="body">
-                            <!--<button type="button" pButton id="btnTable" (click)="editarC(row.TaCoId)" icon="fa-pencil-square-o" > </button>-->
-                            <button type="button" pButton id="btnTable" (click)="eliminarC(row.TaCoId)" icon="fa-trash" > </button>
-                        </template>
-                    </p-column>
-                    <p-column field="nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
-                    <p-column field="BuDescripcion" header="Descripcion Bus"  [style]="{'width':'17em'}"></p-column>
-                    <p-column field="BuPlaca" header="Placa"  [style]="{'width':'8em','text-align':'center'}"></p-column>
-                    <p-column field="TaCoFecha" header="Fecha"  [style]="{'width':'9em','text-align':'center'}"></p-column>
-                    <p-column field="TaCoHoraSalida" header="Salida"  [style]="{'width':'7em','text-align':'center'}"></p-column>
-                </p-dataTable>
-            </div>
-        
-    </div>    
-
-    <!--TABLA DETALLE TARJETA CONTROL-->
-    <div class="row">
-            <div class=" table table-responsive">
-                <p-dataTable [value]="_allTarjDetalle" [rows]="7"   [responsive]="false"
-                    scrollable="true" [paginator]="true" selectionMode="single" scrollWidth="100%" emptyMessage="Lista Vacia" >
-
-                    <p-column field="nro" header="N°"  [style]="{'width':'2em','text-align':'center'}"></p-column>
-                    <p-column field="TaCoDeDescripcion" header="Punto"  [style]="{'width':'9em'}"></p-column>
-                    <p-column field="TaCoDeHora" header="Control"  [style]="{'width':'5em','text-align':'center'}"></p-column>
-                    <p-column field="TaCoDeTiempo" header="Tiempo"  [style]="{'width':'5em','text-align':'center'}"></p-column>
-                </p-dataTable>
-            </div>
-    </div>
-</div>
 
     
 <!--VENTANAS FORMULARIO-->
@@ -165,7 +165,7 @@
                                 <div class=" form-group ">
                                     <label>Orden de las Placas:</label>
                                     <p-dataTable [value]="_progDetalle" scrollable="true" scrollHeight="100px" selectionMode="single" 
-                                                (onRowSelect)="onRowPlaca($event)" emptyMessage="Lista Vacia" >
+                                                (onRowSelect)="onRowPlaca($event)" emptyMessage="Lista Vacia" [(selection)]="selectedPlacaONE" >
                                         <p-column field="nro" header="N°" [style]="{'width':'3em'}" ></p-column>
                                         <p-column field="PrDeOrden" header="Sorteo" [style]="{'width':'3em'}" ></p-column>
                                         <p-column field="nroPlaca" header="Placa" [style]="{'width':'6em'}" ></p-column>
@@ -320,7 +320,7 @@
                                     <div class=" form-group ">
                                         <label>Orden de las Placas:</label>
                                         <p-dataTable [value]="_progDetalle" scrollable="true" scrollHeight="100px" selectionMode="single" 
-                                                    (onRowSelect)="onRowPlaca($event)" emptyMessage="Lista Vacia" >
+                                                    (onRowSelect)="onRowPlaca($event)" emptyMessage="Lista Vacia" [(selection)]="selectedPlacaMULTI">
                                             <p-column field="nro" header="N°" [style]="{'width':'3em'}" ></p-column>
                                             <p-column field="PrDeOrden" header="Sorteo" [style]="{'width':'3em'}" ></p-column>
                                             <p-column field="nroPlaca" header="Placa" [style]="{'width':'6em'}" ></p-column>
@@ -371,7 +371,7 @@
                     <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelar_eliminarC()" label="Cancelar"></button>
                 </div>
                 <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                    <button class="btn_modal" type="text" pButton icon="fa-trash-o" (click)="_eliminarC()" label = "Eliminar"></button>
+                    <button class="btn_modal" type="text" pButton icon="fa-trash-o" (click)="aceptar_eliminarC()" label = "Eliminar"></button>
                 </div>
             </div>
      </p-dialog>  

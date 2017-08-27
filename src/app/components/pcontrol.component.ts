@@ -2,7 +2,7 @@ import {Component, OnInit ,ElementRef} from '@angular/core';
 import {Message} from 'primeng/primeng';
 //import {puntoscontrol, puntosTrazaRuta} from 'app/variables';
 import {GlobalVars} from 'app/variables'
-import {hora,_hora,_cCeroFecha,cCeroHora,corrigiendoHora,fecha,_fecha,fechaActual1,fechaActual2} from 'app/funciones';
+import {hora,_hora,_cCeroFecha,cCeroHora,corrigiendoHora,fecha,fechaActual1,fechaActual2} from 'app/funciones';
 //para rest 
 import {PuntoControlService} from '../service/pcontrol.service';
 import {RutaService} from '../service/ruta.service';
