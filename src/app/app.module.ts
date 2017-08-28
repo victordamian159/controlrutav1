@@ -29,7 +29,14 @@ import {EmpPerComponent} from './components/empresapersonal.component';
 import {PersComponent} from './components/personal.component';
 import {loginUserComponent} from './components/loginUser.component';
 import { AuthGuard } from './components/auth.guard';
+
+/* REPORTES */
+import {reportPersonas} from './components/reportPersonas.component';
+
+/* GLOBALES */
 import {GlobalVars} from './variables';
+
+
 
 //ROUTING MODULE
 import {AppRoutingModule} from './app-routing.module';
@@ -80,13 +87,10 @@ import { BaseRequestOptions } from '@angular/http';*/
     EmpPerComponent,
     PersComponent,
     menuComponent,
-    /*LoginComponent,
-    RegisterComponent,
-    AlertComponent,*/
     loginUserComponent,
+   
+    reportPersonas
     
-    //InMemoryWebApiModule.forRoot()
-    //InMemoryWebApiModule.forRoot(InMemoryDataService)
   ],
   
   /*MODULOS FRAMWORK PRIMENG*/
@@ -147,3 +151,14 @@ import { BaseRequestOptions } from '@angular/http';*/
 })
 
 export class AppModule { }
+
+
+ /*
+        LoginComponent,
+        RegisterComponent,
+        AlertComponent,
+        //InMemoryWebApiModule.forRoot()
+        //InMemoryWebApiModule.forRoot(InMemoryDataService)
+    */
+    
+    /* REPORTES */

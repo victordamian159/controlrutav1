@@ -1,0 +1,46 @@
+<div class="container">
+    <div>Reporte de Personas en la Empresa</div>
+    <div class="row">
+        <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+            <div>Opciones de Reporte</div>
+            <select class="form-control" required [(ngModel)]="optIdRep" (change)="funCboOptId()">
+                <!--<option value="" disabled selected hidden>Please Choose...</option>-->
+                <option *ngFor="let optRep of arrOptReports" [value]="optRep.id">
+                    {{optRep.nomb}}
+                </option>
+            </select> 
+        </div>
+        <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                <div>Listado</div>
+                <select class="form-control" required [(ngModel)]="suemid" (change)="funCboSubEmp()">
+                    <!--<option value="" disabled selected hidden>Please Choose...</option>-->
+                    <option *ngFor="let optList of arrOptListado" [value]="optList.SuEmId">
+                        {{optList.SuEmRSocial}}
+                    </option>
+                </select> 
+            </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div  style="height:460px; width:100%;border: 2px solid rgb(0, 174, 0); overflow-y:auto;">
+                    <table style="width:100%">
+                        <thead>
+                            <tr>
+                                <th *ngFor="let cab of arrTableCab" style="height:45px" >{{cab}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let c of arrPersonal" style="height:45px; border-top:1px solid; ">
+                                <td *ngFor="let row of c">{{row}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+            <button pButton label="Descargar" style="height:40px; background:green; width:100%;"></button>
+        </div>
+    </div>
+</div>

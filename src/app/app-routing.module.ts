@@ -15,6 +15,8 @@ import {EmpSubEmpComponent} from './components/empSubemp.component';
 import {PersComponent} from './components/personal.component';
 import {loginUserComponent} from './components/loginUser.component';
 
+import {reportPersonas} from './components/reportPersonas.component';
+
 /*import {LoginComponent} from './login/_login/_login.component';
 import { RegisterComponent } from './login/register/register.component';*/
 
@@ -38,6 +40,10 @@ const app_routes: Routes = [
       {path: 'menu',   component:menuComponent,canActivate: [AuthGuard]}, /* ISNTRUCCIONES??*/
       {path: 'regempper', component:EmpPerComponent,canActivate: [AuthGuard]}, 
       {path: 'regempsubemp',component:EmpSubEmpComponent,canActivate: [AuthGuard]},
+      
+      {path: 'reportPers', component:reportPersonas,canActivate: [AuthGuard]}, 
+
+      
       {path: 'login', component:loginUserComponent },
       {path: '**', redirectTo: 'login' } /* __ ** : SI ESCRIBE CUALQUIER COSA MANDA AL LOGIN*/
 ];
