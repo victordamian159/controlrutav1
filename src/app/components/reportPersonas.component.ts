@@ -23,7 +23,9 @@ export class reportPersonas implements OnInit{
     /* ARRAYS */
         private arrOptReports:any[]=[{id:"",nomb:""}];
         private arrTableCab:any[]=[];
-        private arrPersonal:any[]=[];
+        private arrTableCabEmpPer:any[]=[];
+        private arrPersonal:any[]=[]; /* TODAS LAS PERSONAS EN EL SISTEMA */
+        private arrEmpPer:any[]=[]; /* PERSONAS POR SUBEMPRESA */
         private arrOptListado:any[]=[];
     /* VAR DISPLAY */
     /* DISABLED AND HIDDEN BTNS */
@@ -55,9 +57,9 @@ export class reportPersonas implements OnInit{
                 );
             }
             procGetEmpPerByEmId(emid:number,suemid:number){
-                let objEmpPer:any;
+                let arrEmpPer:any[]=[];
                 this.empeservice.getallempperbyemidsuemid(emid,suemid).subscribe(
-                    data => {objEmpPer=data; console.log(objEmpPer);},
+                    data => {arrEmpPer=data; this.mgAllEmpPer(arrEmpPer);},
                     error=> {console.log(error);}
                 );
             }
@@ -66,12 +68,12 @@ export class reportPersonas implements OnInit{
     /* FUNCIONES ASOCIADA A COMBO */
         funCboOptId(){
             let optIdRep:string; optIdRep=this.optIdRep;
-
+            this.arrOptListado=[];
             if(optIdRep=="01"){
                 console.log("todas las personas por su subempresa");
-                this.procGetAllsubempbyemid(this.emid);
             }else if(optIdRep=="02"){
                 console.log("por todas las sub empresas");
+                this.procGetAllsubempbyemid(this.emid);
             }else if(optIdRep=="03"){
                 console.log("todas las personas sobre el sistema");
                 this.procGetAllPersona();
@@ -79,7 +81,7 @@ export class reportPersonas implements OnInit{
         }
 
         funCboSubEmp(){
-            console.log(this.suemid);
+            /*console.log(this.suemid);*/
             this.procGetEmpPerByEmId(this.emid,this.suemid);
         }
     
@@ -105,6 +107,16 @@ export class reportPersonas implements OnInit{
                 arrRows[i]=[arrOpt[i].PeNombres, arrOpt[i].PeApellidos, arrOpt[i].PeDNI, arrOpt[i].PeDireccion, arrOpt[i].PeCelular]
             }
             this.arrPersonal=arrRows;
+        }
+        mgAllEmpPer(arrEmpPer=[]){
+            let arrRows:any[]=[];
+            /* CABECERA */
+            this.arrTableCabEmpPer=["Nombres","Apellidos","DNI","Fecha Ingreso", "Cargo"];
+            /* TABLA */
+            for(let i=0; i<arrEmpPer.length; i++){
+                arrRows[i]=[arrEmpPer[i].PeNombres,arrEmpPer[i].PeApellidos,arrEmpPer[i].PeDNI,arrEmpPer[i].PeFechaIng,arrEmpPer[i].EmPeTipo];
+            }
+            this.arrEmpPer=arrRows;
         }
         mCboAllSubEmp(allsuemp=[]){
             let OptCboList:any[]=[];

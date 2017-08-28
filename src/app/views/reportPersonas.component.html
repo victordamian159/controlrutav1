@@ -23,7 +23,7 @@
     <div class="row">
         <div class="col-xl-12">
             <div  style="height:460px; width:100%;border: 2px solid rgb(0, 174, 0); overflow-y:auto;">
-                    <table style="width:100%">
+                    <table *ngIf="optIdRep==03" style="width:100%">
                         <thead>
                             <tr>
                                 <th *ngFor="let cab of arrTableCab" style="height:45px" >{{cab}}</th>
@@ -31,6 +31,19 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let c of arrPersonal" style="height:45px; border-top:1px solid; ">
+                                <td *ngFor="let row of c">{{row}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <table *ngIf="optIdRep==02" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th *ngFor="let cab of arrTableCabEmpPer" style="height:45px" >{{cab}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let c of arrEmpPer" style="height:45px; border-top:1px solid; ">
                                 <td *ngFor="let row of c">{{row}}</td>
                             </tr>
                         </tbody>
