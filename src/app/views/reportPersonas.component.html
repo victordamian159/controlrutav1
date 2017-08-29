@@ -11,8 +11,8 @@
             </select> 
         </div>
         <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                <div>Listado</div>
-                <select class="form-control" required [(ngModel)]="suemid" (change)="funCboSubEmp()">
+                <div [hidden]="optIdRep!=02" >Listado</div>
+                <select class="form-control" required [(ngModel)]="suemid" [hidden]="optIdRep!=02" (change)="funCboSubEmp()">
                     <!--<option value="" disabled selected hidden>Please Choose...</option>-->
                     <option *ngFor="let optList of arrOptListado" [value]="optList.SuEmId">
                         {{optList.SuEmRSocial}}
@@ -36,7 +36,8 @@
                         </tbody>
                     </table>
                     
-                    <table *ngIf="optIdRep==02" style="width:100%">
+                    <table *ngIf="optIdRep==02 && suemid!=null" style="width:100%">
+                        <!--<h3 style="text-align:center">{{optList.SuEmRSocial}}</h3>-->
                         <thead>
                             <tr>
                                 <th *ngFor="let cab of arrTableCabEmpPer" style="height:45px" >{{cab}}</th>

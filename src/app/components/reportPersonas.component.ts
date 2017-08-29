@@ -27,6 +27,7 @@ export class reportPersonas implements OnInit{
         private arrPersonal:any[]=[]; /* TODAS LAS PERSONAS EN EL SISTEMA */
         private arrEmpPer:any[]=[]; /* PERSONAS POR SUBEMPRESA */
         private arrOptListado:any[]=[];
+        private arrAllEmpPerBySuEmId:any[]=[];
     /* VAR DISPLAY */
     /* DISABLED AND HIDDEN BTNS */
     ngOnInit(){
@@ -34,11 +35,11 @@ export class reportPersonas implements OnInit{
     }
     constructor(private empeservice:EmpPerService, private personaService : PersService, private empsuemservice : EmpSubEmpService, public classglobalvars:GlobalVars ){
         this.arrOptReports=[{id:"01", nomb:"Todas las SubEmpresas"},
-                         {id:"02", nomb:"Por SubEmpresas"},
-                         {id:"03", nomb:"En el Sistema"}];
+                            {id:"02", nomb:"Por SubEmpresas"},
+                            {id:"03", nomb:"En el Sistema"}];
         this.emid=this.classglobalvars.GetEmId();
         this.userId=this.classglobalvars.GetUsId();
-        
+        this.arrAllEmpPerBySuEmId[0]=[];
     }
     /* PROCEDURES */
         /* GETTERS */
@@ -52,16 +53,34 @@ export class reportPersonas implements OnInit{
             procGetAllsubempbyemid(emid:number){
                 let allsubemp:any[]=[];
                 this.empsuemservice.getallsubempresasbyemid(emid).subscribe(
-                    data => {allsubemp=data; this.mCboAllSubEmp(allsubemp);},
+                    data => {allsubemp=data; 
+                                if(this.optIdRep=='01'){
+                                    this.consultaTodasSubEmp(allsubemp);
+                                    //this.mgAllEmpPerBySuEmId();
+                                }else if(this.optIdRep=='02'){
+                                    this.mCboAllSubEmp(allsubemp);
+                                }
+                            },
                     error=> {console.log(error);}
                 );
             }
             procGetEmpPerByEmId(emid:number,suemid:number){
                 let arrEmpPer:any[]=[];
+                let arrAllEmpPerBySuEmId:any[]=[[]];
                 this.empeservice.getallempperbyemidsuemid(emid,suemid).subscribe(
-                    data => {arrEmpPer=data; this.mgAllEmpPer(arrEmpPer);},
+                    data => {   arrEmpPer=data; 
+                                if(this.optIdRep=='01'){
+                                    this.arrAllEmpPerBySuEmId.push(arrEmpPer);
+                                }else if(this.optIdRep=='02'){
+                                    this.mgAllEmpPerBySuEmId(arrEmpPer); /* CARGANDO EL TABLE */
+                                }
+                            },
                     error=> {console.log(error);}
                 );
+            }
+            procGetAllEmpPerBySuEmId(){
+                let arrAllEmpPer:any[]=[];
+                this.empeservice.getEmpPerById
             }
         /* MANTENIMIENTO */ 
 
@@ -71,6 +90,7 @@ export class reportPersonas implements OnInit{
             this.arrOptListado=[];
             if(optIdRep=="01"){
                 console.log("todas las personas por su subempresa");
+                this.procGetAllsubempbyemid(this.emid);
             }else if(optIdRep=="02"){
                 console.log("por todas las sub empresas");
                 this.procGetAllsubempbyemid(this.emid);
@@ -85,7 +105,7 @@ export class reportPersonas implements OnInit{
             this.procGetEmpPerByEmId(this.emid,this.suemid);
         }
     
-    /*MOSTRAR DATOS */
+    /* MOSTRAR DATOS */
         mgAllPersonasPDFTable(arrOpt=[]){
             let arrColOptPer:any[]=[], arrNroOrden:any[]=[], arrNombres:any[]=[], 
                 arrApellidos:any[]=[], arrDNI:any[]=[], arrDireccion:any[]=[];
@@ -108,13 +128,17 @@ export class reportPersonas implements OnInit{
             }
             this.arrPersonal=arrRows;
         }
-        mgAllEmpPer(arrEmpPer=[]){
+        mgAllEmpPerBySuEmId(arrEmpPerBySuEmId=[]){
             let arrRows:any[]=[];
             /* CABECERA */
             this.arrTableCabEmpPer=["Nombres","Apellidos","DNI","Fecha Ingreso", "Cargo"];
             /* TABLA */
-            for(let i=0; i<arrEmpPer.length; i++){
-                arrRows[i]=[arrEmpPer[i].PeNombres,arrEmpPer[i].PeApellidos,arrEmpPer[i].PeDNI,arrEmpPer[i].PeFechaIng,arrEmpPer[i].EmPeTipo];
+            for(let i=0; i<arrEmpPerBySuEmId.length; i++){
+                arrRows[i]=[arrEmpPerBySuEmId[i].PeNombres,
+                            arrEmpPerBySuEmId[i].PeApellidos,
+                            arrEmpPerBySuEmId[i].PeDNI,
+                            arrEmpPerBySuEmId[i].PeFechaIng,
+                            arrEmpPerBySuEmId[i].EmPeTipo];
             }
             this.arrEmpPer=arrRows;
         }
@@ -123,5 +147,22 @@ export class reportPersonas implements OnInit{
             for(let i=0; i<allsuemp.length; i++){ OptCboList[i]=[]; }
             for(let i=0; i<allsuemp.length; i++){OptCboList[i].SuEmId=allsuemp[i].SuEmId; OptCboList[i].SuEmRSocial=allsuemp[i].SuEmRSocial; }
             this.arrOptListado=OptCboList; /* PASANDO AL COMBO */
+        }
+        mgAllEmpPer(allEmpPer=[]){
+            let arrcampos=["Nombres","Apellidos","DNI","Fecha Ingreso","Cargo"];
+            console.log(allEmpPer);/* EN LAS FILAS INDICADAS PONER EL NOMBRE DE LA SUBEMPRESA, Y EN LAS DEMAS PONER EL OBJETO
+                                        QUE SERA LA FILA QUE CONTIENE LOS CAMPOS A MOSTRAR */
+
+            /* JUNTANDO TODO EN UN ARRAY */
+            
+        }   
+    /* FUNCIONES */
+        consultaTodasSubEmp(allsubemp=[]){
+            for(let i=0; i<allsubemp.length;i++){
+                this.procGetEmpPerByEmId(this.emid,allsubemp[i].SuEmId);
+            }
+            this.arrAllEmpPerBySuEmId.shift();
+            this.mgAllEmpPer(this.arrAllEmpPerBySuEmId);
+            
         }
 }
