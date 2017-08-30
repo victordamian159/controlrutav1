@@ -11,14 +11,14 @@
             </select> 
         </div>
         <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                <div [hidden]="optIdRep!=02" >Listado</div>
-                <select class="form-control" required [(ngModel)]="suemid" [hidden]="optIdRep!=02" (change)="funCboSubEmp()">
-                    <!--<option value="" disabled selected hidden>Please Choose...</option>-->
-                    <option *ngFor="let optList of arrOptListado" [value]="optList.SuEmId">
-                        {{optList.SuEmRSocial}}
-                    </option>
-                </select> 
-            </div>
+            <div [hidden]="optIdRep!=02" >Listado</div>
+            <select class="form-control" required [(ngModel)]="suemid" [hidden]="optIdRep!=02" (change)="funCboSubEmp()">
+                <!--<option value="" disabled selected hidden>Please Choose...</option>-->
+                <option *ngFor="let optList of arrOptListado" [value]="optList.SuEmId">
+                    {{optList.SuEmRSocial}}
+                </option>
+            </select> 
+        </div>
     </div>
     <div class="row">
         <div class="col-xl-12">

@@ -32,6 +32,7 @@ import { AuthGuard } from './components/auth.guard';
 
 /* REPORTES */
 import {reportPersonas} from './components/reportPersonas.component';
+import {reportBuses} from './components/reportBus.component';
 
 /* GLOBALES */
 import {GlobalVars} from './variables';
@@ -89,8 +90,8 @@ import { BaseRequestOptions } from '@angular/http';*/
     menuComponent,
     loginUserComponent,
    
-    reportPersonas
-    
+    reportPersonas,
+    reportBuses
   ],
   
   /*MODULOS FRAMWORK PRIMENG*/

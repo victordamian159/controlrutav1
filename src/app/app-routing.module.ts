@@ -16,6 +16,7 @@ import {PersComponent} from './components/personal.component';
 import {loginUserComponent} from './components/loginUser.component';
 
 import {reportPersonas} from './components/reportPersonas.component';
+import {reportBuses} from './components/reportBus.component';
 
 /*import {LoginComponent} from './login/_login/_login.component';
 import { RegisterComponent } from './login/register/register.component';*/
@@ -42,7 +43,7 @@ const app_routes: Routes = [
       {path: 'regempsubemp',component:EmpSubEmpComponent,canActivate: [AuthGuard]},
       
       {path: 'reportPers', component:reportPersonas,canActivate: [AuthGuard]}, 
-
+      {path: 'reportBus', component:reportBuses,canActivate: [AuthGuard]}, 
       
       {path: 'login', component:loginUserComponent },
       {path: '**', redirectTo: 'login' } /* __ ** : SI ESCRIBE CUALQUIER COSA MANDA AL LOGIN*/

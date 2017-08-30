@@ -3,23 +3,47 @@
     <div class="row">
         <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
             <div>Opciones de Reporte</div>
-            <select class="form-control">
-                <option>Personas & Buses</option>
-                <option>Telefonos & Buses</option>
-                <option>Buses en el Sistema</option>
-                <option>Buses por SubEmpresa</option>
-            </select>
+            <select class="form-control" required [(ngModel)]="optIdRep" (change)="funCboOptId()">
+                <option *ngFor="let optRep of arrOptReports" [value]="optRep.id">
+                    {{optRep.nomb}}
+                </option>
+            </select> 
         </div>
-        <div class="row">
-            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                <div  style="height:460px; width:100%;border: 2px solid rgb(0, 174, 0); overflow-y:auto;">
-                </div>
-            </div>
+        <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+            <div [hidden]="optIdRep!=03" >Listado</div>
+            <select class="form-control" required [(ngModel)]="suemid" [hidden]="optIdRep!=03" (change)="funCboSubEmp()">
+                <option *ngFor="let optList of arrOptListado" [value]="optList.SuEmId">
+                    {{optList.SuEmRSocial}}
+                </option>
+            </select> 
         </div>
-        <div class="row">
-            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                <button pButton label="Descargar Archivo" style="height:40px; background:green; width:100%;"></button>
+    </div>
+    <div class="row">
+        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+            <div  style="height:460px; width:100%;border: 2px solid rgb(0, 174, 0); overflow-y:auto;">
+                <table *ngIf="optIdRep==03 && suemid!=null" style="width:100%">
+                    <!--<h3 style="text-align:center">{{optList.SuEmRSocial}}</h3>-->
+                    <thead>
+                        <tr>
+                            <th *ngFor="let cab of arrTableCabBusEmp" style="height:45px" >{{cab}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let c of arrBusEmp" style="height:60px; border-top:1px solid;">
+                            <td *ngFor="let row of c" style="width:80px;" >{{row.BuMarca}}</td>
+                            <td *ngFor="let row of c" style="width:80px;" >{{row.BuPlaca}}</td>
+                            <td *ngFor="let row of c" style="width:80px;" >{{row.BuCapacidad}}</td>
+                            <td *ngFor="let row of c" style="width:200px;" >{{row.BuDescripcion}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+            <button pButton label="Descargar Archivo" style="height:40px; background:green; width:100%;"></button>
+        </div>
+    </div>
+    
 </div>

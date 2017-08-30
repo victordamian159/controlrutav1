@@ -69,8 +69,10 @@ export class reportPersonas implements OnInit{
                 let arrAllEmpPerBySuEmId:any[]=[[]];
                 this.empeservice.getallempperbyemidsuemid(emid,suemid).subscribe(
                     data => {   arrEmpPer=data; 
-                                if(this.optIdRep=='01'){
+                                /* TODAS LAS PERSONAS SEPARADAS POR SU SUBEMPRESA */
+                                if(this.optIdRep=='01'){    
                                     this.arrAllEmpPerBySuEmId.push(arrEmpPer);
+                                /* SOLO PERSONAS POR SUBEMPRESA DETERMINADA */
                                 }else if(this.optIdRep=='02'){
                                     this.mgAllEmpPerBySuEmId(arrEmpPer); /* CARGANDO EL TABLE */
                                 }
@@ -154,7 +156,7 @@ export class reportPersonas implements OnInit{
                                         QUE SERA LA FILA QUE CONTIENE LOS CAMPOS A MOSTRAR */
 
             /* JUNTANDO TODO EN UN ARRAY */
-            
+
         }   
     /* FUNCIONES */
         consultaTodasSubEmp(allsubemp=[]){

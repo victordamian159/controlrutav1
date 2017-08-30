@@ -1104,6 +1104,7 @@ export class ProgComponent implements OnInit{
 
         i=0; let arrAux=[],arrborrar2=[];
 
+        /* ARRAY DE ARRAYCOLUMNAS */
         while(i<this.nroBusesFilaSelect){
             while(j<this.nroDiasFilaSelect && i+nrosalto<arrprog.length){
                 //arr0[i][j]=arrprog[i+nrosalto].slice(0);
@@ -1114,44 +1115,35 @@ export class ProgComponent implements OnInit{
             arrAux.push(arr0[i].slice(0));
             i++;  nrosalto=0;  j=0;
         }
-        arr0=arrAux;
-        
+
+        arr0=arrAux;/* ARRAY CON ARRAY DE COLUMNAS */
+        console.log(arr0);
+
         /*AJUSTANDO EL NRO DE COLUMNAS A LA HOJA = 15 X HOJA*/
         i=j=0;
         ncol = 15; //NUMERO DE COLUMNAS MAXIMO EN CADA HOJA
         r = dividendo - ncol;//1ER RESIDUO, SABER SI EL TOTAL DE COLUMNAS ES MENOR O IGUAL QUE EL MAXIMO DE COLUMNAS PERMITIDO 
+        console.log(r);
 
         /* HAY 2 A MAS HOJAS */
         if(r>=0){
-            while( r > ncol ){
-                dividendo = r;
-                r = dividendo - ncol; 
-                dividendo = r;
-                c++;
-            }
-            
+            while( r > ncol ){ dividendo = r; r = dividendo - ncol;  dividendo = r; c++; }
             //DIVIDIENDO EN ARRAYS (ARRAY DE CALENDARIO)
-            while(i<c){
-                while( k<ncol && j<15*(i+1)){
-                    arr1[i][k]=this.calendario[j]; 
-                    j++; k++;
-                }
-                k=0; i++;   
-            }
+            while(i<c){ while( k<ncol && j<15*(i+1)){ arr1[i][k]=this.calendario[j];  j++; k++; } k=0; i++; }
             /*console.log(arr1);*/
 
             //TOMANDO EL RESIDUO DE DIVIDIR LA TABLA 
-            //ULTIMA HOJA
-            dividendo=this.nroDiasFilaSelect;
-            i=ncol*c; j=0;
-            while(i<dividendo){//DIVIDENDO = NRO DE COLUMNAS TOTAL
-                arr1[c][j]=this.calendario[i];
-                i++; j++;
-            }
+            //ULTIMA HOJA ARRAY
+            dividendo=this.nroDiasFilaSelect; i=ncol*c; j=0;
+            //DIVIDENDO = NRO DE COLUMNAS TOTAL
+            while(i<dividendo){ arr1[c][j]=this.calendario[i]; i++; j++; }
+
+            /* arr0: MATRIZ DE PLACAS(PROGRAMACION) */
+            /* arr1: MATRIZ CALENDARIO */
 
             //GENERANDO EL ARCHIVO PDF
             i=j=0;
-            //DIVIDIENDO EN ARRAYS EL ARRAY DE FILAS
+            //INICIANDO LAS HOJAS DEL PDF
             while(arr1[i].length != 0 && j<(c)){ 
                 doc.autoTable(arr1[i],arr0,{ 
                     styles: {fontSize: 7,halign: 'center',cellPadding: 1,},   
@@ -1164,20 +1156,18 @@ export class ProgComponent implements OnInit{
                 i++;
                 j++;
             }
-            //INTEGRAR EL RESTO DE LAS COLUMNAS QUE FALTAN, USAR EL RESIDUO DE LA DIVISION
+            console.log(arr0);
+            console.log(arr1[c]);
+
+            /* PDF ULTIMA HOJA  -> INTEGRAR EL RESTO DE LAS COLUMNAS QUE FALTAN, USAR EL RESIDUO DE LA DIVISION */
             doc.autoTable(arr1[c], arr0,{ 
-                    styles: { /*ESTILO COLUMNAS Y CELDAS*/
-                                fontSize: 7,
-                                halign: 'center',
-                                cellPadding: 1,
-                                columnWidth: 60
-                            },   
+                    styles: { fontSize: 7, halign: 'center', cellPadding: 1,columnWidth: 60 },   
                     margin: {top: 30, right: 10, bottom: 10, left: 10},
                     theme: 'striped',
                     columnWidth: 70,
                     valign: 'top',
             });
-        /* */
+    
 
         /*UNA SOLA HOJA (RESIDUO ES MENOR A CERO)*/
         }else if(r<0){
@@ -1194,7 +1184,6 @@ export class ProgComponent implements OnInit{
                 columnWidth: 70,
                 valign: 'top',
             });
-            
         }
 
         /* GUARDANDO ARCHIVO CON NOMBRE */
