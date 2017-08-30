@@ -1074,6 +1074,7 @@ export class ProgComponent implements OnInit{
                         },
             err => {this.mensaje="No puede borrar esta programacion, esta siendo utilizada";
                     this.displayAvisoNoPuedeBorrarProg=true;    
+                    this.displayConfirmar=false;
                     console.log(err);}
          );
     }
@@ -1094,7 +1095,7 @@ export class ProgComponent implements OnInit{
         let arr0=[], i:number =0,j=0,k=0 ,arr1=[], nrosalto:number = 0, arrprog=[];
         let ncol:number, r, dividendo=this.nroDiasFilaSelect,c=1;
 
-        while(i<this.nroBusesFilaSelect){ arr0[i]=arr1; i++;} //NUMERO DE ARRAYS(FILAS) DE TODA LA TABLA
+        while(i){ arr0[i]=arr1; i++;} //NUMERO DE ARRAYS(FILAS) DE TODA LA TABLA
         arr1=[[],[],[],[],[],[],[]]; //NRO DE HOJAS EN TOTAL Q SE PUEDE DIVIDIR EL CALENDARIO
 
         //ALGORITMOS

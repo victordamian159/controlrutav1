@@ -138,10 +138,11 @@
                                 <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                         <label>Licencia:</label>
-                                        <input class="form-control" type="text" maxlength="8" required #licenchoferperso="ngModel" [(ngModel)]="personal.PeTipoLicencia" />
+                                        <!--<input class="form-control" type="text" maxlength="8" required #licenchoferperso="ngModel" [(ngModel)]="personal.PeTipoLicencia" />
                                         <span *ngIf="!licenchoferperso.valid && (licenchoferperso.touched || licenchoferperso.dirty)" >  
                                             <div id="validation" [hidden]="!licenchoferperso.errors.required"> obligatorio </div>
-                                        </span>
+                                        </span>-->
+                                        <input class="form-control" type="text" maxlength="8" [(ngModel)]="personal.PeTipoLicencia" />
                                     </div>
                                 </div>
 
@@ -172,10 +173,11 @@
                                 <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                         <label >Email:</label>
-                                        <input class="form-control" type="text" maxlength="30" required #emailperso="ngModel" [(ngModel)]="personal.PeEmail" />
+                                        <!--<input class="form-control" type="text" maxlength="30" required #emailperso="ngModel" [(ngModel)]="personal.PeEmail" />
                                         <span *ngIf="!emailperso.valid && (emailperso.touched || emailperso.dirty)" >  
                                             <div id="validation" [hidden]="!emailperso.errors.required"> obligatorio </div>
-                                        </span>
+                                        </span>-->
+                                        <input class="form-control" type="text" maxlength="30" [(ngModel)]="personal.PeEmail" />
                                     </div>
                                 </div>
                                
@@ -197,10 +199,11 @@
                                 <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                         <label>Fecha Salida:</label>
-                                        <input class="form-control" type="date" [(ngModel)]="personal.PeFechaSal" required #fsalidapers="ngModel" />
+                                        <!--<input class="form-control" type="date" [(ngModel)]="personal.PeFechaSal" required #fsalidapers="ngModel" />
                                         <div id="validation" [hidden]="fsalidapers.valid || !fsalidapers.touched">
                                                 Error, revise los datos ingresados
-                                        </div> 
+                                        </div>-->
+                                        <input class="form-control" type="date" [(ngModel)]="personal.PeFechaSal" />
                                     </div>
                                 </div>
                             </div>
@@ -212,10 +215,10 @@
             <!--BOTONES-->
             <div class="btn_Modal row">
                 <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                    <button class="btn_modal" class="btn_modal" pButton icon="fa-save" label="Guardar" [disabled]="!nombpers.valid || !apepers.valid || !dniperso.valid || !cbosexo.valid || !estcivilper.valid || !fnacpers.valid || !direcperso.valid || !licenchoferperso.valid || !nromovilperso.valid || !nrofijoperso.valid || !emailperso.valid || !fingresopers.valid || !fsalidapers.valid" (click)="guardarPersonal();  nombpers.reset(); apepers.reset(); dniperso.reset(); cbosexo.reset(); estcivilper.reset(); fnacpers.reset(); direcperso.reset(); licenchoferperso.reset(); nromovilperso.reset(); nrofijoperso.reset(); emailperso.reset(); fingresopers.reset(); fsalidapers.reset();"></button>
+                    <button class="btn_modal" class="btn_modal" pButton icon="fa-save" label="Guardar" [disabled]="!nombpers.valid || !apepers.valid || !dniperso.valid || !cbosexo.valid || !estcivilper.valid || !fnacpers.valid || !direcperso.valid || !nromovilperso.valid || !nrofijoperso.valid || !fingresopers.valid" (click)="guardarPersonal();  nombpers.reset(); apepers.reset(); dniperso.reset(); cbosexo.reset(); estcivilper.reset(); fnacpers.reset(); direcperso.reset(); nromovilperso.reset(); nrofijoperso.reset(); fingresopers.reset();"></button>
                 </div>
                 <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                    <button class="btn_modal" class="btn_modal" pButton icon="fa-close" label="Cancelar" (click)="cancelarPersonal(); nombpers.reset(); apepers.reset(); dniperso.reset(); cbosexo.reset(); estcivilper.reset(); fnacpers.reset(); direcperso.reset(); licenchoferperso.reset(); nromovilperso.reset(); nrofijoperso.reset(); emailperso.reset(); fingresopers.reset(); fsalidapers.reset();"></button>
+                    <button class="btn_modal" class="btn_modal" pButton icon="fa-close" label="Cancelar" (click)="cancelarPersonal(); nombpers.reset(); apepers.reset(); dniperso.reset(); cbosexo.reset(); estcivilper.reset(); fnacpers.reset(); direcperso.reset(); nromovilperso.reset(); nrofijoperso.reset(); fingresopers.reset(); "></button>
                 </div>
             </div>
         </p-dialog>

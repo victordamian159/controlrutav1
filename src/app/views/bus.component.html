@@ -66,7 +66,7 @@
                     <p-dataTable [value]="_gbusPer" [rows]="2"  emptyMessage="No Hay Registros" scrollable="true" scrollWidth="100%" selectionMode="single">
                         <p-column styleClass="col-button" [style]="{'width':'3em'}">
                             <template let-col  let-objBusPer="rowData"  pTemplate="body">
-                                    <button pButton id="btnTable" (click)=  "editarBusPers(objBusPer.BuPeId)" icon="fa-pencil-square-o" > </button>                  
+                                    <!--<button pButton id="btnTable" (click)=  "editarBusPers(objBusPer.BuPeId)" icon="fa-pencil-square-o" > </button>-->
                                     <button pButton id="btnTable" (click)= "eliminarBusPers(objBusPer.BuPeId)" icon="fa-trash">  </button>
                             </template>
                         </p-column>

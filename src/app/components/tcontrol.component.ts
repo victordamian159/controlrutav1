@@ -646,8 +646,8 @@ export class TcontrolComponent implements OnInit{
 
                 _tarjeta ={
                     TaCoId : this._TaCoId,
-                    PuCoId : this.tarjeta._PuCoId,
-                    RuId : this.tarjeta._RuId,
+                    PuCoId : this._PuCoId,
+                    RuId : Number(this._ruId),
                     BuId :this._BuId,
                     PrId : Number(this._prId),
                     TaCoFecha :new Date(),
@@ -660,7 +660,7 @@ export class TcontrolComponent implements OnInit{
 
                 /*NUEVA TARJETA*/
                 progUpdate ={ PrDeId : this._prDeId, PrDeAsignadoTarjeta : this.val} 
-                /*console.log(this._pcId); console.log(_tarjeta);*/
+                console.log(this._pcId); console.log(_tarjeta);
 
                 /* ASIGNADO TARJETA VAL=1  */
                 if(this.val==1){

@@ -143,6 +143,49 @@
             </div>
         </div>
     </p-dialog> 
+    
+    <!--modal del boton guardar (2DA VENTANA  TERMINAR GENERANDO LA PROGRAMACION) -->
+    <p-dialog header="Programacion Base" [resizable]="false" [(visible)]="displayProgramacionBase" modal="modal" width="80%" responsive="true" [closable]="false" >           
+        <div class="row">
+            <div class="cont_modal">
+                <div class="container">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <!--lista de placas (programacion base) MANUAL -->
+                            <p-pickList [source]="arrayPlacas" [target]="ordenSorteo" sourceHeader="Placa" targetHeader="Orden" [responsive]="true" 
+                                        [sourceStyle]="{'height':'170px'}"  [targetStyle]="{'height':'170px'}">
+                                <template let-placa pTemplate="item">
+                                    <div class="ui-helper-clearfix">
+                                        <div style="font-size:14px; float:right; margin:15px 5px 0 0">{{placa.nroPlaca}}</div>
+                                    </div>
+                                </template>
+                            </p-pickList>
+                            <!--
+                                <p-pickList [source]="arrayPlacas" [target]="ordenSorteo" sourceHeader="Placa" targetHeader="Orden" [responsive]="false" 
+                                            [sourceStyle]="{'height':'130px','width':'100px'}"  [targetStyle]="{'height':'130px','width':'100px'}">
+                                    <template let-placa pTemplate="item">
+                                        <div class="ui-helper-clearfix">
+                                            <div style="font-size:12px; float:right; margin:5px 5px 0 0">{{placa.nroPlaca}}</div>
+                                        </div>
+                                    </template>
+                                </p-pickList>
+                            -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                                
+        <!--BOTONES DE LA VENTANA-->           
+        <div class="btn_Modal row">
+            <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">  
+                <button class="btn_modal"  pButton icon="fa-check" (click)="generarProgramacionSegundoModal()" label="Generar Programacion"></button>
+            </div>
+            <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">
+                <button class="btn_modal"  pButton icon="fa-close" (click)="cancelarProgBaseSegundoModal()" [disabled]="disabledButtonForm()" label="Cancelar"></button>
+            </div>
+        </div>
+    </p-dialog> 
 
     <!--EDITAR PROGRAMACION CABECERA-->
     <p-dialog [(visible)]="displayEditProgC" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
@@ -182,33 +225,7 @@
         
     </p-dialog>
 
-    <!--modal del boton guardar (2DA VENTANA  TERMINAR GENERANDO LA PROGRAMACION) -->
-    <p-dialog header="Programacion Base" [resizable]="false" [(visible)]="displayProgramacionBase" modal="modal" width="450" responsive="true" [closable]="false" >           
-        
-        <!--lista de placas (programacion base) MANUAL -->
-        <p-pickList [source]="arrayPlacas" [target]="ordenSorteo" 
-                    sourceHeader="Placa" 
-                    targetHeader="Orden" [responsive]="false" [sourceStyle]="{'height':'130px','width':'100px'}" 
-                    [targetStyle]="{'height':'130px','width':'100px'}">
-            <template let-placa pTemplate="item">
-                <div class="ui-helper-clearfix">
-                    <div style="font-size:12px; float:right; margin:5px 5px 0 0">
-                        {{placa.nroPlaca}}
-                    </div>
-                </div>
-            </template>
-        </p-pickList>
-                            
-        <!--BOTONES DE LA VENTANA-->           
-        <div class="btn_Modal row container">
-            <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">
-                <button class="btn_modal"  pButton icon="fa-close" (click)="cancelarProgBaseSegundoModal()" [disabled]="disabledButtonForm()" label="Cancelar"></button>
-            </div>
-            <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">  
-                <button class="btn_modal"  pButton icon="fa-check" (click)="generarProgramacionSegundoModal()" label="Generar Programacion"></button>
-            </div>
-        </div>
-    </p-dialog> 
+    
 
 
     <!--MODAL VISTA PROGRAMACIONES (CLICK SOBRE UN REGISTRO)-->
@@ -372,13 +389,16 @@
 
 
 <!--<p-footer>
-    <div class="ui-helper-clearfix" style="width:100%">
-        <button   pButton icon="fa-plus" style="float:left" (click)="nuevaAsignaTarjeta()" label="Nuevo" ></button>
-        <span class="text-xs-right"></span>
-    </div>
-</p-footer>
-<div class="win_modal"  style="overflow-y: auto; height:380px; width: 100%;">
+        <div class="ui-helper-clearfix" style="width:100%">
+            <button   pButton icon="fa-plus" style="float:left" (click)="nuevaAsignaTarjeta()" label="Nuevo" ></button>
+            <span class="text-xs-right"></span>
+        </div>
+    </p-footer>
+    <div class="win_modal"  style="overflow-y: auto; height:380px; width: 100%;">
 -->
 
-    <!--<div class="table-container" > </div>
-                <div class="container" style="overflow-x:auto; overflow-y:auto; height:420px; ">-->
+    <!--
+        <div class="table-container" > </div>
+        <div class="container" style="overflow-x:auto; overflow-y:auto; height:420px; ">
+                    
+    -->
