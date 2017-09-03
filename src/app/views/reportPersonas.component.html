@@ -1,5 +1,7 @@
 <div class="container">
     <div>Reporte de Personas en la Empresa</div>
+
+    <!--BOTONES-->
     <div class="row">
         <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
             <div>Opciones de Reporte</div>
@@ -12,14 +14,22 @@
         </div>
         <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
             <div [hidden]="optIdRep!=02" >Listado</div>
-            <select class="form-control" required [(ngModel)]="suemid" [hidden]="optIdRep!=02" (change)="funCboSubEmp()">
-                <!--<option value="" disabled selected hidden>Please Choose...</option>-->
-                <option *ngFor="let optList of arrOptListado" [value]="optList.SuEmId">
+            <select class="form-control" required [(ngModel)]="subemp" [hidden]="optIdRep!=02"  (change)="funCboSubEmp()">
+                <option *ngFor="let optList of arrOptListado" [ngValue]="optList">
                     {{optList.SuEmRSocial}}
                 </option>
             </select> 
+            <!--
+                <select class="form-control" required [(ngModel)]="suemid" [hidden]="optIdRep!=02" (change)="funCboSubEmp()">
+                    <option *ngFor="let optList of arrOptListado" [value]="optList.SuEmId">
+                        {{optList.SuEmRSocial}}
+                    </option>
+                </select> 
+            -->
         </div>
     </div>
+
+    <!--TABLE-->
     <div class="row">
         <div class="col-xl-12">
             <div  style="height:460px; width:100%;border: 2px solid rgb(0, 174, 0); overflow-y:auto;">
@@ -52,9 +62,12 @@
             </div>
         </div>
     </div>
+
+    <!--BOTON DESCARGAR-->
     <div class="row">
         <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-            <button pButton label="Descargar Archivo" style="height:40px; background:green; width:100%;"></button>
+            <button pButton label="Descargar Archivo" [disabled]="disBtnDescargar" (click)="descargarReporte();" style="height:40px; background:green; width:100%;"></button>
         </div>
     </div>
+    
 </div>

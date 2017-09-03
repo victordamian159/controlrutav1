@@ -132,6 +132,7 @@ export class BusComponent implements OnInit{
                     this.emid=this.ClassGlobal.GetEmId();
                     this.userId=this.ClassGlobal.GetUsId();
                     this.BuPlaca="none";
+                    this.EmPeId=0;
                     this._suemid=0; /*VARIABLE COMBO SUBEMPRE FORM PRINCIPAL */
                     this.arrTipoEmpPer=[{id:'01',perTEmpPer:'GERENTE'},{id:'02',perTEmpPer:'ADMINISTRADOR'},
                             {id:'03',perTEmpPer:'COBRADOR'},{id:'04',perTEmpPer:'ASOCIADOS'},
@@ -788,7 +789,7 @@ export class BusComponent implements OnInit{
 
     /* FUNCION ASOCIA A COMBO SUBEMPRESAS (FORM NUEVO BUSPERSONA) */ 
         _SuEmId(){
-            this.EmPeId=null;
+            this.EmPeId=0;
             this.selectedRow=[];
             /* PROCEDURE BUSCAR TODAS LAS PERSONA(EN CADA SUBEMPRESA) POR EMID Y SUEMID */
             this.getallempPerByEmIdSuEmId(this.emid,this.suemid);

@@ -11,13 +11,22 @@
         </div>
         <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
             <div [hidden]="optIdRep!=03" >Listado</div>
-            <select class="form-control" required [(ngModel)]="suemid" [hidden]="optIdRep!=03" (change)="funCboSubEmp()">
-                <option *ngFor="let optList of arrOptListado" [value]="optList.SuEmId">
+            <select class="form-control" required [(ngModel)]="oBus" [hidden]="optIdRep!=03" (change)="funCboSubEmp()">
+                <option *ngFor="let optList of arrOptListado" [ngValue]="optList">
                     {{optList.SuEmRSocial}}
                 </option>
-            </select> 
+            </select>
+            <!--
+                <select class="form-control" required [(ngModel)]="suemid" [hidden]="optIdRep!=03" (change)="funCboSubEmp()">
+                    <option *ngFor="let optList of arrOptListado" [value]="optList.SuEmId">
+                        {{optList.SuEmRSocial}}
+                    </option>
+                </select> 
+            --> 
         </div>
     </div>
+
+    <!--TABLE DATOS-->
     <div class="row">
         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
             <div  style="height:460px; width:100%;border: 2px solid rgb(0, 174, 0); overflow-y:auto;">
@@ -40,10 +49,11 @@
             </div>
         </div>
     </div>
+
+    <!--BTN DESCARGA-->
     <div class="row">
         <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-            <button pButton label="Descargar Archivo" style="height:40px; background:green; width:100%;"></button>
+            <button pButton label="Descargar Archivo" (click)="descargarReporte();" [disabled]="disBtnDescarga" style="height:40px; background:green; width:100%;"></button>
         </div>
     </div>
-    
 </div>

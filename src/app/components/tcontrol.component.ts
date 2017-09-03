@@ -314,7 +314,7 @@ export class TcontrolComponent implements OnInit{
     /* MANTENIMIENTO */
         /* PROCEDURE ELIMINAR REGISTRO - NO EN USO*/
         procDeleteTarjetaControl(TaCoId:number){
-            /*console.log(this.emID); console.log(this._pcId);*/
+            /**/
             this.tcontrolservice.deleteTarjetaControl(TaCoId).subscribe(
             realizar =>{this.getalltarjetasbyemidpucoid(this.emID,this._pcId);},
             err => {console.log(err);}
@@ -343,7 +343,7 @@ export class TcontrolComponent implements OnInit{
             /* PROCEDURE ASIGNAR TARJETA (UNA SOLA) */
             this.tcontrolservice.asignarTarjetaControl(_tarjeta).subscribe(
                 data => { this.updateProgDetalle(progUpdate);/* PROCEDURE UPDATE PROGDETALLE */   
-                          this.getalltarjetasbyemidpucoid(this.emID,this._pcId); }, 
+                          this.getalltarjetasbyemidpucoid(this.emID,this._PuCoId); }, 
                 err  => {this.errorMessage=err}
             );
         }
@@ -591,7 +591,7 @@ export class TcontrolComponent implements OnInit{
 
             /* FUNCION ASOCIADA COMBO PUNTO CONTROL HACE CONSULTA PARA GRILLA PRINCIPAL */
             pControlId(event:Event){
-                /*console.log(this._pcId);*/
+                /*this._pcId    :    VARIABLE ASOCIADA A ESTE COMBO*/
                 this._allTarjControl=[];
                 this._allTarjDetalle=[];
                 this.selectedTarjCab=[];
@@ -660,7 +660,7 @@ export class TcontrolComponent implements OnInit{
 
                 /*NUEVA TARJETA*/
                 progUpdate ={ PrDeId : this._prDeId, PrDeAsignadoTarjeta : this.val} 
-                console.log(this._pcId); console.log(_tarjeta);
+                console.log(_tarjeta);
 
                 /* ASIGNADO TARJETA VAL=1  */
                 if(this.val==1){

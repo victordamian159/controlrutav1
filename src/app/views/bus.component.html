@@ -329,7 +329,7 @@
                                 </div>
                             <!--COMBO SUBEMPRESAS-->
                                 <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
-                                    <select class="form-control" required [(ngModel)]="suemid" (change)="_SuEmId();">
+                                    <select class="form-control" required [(ngModel)]="suemid" (change)="_SuEmId();" #varsuemid="ngModel">
                                         <option *ngFor="let suem of _arrsuEmp" [value]="suem.SuEmId">
                                             {{suem.SuEmRSocial}}
                                         </option>
@@ -338,7 +338,7 @@
 
                             <!--COMBO BUSPERSONA TIPO-->
                                 <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
-                                    <select class="form-control" required [(ngModel)]="BuPeTipo">
+                                    <select class="form-control" required [(ngModel)]="BuPeTipo" #varBuPeTipo="ngModel">
                                         <option *ngFor="let bupeti of arrBuPeTipo" [value]="bupeti.id">
                                             {{bupeti.cargo}}
                                         </option>
@@ -370,13 +370,13 @@
                 </div>
                 </div>
             </div>
-
-            <div class="btn_Modal row">
-                <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">  
-                    <button class="btn_modal" pButton label="Guardar" (click)="guardarBusPer()"></button>
+            
+            <div class="btn_Modal row">             
+                <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">                                                          
+                    <button class="btn_modal" pButton label="Guardar" (click)="guardarBusPer(); varsuemid.reset(); varBuPeTipo.reset();" [disabled]="!varsuemid.valid || !varBuPeTipo.valid || EmPeId==0"></button>
                 </div>
                 <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">  
-                    <button class="btn_modal" pButton label="Cancelar" (click)="cancelarBusPer()"></button>
+                    <button class="btn_modal" pButton label="Cancelar" (click)="cancelarBusPer(); varsuemid.reset(); varBuPeTipo.reset();"></button>
                 </div>
             </div>
         </p-dialog>

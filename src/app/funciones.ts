@@ -226,8 +226,24 @@
     export var arrABI=[31,29,31,30,31,30,31,31,30,31,30,31];
     export var arrANBI=[31,28,31,30,31,30,31,31,30,31,30,31];
 
-    
-    
+    /* ASIGNAR CARGO */
+    export function cargoEmpPer(idCargo:string):string{
+        let cargo;
+        if(idCargo=="01"){
+            cargo="GERENTE";
+        }else if(idCargo=="02"){
+            cargo="ADMINISTRADOR";
+        }else if(idCargo=="03"){ 
+            cargo="COBRADOR";
+        }else if(idCargo=="04"){
+            cargo="ASOCIADOS";
+        }else if(idCargo=="05"){
+            cargo="CHOFER";
+        }else if(idCargo=="06"){
+            cargo="CONTROLADOR"
+        }
+        return cargo;    
+    }   
    
     /* DEVUELVE SI ES AÑO BISIESTO O NO BISIESTO */
     export function tipoAnio(anio:number):number{

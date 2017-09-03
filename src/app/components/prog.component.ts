@@ -371,7 +371,7 @@ export class ProgComponent implements OnInit{
     calendarioProg(f1 : string, f2 : string){
         this.calendario=this.calendarioNumb(f1,f2);
         this.calendarioString=this.calendarioChar(f1,f2,this.calendario);
-        console.log(this.calendarioString);
+        //console.log(this.calendarioString);
     }
     
     /* CALENDARIO NUMERICO */
@@ -983,7 +983,7 @@ export class ProgComponent implements OnInit{
 
 
                 this._detalle = a5;
-                console.log(this._detalle);
+                //console.log(this._detalle);
                 //CALCULANDO EL NRO DE COLUMNAS (NRODIAS PROGRAMACION)
                 for(l=1; l<=this.nroDiasFilaSelect; l++){ this.nroDias.push(l);} 
 
@@ -994,7 +994,7 @@ export class ProgComponent implements OnInit{
                 
                 this.calendario.unshift(" ");
                 this.calendarioString.unshift(" ");
-                console.log(this._detalle);
+                //console.log(this._detalle);
 
                 this.nroDias=this.calendario; /* PASANDO CALENDARIO */
                 this.nroColumn=this.nroDias.length-1; //PARA ELEGIR TAMAÑO DE TABLA 2000PX O 500PX
@@ -1092,23 +1092,26 @@ export class ProgComponent implements OnInit{
     descargarProgramacion(){
         //VARIABLES 
         var doc = new jsPDF('l','pt','a4');
+
         let arr0=[], i:number =0,j=0,k=0 ,arr1=[], nrosalto:number = 0, arrprog=[];
         let ncol:number, r, dividendo=this.nroDiasFilaSelect,c=1;
-
-        while(i){ arr0[i]=arr1; i++;} //NUMERO DE ARRAYS(FILAS) DE TODA LA TABLA
+        
+        //NUMERO DE ARRAYS(FILAS) DE TODA LA TABLA
+        while(i<this.nroBusesFilaSelect){ 
+            arr0[i]=arr1; 
+            i++;
+        } 
         arr1=[[],[],[],[],[],[],[]]; //NRO DE HOJAS EN TOTAL Q SE PUEDE DIVIDIR EL CALENDARIO
 
         //ALGORITMOS
 
         arrprog=this.placasProgramacion(this.progBDDetalle,this.arrayPlacas);/* ARRAY DE PROG (SOLO PLACAS) */
-        /*console.log(arrprog);*/
 
         i=0; let arrAux=[],arrborrar2=[];
 
-        /* ARRAY DE ARRAYCOLUMNAS */
+        /* ARRAY DE ARRAYCOLUMNAS - PREPARANDO PROGRAMACION*/
         while(i<this.nroBusesFilaSelect){
             while(j<this.nroDiasFilaSelect && i+nrosalto<arrprog.length){
-                //arr0[i][j]=arrprog[i+nrosalto].slice(0);
                 arr0[i][j]=arrprog[i+nrosalto];
                 nrosalto=nrosalto+this.nroBusesFilaSelect;
                 j++;
@@ -1118,30 +1121,31 @@ export class ProgComponent implements OnInit{
         }
 
         arr0=arrAux;/* ARRAY CON ARRAY DE COLUMNAS */
-        console.log(arr0);
 
         /*AJUSTANDO EL NRO DE COLUMNAS A LA HOJA = 15 X HOJA*/
         i=j=0;
         ncol = 15; //NUMERO DE COLUMNAS MAXIMO EN CADA HOJA
         r = dividendo - ncol;//1ER RESIDUO, SABER SI EL TOTAL DE COLUMNAS ES MENOR O IGUAL QUE EL MAXIMO DE COLUMNAS PERMITIDO 
-        console.log(r);
+   
 
         /* HAY 2 A MAS HOJAS */
         if(r>=0){
             while( r > ncol ){ dividendo = r; r = dividendo - ncol;  dividendo = r; c++; }
+
             //DIVIDIENDO EN ARRAYS (ARRAY DE CALENDARIO)
             while(i<c){ while( k<ncol && j<15*(i+1)){ arr1[i][k]=this.calendario[j];  j++; k++; } k=0; i++; }
-            /*console.log(arr1);*/
 
             //TOMANDO EL RESIDUO DE DIVIDIR LA TABLA 
             //ULTIMA HOJA ARRAY
             dividendo=this.nroDiasFilaSelect; i=ncol*c; j=0;
+
             //DIVIDENDO = NRO DE COLUMNAS TOTAL
             while(i<dividendo){ arr1[c][j]=this.calendario[i]; i++; j++; }
 
+
             /* arr0: MATRIZ DE PLACAS(PROGRAMACION) */
             /* arr1: MATRIZ CALENDARIO */
-
+            
             //GENERANDO EL ARCHIVO PDF
             i=j=0;
             //INICIANDO LAS HOJAS DEL PDF
