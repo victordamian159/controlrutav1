@@ -222,7 +222,7 @@
 
         <!--CORREGIR AGREGAR VALIDACION -->
         <!--NUEVO PUNTO DE CONTROL DETALLE ADDMARKER-->
-        <p-dialog [(visible)]="displayNuevoPunto" [resizable]="false" modal="modal" width="100%" height="500" responsive="true"  [closable]="false">
+        <p-dialog [(visible)]="displayNuevoPunto" [resizable]="false" modal="modal" width="100%" height="100%" responsive="true"  [closable]="false">
             <!--CONDICIONAL-->
             <div *ngIf="selectedPosition">
                 <!--CONTENIDO-->
@@ -232,21 +232,10 @@
                             <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                                 <!--CONTENIDO-->
                                 <div class="row">
-                                    <!-- LISTA DE PUNTO AGREGADOS + INFO PUNTOS AGREGADOS  -->
-                                    <div class="col-xl-7 col-md-7 col-sm-6 col-xs-12">
-                                        <!-- LISTA DE PUNTO AGREGADOS -->
-                                        <div class=" form-group ">
-                                            <p-dataTable [value]="miniLista" scrollable="true" scrollHeight="370px" emptyMessage="Lista Vacia" >
-                                                <p-column field="nro" header="N°" [style]="{'width':'2em'}" ></p-column>
-                                                <p-column field="PuCoDeDescripcion" header="Nombre" [style]="{'width':'5em'}" ></p-column>
-                                                <p-column field="PuCoDeHora" header="Tiempo" [style]="{'width':'3em'}" ></p-column>
-                                            </p-dataTable>
-                                        </div>
-                                    </div>
 
                                     <!--POSICION - NOMBRE - TIEMPO-->
-                                    <div class="col-xl-5 col-md-5 col-sm-6 col-xs-12">
-
+                                    <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
+                                            
                                         <!--INFO PUNTOS AGREGADOS
                                         <div class="form-group">
                                             <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
@@ -282,7 +271,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                             
+                                
                                         <!--TIEMPO -->                               
                                         <div class="form-group ">
                                             <!--<div class="form-group"><label  for="time">Tiempo:</label></div>-->
@@ -307,6 +296,21 @@
                                         </div>
 
                                     </div>
+
+                                    <!-- LISTA DE PUNTO AGREGADOS + INFO PUNTOS AGREGADOS  -->
+                                    <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
+                                        <!-- LISTA DE PUNTO AGREGADOS -->
+                                        <div class="row">
+                                            <div class=" form-group ">
+                                                <p-dataTable [value]="miniLista" scrollable="true" scrollHeight="320px" emptyMessage="Lista Vacia" >
+                                                    <p-column field="nro" header="N°" [style]="{'width':'2em'}" ></p-column>
+                                                    <p-column field="PuCoDeDescripcion" header="Nombre" [style]="{'width':'5em'}" ></p-column>
+                                                    <p-column field="PuCoDeHora" header="Tiempo" [style]="{'width':'3em'}" ></p-column>
+                                                </p-dataTable>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>

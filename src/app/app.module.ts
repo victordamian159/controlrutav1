@@ -30,11 +30,16 @@ import {PersComponent} from './components/personal.component';
 import {loginUserComponent} from './components/loginUser.component';
 import { AuthGuard } from './components/auth.guard';
 
-/* REPORTES */
+/* MENU CONSULTAS */
+import {consulVistaEnLineaComponent} from './components/vistaEnLinea.component';
+import {consulAlertNotifComponent} from './components/alertNotificacion.component';
+import {consulIncidenciaComponent} from './components/incidencia.component';
+
+/* MENU REPORTES */
 import {reportPersonas} from './components/reportPersonas.component';
 import {reportBuses} from './components/reportBus.component';
 
-/* GLOBALES */
+/* VAR AND FUNCTION GLOBALES */
 import {GlobalVars} from './variables';
 
 
@@ -54,6 +59,11 @@ import {PersService}  from './service/personal.service';
 import {EmpSubEmpService} from './service/empSubemp.service';
 import {TeleMovilService} from './service/telefono.service';
 import {UserSystemService} from './service/usuarioSistema.service';
+    /* SERVICE CONSULTAS */
+    import {servAlertNotifService} from './service/alertNotificacion.service';
+    import {servIncidenciaService} from './service/incidencia.service';
+    import {servVistaEnLineaService} from './service/vistaEnLinea.service';
+
 
 /* PARA EL LOGIN   BORRAR DESPUES DE TERMINAR DE PROGRAMARLO
 import { AlertComponent } from './login/_directives/alert.component';
@@ -91,7 +101,10 @@ import { BaseRequestOptions } from '@angular/http';*/
     loginUserComponent,
    
     reportPersonas,
-    reportBuses
+    reportBuses,
+    consulVistaEnLineaComponent,
+    consulAlertNotifComponent,
+    consulIncidenciaComponent
   ],
   
   /*MODULOS FRAMWORK PRIMENG*/
@@ -141,7 +154,10 @@ import { BaseRequestOptions } from '@angular/http';*/
       PersService,
       TeleMovilService,
       UserSystemService,
-      GlobalVars  /* CLASS GLOBAL :s */
+      GlobalVars,  /* CLASS GLOBAL :s */
+      servAlertNotifService,
+      servIncidenciaService,
+      servVistaEnLineaService
       /* fake backend
       fakeBackendProvider,
       MockBackend,

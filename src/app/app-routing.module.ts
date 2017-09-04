@@ -18,6 +18,10 @@ import {loginUserComponent} from './components/loginUser.component';
 import {reportPersonas} from './components/reportPersonas.component';
 import {reportBuses} from './components/reportBus.component';
 
+import {consulVistaEnLineaComponent} from './components/vistaEnLinea.component';
+import {consulAlertNotifComponent} from './components/alertNotificacion.component';
+import {consulIncidenciaComponent} from './components/incidencia.component';
+
 /*import {LoginComponent} from './login/_login/_login.component';
 import { RegisterComponent } from './login/register/register.component';*/
 
@@ -44,7 +48,11 @@ const app_routes: Routes = [
       
       {path: 'reportPers', component:reportPersonas,canActivate: [AuthGuard]}, 
       {path: 'reportBus', component:reportBuses,canActivate: [AuthGuard]}, 
-      
+
+      {path: 'consVistaEnLinea', component:consulVistaEnLineaComponent,canActivate: [AuthGuard]}, 
+      {path: 'consAlertNotific', component:consulAlertNotifComponent,canActivate: [AuthGuard]}, 
+      {path: 'consIncidencias', component:consulIncidenciaComponent,canActivate: [AuthGuard]}, 
+
       {path: 'login', component:loginUserComponent },
       {path: '**', redirectTo: 'login' } /* __ ** : SI ESCRIBE CUALQUIER COSA MANDA AL LOGIN*/
 ];

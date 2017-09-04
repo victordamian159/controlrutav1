@@ -34,10 +34,21 @@
 
                     <!--MENU-->
                     <ul class="dropdown-menu">
-                        <li class="sub-nav-item "><a href="#" routerLink="/ruta" routerLinkActive="active">Ruta</a></li>		 
-                        <li class="sub-nav-item "><a href="#" routerLink="/pcontrol" routerLinkActive="active">Puntos de Control</a></li>						
-                        <li class="sub-nav-item "><a href="#" routerLink="/prog" routerLinkActive="active">Programacion</a></li>		
-                        <li class="sub-nav-item "><a href="#" routerLink="/tcontrol" routerLinkActive="active">Tarjeta de Control</a></li>		
+                        <li class="sub-nav-item ">
+                            <a href="#" routerLink="/ruta" routerLinkActive="active">Ruta</a>
+                        </li>		 
+                        <li class="sub-nav-item ">
+                            <a href="#" routerLink="/pcontrol" routerLinkActive="active">Puntos de Control</a>
+                        </li>						
+                        <li class="sub-nav-item ">
+                            <a href="#" routerLink="/prog" routerLinkActive="active">Programacion</a>
+                        </li>		
+                        <li class="sub-nav-item ">
+                            <a href="#" routerLink="/tcontrol" routerLinkActive="active">Tarjeta de Control</a>
+                        </li>		
+                        <li class="sub-nav-item ">
+                            <a>Distribucion de Tiempo</a>
+                        </li>
                         <!--<li class="nav-item "><a href="#" routerLink="/regtime" routerLinkActive="active">Reg Tiempo</a></li>-->
                     </ul>
                 </li>
@@ -57,13 +68,30 @@
                     </ul>
                 </li>
                 
+                <!--CONSULTAS-->
+                <li class="nav-item dropdown">
+                    <a  href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Consultas <span class="caret"></span> </a>
+                    <ul class="dropdown-menu">
+                        <li class="sub-nav-item ">
+                            <a href="#" routerLink="/consVistaEnLinea" routerLinkActive="active" >Vista En Linea</a>
+                        </li>
+                        <li class="sub-nav-item ">
+                            <a href="#" routerLink="/consAlertNotific" routerLinkActive="active" >Alertas-Notificacion</a>
+                        </li>
+                        <li class="sub-nav-item ">
+                            <a href="#" routerLink="/consIncidencias" routerLinkActive="active" >Incidencias</a>
+                        </li>
+                        
+                    </ul>
+                </li>
+                
                 <!--
-                <li class="nav-item dropdown" >
-                    <a id="_username">Usuario:{{nombre}}</a>
-                </li>
-                <li class="nav-item dropdown" >
-                    <a id="_btnlogout" href="#" routerLink="/login">Cerrar Sesion</a>
-                </li>
+                    <li class="nav-item dropdown" >
+                        <a id="_username">Usuario:{{nombre}}</a>
+                    </li>
+                    <li class="nav-item dropdown" >
+                        <a id="_btnlogout" href="#" routerLink="/login">Cerrar Sesion</a>
+                    </li>
                 -->
             </ul>  
         </div>
@@ -93,6 +121,5 @@
     <ul>
         <p><br></p>
         <p>Derechos Reservados - Aplicativo de Transporte Publico</p>
-        <p>2017 - Industrias Qu@ntum</p>
     </ul>
 </footer>

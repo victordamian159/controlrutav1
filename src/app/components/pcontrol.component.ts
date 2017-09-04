@@ -250,25 +250,36 @@ export class PcontrolComponent implements OnInit{
                     }
                     
                 /* GET ALL PTSCTRLDET BY PUCOID */
-                    procGetallptsctrldetbyPuCo(PuCoId:number){
+                    procGetallptsctrldetbyPuCo(PuCoId:number):any{
                         let ptsctrl:any[]=[];
                         this.pcontrolService.getAllPuntoControlDetalleByPuCo(PuCoId).subscribe(
                             data => {   ptsctrl=data;
                                         this.pCArrayDetalleBD=ptsctrl.slice(0);
+
+                                        /* DESACTIVANDO BOTONES */
+                                        if(this.pCArrayDetalleBD.length==0){
+                                            //DESACTIVANDO O ACTIVANDO BOTONES
+                                            this.desGuardarPCD_BD=true; 
+                                            this.desBorrarPCDet=true; 
+                                            this.desEditarPCDetMarker=true;
+                                            this.desNuevosPuntos=false;
+                           
+                                        }else if(this.pCArrayDetalleBD.length!=0){
+                                            //DESACTIVANDO O ACTIVANDO BOTONES
+                                            this.desGuardarPCD_BD=true; 
+                                            this.desBorrarPCDet=true; 
+                                            this.desEditarPCDetMarker=false;
+                                            this.desNuevosPuntos=true;
+                                        }
+
                                         if(ptsctrl.length!=0){
                                             this.cargarmarker(ptsctrl); //CARGAR LOS MARCADORES 
                                             this.mgMiniListaPC(ptsctrl);
-                                            /*his.desNuevosPuntos=true; 
-                                            this.desDeshacerPCDet=true; //DESACTIVANDO BOTON 
-                                            this.ocEditar=false;*/
-                                            //this.ocEditar=false;
                                             //this.editando = 1; //se esta editando el array de puntos (existen puntos en la BD) 
                                             
                                         }else if(ptsctrl.length==0){
                                             this.mensaje = "No hay puntos de control"; 
                                             this.displayNohayPuntos = true;
-                                            /*this.desNuevosPuntos = false; 
-                                            this.desEditarPCDetMarker = true;//ACTIVANDO BOTON */
                                             this.editando = 0; //NUEVO REGISTRO, NO EXISTEN PUTNOS EN LA BD
                                         }
                                     },
@@ -789,12 +800,7 @@ export class PcontrolComponent implements OnInit{
             this.PuCoId=PuCoId; 
             this.RuId=RuId;
             this.idDetalle=this.idFilaSeleccionada; // funcion guardar if editado=1
-            
-
-            //DESACTIVANDO O ACTIVANDO BOTONES
-                this.desGuardarPCD_BD=true; 
-                this.desBorrarPCDet=true; 
-                this.desEditarPCDetMarker=false;
+           
             /*limpiar el mapa para ponerle los nuevos marcadores*/
                 this.overlays = [];  
                 this.puntosRuta=[]; 
@@ -804,12 +810,12 @@ export class PcontrolComponent implements OnInit{
             //DESACTIVANDO EDITAR Y NO ARRASTRAR MARCADORES
                 this.j=0; //PONER CLEAR PARA REINICIAR LAS VARIABLES -> BORRAR ESTA LINEA
                 this.mayorOrdenPuntos();//PARA EL CASO DE EDITAR UNA LISTA EXISTENTE
-                
-            
 
             /* SOLO CARGAR RUTA Y MARCADORES */
             this.procGetallrutadetallebyru(RuId);
             this.procGetallptsctrldetbyPuCo(PuCoId);
+           
+            
     
         /* SI SE ESTA EDITANDO ALGO, BLOQUEADO HASTA Q TERMINE DE EDITAR */
         }else if(this.modoSaveActivo == true){
@@ -1311,12 +1317,19 @@ export class PcontrolComponent implements OnInit{
                              () => {/*console.log("no hubo error al guardar C:");*/}
                     );
             
-            /*SAVE LISTA VACIA*/
+            /*SAVE LISTA VACIA - BORRO PTS EXISTENTES Y GUARDO UN LISTA VACIA */
             }else if(this.pCArrayDetalleBD.length == 0 && this.editando == 1){ 
                 //BORRANDO TODOS LOS REGISTROS DETALLE EN LA BD POR EL PUCOID Y PONER LOS NUEVOS ENCIMA
                 this.pcontrolService.deletePuntoControlDetalleByRu(this.idDetalle).subscribe(
-                        realizar => {console.log("SE BORRO TODO LOS PUNTOS DEL MAPA"); this.hidDblBtn(5);},  
-                        err => {console.log(err);}
+                    realizar => {console.log("SE BORRO TODO LOS PUNTOS DEL MAPA"); this.hidDblBtn(5);},  
+                    err => {console.log(err);}
+                );
+
+            /* SAVE LISTA VACIA - NO SE BORRO PTS EXISTESTE PERO SE GUARDO LISTA VACIA  */
+            }else if(this.pCArrayDetalleBD.length==0 && this.editando==0){
+                this.pcontrolService.deletePuntoControlDetalleByRu(this.idDetalle).subscribe(
+                    realizar => {console.log("SE BORRO TODO LOS PUNTOS DEL MAPA"); this.hidDblBtn(5);},  
+                    err => {console.log(err);}
                 );
             }
         
@@ -1533,6 +1546,9 @@ export class PcontrolComponent implements OnInit{
     BorrarPuntosDetalle(){
         //borrando array de puntos de control en el datatable y hacer consulta para mostrar resultado
         //borrando puntos de control del mapa (overlayrs de index 1 hacia adelante , index 0 es el mapa)
+        console.log(this.editando);
+        console.log(this.pCArrayDetalleBD.length);
+        
         let long=this.overlays.length;
         console.log(this.overlays);
         /*this.overlays.splice(0,long-1);*/

@@ -68,7 +68,8 @@
 /*USADO EN LOS BOTONES DE LAS VENTANAS MODALES*/
 .container{
     margin-bottom: 20px;
-    max-width: 600px;
+    max-width: 750px;
+    max-height: 400px;
 }
 
 /*USADO EN LOS BOTONES DE LAS VENTANAS MODALES*/
@@ -132,7 +133,7 @@ row{
 .cont_modal{
     overflow-y: hidden; 
     overflow-x: auto;
-    height:380px;
+    height:400px;
     width: 100%;
 }
 
@@ -146,4 +147,78 @@ row{
     width: 100%;
 }
 
+/* iphone 6 plus*/
+@media(max-width:480px){ 
+    .container{max-height: 550px;max-width: 330px;}
+    /*.form-control{
+        width: 100%;
+    }
+    .col-xs-12{
+        
+        padding: 0 8px;
+        margin: 0;
+    }*/
+    .cont_modal{
+        overflow-y: auto; 
+        overflow-x: auto;
+        height:550px;
+        width: 100%;
+    }
+}
 
+/* iphone 6 */
+@media(max-width:380px){ 
+    .container{max-height: 480px;max-width: 330px;}
+    /*.form-control{
+        width: 100%;
+    }
+    .col-xs-12{
+        
+        padding: 0 8px;
+        margin: 0;
+    }*/
+    .cont_modal{
+        overflow-y: auto; 
+        overflow-x: auto;
+        height:480px;
+        width: 100%;
+    }
+}
+
+/* iphone 5 */
+@media(max-width:320px){ 
+    .container{max-height: 420px;max-width: 290px;}
+    /*.form-control{
+        width: 100%;
+    }
+    .col-xs-12{
+        
+        padding: 0 8px;
+        margin: 0;
+    }*/
+    .cont_modal{
+        overflow-y: auto; 
+        overflow-x: auto;
+        height:420px;
+        width: 100%;
+    }
+}
+
+/* iphone 4 */
+@media(max-height:480px){
+    .container{max-height: 400px;max-width: 280px;}
+    /*.form-control{
+        width: 100%;
+    }
+    .col-xs-12{
+       
+        padding: 0 8px;
+        margin: 0;
+    }*/
+    .cont_modal{
+        overflow-y: auto; 
+        overflow-x: auto;
+        height:400px;
+        width: 100%;
+    }
+}
