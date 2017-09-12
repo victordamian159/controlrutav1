@@ -1,4 +1,4 @@
-<div class="container">
+<div class="contenedor">
     <div>Reporte de Personas en la Empresa</div>
 
     <!--BOTONES-->
@@ -31,12 +31,14 @@
 
     <!--TABLE-->
     <div class="row">
-        <div class="col-xl-12">
-            <div  style="height:460px; width:100%;border: 2px solid rgb(0, 174, 0); overflow-y:auto;">
-                    <table *ngIf="optIdRep==03" style="width:100%">
+        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+            <!--<div  style="height:400px; width:100%;border: 2px solid rgb(0, 174, 0); overflow-y:auto;">-->
+            <div id="tableopt3" *ngIf="optIdRep==03">
+                <div class="container">    
+                    <table id="opt03" >
                         <thead>
                             <tr>
-                                <th *ngFor="let cab of arrTableCab" style="height:45px" >{{cab}}</th>
+                                <th *ngFor="let cab of arrTableCab" style="height:45px;" >{{cab}}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -45,8 +47,11 @@
                             </tr>
                         </tbody>
                     </table>
-                    
-                    <table *ngIf="optIdRep==02 && suemid!=null" style="width:100%">
+                </div>
+            </div>
+            <div id="tableopt2" *ngIf="optIdRep==02 && suemid!=null">
+                <div class="container">   
+                    <table id="opt02" >
                         <!--<h3 style="text-align:center">{{optList.SuEmRSocial}}</h3>-->
                         <thead>
                             <tr>
@@ -59,6 +64,7 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
             </div>
         </div>
     </div>

@@ -347,6 +347,102 @@
         return arrH;
     }
 
+    /* DIVIDIENDO STRING HORA A ARRAY */
+    export function extFuncArrHora(tiempo:string){
+        let arrH=tiempo.split(":"); let arrRes:any[]=[];
+
+        arrRes[0]=Number(arrH[0]); arrRes[1]=Number(arrH[1]); arrRes[2]=Number(arrH[2]);
+        return arrRes;
+    }
+
+    /* OPERACION MULTIPLICACION CON TIEMPOS */
+    export function operMHoras(tmp:string, nroMult:number){
+        let rest:any[]=[]; let t=extFuncArrHora(tmp); let _rest:string;
+        rest[0]=(t[0]*nroMult).toString();
+        rest[1]=(t[1]*nroMult).toString();
+        rest[2]=(t[2]*nroMult).toString();
+        _rest=cCeroHora(rest.join(":"));
+        return _rest;
+    }
+    /* OPERACION SUMA CON TIEMPOS */
+    export function operSHoras(tmp1:string, tmp2:string){
+        let rest:any[]=[]; let t1=extFuncArrHora(tmp1), t2=extFuncArrHora(tmp2), _rest:string;;
+        rest[0]=(t1[0]+t2[0]).toString();
+        rest[1]=(t1[1]+t2[1]).toString();
+        rest[2]=(t1[2]+t2[2]).toString();
+        _rest=cCeroHora(rest.join(":"));
+        return _rest;
+    }
+
+    /* PASAR HORA A ARRAY DE NUMEROS */
+    export function extFuncConvHora1(t:string){
+        let res; res=t.split(":");
+        res[0]=Number(res[0]); res[1]=Number(res[1]); res[2]=Number(res[2]);
+        return res;
+    }
+
+    /* PASAR ARRAY NROS A STRING */
+    export function extFuncConvHora2(arrT=[]):string{
+        let resp:string;
+        resp=arrT.join(":");
+        resp= cCeroHora(resp);
+        return resp;
+    }
+
+    /* CORREGIR HORA CUANDO ESTAN EJEMPLO   17:80:185 --->  18:23:05 */
+    export function extFuncCorrecHora(t:string):string{
+        let arrH, rest, _rest;
+        let hAux:number, auxM:number, auxS:number;
+        arrH=extFuncConvHora1(t);
+ 
+        /* SEGUNDOS*/
+        if(arrH[2]>59){
+            if(arrH[2]%60==0){
+                auxS = arrH[2];
+                arrH[2]=0;
+                arrH[1]=arrH[1]+(auxS/60);
+            }else if(arrH[2]%60>0){
+                auxS = arrH[2];
+                arrH[2] = arrH[2]%60;
+                arrH[1] = arrH[1]+((auxS-auxS%60)/60);
+            }
+        }else if(arrH[2]<=59){
+            /* NO HACE NADA */
+        }
+            
+        /* MINUTOS */
+        if(arrH[1]>59){
+            if(arrH[1]%60==0){
+                auxM = arrH[1];
+                arrH[1]=0;
+                arrH[0]=arrH[0]+(auxM/60);
+            }else if(arrH[1]%60>0){
+                auxM = arrH[1];
+                arrH[1] = arrH[1]%60;
+                arrH[0] = arrH[0]+((auxM-auxM%60)/60) ; /* SUMANDO A LA HORA */
+            }
+        }else if(arrH[1]<=59){
+            /* NO HACE NADA */
+        }
+
+        /* HORAS */
+        if(arrH[0]>23){
+            /*PASA AL SIGUIENTE DIA */
+            if(arrH[0]%24==0){
+                arrH[0]=0;
+            }else if(arrH[0]%24>0){
+                arrH[0]=arrH[0]%24;
+            }
+        }else if(arrH[0]<=23){
+            /* NO HACE NADA */
+        }
+
+        _rest=arrH.splice(0);
+        _rest=extFuncConvHora2(_rest);
+        return _rest;
+    }
+
+
 /*  DEVUELVE FECHA DADO UNA  FECHA INICIAL Y UN 
         NRO DE DIAS EN FORMATO  ->  YYYY/MM/SS
         export function fechaSgte(f:string, nrodias):string{

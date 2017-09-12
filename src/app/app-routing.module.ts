@@ -7,7 +7,7 @@ import {PcontrolComponent} from './components/pcontrol.component';
 import {ProgComponent} from './components/prog.component';
 import {RegtimeComponent} from './components/regtime.component';
 import {TcontrolComponent} from './components/tcontrol.component';
-
+import {distribTiempoComponent} from './components/distribTiempo.component';
 import {menuComponent} from './components/menu.component';
 import {BusComponent} from './components/bus.component';
 import {EmpPerComponent} from './components/empresapersonal.component';
@@ -45,7 +45,7 @@ const app_routes: Routes = [
       {path: 'menu',   component:menuComponent,canActivate: [AuthGuard]}, /* ISNTRUCCIONES??*/
       {path: 'regempper', component:EmpPerComponent,canActivate: [AuthGuard]}, 
       {path: 'regempsubemp',component:EmpSubEmpComponent,canActivate: [AuthGuard]},
-      
+      {path: 'disttiempo',component:distribTiempoComponent,canActivate: [AuthGuard]},
       {path: 'reportPers', component:reportPersonas,canActivate: [AuthGuard]}, 
       {path: 'reportBus', component:reportBuses,canActivate: [AuthGuard]}, 
 

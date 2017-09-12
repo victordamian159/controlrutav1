@@ -1,0 +1,124 @@
+.contenedor{
+    margin-top:20px;
+    margin-left:40px;
+    margin-right:40px;
+    margin-bottom:60px;
+}
+#tableopt3{
+    height:390px; 
+    width:100%;
+    border: 2px solid rgb(0, 174, 0); 
+    overflow-y:auto;
+}
+.container{
+    margin-bottom: 20px;
+    max-width: 1200px;
+    max-height: 390px;
+}
+.container #opt03{
+    width: 100%;
+}
+
+/* iphone 6 plus*/
+@media(max-width:480px){
+    #tableopt2{
+        height:435px;
+        margin: 0;
+        padding: 0; 
+    }
+    #tableopt3{
+        height:377px;
+        margin: 0;
+        padding: 0; 
+    }
+    #tableopt3 #opt03{
+        /*background:red;*/
+        width: 100%;
+    }
+    #tableopt2 #opt02{
+        /*background: yellow;*/
+        width: 100%;
+    }
+
+    .container{
+        width: 800px;
+    }
+}
+
+/* iphone 6 */
+@media(max-width:380px){
+    #tableopt2{
+        height:380px;
+        margin: 0;
+        padding: 0; 
+    }
+    #tableopt3{
+        height:322px;
+        margin: 0;
+        padding: 0; 
+    }
+    #tableopt3 #opt03{
+        /*background:red;*/
+        width: 100%;
+    }
+    #tableopt2 #opt02{
+        /*background: yellow;*/
+        width: 100%;
+    }
+
+    .container{
+        width: 800px;
+    }
+}
+
+/* iphone 5 */
+@media(max-width:320px){
+    #tableopt2{
+        height:300px;
+        margin: 0;
+        padding: 0; 
+    }
+    #tableopt3{
+        height:322px;
+        margin: 0;
+        padding: 0; 
+    }
+    #tableopt3 #opt03{
+        /*background:red;*/
+        width: 100%;
+    }
+    #tableopt2 #opt02{
+        /*background: yellow;*/
+        width: 100%;
+    }
+
+    .container{
+        width: 800px;
+    }
+}
+
+/* iphone 4 */
+@media(max-height:480px){
+    #tableopt3{
+        height:300px;
+        margin: 0;
+        padding: 0; 
+    }
+    #tableopt2{
+        height:322px;
+        margin: 0;
+        padding: 0; 
+    }
+    #tableopt3 #opt03{
+        /*background:red;*/
+        width: 100%;
+    }
+    #tableopt2 #opt02{
+        /*background: yellow;*/
+        width: 100%;
+    }
+
+    .container{
+        width: 800px;
+    }
+}

@@ -1,0 +1,23 @@
+.contenedor{
+    margin-top:20px;
+    margin-left:40px;
+    margin-right:40px;
+    margin-bottom:60px;
+}
+
+#mapa{
+    max-height: 530px;
+    height: 530px;
+    max-width: 980px;
+    width: 980px;
+}
+
+/* APARIENCIA BOTONES MAPA*/
+.btn_mapa{
+    width:100%; 
+    height:40px; 
+    font-size:15px;
+    border:none;
+    background-color:#4CAF50;
+    text-align: center;
+}

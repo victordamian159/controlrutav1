@@ -28,6 +28,7 @@ import {EmpSubEmpComponent} from './components/empSubemp.component';
 import {EmpPerComponent} from './components/empresapersonal.component';
 import {PersComponent} from './components/personal.component';
 import {loginUserComponent} from './components/loginUser.component';
+import {distribTiempoComponent} from './components/distribTiempo.component';
 import { AuthGuard } from './components/auth.guard';
 
 /* MENU CONSULTAS */
@@ -59,6 +60,8 @@ import {PersService}  from './service/personal.service';
 import {EmpSubEmpService} from './service/empSubemp.service';
 import {TeleMovilService} from './service/telefono.service';
 import {UserSystemService} from './service/usuarioSistema.service';
+import {distribTiempoService} from './service/distribTiempo.service';
+
     /* SERVICE CONSULTAS */
     import {servAlertNotifService} from './service/alertNotificacion.service';
     import {servIncidenciaService} from './service/incidencia.service';
@@ -99,7 +102,7 @@ import { BaseRequestOptions } from '@angular/http';*/
     PersComponent,
     menuComponent,
     loginUserComponent,
-   
+    distribTiempoComponent,
     reportPersonas,
     reportBuses,
     consulVistaEnLineaComponent,
@@ -152,6 +155,7 @@ import { BaseRequestOptions } from '@angular/http';*/
       EmpPerService,
       EmpSubEmpService,
       PersService,
+      distribTiempoService,
       TeleMovilService,
       UserSystemService,
       GlobalVars,  /* CLASS GLOBAL :s */

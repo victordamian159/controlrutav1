@@ -402,7 +402,8 @@ export class TcontrolComponent implements OnInit{
         mgprogDetalle(){ 
             this._progDetalle=[];
             //i: PARA RECORRER EL ARRAY, SI Y NO: CUANTOS SE ENCONTRARON Y NO SE ENCONTRARON
-            let i = 0; let j=0;  let si=0; let no=0; let cen = 0, cen2=0; let programacion=[]; let longProg = this.progDetalle.length;
+            let i = 0; let j=0;  let si=0; let no=0; let cen = 0, cen2=0; 
+            let programacion=[]; let longProg = this.progDetalle.length;
 
             /* BUSCANDO POR PLACAS */
             while (i<this.placas.length && cen2==0){

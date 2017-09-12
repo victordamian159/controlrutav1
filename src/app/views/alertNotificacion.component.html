@@ -1,0 +1,102 @@
+<div class="contenedor">
+    <!-- BUSCAR - BTNMENSAJE -->
+    <div class="row">
+        <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
+            <div class="row">
+                <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
+                    <input placeholder="Buscar..." class="form-control" type="text">
+                </div>
+                <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
+                    <button class="form-control" (click)="btnNvoMensaje()" pButton icon="fa-file-text-o" label="Nuevo Mensaje"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--TABLAS-->
+    <div class="row">
+        <!--TABLA MENSAJE EXISTENTES-->
+        <div class="col-xl-8 col-md-8 col-sm-6 col-xs-12">
+            <p-dataTable [value]="usuarios" [globalFilter]="filtroGlobal2" scrollable="true" emptyMessage="No Hay Registros" scrollWidth="100%">
+                    <p-column field="nro" header="Nro" [style]="{'width':'3em','text-align':'center'}"></p-column>
+                    <p-column field="fecha" header="Placa" [style]="{'width':'5em','text-align':'center'}"></p-column>
+                    <p-column field="descripcion" header="Chofer" [style]="{'width':'10em'}"></p-column>
+                    <p-column field="tipo" header="Cobrador" [style]="{'width':'10em'}"></p-column>
+                    <p-column field="usuario" header="Cobrador" [style]="{'width':'10em'}"></p-column>
+            </p-dataTable>
+        </div> 
+    </div>
+</div>
+
+<!--MODALES-->
+<p-dialog [(visible)]="disFormModMensaje" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
+    <div class="row">
+        <div class="container">
+            <div class="row">
+                <!--COMPONENTES-->
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="row">
+                        <!--FECHA ACTUAL-->
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="row">
+                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Fecha:</label>
+                                        <input class="form-control" type="date" [disabled]="true">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--TIPO MENSAJE-->
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="row">
+                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Tipo:</label>
+                                        <select class="form-control">
+                                            <option>Alerta</option>
+                                            <option>Notificacion</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--DESCRIPCION-->
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="row">
+                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Tipo:</label>
+                                        <textarea class="form-control" rows="10" cols="50"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                            <button class="btn_modal" pButton label="Enviar" (click)="guardarMsj();"></button>
+                        </div>
+                        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                            <button class="btn_modal" pButton label="Cancelar" (click)="cancelarMsj();"></button>
+                        </div>
+                    </div>
+                </div>
+                <!--USUARIOS-->
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <p-dataTable [value]="usuarios" [globalFilter]="filtroGlobal1" [(selection)]="selectedUsers" dataKey="Placa" scrollable="true" emptyMessage="No Hay Registros" scrollWidth="100%" >
+                                    <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
+                                    <p-column field="Nro" header="Nro" [style]="{'width':'3em','text-align':'center'}"></p-column>
+                                    <p-column field="Placa" header="Placa" [style]="{'width':'5em','text-align':'center'}"></p-column>
+                                    <p-column field="Chofer" header="Chofer" [style]="{'width':'10em'}"></p-column>
+                                    <p-column field="Cobrador" header="Cobrador" [style]="{'width':'10em'}"></p-column>
+                            </p-dataTable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</p-dialog>

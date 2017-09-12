@@ -309,7 +309,7 @@ export class ProgComponent implements OnInit{
                         PrFechaFin : this.fecha(this.progMaestro.PrFechaFin), //string
                         PrTipo : Number(this.tipoProg), //string escala pescadito
                         PrAleatorio : Number(this.formaProg), //string manual automatico(aleatorio)
-                        UsId : this.progMaestro.UsId, //number
+                        UsId : this.userid, //number
                         UsFechaReg : new Date() //string
                     }
                     console.log(progCab);
@@ -330,7 +330,7 @@ export class ProgComponent implements OnInit{
             /* AUTOMATICO*/
             if(tprog=="01"){ 
                 let array = ["c"];  let nro;//ARRAY NUMEROS ALEATORIOS NO REPETIDOS
-                let arrayplacas= this.arrayPlacas;  let long = this.arrayPlacas.length; console.log("automatico");
+                let arrayplacas= this.arrayPlacas;  let long = this.arrayPlacas.length; 
                 let _arrayplacas=[];  let i=0,j=0, cen=0; // cen=0: no existe         cen=1: existe
                 //ALGORITMO NROS ALEATORIOS
                 while(i<long ){
@@ -349,7 +349,7 @@ export class ProgComponent implements OnInit{
                     }
                     cen=0; j=0;
                 }
-                console.log(array);
+                //console.log(array);
                 //APLICANDO ALGORITMO, BUSCANDO INDICES CON ARRAY DE PLACAS
                 i=0; nro=0;
                 while(i<array.length){
@@ -358,7 +358,7 @@ export class ProgComponent implements OnInit{
                 }
                 this.ordenSorteo=_arrayplacas;
                 this.arrayPlacas=[];
-                console.log(this.arrayPlacas);
+                //console.log(this.arrayPlacas);
             /* MANUAL*/
             }else if(tprog=="02"){
                 console.log("manual");
@@ -621,9 +621,9 @@ export class ProgComponent implements OnInit{
         _f1 = _f1.toString(); _f2 = _f2.toString();
         val1 = this.fnroDias(_f1); val2 = this.fnroDias(_f2);
 
-        console.log(val1 + "  "+val2);
+        //console.log(val1 + "  "+val2);
         let ndias = val2 - val1 + 1;
-        console.log(ndias);
+        //console.log(ndias);
         if(ndias>9  &&  ndias<=62){
             val = 1 ; //LAS FECHAS SON CORRECTAS
         }else if(ndias <= 0 || ndias>62 ){
@@ -793,7 +793,6 @@ export class ProgComponent implements OnInit{
 
     //datos para grilla HTML Maestro (consulta especialmente hecha para mostrar en el res)
     mostrargrillaProgramacionMaestro(arrProg=[]){
-        console.log(arrProg);
         this.programacionMaestroArrayHTML=[];
 
         //progRest es la variable q almacena las programaciones recuperadas desde el Rest de internet
@@ -1035,6 +1034,7 @@ export class ProgComponent implements OnInit{
             UsId:this._progrMaestro.UsId
         }
         this.displayEditProgC=false;
+        console.log(obj);
         this.programacionService.saveProgramacion(obj)
             .subscribe( 
                 data => {this.progMaestro=data;  //RECUPERANDO OBJETO PARA SACAR EL PRID

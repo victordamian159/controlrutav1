@@ -167,8 +167,9 @@
                                     <p-dataTable [value]="_progDetalle" scrollable="true" scrollHeight="100px" selectionMode="single" 
                                                 (onRowSelect)="onRowPlaca($event)" emptyMessage="Lista Vacia" [(selection)]="selectedPlacaONE" >
                                         <p-column field="nro" header="N°" [style]="{'width':'3em'}" ></p-column>
-                                        <p-column field="PrDeOrden" header="Sorteo" [style]="{'width':'3em'}" ></p-column>
+                                        <!--<p-column field="PrDeOrden" header="Sorteo" [style]="{'width':'3em'}" ></p-column>-->
                                         <p-column field="nroPlaca" header="Placa" [style]="{'width':'6em'}" ></p-column>
+                                        <p-column field="subemp" header="Pertenece" [style]="{'width':'3em'}" ></p-column>
                                     </p-dataTable>
                                 </div>
                             </div>
