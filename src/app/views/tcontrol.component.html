@@ -164,12 +164,12 @@
                             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                 <div class=" form-group ">
                                     <label>Orden de las Placas:</label>
-                                    <p-dataTable [value]="_progDetalle" scrollable="true" scrollHeight="100px" selectionMode="single" 
+                                    <p-dataTable [value]="_progDetalle" scrollable="true" scrollWidth="100%" scrollHeight="100px" selectionMode="single" 
                                                 (onRowSelect)="onRowPlaca($event)" emptyMessage="Lista Vacia" [(selection)]="selectedPlacaONE" >
-                                        <p-column field="nro" header="N°" [style]="{'width':'3em'}" ></p-column>
+                                        <p-column field="nro" header="N°" [style]="{'width':'2em'}" ></p-column>
                                         <!--<p-column field="PrDeOrden" header="Sorteo" [style]="{'width':'3em'}" ></p-column>-->
-                                        <p-column field="nroPlaca" header="Placa" [style]="{'width':'6em'}" ></p-column>
-                                        <p-column field="subemp" header="Pertenece" [style]="{'width':'3em'}" ></p-column>
+                                        <p-column field="nroPlaca" header="Placa" [style]="{'width':'5em'}" ></p-column>
+                                        <p-column field="subemp" header="Pertenece" [style]="{'width':'8em'}" ></p-column>
                                     </p-dataTable>
                                 </div>
                             </div>
