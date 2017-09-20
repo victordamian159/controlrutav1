@@ -442,6 +442,43 @@
         return _rest;
     }
 
+    /* DEVUELVE ARRAY DE TIMES EN Q SE DIVIDE UNA HORA DE BUS Q SALIO DE RUTA */
+    export function extFuncArrDistTmps(tmpRep:string, _tmpRep:string){
+        let ArrRept:any[]=[], arrtmpRep=extFuncConvHora1(tmpRep), arr_tmpRep=extFuncConvHora1(_tmpRep);
+        
+        if(arrtmpRep[1]>0){
+            arrtmpRep[2]=arrtmpRep[1]*60+arrtmpRep[2]; arrtmpRep[1]=0;
+        }else if(arrtmpRep[1]==0){}
+
+        if(arr_tmpRep[1]>0){
+            arr_tmpRep[2]=arr_tmpRep[1]*60+arr_tmpRep[2]; arr_tmpRep[1]=0;
+        }else if(arr_tmpRep[1]==0){}
+
+        let st1:number=arrtmpRep[2]; let st2:number=arr_tmpRep[2]; let residuo:number;
+
+        if(st1>st2){
+            let i=0;
+            /* ENCONTRAR COCIENTE */
+            while(i*st2< st1){
+                i++;
+            }
+            i=i-1;/* COCIENTE */
+            residuo=st1-(i*st2); /* RESIDUO */
+
+            /* ARRAY */
+            for(let j=0;j<i;j++ ){
+                ArrRept[j]=st2;
+            }
+            ArrRept.push(residuo);
+        }else if(st1<st2 || st1==st2){
+            ArrRept[0]=st1;
+        }
+        
+        for(let i=0;i<ArrRept.length;i++){ArrRept[i]="00:00:"+ArrRept[i].toString();}
+        
+        //ArrRept[i]=extFuncCorrecHora(ArrRept[i]);
+        return ArrRept;
+    }
 
 /*  DEVUELVE FECHA DADO UNA  FECHA INICIAL Y UN 
         NRO DE DIAS EN FORMATO  ->  YYYY/MM/SS
