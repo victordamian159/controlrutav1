@@ -1,9 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {TControlService} from '../service/tcontrol.service';
+
 import {PlacasService} from '../service/placas.service';
 import {RutaService} from '../service/ruta.service';
 import {PuntoControlService} from '../service/pcontrol.service'; 
 import {ProgramacionService} from '../service/prog.service';
+import {distribTiempoService} from '../service/distribTiempo.service';
+
 import {GlobalVars} from 'app/variables'
 import {ajustaHora,hora,_hora,_cCeroFecha,cCeroHora,corrigiendoHora,corrigiendoHoraString,fecha,_fecha1,fechaActual1,editf1,horaAct} from 'app/funciones';
 
@@ -32,13 +35,15 @@ export class TcontrolComponent implements OnInit{
         displayAsigMultiTarj : boolean = false;
 
     /* OTRAS VARIABLES */
-        private val:number;
+        private val:number;     //VALOR PARA ASIGNAR TARJETA (ASIGNADO O AUSENTE)
+        private tpHoraS:string;  // TIPO ASIGNAR HORA SAL (MANUAL O AUTOMATICO)
         private actRadioButton:boolean=true;
         private nroTarjetas:number; 
         private timeInter:string; /* TIEMPO INTERMEDIO (ASIGNAR MULTITARJETA) */
         private mensaje : string; /*MENSAJE EN PANTALLA PARA CONFIRMAR*/
         private titulo : string; /*TITULO PANTALLAS */
         private tVueltaBus : string; /* TIEMPO RECORRIDO BUS */
+        private timevueltadescrip:string; 
 
         private arrNTarjCabecera : any[] = []; /* ARRAY NUEVAS TARJETAS DE CONTROL (MULTITARJETAS) */
         private arrNTarjDetalle : any[] = []; /* ARRAY NUEVAS TARJETAS DE CONTROL DETALLE (MULTITARJETAS) */
@@ -157,13 +162,17 @@ export class TcontrolComponent implements OnInit{
         private emID : number;
         private UsId:number;
 
-    constructor(    public ClassGlobal:GlobalVars, private tcontrolservice: TControlService,
-                    private placaService: PlacasService, private rutaService: RutaService,
-                    private pcontrolService : PuntoControlService, private progService :ProgramacionService
+    constructor(    public ClassGlobal : GlobalVars,
+                    private tcontrolservice : TControlService,
+                    private placaService : PlacasService, 
+                    private rutaService : RutaService,
+                    private pcontrolService : PuntoControlService, 
+                    private progService : ProgramacionService,
+                    private disTiemservice : distribTiempoService
                 ){
                     this.emID=this.ClassGlobal.GetEmId();
                     this.UsId=this.ClassGlobal.GetUsId();
-                    console.log(this.UsId);
+                    this.tpHoraS="02";
                     this.tarjeta._UsId = this.UsId; //ARREGLAR ESTO
                     this._ruId=0; /* INICIANDO RUID A CERO PARA DESACTIVAR EL BOTON ASIGNAR TARJETA */
                     this.arrNTarjCabecera=[]; /*INICIANDO ARRAY A VACIO DE NUEVAS TARJETAS */
@@ -173,12 +182,22 @@ export class TcontrolComponent implements OnInit{
         this.getallplacasbusbyemsuem(this.emID,0); /*TODAS LAS PLACAS POR EMID, EL CERO ES PARA TODOS LOS SUEMID*/
         this.getallprogramacionbyem(this.emID,0); //PROGRAMACION X EMP Y POR AÑO(ACLARAR ESTO)
         this.getAllRutaByEm(this.emID);
-
+        //this.getvalorsalidabyembu(1,1);
     }
     
 
 /* PROCEDURES */ 
     /* GETTERS */
+        /* CONSULTANDO TIEMPO SALIDA DE CADA PLACA */
+        getvalorsalidabyembu(emid:number, buid:number){
+            let objvalor:any[]=[];
+            this.disTiemservice.getvalorsalidabyembu(emid, buid).subscribe(
+                data => {objvalor=data; this.mvalortiempoplaca(objvalor);},
+                err => {this.errorMessage=err},
+                () => this.isLoading=false
+            );  
+        }
+
         /* CONSULTAR TODAS LAS RUTAS EXISTENTES */
         getAllRutaByEm(emId: number){
             this.rutaService.getAllRutaByEm(emId).subscribe(
@@ -235,6 +254,8 @@ export class TcontrolComponent implements OnInit{
             this.tcontrolservice.getAllProgramacionDetalleByPrFecha(PrId, Date).subscribe(
                 data => {
                             this.progDetalle=data;
+                            console.log(this.progDetalle);
+
                             if(this.progDetalle.length>0 ){
                                 //this.getallplacasbusbyemsuem(this.emID,0);
                                 this.mgprogDetalle(); /*GRILLA PROG POR FECHA*/
@@ -361,17 +382,24 @@ export class TcontrolComponent implements OnInit{
             this.tcontrolservice.newTarjetaControl() .subscribe(
                     data =>{ 
                                 this._tarjeta=data;
+                                console.log(this._tarjeta);
                                 this.tarjeta={
                                     _TaCoId : this._tarjeta.TaCoId,
-                                    _PuCoId : this._tarjeta.PuCoId,
-                                    _RuId : this._tarjeta.RuId,
+                                    
+                                    
+
                                     _BuId :this._tarjeta.BuId,
                                     _PrId :this._tarjeta.PrId,
+                                    _PuCoId : this._tarjeta.PuCoId,
+                                    _RuId : this._tarjeta.RuId,
+                                    
+
                                     _TaCoNroVuelta:this._tarjeta.TaCoNroVuelta,
                                     _TaCoFecha :"",
                                     _TaCoHoraSalida :horaAct(),
                                     _TaCoCuota :this._tarjeta.TaCoCuota,
                                     _UsId :this._tarjeta.UsId,
+
                                     _UsFechaReg :this._tarjeta.UsFechaReg
                                 }
                         }
@@ -379,6 +407,26 @@ export class TcontrolComponent implements OnInit{
         }
 
 /* MOSTRAR DATOS */
+        //VALOR TIPO TIEMPO SALIDA
+        mvalortiempoplaca(objvalor=[]){
+            let _objvalor:any;
+            console.log(objvalor);
+
+            if(objvalor.length!=0){
+                _objvalor={
+                    SuEmId:objvalor[0].SuEmId,
+                    TiSaId:objvalor[0].TiSaId,
+                    TiSaNombre:objvalor[0].TiSaNombre,
+                    TiSaValor:_hora(objvalor[0].TiSaValor)
+                }  
+                this.timevueltadescrip='\t'+_hora(objvalor[0].TiSaValor);
+            }else if(objvalor.length==0){
+                this.timevueltadescrip='\t'+"No Tiene";
+            }
+             
+            console.log(_objvalor);
+        }
+        
         //COMBO PROGRAMACION CABECERA (CARGA ARRAY PARA MOSTRAR OPCIONES EN EL COMBOBOX)
         mcobprogramacion(){
             this._programacion=[];
@@ -418,7 +466,9 @@ export class TcontrolComponent implements OnInit{
                             PrId:this.progDetalle[i].PrId,
                             PrDeOrden:this.progDetalle[i].PrDeOrden,
                             PrDeId: this.progDetalle[i].PrDeId,
-                            PrDeAsignadoTarjeta:this.progDetalle[i].PrDeAsignadoTarjeta
+                            PrDeAsignadoTarjeta:this.progDetalle[i].PrDeAsignadoTarjeta,
+                            SuEmRSocial:this.placas[j].SuEmRSocial,
+                            BuDescripcion:this.placas[j].BuDescripcion
                         });
                         cen = 1; 
                     }else if(this.progDetalle[i].BuId != this.placas[j].BuId){
@@ -446,7 +496,9 @@ export class TcontrolComponent implements OnInit{
                         PrId:progD.PrId,
                         PrDeOrden:progD.PrDeOrden,
                         PrDeId:progD.PrDeId,
-                        PrDeAsignadoTarjeta:progD.PrDeAsignadoTarjeta
+                        PrDeAsignadoTarjeta:progD.PrDeAsignadoTarjeta,
+                        SuEmRSocial:progD.SuEmRSocial,
+                        BuDescripcion:progD.BuDescripcion
                         /*
                             PrDeFecha:progD.PrDeFecha,
                             UsFechaReg:progD.UsFechaReg,
@@ -548,7 +600,9 @@ export class TcontrolComponent implements OnInit{
                     this._prDeId = event.data.PrDeId; /* PROGRAMACIONDETALLE ID */
                     this._BuId=event.data.BuId;
                     let val=event.data.PrDeAsignadoTarjeta;
-                    console.log(val);
+                    
+                    console.log(event.data);
+                    this.getvalorsalidabyembu(this.emID, this._BuId);
                     /*this.tarjeta._BuId=obj.BuId;  ID DE LA PLACA SELCCIONADA */
                     
                     /* SI VAL=0 RADIOBUTTONS HABILITADOS */
@@ -657,6 +711,10 @@ export class TcontrolComponent implements OnInit{
                     UsId :this.UsId,
                     UsFechaReg :new Date(),
                     TaCoNroVuelta : this.tarjeta._TaCoNroVuelta = 1
+
+                    //TiPrId
+                    //TaCoTipoHoraSalida
+                    //TaCoAsignado
                 }
 
                 /*NUEVA TARJETA*/

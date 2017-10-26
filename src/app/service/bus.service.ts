@@ -2,13 +2,17 @@ import {Injectable} from '@angular/core';
 import {Headers, Http, Response, RequestOptions} from '@angular/http';
 /*import {URLSearchParams} from '@angular/http';*/
 import {Observable} from 'rxjs';
+import {url_bus, url_buspersona} from 'app/urls';
 
 @Injectable()
 
 export class BusService{
-    private baseUrl :string ='http://controlbus-ronaldmam.rhcloud.com/rest/bus/'; 
-    private baseUrl2:string ='http://controlbus-ronaldmam.rhcloud.com/rest/buspersona/';
-    /* */
+    //private baseUrl :string ='http://controlbus-ronaldmam.rhcloud.com/rest/bus/'; 
+    //private baseUrl2:string ='http://controlbus-ronaldmam.rhcloud.com/rest/buspersona/';
+    //private baseUrl :string ='http://controlbus-controlbus.1d35.starter-us-east-1.openshiftapps.com/bus/rest/bus/'; 
+    //private baseUrl2:string ='http://controlbus-controlbus.1d35.starter-us-east-1.openshiftapps.com/bus/rest/buspersona/';
+    private baseUrl=url_bus;
+    private baseUrl2=url_buspersona;
     constructor(private http: Http){}
 
     /* TABLA BUS */

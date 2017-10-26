@@ -71,7 +71,7 @@ export class EmpSubEmpComponent implements OnInit{
             this.displayEditConfEmpresa=false;
             this.displayRegEmpresa=false;
             this.displayElimEmp=false;
-        this.arrTiposEmp=[{tipId:0,nomTipo:"CONSORCIO"},{tipId:1,nomTipo:"INDIVIDUAL"}]
+        this.arrTiposEmp=[{tipId:"00",nomTipo:"CONSORCIO"},{tipId:"01",nomTipo:"INDIVIDUAL"}]
         this.selectRow=false; /*false: no se selecciono ninguna fila, true: si se selecciono una fila */
     }
 
@@ -88,7 +88,7 @@ export class EmpSubEmpComponent implements OnInit{
             getsubempresasbyemid(emid:number){
                 let subemps:any[]=[];
                 this.empSubempservice.getallsubempresasbyemid(emid).subscribe(
-                    data => { subemps=data; this.mgsubempresas(subemps);},
+                    data => { subemps=data; console.log(subemps); this.mgsubempresas(subemps);},
                     err => {this.errorMessage=err},
                 );
             }

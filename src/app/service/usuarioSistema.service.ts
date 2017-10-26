@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Headers, Http, Response, RequestOptions} from '@angular/http';
 import {Observable} from 'rxjs';
-
+import {url_usuario} from 'app/urls';
 @Injectable()
 
 export class UserSystemService{
-    private baseUrl1: string = 'http://controlbus-ronaldmam.rhcloud.com/rest/usuario/';
+   private baseUrl1=url_usuario;
     /* http://controlbus-ronaldmam.rhcloud.com/rest/usuario/getallusuariobyem?emId=1 */
     constructor (private http: Http){}
         /* CONSULTA TODAS LOS USUARIO */

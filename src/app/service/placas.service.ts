@@ -1,11 +1,13 @@
 import {Injectable} from '@angular/core';
 import {Headers, Http, Response, RequestOptions} from '@angular/http'
 import {Observable} from 'rxjs';
-
+import {url_bus} from 'app/urls'
 @Injectable()
 
 export class PlacasService{
-    private baseUrl: string = 'http://controlbus-ronaldmam.rhcloud.com/rest/bus/'
+    //private baseUrl: string = 'http://controlbus-ronaldmam.rhcloud.com/rest/bus/'
+    //private baseUrl: string = 'http://controlbus-controlbus.1d35.starter-us-east-1.openshiftapps.com/bus/rest/bus/'
+    private baseUrl=url_bus;
     // private baseUrl: string = 'http://localhost:8089/controlbus/rest/bus/'
     //http://controlbus-ronaldmam.rhcloud.com/rest/bus/getallbusesbyemsuem?emId=1&suEmId=0
     

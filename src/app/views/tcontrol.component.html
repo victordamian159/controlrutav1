@@ -160,6 +160,7 @@
                                 </div>
                             </div>
                             
+                            <!--TABLA-->
                             <!--Orden de las Placas-->
                             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                 <div class=" form-group ">
@@ -169,9 +170,10 @@
                                         <p-column field="nro" header="N°" [style]="{'width':'2em'}" ></p-column>
                                         <!--<p-column field="PrDeOrden" header="Sorteo" [style]="{'width':'3em'}" ></p-column>-->
                                         <p-column field="nroPlaca" header="Placa" [style]="{'width':'5em'}" ></p-column>
-                                        <p-column field="subemp" header="Pertenece" [style]="{'width':'8em'}" ></p-column>
+                                        <p-column field="SuEmRSocial" header="Empresa" [style]="{'width':'8em'}" ></p-column>
                                     </p-dataTable>
                                 </div>
+                                Rol:{{timevueltadescrip}}
                             </div>
 
                             <!--Estado de la Tarjeta-->
@@ -185,12 +187,23 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
+                            <!--Asignar Hora Manual o Automatica-->
+                            <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label>Tipo de Hora Salida:</label>
+                                    <div class="row">
+                                        <p-radioButton class="radioButton" value="01"  label="Manual" [(ngModel)]="tpHoraS" ></p-radioButton>
+                                        <p-radioButton class="radioButton" value="02"  label="Automatico" [(ngModel)]="tpHoraS" ></p-radioButton>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!--Hora Salida(HH:MM:SS):-->
                             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                 <div class="form-group">
                                     <label >Hora Salida(HH:MM:SS):</label>
-                                    <input class="form-control" type="time"[(ngModel)]="tarjeta._TaCoHoraSalida"  step="1"  required #hsal="ngModel" />
+                                    <input class="form-control" type="time"[(ngModel)]="tarjeta._TaCoHoraSalida"  step="1" [disabled]="tpHoraS=='02'" required #hsal="ngModel" />
                                     <span *ngIf="!hsal.valid && (hsal.touched || hsal.dirty)"  >  
                                         <div id="validation" [hidden]="!hsal.errors.required"> obligatorio </div>
                                     </span>   

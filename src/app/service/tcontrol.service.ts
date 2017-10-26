@@ -1,29 +1,35 @@
 import {Injectable} from '@angular/core';
 import {Headers, Http, Response, RequestOptions} from '@angular/http';
 import {Observable} from 'rxjs';
+import {
+			url_tarjetacontrol,
+			url_tarjetacontroldetalle,
+			url_puntocontrol,
+			url_puntocontroldetalle,
+			url_programacion,
+			url_programaciondetalle,
+			url_bus
+		} from 'app/urls';
 
 @Injectable()
 
 export class TControlService{
 	//TARJETA CONTROL
-    private baseUrl: string ='http://controlbus-ronaldmam.rhcloud.com/rest/tarjetacontrol/';
-	//private baseUrl: string ='http://localhost:8089/controlbus/rest/tarjetacontrol/';
-    private baseUrl2:string ='http://controlbus-ronaldmam.rhcloud.com/rest/tarjetacontroldetalle/';
+
+	//private baseUrl: string ='http://controlbus-controlbus.1d35.starter-us-east-1.openshiftapps.com/bus/rest/tarjetacontrol/';
+    //private baseUrl2:string ='http://controlbus-controlbus.1d35.starter-us-east-1.openshiftapps.com/bus/rest/tarjetacontroldetalle/';
 	
-
-	//PUNTOS DE CONTROL
-	private baseUrl3:  string = 'http://controlbus-ronaldmam.rhcloud.com/rest/puntocontrol/';
-	private baseUrl4: string = 'http://controlbus-ronaldmam.rhcloud.com/rest/puntocontroldetalle/';
-
-	//PROGRAMACION
-	private baseUrl5: string ='http://controlbus-ronaldmam.rhcloud.com/rest/programacion/';
-	private baseUrl6: string ='http://controlbus-ronaldmam.rhcloud.com/rest/programaciondetalle/';
-
-	//BUSES
-	private baseUrl7: string ='http://controlbus-ronaldmam.rhcloud.com/rest/bus';
-
-    constructor(private http: Http){}
-
+	private baseUrl=url_tarjetacontrol;
+	private baseUrl2=url_tarjetacontroldetalle;
+	private baseUrl3=url_puntocontrol;
+	private baseUrl4=url_puntocontroldetalle;
+	private baseUrl5=url_programacion;
+	private baseUrl6=url_programaciondetalle;
+	private baseUrl7=url_bus;
+	
+	constructor(private http: Http){}
+	
+//GETTERS
 	//CONSULTA PROGRAMACION CABECERA (SE MUESTRA EN GRILLA PROGRAMACION)
     getAllProgramacionByEm( emId: number, anio: number){
         return this.http        

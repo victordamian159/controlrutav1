@@ -961,7 +961,7 @@ export class RutaComponent implements OnInit{
                 path: this.coordenadas,
                 strokeColor: '#00796B',
                 strokeOpacity : 1,
-                strokeWeight :12 
+                strokeWeight :10 
             }));
 
             /* ACTIVANDO DESACTIVANDO BOTONES */

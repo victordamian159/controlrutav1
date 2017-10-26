@@ -2,11 +2,12 @@ import {Injectable} from '@angular/core';
 import {Headers, Http, Response, RequestOptions} from '@angular/http';
 /*import {URLSearchParams} from '@angular/http';*/
 import {Observable} from 'rxjs';
+import {url_persona} from 'app/urls';
 
 @Injectable()
 
 export class PersService{
-    private baseUrl: string = 'http://controlbus-ronaldmam.rhcloud.com/rest/persona/';
+    private baseUrl=url_persona;
     constructor(private http: Http) { }
 
     /* CONSULTA TODAS LAS PERSONAS */

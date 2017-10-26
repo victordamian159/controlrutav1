@@ -2,15 +2,12 @@ import {Injectable} from '@angular/core';
 import {Headers, Http, Response, RequestOptions} from '@angular/http';
 import {URLSearchParams} from '@angular/http';
 import {Observable} from 'rxjs';
-
+import {url_programacion, url_programaciondetalle} from 'app/urls';
 @Injectable()
 
 export class ProgramacionService{
-    private baseUrl   : string ='http://controlbus-ronaldmam.rhcloud.com/rest/programacion/';
-    private baseUrl2  : string ='http://controlbus-ronaldmam.rhcloud.com/rest/programaciondetalle/';
-    //private baseUrl   : string ='http://localhost:8089/controlbus/rest/programacion/';
-    //private baseUrl2  : string ='http://localhost:8089/controlbus/rest/programaciondetalle/';
-
+    private baseUrl=url_programacion;
+    private baseUrl2=url_programaciondetalle;
     constructor (private http: Http){}
 
     //consultar por Id Empresa, Ruta Empresa (mostrar en la grilla)
@@ -19,6 +16,15 @@ export class ProgramacionService{
             .get(this.baseUrl+"getallprogramacionbyem?emId="+emId+"&anio="+anio)
             .map((r:Response) => r.json())
             .catch(this.handleError);
+    }
+
+    //BUSCAR PROGRAMACION DE UNA FECHA
+    getAllProgramacionDetalleByPrFecha(PrId:number, date: string){
+        return this.http
+			.get(this.baseUrl2+"getallprogramaciondetallebyprfecha?prId="+PrId+"&prDeFecha="+date)
+            //.get(this.baseUrl6+'prid/'+PrId)
+            .map( (r:Response) => r.json())
+            .catch( (error:any) => Observable.throw(error.json.error || 'server error') );
     }
 
 //PROGRAMACION MAESTRO

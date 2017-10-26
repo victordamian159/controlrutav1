@@ -1,16 +1,15 @@
 import {Injectable} from '@angular/core';
 import {Headers, Http, Response, RequestOptions} from '@angular/http';
 import {Observable} from 'rxjs';
+import {url_puntocontroldetalle,url_puntocontrol} from 'app/urls';
 
 @Injectable()
 
 export class PuntoControlService{
-	private baseUrl:  string = 'http://controlbus-ronaldmam.rhcloud.com/rest/puntocontrol/';
-	private baseUrl2: string = 'http://controlbus-ronaldmam.rhcloud.com/rest/puntocontroldetalle/';
-	//private baseUrl:  string = 'http://localhost:8089/bus/rest/puntocontrol/';
-	//private baseUrl2: string = 'http://localhost:8089/bus/rest/puntocontroldetalle/';
-    constructor(private http: Http) { }
+	private baseUrl=url_puntocontrol;
+	private baseUrl2=url_puntocontroldetalle;
 
+	constructor(private http: Http) { }
 
 	getAllPuntoControlByEmRu(emId: number,ruId:number) {
 		return this.http

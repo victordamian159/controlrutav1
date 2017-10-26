@@ -1,12 +1,17 @@
 import {Injectable} from '@angular/core';
 import {Headers, Http, Response, RequestOptions} from '@angular/http';
 import {Observable} from 'rxjs';
+import {url_ruta,url_rutadetalle} from 'app/urls'
 
 @Injectable()
 
 export class RutaService{
-    private baseUrl: string = 'http://controlbus-ronaldmam.rhcloud.com/rest/ruta/';
-	private baseUrl2: string = 'http://controlbus-ronaldmam.rhcloud.com/rest/rutadetalle/';
+    //private baseUrl: string = 'http://controlbus-ronaldmam.rhcloud.com/rest/ruta/';
+	//private baseUrl2: string = 'http://controlbus-ronaldmam.rhcloud.com/rest/rutadetalle/';
+	//private baseUrl: string = 'http://controlbus-controlbus.1d35.starter-us-east-1.openshiftapps.com/bus/rest/ruta/';
+	//private baseUrl2: string = 'http://controlbus-controlbus.1d35.starter-us-east-1.openshiftapps.com/bus/rest/rutadetalle/';
+	private baseUrl=url_ruta
+	private baseUrl2=url_rutadetalle
 	/*
 		private baseUrl2: string = 'http://controlbus-controlbus.44fs.preview.openshiftapps.com/bus/rest/rutadetalle/';
 		private baseUrl: string = 'http://localhost:8081/bus/rest/ruta/';

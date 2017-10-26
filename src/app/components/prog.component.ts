@@ -264,13 +264,13 @@ export class ProgComponent implements OnInit{
                     .subscribe(
                         datos => {
                             this.progRest = datos ; 
-                            //console.log(this.progRest);
+                           
                             this.mostrargrillaProgramacionMaestro(this.progRest);
                         },
                         err => {this.errorMessage = err}, 
                         () =>this.isLoading = false
                     );
-                //console.log(this.progRest)
+                
             }
 
 
@@ -284,8 +284,6 @@ export class ProgComponent implements OnInit{
         this.extrayendoPlacasBus(); 
         this.unidadesEstado(); //CALCULA EL NRO DE UNIDADES ACTIVAS Y NO ACTIVAS
 
-        /*console.log(this.progRest);*/
-        //console.log(editf1(this.ultFecha(this.progRest)));
 
         this.tipoProg="01"; //PROGRAMACION POR DEFECTO: MANUAL
         this.formaProg="01"; /* (1)MANUAL O (2)AUTOMATICO */
@@ -782,12 +780,7 @@ export class ProgComponent implements OnInit{
         this.displayProgramacionBase = false; //1era MODAL
         this.displayNuevaProgramacion=false;  //2da MODAL
         //BORRAR LOS DATOS INGRESADOS 
-        /*ELIMINAR LA PROGRAMACION (CABECERA) QUE NO TIENE PROGDETALLE, CONSULTAR A this.getAllProgramacionByEm(1,0)
-        console.log(this.progRest[this.progRest.length-1].prId);*/
-        this.programacionService.deleteProgramacionByid(this.progRest[this.progRest.length-1].prId).subscribe(
-            realizar => {this.getAllProgramacionByEm(this.emid,this.anio)},
-            err => {console.log(err);}
-        );
+      
         
     }
 

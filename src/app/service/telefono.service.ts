@@ -5,8 +5,8 @@ import {Observable} from 'rxjs';
 @Injectable()
 
 export class TeleMovilService{
-    private baseUrl :string ='http://controlbus-ronaldmam.rhcloud.com/rest/telefono/'; 
-
+    //private baseUrl :string ='http://controlbus-ronaldmam.rhcloud.com/rest/telefono/'; 
+    private baseUrl :string ='http://controlbus-controlbus.1d35.starter-us-east-1.openshiftapps.com/bus/rest/telefono/'; 
     constructor(private http: Http){}
 
     /* GET ALL TELEFONO POR BUID */

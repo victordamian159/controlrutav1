@@ -1,12 +1,18 @@
 import {Injectable} from '@angular/core';
 import {Headers, Http, Response, RequestOptions} from '@angular/http';
 import {Observable} from 'rxjs';
+import {url_empresa, url_subempresa} from 'app/urls';
 
 @Injectable()
 
 export class EmpSubEmpService{
-    private baseUrl1: string = 'http://controlbus-ronaldmam.rhcloud.com/rest/empresa/';
-	private baseUrl2: string = 'http://controlbus-ronaldmam.rhcloud.com/rest/subempresa/';
+    //private baseUrl1: string = 'http://controlbus-ronaldmam.rhcloud.com/rest/empresa/';
+    //private baseUrl2: string = 'http://controlbus-ronaldmam.rhcloud.com/rest/subempresa/';
+    //private baseUrl1: string = 'http://controlbus-controlbus.1d35.starter-us-east-1.openshiftapps.com/bus/rest/empresa/';
+	//private baseUrl2: string = 'http://controlbus-controlbus.1d35.starter-us-east-1.openshiftapps.com/bus/rest/subempresa/';
+    private baseUrl1=url_empresa;
+    private baseUrl2=url_subempresa;
+    
     constructor (private http: Http){}
 
     /* EMPRESA */
