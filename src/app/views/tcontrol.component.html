@@ -176,7 +176,7 @@
                                 Rol:{{timevueltadescrip}}
                             </div>
 
-                            <!--Estado de la Tarjeta-->
+                            <!--Estado de la Tarjeta    ASIGNAR O AUSENTE-->
                             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                 <div class="form-group">
                                     <label>Estado de la Tarjeta:</label>
@@ -188,7 +188,7 @@
                                 </div>
                             </div>
 
-                            <!--Asignar Hora Manual o Automatica-->
+                            <!--Tipo Asignar Hora Manual o Automatica-->
                             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                 <div class="form-group">
                                     <label>Tipo de Hora Salida:</label>
@@ -203,7 +203,8 @@
                             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                 <div class="form-group">
                                     <label >Hora Salida(HH:MM:SS):</label>
-                                    <input class="form-control" type="time"[(ngModel)]="tarjeta._TaCoHoraSalida"  step="1" [disabled]="tpHoraS=='02'" required #hsal="ngModel" />
+                                    <input class="form-control" type="time"[(ngModel)]="tarjeta._TaCoHoraSalida"  
+                                            step="1" [disabled]="tpHoraS=='02'" required #hsal="ngModel" />
                                     <span *ngIf="!hsal.valid && (hsal.touched || hsal.dirty)"  >  
                                         <div id="validation" [hidden]="!hsal.errors.required"> obligatorio </div>
                                     </span>   
@@ -227,13 +228,22 @@
             </div>
          </div>
 
+         {{!PC.valid || !PROG.valid || !fprog.valid || (hsal.valid  && tpHoraS=='02')|| !cuota.valid || this.actRadioButton}}
+         {{!PC.valid}}
+         {{!PROG.valid}}
+         {{!fprog.valid}}
+         {{(hsal.valid  && tpHoraS=='02')}}
+         {{!cuota.valid}}
+         {{this.actRadioButton}}
+         
         <!--BOTONES-->
         <div class=" btn_Modal row ">
             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                 <button class="btn_modal" type="text" pButton icon="fa-fast-backward" (click)="btnAtrasMultiTarj(); PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset();" label="Atras"></button>
             </div>
             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
-                <button class="btn_modal" type="text" pButton icon="fa-save" (click)="guardarTarjeta();  PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset();" [disabled]="!PC.valid || !PROG.valid || !fprog.valid || !hsal.valid || !cuota.valid || this.actRadioButton" label="Guardar"></button>
+                <button class="btn_modal" type="text" pButton icon="fa-save" (click)="guardarTarjeta();  PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset();" 
+                        [disabled]="!PC.valid || !PROG.valid || !fprog.valid || (hsal.valid  && tpHoraS=='02')|| !cuota.valid || this.actRadioButton" label="Guardar"></button>
             </div>
             <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
                 <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelarTarjeta();  PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset(); " label="Cancelar"></button>

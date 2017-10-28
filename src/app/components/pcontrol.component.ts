@@ -272,6 +272,7 @@ export class PcontrolComponent implements OnInit{
                                             this.desNuevosPuntos=true;
                                         }
 
+                                        //CARGANDO LA RUTA Y MARKERS
                                         if(ptsctrl.length!=0){
                                             this.cargarmarker(ptsctrl); //CARGAR LOS MARCADORES 
                                             this.mgMiniListaPC(ptsctrl);
@@ -435,7 +436,8 @@ export class PcontrolComponent implements OnInit{
         /* CLICK SOBRE EL MAPA */
             handleMapClick(event){
                 /*CONDICIONAL CLICK SOBRE EL MAPA y addmarker*/
-                console.log(this.overlays);
+                //console.log(this.overlays);
+                
                 //addmarker activado
                 if(this.activeAddMarker == 1){ 
                     //mostrar modal addmarker
@@ -443,16 +445,13 @@ export class PcontrolComponent implements OnInit{
                     this.selectedPosition = event.latLng;
 
                     //agregando las coordenadas de los markers para mandarlos a la BD
-                    this.coordenadas.push(
-                        coords = {x:this.selectedPosition.lat(), 
-                                y:this.selectedPosition.lng()}
-                    );
+                    this.coordenadas.push( coords = {x:this.selectedPosition.lat(),y:this.selectedPosition.lng()} );
                     //guardando coordenadas en las variables X y Y 
-                    this.x=(coords.x).toString();
-                    this.y=(coords.y).toString();
-                
+                    this.x=(coords.x).toString(); this.y=(coords.y).toString();
                     this.addmarker();
                     this.displayNuevoPunto=true;
+
+                    
 
                 //addmarker desactivado
                 }else if(this.activeAddMarker == 0){ 
@@ -598,12 +597,13 @@ export class PcontrolComponent implements OnInit{
                     this.draggable=true;
                     this.indexMarkerTitle=this.indexMarker.toString();
 
-                    this.overlays.push(new google.maps.Marker({
-                                                                position: {lat: this.coordenadas[this.j].x, 
-                                                                        lng: this.coordenadas[this.j].y},
-                                                                title:this.indexMarkerTitle,
-                                                                draggable: this.draggable              
-                                                            }
+                    this.overlays.push(
+                            new google.maps.Marker({
+                                    position: { lat: this.coordenadas[this.j].x, 
+                                                lng: this.coordenadas[this.j].y},
+                                    title:this.indexMarkerTitle,
+                                    draggable: this.draggable              
+                                }
                     ));
 
                     this.indexMarker++;
@@ -620,7 +620,7 @@ export class PcontrolComponent implements OnInit{
                         radius:100
                     }));
                     this.j++;
-                    console.log(this.overlays);
+                    //console.log(this.overlays);
                 }else if(this.activeAddMarker == 0){ //addmarker desactivado
                     //PONER EN VENTANA MODAL COMO MENSAJE PARA EL USUARIO
                     console.log("seleccione un registro de la tabla o haga click sobre el boton nuevo");
@@ -744,26 +744,26 @@ export class PcontrolComponent implements OnInit{
 
     
      //ACEPTAR PUEDE AGREGAR MARKER 
-    aceptarClickObjeto(){
-        this.mensaje="";
-        this.displayAddMarker=false;
-    }
+        aceptarClickObjeto(){
+            this.mensaje="";
+            this.displayAddMarker=false;
+        }
 
-    aceptarModalAgregarMarker(){
-        this.mensaje="";
-        this.displayMapaClick=false;
-    }
+        aceptarModalAgregarMarker(){
+            this.mensaje="";
+            this.displayMapaClick=false;
+        }
 
     
 
     //ACTUALIZANDO LOS PUNTOS DE CONTROL AL GUARDAR LA BD
-    actualizarOrdenPC(){
-        let i=0; let j;
-        while(i<this.pCArrayDetalleBD.length){
-                this.pCArrayDetalleBD[i].PuCoDeOrden=i+1;
-            i++;
+        actualizarOrdenPC(){
+            let i=0; let j;
+            while(i<this.pCArrayDetalleBD.length){
+                    this.pCArrayDetalleBD[i].PuCoDeOrden=i+1;
+                i++;
+            }
         }
-    }
 
    
     
@@ -812,8 +812,8 @@ export class PcontrolComponent implements OnInit{
                 this.mayorOrdenPuntos();//PARA EL CASO DE EDITAR UNA LISTA EXISTENTE
 
             /* SOLO CARGAR RUTA Y MARCADORES */
-            this.procGetallrutadetallebyru(RuId);
-            this.procGetallptsctrldetbyPuCo(PuCoId);
+                this.procGetallrutadetallebyru(RuId);
+                this.procGetallptsctrldetbyPuCo(PuCoId);
            
             
     
@@ -1007,6 +1007,7 @@ export class PcontrolComponent implements OnInit{
         
         /* ARRAY DE PUNTOS CONTROL */
         let puntos = this.pCDetalleMostrar;
+        console.log(this.pCDetalleMostrar);
         console.log(puntos);
 
         /*SE PULSO EL BOTON EDITAR*/
@@ -1019,7 +1020,9 @@ export class PcontrolComponent implements OnInit{
                    cen=1;
                }
            } 
-           
+           puntos=this.pCDetalleMostrar;
+           console.log(i);
+           console.log(puntos[i]);
            this.pcDetalle = puntos[i];
            console.log(this.pcDetalle);
            this.indexPunto = i; /* INDICE DEL PUNTO DE CONTROL MODIFICADO */
@@ -1043,8 +1046,7 @@ export class PcontrolComponent implements OnInit{
     //BOTON GUARDAR PUNTOS (CUADRO MODAL AGREGAR PUNTO CONTROL)
     guardarPuntoControlDetalle(){   
         this.procNuevoPtoCrtlDet(); // crear un nuevo punto (REST)
-        console.log(this.overlays);
-
+        
        /* NUEVA LISTA DE P.CONTROL */
        if(this.editando == 0 ){
             let pos=this.pCArrayDetalleBD.length;
@@ -1121,9 +1123,11 @@ export class PcontrolComponent implements OnInit{
        
        /* AGREGANDO NUEVOS PUNTOS */
        }else if(this.editando == 1){
+
             /* POSICION AUTOMATICO */
             if(this.disabledInputPos == true){ 
                 let pos=this.pCArrayDetalleBD.length;
+
                 //ENCONTRANDO NRO DE ORDEN MAYOR EN EL ARRAY DE PUNTOS
                 this.pCArrayDetalleBD.push({ 
                         PuCoDeId : 0,
@@ -1137,12 +1141,16 @@ export class PcontrolComponent implements OnInit{
                         PuCoDeOrden : pos+1 //segun se vaya agregando al final
                     });
                 
+
+                //LISTA VISTA DE PTOS AL AGREGAR NUEVOS
                 /* CARGANDO LA MINILISTA */
                 this.miniLista.push({
                     nro:pos+1,
                     PuCoDeDescripcion : this.pcDetalle.PuCoDeDescripcion,
                     PuCoDeHora:this.pcDetalle.PuCoDeHora
                 });
+                console.log(this.pCArrayDetalleBD);
+                console.log(this.miniLista);
             /* POSICION MANUAL */
             }else if(this.disabledInputPos==false){
                 console.log("manual");
@@ -1283,8 +1291,9 @@ export class PcontrolComponent implements OnInit{
 
        /* LA SUMATORIA DE TIEMPOS ESTA BIEN */
        if(this.horaReg == su){
-           console.log(this.editando);
-           console.log(this.pCArrayDetalleBD.length);
+           //console.log(this.editando);
+           console.log(this.pCArrayDetalleBD);
+
             /*SAVE NUEVOS PUNTOS*/
             if(this.editando == 0 && this.pCArrayDetalleBD.length!=0){ 
                 /* PROCEDURE */
@@ -1295,6 +1304,8 @@ export class PcontrolComponent implements OnInit{
     
             //SE ESTA EDITANDO LISTADO EXISTENTE
             }else if(this.editando == 1 && this.pCArrayDetalleBD.length!=0){ 
+                //1ero borra
+                //2do guardar
                 /* CORREGIR ESTA PARTE, NO DEBE BORRAR EL REGISTRO SOLO VACIARLO */
                     this.pcontrolService.deletePuntoControlDetalleByRu(this.idDetalle).subscribe(
                         realizar => {cen=realizar;
@@ -1518,7 +1529,21 @@ export class PcontrolComponent implements OnInit{
     /* MOSTRAR ELEMENTOS EN LA GRILLAS */
     mgPuntosControlDetalle(ptsCtrl:any){
         this.pCDetalleMostrar=[];//array para mostrarlo en el datatable 
+        
+        console.log(this.pCArrayDetalleBD);
+        console.log(ptsCtrl);
 
+        if(this.pCArrayDetalleBD.length==0 && ptsCtrl.length>0){
+            
+        }else if(this.pCArrayDetalleBD.length==ptsCtrl.length){
+            //COPIAR LO DE PCARRAYDETALLEBD A PTSCTRL
+            ptsCtrl=this.pCArrayDetalleBD;
+        }else if(this.pCArrayDetalleBD.length>ptsCtrl.length){
+            ptsCtrl=this.pCArrayDetalleBD;
+        }else if(this.pCArrayDetalleBD.length<ptsCtrl.length){
+            ptsCtrl=this.pCArrayDetalleBD;
+        }   
+        console.log(ptsCtrl);
         for(let puntoDetalle of ptsCtrl ){
             this.pCDetalleMostrar.push({
                 PuCoDeId: puntoDetalle.PuCoDeId,
@@ -1530,6 +1555,7 @@ export class PcontrolComponent implements OnInit{
                 PuCoDeOrden: puntoDetalle.PuCoDeOrden 
             });
         }
+        console.log("&&&&&&&");
     }
 
     //recuperar puntos de controldetalle por pucoID (por el ID) de esta forma no se necesita actualizar la pagina para ver el resultado
@@ -1641,7 +1667,8 @@ export class PcontrolComponent implements OnInit{
         this.dragPunto = 1;     //DRAGGABLE TODOS PUNTOS Control
         this.reiniciarVariables(this.editando,this.dragPunto);*/
 
-        console.log(this.overlays);console.log(this.pCArrayDetalleBD);
+        //console.log(this.overlays);
+        console.log(this.pCArrayDetalleBD);
         
         if(this.pCArrayDetalleBD.length!=0){
             /* HACIENDO COPIA DEL ARRAY (CASO CANCELAR TODO LO EDITADO) */
@@ -1680,102 +1707,102 @@ export class PcontrolComponent implements OnInit{
 
     //REINICIAR VARIABLES Y ARRAYS DE OBJETOS
     /* ESTA FUNCION PROBAR QUE RECIBA PARAMETROS */
-    reiniciarVariables(editando:number, dragPunto:number){
-        //CONDICIONAL DRAGGABLE ACTIVADO O NO, CASO SI SE ESTA EDITANDO O NO editando 1 | 0, dragPunto 1 | 0
+        reiniciarVariables(editando:number, dragPunto:number){
+            //CONDICIONAL DRAGGABLE ACTIVADO O NO, CASO SI SE ESTA EDITANDO O NO editando 1 | 0, dragPunto 1 | 0
 
-        /* SE EDITA LISTA PTS , SE PUEDE MOVER LOS MARKER(PTS)*/
-        if(editando == 1 && dragPunto ==1){ 
-            //this.pCEditados =[]; // array editado PUNTOSCONTROL, PARA MANDAR A LA BD
-            this.overlays=[];   //BORRANDO TODOS ELEMENTOS DEL ARRAY OBJETOS DEL MAPA
-            this.coordenadas=[];
-            this.j=0;//para pasar entre las coordenadas en el array COORDENADAS 
-            this.k=0;
-            this.l=0;
-            this.m=0; //reducir en 1 los title de los marker
-            this.n=1; //nro de puntos de control (guardar puntos en rest DETALLE) 
-            this.editar=0; //si editar = 0 (nuevo registro) si editar = 1 (funcion editar) 
-            this.ordenMayor=0; //nro mayor del array de puntos recuperados para el caso de editar
-            //indexMarkerTitle:string; //index marker para title (string)
-            this.indexMarker=0; //indice de marker
-            
-        /* NO SE EDITA LISTA PTS , NO PUEDE MOVER LOS MARKER(PTS)*/
-        }else if(editando == 0 && dragPunto == 0){ // EDITANDO NO, DRAGPUNTO NO
-            //this.pCEditados =[]; // array editado PUNTOSCONTROL, PARA MANDAR A LA BD
-            this.overlays=[];   //BORRANDO TODOS ELEMENTOS DEL ARRAY OBJETOS DEL MAPA
-            this.coordenadas=[];
-            this.pCArrayDetalleBD=[]; //borrando puntos del array que va a la BD
-            //this.i=0;
-            this.j=0;//para pasar entre las coordenadas en el array COORDENADAS 
-            this.k=0;
-            this.l=0;
-            this.m=0; //reducir en 1 los title de los marker
-            this.n=1; //nro de puntos de control (guardar puntos en rest DETALLE) 
-            this.editar=0; //si editar = 0 (nuevo registro) si editar = 1 (funcion editar) 
-            this.ordenMayor=0; //nro mayor del array de puntos recuperados para el caso de editar
+            /* SE EDITA LISTA PTS , SE PUEDE MOVER LOS MARKER(PTS)*/
+            if(editando == 1 && dragPunto ==1){ 
+                //this.pCEditados =[]; // array editado PUNTOSCONTROL, PARA MANDAR A LA BD
+                this.overlays=[];   //BORRANDO TODOS ELEMENTOS DEL ARRAY OBJETOS DEL MAPA
+                this.coordenadas=[];
+                this.j=0;//para pasar entre las coordenadas en el array COORDENADAS 
+                this.k=0;
+                this.l=0;
+                this.m=0; //reducir en 1 los title de los marker
+                this.n=1; //nro de puntos de control (guardar puntos en rest DETALLE) 
+                this.editar=0; //si editar = 0 (nuevo registro) si editar = 1 (funcion editar) 
+                this.ordenMayor=0; //nro mayor del array de puntos recuperados para el caso de editar
+                //indexMarkerTitle:string; //index marker para title (string)
+                this.indexMarker=0; //indice de marker
+                
+            /* NO SE EDITA LISTA PTS , NO PUEDE MOVER LOS MARKER(PTS)*/
+            }else if(editando == 0 && dragPunto == 0){ // EDITANDO NO, DRAGPUNTO NO
+                //this.pCEditados =[]; // array editado PUNTOSCONTROL, PARA MANDAR A LA BD
+                this.overlays=[];   //BORRANDO TODOS ELEMENTOS DEL ARRAY OBJETOS DEL MAPA
+                this.coordenadas=[];
+                this.pCArrayDetalleBD=[]; //borrando puntos del array que va a la BD
+                //this.i=0;
+                this.j=0;//para pasar entre las coordenadas en el array COORDENADAS 
+                this.k=0;
+                this.l=0;
+                this.m=0; //reducir en 1 los title de los marker
+                this.n=1; //nro de puntos de control (guardar puntos en rest DETALLE) 
+                this.editar=0; //si editar = 0 (nuevo registro) si editar = 1 (funcion editar) 
+                this.ordenMayor=0; //nro mayor del array de puntos recuperados para el caso de editar
 
-            //indexMarkerTitle:string; //index marker para title (string)
-            this.indexMarker=0; //indice de marker
+                //indexMarkerTitle:string; //index marker para title (string)
+                this.indexMarker=0; //indice de marker
 
-        /*USADO CASO SE BORRA TODOS LOS PUNTOS,  SE EDITAN LISTA Y NO SE MUEVE LOS PUNTOS */
-        }else if(editando==1 && dragPunto==0){
-            this.overlays=[];   //BORRANDO TODOS ELEMENTOS DEL ARRAY OBJETOS DEL MAPA
-            this.coordenadas=[];
-            this.pCArrayDetalleBD=[]; //borrando puntos del array que va a la BD
-            //this.i=0;
-            this.j=0;//para pasar entre las coordenadas en el array COORDENADAS 
-            this.k=0;
-            this.l=0;
-            this.m=0; //reducir en 1 los title de los marker
-            this.n=1; //nro de puntos de control (guardar puntos en rest DETALLE) 
-            this.editar=0; //si editar = 0 (nuevo registro) si editar = 1 (funcion editar) 
-            this.ordenMayor=0; //nro mayor del array de puntos recuperados para el caso de editar
+            /*USADO CASO SE BORRA TODOS LOS PUNTOS,  SE EDITAN LISTA Y NO SE MUEVE LOS PUNTOS */
+            }else if(editando==1 && dragPunto==0){
+                this.overlays=[];   //BORRANDO TODOS ELEMENTOS DEL ARRAY OBJETOS DEL MAPA
+                this.coordenadas=[];
+                this.pCArrayDetalleBD=[]; //borrando puntos del array que va a la BD
+                //this.i=0;
+                this.j=0;//para pasar entre las coordenadas en el array COORDENADAS 
+                this.k=0;
+                this.l=0;
+                this.m=0; //reducir en 1 los title de los marker
+                this.n=1; //nro de puntos de control (guardar puntos en rest DETALLE) 
+                this.editar=0; //si editar = 0 (nuevo registro) si editar = 1 (funcion editar) 
+                this.ordenMayor=0; //nro mayor del array de puntos recuperados para el caso de editar
 
-        /* CREANDO NUEVA LISTA, SE MUEVEN PTS Y NO SE EDITA LISTA(TOTALMENTE NUEVA) */
-        }else if(dragPunto==1 &&  editando==0){
-            /*this.overlays=[];*/ this.coordenadas=[]; this.pCArrayDetalleBD=[]; this.miniLista=[];
+            /* CREANDO NUEVA LISTA, SE MUEVEN PTS Y NO SE EDITA LISTA(TOTALMENTE NUEVA) */
+            }else if(dragPunto==1 &&  editando==0){
+                /*this.overlays=[];*/ this.coordenadas=[]; this.pCArrayDetalleBD=[]; this.miniLista=[];
+            }
         }
-    }
 
     //FUNCION COMBOBOX TIPO TARJETA
-    ftipoTarjeta(event){ 
-        /*console.log(this.tTarj);*/
-        this.pcMaestro.PuCoClase = this.tTarj;  
-    }
+        ftipoTarjeta(event){ 
+            /*console.log(this.tTarj);*/
+            this.pcMaestro.PuCoClase = this.tTarj;  
+        }
 
     //SI SUMATORIA TODOS PUNTOS DE CONTROL IGUAL AL TIEMPO DE RECORRIDO BUS
-    sumatoriaTiempoPC(pControl = []):string{
-        let su:string, tx; 
-        let arrTiempos=[],_arrTiempos=[], timePc=[0,0,0], i=0,j=0;
-        for(let pC of pControl){ arrTiempos.push(_hora(pC.PuCoDeHora).split(':')); }
-        for(let pC of arrTiempos){ _arrTiempos.push(pC.slice()); }
-        for(let i=0; i<_arrTiempos.length; i++){ for(let j=0; j<_arrTiempos[i].length; j++){  _arrTiempos[i][j]=Number(_arrTiempos[i][j]); } }
+        sumatoriaTiempoPC(pControl = []):string{
+            let su:string, tx; 
+            let arrTiempos=[],_arrTiempos=[], timePc=[0,0,0], i=0,j=0;
+            for(let pC of pControl){ arrTiempos.push(_hora(pC.PuCoDeHora).split(':')); }
+            for(let pC of arrTiempos){ _arrTiempos.push(pC.slice()); }
+            for(let i=0; i<_arrTiempos.length; i++){ for(let j=0; j<_arrTiempos[i].length; j++){  _arrTiempos[i][j]=Number(_arrTiempos[i][j]); } }
 
-        //SUMANDO TODOS LOS TIEMPOS ENTRE CADA PUNTO PARA HACER EL CALCULO 
-        let r;
-        //console.log(_arrTiempos);
-        //console.log("long: "+_arrTiempos.length);
-        while(i<_arrTiempos.length-1){
-            //console.log(_arrTiempos[i+1][1]+" <- - -> "+_arrTiempos[i][1]);
-            if(_arrTiempos[i+1][1]>_arrTiempos[i][1]){
-                r=_arrTiempos[i+1][1]-_arrTiempos[i][1];
-                j = j + r;
-                //console.log("> j: "+j);
-            }else if(_arrTiempos[i+1][1]<_arrTiempos[i][1]){
-                r = 60 - _arrTiempos[i][1];
-                j = j + r;
-                j = j + _arrTiempos[i+1][1];
-                //console.log("< j: "+j);
+            //SUMANDO TODOS LOS TIEMPOS ENTRE CADA PUNTO PARA HACER EL CALCULO 
+            let r;
+            //console.log(_arrTiempos);
+            //console.log("long: "+_arrTiempos.length);
+            while(i<_arrTiempos.length-1){
+                //console.log(_arrTiempos[i+1][1]+" <- - -> "+_arrTiempos[i][1]);
+                if(_arrTiempos[i+1][1]>_arrTiempos[i][1]){
+                    r=_arrTiempos[i+1][1]-_arrTiempos[i][1];
+                    j = j + r;
+                    //console.log("> j: "+j);
+                }else if(_arrTiempos[i+1][1]<_arrTiempos[i][1]){
+                    r = 60 - _arrTiempos[i][1];
+                    j = j + r;
+                    j = j + _arrTiempos[i+1][1];
+                    //console.log("< j: "+j);
+                }
+                //console.log("i: "+i);
+                i++;
+                
             }
-            //console.log("i: "+i);
-            i++;
+        //console.log("j: "+j);
             
-        }
-       //console.log("j: "+j);
-        
 
-        tx="00:03:45";
-    return tx ;
-    }
+            tx="00:03:45";
+            return tx ;
+        }
 }
 var coords={
     x:0,
