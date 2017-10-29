@@ -98,6 +98,7 @@ export class PcontrolComponent implements OnInit{
     y:string; //para pasarlo al objeto pcDetalle
     pCMaestroMostrar:any[]=[];//mostrar grilla de lista puntos control
     pCDetalleMostrar:any[]=[]; //mostrar grilla detalle de puntos control
+    _pCDetalleMostrar:any[]=[];
     miniLista:any[]=[];
     pCEditados : any[]=[]; // array editado PUNTOSCONTROL, PARA MANDAR A LA BD
 
@@ -930,18 +931,27 @@ export class PcontrolComponent implements OnInit{
          //BUSCANDO EL OBJETO EN EL ARRAY
             let j=0;
             let cen=1; // 1: encontrado    0: no encontrada
+
             //BUSCANDO REGISTRO A ELIMINAR DEL ARRAY Q VA A LA BD
-            while(j<this.pCArrayDetalleBD.length && cen == 1){
-                if(this.pCArrayDetalleBD[j].PuCoDeId != this._PuCoDeId){
-                    j++;
-                }else if(this.pCArrayDetalleBD[j].PuCoDeId ==  this._PuCoDeId){
-                    cen = 0;
-                    /*console.log("encontrado =D: "+ j);*/
+                while(j<this.pCArrayDetalleBD.length && cen == 1){
+                    if(this.pCArrayDetalleBD[j].PuCoDeId != this._PuCoDeId){
+                        j++;
+                    }else if(this.pCArrayDetalleBD[j].PuCoDeId ==  this._PuCoDeId){
+                        cen = 0;
+                        /*console.log("encontrado =D: "+ j);*/
+                    }
                 }
-            }
-            this.pCArrayDetalleBD.splice(j,1); //ELIMINANDO UN SOLO ELEMENTO DESDE LA POSICION J
-            /*this.mgPuntosControlDetalle(); //CARGANDO LA GRILLA PUNTOS DETALLE*/
-            this.procGetallptsctrldetbyPuCo(this.PuCoId);
+                this.pCArrayDetalleBD.splice(j,1); //ELIMINANDO UN SOLO ELEMENTO DESDE LA POSICION J
+            //BORRANDO PUNTO CONTROL DEL MAPA
+                console.log(this.overlays);
+                console.log(    (j+1)*2-1   );
+                this.overlays[(j+1)*2-1].setMap(null);
+                this.overlays[(j+1)*2-1+1].setMap(null);
+            //RECARGNADO LA LISTA DE PUNTOS (MODO EDITAR)
+            this.mgPuntosControlDetalle(this.pCArrayDetalleBD); //CARGANDO LA GRILLA PUNTOS DETALLE
+            
+            
+            //this.procGetallptsctrldetbyPuCo(this.PuCoId);
             this.displayElimRegDetalle=false;
     }
 
@@ -1002,16 +1012,17 @@ export class PcontrolComponent implements OnInit{
        Y PODER MANDAR LA NUEVA LISTA MODIFICADA*/
     /* FUNCION ASOCIADA AL BOTON DATATABLE EDITAR EN MODO LISTA PUNTOSCONTROL */
     editarDetalle(_PuCoDeId : number){
-        let i=0 /*i: variable busqueda */ ,cen=0 /*cen: variable centinela */;
+         /*i: variable busqueda */ /*cen: variable centinela */;
         this._PuCoDeId=_PuCoDeId;
         
         /* ARRAY DE PUNTOS CONTROL */
         let puntos = this.pCDetalleMostrar;
-        console.log(this.pCDetalleMostrar);
-        console.log(puntos);
+        //console.log(this.pCDetalleMostrar);
+        //console.log(puntos);
 
         /*SE PULSO EL BOTON EDITAR*/
         if(this.editando==1){   
+            let i=0 ,cen=0
            //BUSCANDO OBJETO X _PUCODEID EN EL ARRAY DEVUELTO
            while(i<puntos.length && cen==0){
                if(puntos[i].PuCoDeId != _PuCoDeId){
@@ -1021,10 +1032,10 @@ export class PcontrolComponent implements OnInit{
                }
            } 
            puntos=this.pCDetalleMostrar;
-           console.log(i);
-           console.log(puntos[i]);
+           //console.log(i);
+           //console.log(puntos[i]);
            this.pcDetalle = puntos[i];
-           console.log(this.pcDetalle);
+           //console.log(this.pcDetalle);
            this.indexPunto = i; /* INDICE DEL PUNTO DE CONTROL MODIFICADO */
            this.displayEditarPunto = true;
         
@@ -1213,8 +1224,7 @@ export class PcontrolComponent implements OnInit{
 
     /* FUNCION ASOCIADA A BOTON EDITAR(ACEPTAR) EN EL CUADRO MODAL PEQUEÑO */
     editandoRegistroDetalle(){
-        let pos;
-        pos = this.pCArrayDetalleBD[this.indexPunto].PuCoDeOrden; //POSICION ORIGINAL
+        let pos; pos = this.pCArrayDetalleBD[this.indexPunto].PuCoDeOrden; //POSICION ORIGINAL
         /* 
             this.indexPunto INDICE DEL ELEMENTO MODIFICADO
             this.pcDetalle  OBJETO CON LOS CAMPO MODIFICADOS
@@ -1235,6 +1245,7 @@ export class PcontrolComponent implements OnInit{
         this.actualizarOrdenPC(); /* ESTA POR GUSTO */
         /*this.mgPuntosControlDetalle();
         this.procGetallptsctrldetbyPuCo(this.PuCoId);*/
+        this.mgPuntosControlDetalle(this.pCArrayDetalleBD);
         this.displayEditarPunto = false;
     }
 
@@ -1255,6 +1266,8 @@ export class PcontrolComponent implements OnInit{
     
     cancelarEditandoRegistroDetalle(){
         this.displayEditarPunto = false;
+        //console.log(this.pCDetalleMostrar);
+        this.mgPuntosControlDetalle(this.pCArrayDetalleBD);
         /*this.pcDetalle.PuCoDeHora = "";
         this.pcDetalle.PuCoDeDescripcion = "";*/
         //this.pcDetalle.PuCoDeHora = "";
@@ -1530,8 +1543,8 @@ export class PcontrolComponent implements OnInit{
     mgPuntosControlDetalle(ptsCtrl:any){
         this.pCDetalleMostrar=[];//array para mostrarlo en el datatable 
         
-        console.log(this.pCArrayDetalleBD);
-        console.log(ptsCtrl);
+        //console.log(this.pCArrayDetalleBD);
+        //console.log(ptsCtrl);
 
         if(this.pCArrayDetalleBD.length==0 && ptsCtrl.length>0){
             
@@ -1543,7 +1556,7 @@ export class PcontrolComponent implements OnInit{
         }else if(this.pCArrayDetalleBD.length<ptsCtrl.length){
             ptsCtrl=this.pCArrayDetalleBD;
         }   
-        console.log(ptsCtrl);
+        //console.log(ptsCtrl);
         for(let puntoDetalle of ptsCtrl ){
             this.pCDetalleMostrar.push({
                 PuCoDeId: puntoDetalle.PuCoDeId,
@@ -1555,7 +1568,7 @@ export class PcontrolComponent implements OnInit{
                 PuCoDeOrden: puntoDetalle.PuCoDeOrden 
             });
         }
-        console.log("&&&&&&&");
+        //console.log("&&&&&&&");
     }
 
     //recuperar puntos de controldetalle por pucoID (por el ID) de esta forma no se necesita actualizar la pagina para ver el resultado

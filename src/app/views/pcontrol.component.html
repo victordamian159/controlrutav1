@@ -317,7 +317,7 @@
                 <!--POSICION EN LA TARJETA-->
                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <label class="label-control" >N°Pos:</label>
+                        <label class="label-control" >N° Posicion:</label>
                         <input class="form-control" type="text" max=40 [(ngModel)]=pcDetalle.PuCoDeOrden/>
                     </div>
                 </div>
@@ -327,9 +327,7 @@
                     <div class="form-group">
                         <label class="label-control">Nombre:</label>
                         <input class="form-control" type="text" #edNombPc="ngModel" required [(ngModel)]="pcDetalle.PuCoDeDescripcion">
-                        <div id="validation" [hidden]="!edNombPc.touched || edNombPc.valid ">
-                            Error en los datos
-                        </div>
+                        <div id="validation" [hidden]="!edNombPc.touched || edNombPc.valid "> Error en los datos</div>
                     </div>
                 </div>
 
@@ -338,9 +336,7 @@
                     <div class="form-group">
                         <label class="label-control">Tiempo(HH:MM:SS):</label>
                         <input class="form-control" type="text" #edTimePc="ngModel" required [(ngModel)]="pcDetalle.PuCoDeHora" step="1">
-                        <div id="validation" [hidden]="!edTimePc.touched || edTimePc.valid ">
-                            Error en los datos
-                        </div>
+                        <div id="validation" [hidden]="!edTimePc.touched || edTimePc.valid "> Error en los datos</div>
                     </div>
                 </div>
             </div>

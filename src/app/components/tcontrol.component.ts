@@ -717,13 +717,13 @@ export class TcontrolComponent implements OnInit{
                     PrId : Number(this._prId),
                     TaCoFecha :new Date(),
                     TaCoHoraSalida :corrigiendoHora(this.tarjeta._TaCoHoraSalida),
-                    TaCoCuota :this.tarjeta._TaCoCuota,
+                    TaCoCuota :Number(this.tarjeta._TaCoCuota),
                     UsId :this.UsId,
                     UsFechaReg :new Date(),
                     TaCoNroVuelta : this.tarjeta._TaCoNroVuelta = 1,
-                    TaCoAsignado :true,
+                    TaCoAsignado :1,
                     TiSaId:this.TiSaObj.TiSaId,
-                    TaCoTipoHoraSalida:true
+                    TaCoTipoHoraSalida:1
                 }
              
                 /*NUEVA TARJETA*/
