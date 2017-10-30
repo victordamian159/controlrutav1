@@ -8,7 +8,7 @@ import {url_empresapersona} from 'app/urls';
 
 export class EmpPerService{
     //private baseUrl1: string='http://controlbus-ronaldmam.rhcloud.com/rest/empresapersona/';
-    private baseUrl1: string='http://controlbus-controlbus.1d35.starter-us-east-1.openshiftapps.com/bus/rest/empresapersona/';
+    private baseUrl1=url_empresapersona;
     constructor(private http: Http){}
 
 /* EMPRESAPERSONA */

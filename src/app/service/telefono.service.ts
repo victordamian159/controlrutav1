@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
 import {Headers, Http, Response, RequestOptions} from '@angular/http';
 import {Observable} from 'rxjs';
+import {url_telefono} from 'app/urls'
 
 @Injectable()
 
 export class TeleMovilService{
     //private baseUrl :string ='http://controlbus-ronaldmam.rhcloud.com/rest/telefono/'; 
-    private baseUrl :string ='http://controlbus-controlbus.1d35.starter-us-east-1.openshiftapps.com/bus/rest/telefono/'; 
+    private baseUrl :string =url_telefono; 
     constructor(private http: Http){}
 
     /* GET ALL TELEFONO POR BUID */

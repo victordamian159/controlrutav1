@@ -25,6 +25,7 @@ export class distribTiempoComponent implements OnInit{
     private TiPrId:number;
     private fecha:string;
     private _prId:number;
+    private _TiPrId:number;
     private _TiSaId:number;//PARA TABLA TIEMPOPROGRAMADO Y ONROWSELECT
     private __TiSaId:number; //TIEMPO SALIDA PARA VTN CONFIRMAR
     private TiSaValor:string;
@@ -50,7 +51,7 @@ export class distribTiempoComponent implements OnInit{
     private disAsignarTimesSeparacion:boolean;
     private displayConfirmarEliminarTS:boolean;
     private displayConfirmarEditarTS:boolean;
-
+    private displayConfirmarEliminarTP:boolean;
     ngOnInit(){
         this.funcBtnSacarTiemposSalida();
 
@@ -76,6 +77,7 @@ export class distribTiempoComponent implements OnInit{
         this.disAsignarTimesSeparacion=false;
         this.displayConfirmarEditarTS=false;
         this.displayConfirmarEliminarTS=false;
+        this.displayConfirmarEliminarTP=false;
 
         this.SuEmId=0;
         this._TiSaId=0;
@@ -135,7 +137,7 @@ export class distribTiempoComponent implements OnInit{
                 getalltiempoprogramadobytisaid(tisaid:number){
                     let objtipr:any[]=[];
                     this.tiemsalidaservice.getalltiempoprogramadobytisa(tisaid).subscribe(
-                        data => {objtipr=data; this.mgtiempoprogramado(objtipr);},
+                        data => {objtipr=data; console.log(objtipr); this.mgtiempoprogramado(objtipr);},
                         err=>{this.errorMessage=err},
                         ()=>this.isLoading=false
                     );
@@ -189,7 +191,7 @@ export class distribTiempoComponent implements OnInit{
                 }
                 procSaveTimeSalida(tmpSalida:any){
                     this.tiemsalidaservice.savetiemposalida(tmpSalida).subscribe(
-                        data=>{console.log(data);},
+                        data=>{console.log(data); this.getalltiemposalidabyem(this.emID);},
                         err=>{this.errorMessage=err}
                     );
                 }
@@ -209,13 +211,15 @@ export class distribTiempoComponent implements OnInit{
                 }
                 procSaveTimeProgramado(tmpProgramado:any){
                     this.tiemsalidaservice.savetiempoprogramado(tmpProgramado).subscribe(
-                        data=>{console.log(data);},
+                        data=>{console.log(data); this.getalltiempoprogramadobytisaid(this._TiSaId);},
                         err=>{this.errorMessage=err}
                     );
                 }
                 procEliminarProgramado(TiPrId:number){
                     this.tiemsalidaservice.deletetiempoprogramado(TiPrId).subscribe(
-                        data=>{/*this.getalltiemposalidabyem(this.emID);*/},
+                        data=>{
+                                this.getalltiempoprogramadobytisaid(this._TiSaId);
+                                /*this.getalltiemposalidabyem(this.emID);*/},
                         err=>{this.errorMessage=err}
                     );
                 }
@@ -228,9 +232,14 @@ export class distribTiempoComponent implements OnInit{
             onRowTiempoSalida(event){
                 //console.log(event.data.TiSaId);
                 //console.log(event.data.TiSaValor);
+                
                 this._TiSaId=event.data.TiSaId;
+                console.log(this._TiSaId);
                 this.TiSaValor=event.data.TiSaValor;
                 this.getalltiempoprogramadobytisaid(this._TiSaId);
+            }
+            onRowTiempoProgramado(event){
+                console.log(event.data);
             }
         //GUARDAR - CANCELAR
             //TIEMPO SALIDA
@@ -285,19 +294,23 @@ export class distribTiempoComponent implements OnInit{
                 }
             }
             mgtiemposalida(arrtmpsalido=[]){
+                
+                let arrmgtmpsal:any[]=[];
                 this.arrmgtmpsal=[];
                 
                 for(let tmpsal of arrtmpsalido){
-                    this.arrmgtmpsal.push({
+                    arrmgtmpsal.push({
                         nro:0,
                         TiSaId:tmpsal.TiSaId,
                         TiSaNombre:tmpsal.TiSaNombre,
                         TiSaValor:_hora(tmpsal.TiSaValor)
                     });
                 }
-                for(let i=0; i<this.arrmgtmpsal.length;i++){
-                    this.arrmgtmpsal[i].nro=i+1;
+                for(let i=0; i<arrmgtmpsal.length;i++){
+                    arrmgtmpsal[i].nro=i+1;
                 }
+                console.log(arrmgtmpsal);
+                this.arrmgtmpsal=arrmgtmpsal;
             }
             mgtiempoprogramado(arrmgtmpprog=[]){
                 let arrprog:any[]=[];
@@ -402,49 +415,69 @@ export class distribTiempoComponent implements OnInit{
             }
         //BTN DATATABLE
             //TIEMPOSALIDA
-                editartiemposalida(TiSaId:number){
-                    //console.log(TiSaId);
-                    this.__TiSaId=TiSaId;
-                    this.displayConfirmarEditarTS=true;
-                    this.mensajeconfirmar="Desea editar el registro?";
-                }
+                    editartiemposalida(TiSaId:number){
+                        //console.log(TiSaId);
+                        this.__TiSaId=TiSaId;
+                        this.displayConfirmarEditarTS=true;
+                        this.mensajeconfirmar="Desea editar el tiempo de salida?";
+                    }
 
-                eliminartiemposalida(TiSaId:number){
-                    //console.log(TiSaId);
-                    this.procEliminarSalida(TiSaId);
-                }
+                    eliminartiemposalida(TiSaId:number){
+                        //console.log(TiSaId);
+                        this.__TiSaId=TiSaId;
+                        this.displayConfirmarEliminarTS=true;
+                        this.mensajeconfirmar="Desea eliminar el tiempo de salida?";
+                    }
                 
                 //CONFIRMAR
                     //EDITAR
-                    acepEditarTS(){
-                        this.disSepacionTimes=true;
-                        this.gettiemposalidabyid(this.__TiSaId);
-                        this.displayConfirmarEditarTS=false;
-                        this.mensajeconfirmar="";
-                    }
-                    canEditarTS(){
-                        this.__TiSaId=null;
-                        this.displayConfirmarEditarTS=false;
-                        this.mensajeconfirmar="";
-                    }
+                        acepEditarTS(){
+                            this.disSepacionTimes=true;
+                            this.gettiemposalidabyid(this.__TiSaId);
+                            this.displayConfirmarEditarTS=false;
+                            this.mensajeconfirmar="";
+                            this.__TiSaId=null;
+                        }
+                        canEditarTS(){
+                            this.__TiSaId=null;
+                            this.displayConfirmarEditarTS=false;
+                            this.mensajeconfirmar="";
+                        }
                     
                     //ELIMINAR
-                    canEliminarTS(){
-                        
-                    }
-                    acepEliminarTS(){
-                        
-                    }
+                        canEliminarTS(){
+                            this.__TiSaId=null;
+                            this.displayConfirmarEliminarTS=false;
+                            this.mensajeconfirmar="";
+                        }
+                        acepEliminarTS(){
+                            this.displayConfirmarEliminarTS=false;
+                            this.mensajeconfirmar="";
+                            this.procEliminarSalida(this.__TiSaId);
+                            this.__TiSaId=null;
+                        }
 
             //TIEMPOREPARTO
                 eliminartiempoprogramado(TiPrId:number){
                     //console.log(TiPrId);
-                    this.procEliminarProgramado(TiPrId);
-                    this.getalltiempoprogramadobytisaid(this._TiSaId);
+                    this._TiPrId=TiPrId;
+                    this.displayConfirmarEliminarTP=true;
+                    this.mensajeconfirmar="Desea eliminar el tiempo programado?";
                 }
 
                 //CONFIRMAR
-
+                    acepEliminarTP(){
+                        console.log(this._TiPrId);
+                        this.displayConfirmarEliminarTP=false;
+                        this.mensajeconfirmar="";
+                        this.procEliminarProgramado(this._TiPrId);
+                        this._TiPrId=null;
+                    }
+                    canEliminarTP(){
+                        this.displayConfirmarEliminarTP=false;
+                        this.mensajeconfirmar="";
+                        this._TiPrId=null;
+                    }
 
         //FUNCIONES BTNS FORM PRINCIPAL
             /*btnAsignarATiempo(){

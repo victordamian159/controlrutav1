@@ -8,13 +8,13 @@
         <br>
         <div class="row">
             <!--BOTON-->
-            <div class="col-xl-3 col-md-4 col-sm-12 col-xs-12">
+            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                 <button class="btnFormPrin" pButton label="Tiempo Separacion" 
                        (click)="btnTSeparacion();" [disabled]="SuEmId==0"></button>
             </div>
 
             <!--SUBEMPRESAS-->
-            <div class="col-xl-3 col-md-4 col-sm-12 col-xs-12">
+            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                 <select class="form-control" [(ngModel)]="SuEmId" (change)="funcCboSubEmp($event)">
                     <!--<option *ngFor="let subemp of arrSubEmps" (change)="funcCboSubEmp()" [ngValue]="subemp">-->
                     <option *ngFor="let subemp of arrSubEmps"  [value]="subemp.SuEmId">
@@ -23,10 +23,10 @@
                 </select>
             </div>
 
-            <!--FECHA ASIGNACION(TIENE Q SER ACTUAL)-->
+            <!--FECHA ASIGNACION(TIENE Q SER ACTUAL)
             <div class="col-xl-3 col-md-4 col-sm-12 col-xs-12">
                 <input class="form-control" type="date" [(ngModel)]="fechaAsigna">
-            </div>
+            </div>-->
         </div>
         <br>
         <!--TABLA-->
@@ -55,11 +55,11 @@
 
         <!--BOTONES-->
         <div class="row">
-            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                 <input class="form-control" placeholder="Buscar...">
             </div>
             
-            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                 <button class="btnFormPrin" pButton label="Agregar Bus a Tiempos" [disabled]="_TiSaId==0" (click)="funcBtnAsignarATiempos();"></button>
             </div>
             <!--
@@ -67,7 +67,7 @@
                 <button class="btnFormPrin" pButton label="Asignar Buses" (click)="btnAsignarATiempo();"></button>
             </div>
             -->
-            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                 <button class="btnFormPrin" pButton label="Re-Distribucion Tiempo"></button>
             </div>
         </div>
@@ -76,7 +76,7 @@
         <!--TITULO-->
         <div class="row">
             <div class="table-responsive">
-                <p-dataTable [value]="arrmgtmpprog" emptyMessage="No hay registro" scrollable="true" scrollWidth="auto" selectionMode="single" [(selection)]="selectRowtb1">
+                <p-dataTable [value]="arrmgtmpprog" emptyMessage="No hay registro" scrollable="true" scrollWidth="auto" selectionMode="single" (onRowSelect)="onRowTiempoProgramado($event)" [(selection)]="selectRowtb1">
                     <p-column styleClass="col-button" [style]="{'width':'3em','height':'3em'}">
                         <template let-col let-row="rowData" pTemplate="body">
                             <button type="button" pButton id="btnTable" (click)="eliminartiempoprogramado(row.TiPrId)" icon="fa-trash"></button>
@@ -298,7 +298,7 @@
         </p-dialog>
 
     <!--VENTANAS DE VALIDACION-->
-        <!--MODAL CONFIRMAR ELIMINAR REG-->
+        <!--MODAL CONFIRMAR ELIMINAR REG TIEMPOSALIDA-->
         <p-dialog [(visible)] = "displayConfirmarEliminarTS" [resizable]="false" modal="modal" width="100%" [closable]=false>
             {{mensajeconfirmar}}
             <div class=" btn_Modal row ">
@@ -311,7 +311,7 @@
             </div>
         </p-dialog>
 
-        <!--MODAL CONFIRMAR EDITAR REG-->
+        <!--MODAL CONFIRMAR EDITAR REG  TIEMPOSALIDA-->
         <p-dialog [(visible)] = "displayConfirmarEditarTS" [resizable]="false" modal="modal" width="100%" [closable]=false>
             {{mensajeconfirmar}}
             <div class=" btn_Modal row ">
@@ -320,6 +320,19 @@
                 </div>
                 <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
                     <button class="btn_modal" type="text" pButton icon="fa-trash-o" (click)="acepEditarTS" label = "Editar"></button>
+                </div>
+            </div>
+        </p-dialog>
+
+        <!--MODAL CONFIRMAR ELIMINAR REG TIEMPOPROGRAMADO-->
+        <p-dialog [(visible)] = "displayConfirmarEliminarTP" [resizable]="false" modal="modal" width="100%" [closable]=false>
+            {{mensajeconfirmar}}
+            <div class=" btn_Modal row ">
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                    <button class="btn_modal" type="text" pButton icon="fa-close" (click)="canEliminarTP()" label="Cancelar"></button>
+                </div>
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                    <button class="btn_modal" type="text" pButton icon="fa-trash-o" (click)="acepEliminarTP()" label = "Eliminar"></button>
                 </div>
             </div>
         </p-dialog>

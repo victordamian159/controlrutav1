@@ -277,15 +277,7 @@
                                             </div>
                                         </div>
                                         
-                                        <!--BOTONES VENTANA-->
-                                        <div class="btn_Modal row " >
-                                            <div class="col-xl-6 col-md-6 col-sm-6 col-sm-6">
-                                                <button class="btn_modal" pButton icon="fa-plus"  label="Agregar" (click)="guardarPuntoControlDetalle(); nombpc.reset(); timepc.reset();" [disabled]="!nombpc.valid || !timepc.valid "></button>
-                                            </div>
-                                            <div class="col-xl-6 col-md-6 col-sm-6 col-sm-6">    
-                                                <button class="btn_modal" pButton icon="fa-close" label="Cancelar" (click)="cancelarPuntoControlDetalle(); nombpc.reset(); timepc.reset();"></button>
-                                            </div>
-                                        </div>
+                                        
 
                                     </div>
 
@@ -306,6 +298,15 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <!--BOTONES VENTANA-->
+                <div class="btn_Modal row " >
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-sm-6">
+                        <button class="btn_modal" pButton icon="fa-plus"  label="Agregar" (click)="guardarPuntoControlDetalle(); nombpc.reset(); timepc.reset();" [disabled]="!nombpc.valid || !timepc.valid "></button>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-sm-6">    
+                        <button class="btn_modal" pButton icon="fa-close" label="Cancelar" (click)="cancelarPuntoControlDetalle(); nombpc.reset(); timepc.reset();"></button>
                     </div>
                 </div>
             </div>
