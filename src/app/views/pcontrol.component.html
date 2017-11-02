@@ -2,74 +2,74 @@
     <!--TITULO-->
     <div class="titulo">Puntos de Control</div>
 
-    <!--BUSQUEDA + RUTAS-->
-    <div class="row ">
-        <!--COMBO RUTAS-->
-        <div class="col-xl-2 col-md-4 col-sm-4 col-xs-12">
-            <select class="form-control" required [(ngModel)]="_ruid" (change)="_rutaid($event)" #rutaid="ngModel">
-                <option *ngFor="let ruta of rutas" [value]="ruta.RuId">{{ruta.RuDescripcion}}</option>
-            </select>
-        </div>
-        
-        <!--BUSQUEDA SOBRE DATATABLE-->
-        <div class="col-xl-2 col-md-4 col-sm-4 col-xs-12">
-            <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
-        </div>
-
-        <!--BOTON NUEVO REGISTRO-->
-        <div class="col-xl-2 col-md-4 col-sm-4 col-xs-12">
-            <button id="btnNuevo" (click)="newPuntoControlMaestro()" [disabled]="_ruid==0" pButton icon="fa-file-text-o" label="Nuevos Puntos"></button>
-        </div>
-
-    </div>
-
     <!--CONTENIDO-->
     <div class="row">
         <!--TABLAS-->
-        <div class="col-xl-6 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-xl-4 col-md-12 col-sm-12 col-xs-12">
+            <!--BUSQUEDA + RUTAS-->
+            <div class="row ">
+                <!--COMBO RUTAS-->
+                <div class="col-xl-6 col-md-4 col-sm-4 col-xs-12">
+                    <select class="form-control" required [(ngModel)]="_ruid" (change)="_rutaid($event)" #rutaid="ngModel">
+                        <option *ngFor="let ruta of rutas" [value]="ruta.RuId">{{ruta.RuDescripcion}}</option>
+                    </select>
+                </div>
+                
+                <!--BUSQUEDA SOBRE DATATABLE-->
+                <div class="col-xl-6 col-md-4 col-sm-4 col-xs-12">
+                    <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+                </div>
+
+                <!--BOTON NUEVO REGISTRO-->
+                <div class="col-xl-12 col-md-4 col-sm-4 col-xs-12">
+                    <button id="btnNuevo" (click)="newPuntoControlMaestro()" [disabled]="_ruid==0" pButton icon="fa-file-text-o" label="Nuevos Puntos"></button>
+                </div>
+
+            </div>
+
             <!--TABLA CABECERA-->
             <div class="row">
-                <div class="table table-responsive">
-                    <!--<p-dataTable [value]="pCMaestroMostrar" [rows]="5" [paginator]="true" [pageLinks]="2" [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" selectionMode="single" 
-                    emptyMessage="Lista vacia"  [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">     -->
-                    <p-dataTable [value]="pCMaestroMostrar"  [globalFilter]="filtroGlobal" scrollable="true" scrollHeight="400px" scrollWidth="100%" selectionMode="single" 
-                    emptyMessage="Lista vacia" (onRowSelect)="onRowSelectMaestro($event)"> 
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="table table-responsive">
+                        <!--<p-dataTable [value]="pCMaestroMostrar" [rows]="5" [paginator]="true" [pageLinks]="2" [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" selectionMode="single" 
+                        emptyMessage="Lista vacia"  [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">     -->
+                        <p-dataTable [value]="pCMaestroMostrar"  [globalFilter]="filtroGlobal" scrollable="true" scrollHeight="400px" scrollWidth="100%" selectionMode="single" 
+                        emptyMessage="Lista vacia" (onRowSelect)="onRowSelectMaestro($event)"> 
 
-                        <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                            <template let-col let-pcMostrar="rowData" pTemplate="body">
-                                <button id="btnTable" pButton (click)="editarMaestro(pcMostrar.PuCoId)" icon="fa-pencil-square-o" > </button>                  
-                                <button id="btnTable" pButton (click)="eliminarMaestro(pcMostrar.PuCoId)" icon="fa-trash">  </button>
-                                <button id="btnTable" pButton (click)="tablaDetalle(pcMostrar.PuCoId)" icon="fa-folder-open">  </button>
-                            </template>
-                        </p-column>
-                        <p-column field="nro"             header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
-                        <p-column field="PuCoDescripcion" header="Descripcion" [style]="{'width':'18em'}"></p-column>
-                        <p-column field="PuCoTiempoBus" header="Tiempo" [style]="{'width':'5em','text-align':'center'}" ></p-column>
-                        <p-column field="PuCoClase"     header="Clase" [style]="{'width':'10em','text-align':'center'}"></p-column>            
-                    </p-dataTable>
+                            <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                                <template let-col let-pcMostrar="rowData" pTemplate="body">
+                                    <button id="btnTable" pButton (click)="editarMaestro(pcMostrar.PuCoId)" icon="fa-pencil-square-o" > </button>                  
+                                    <button id="btnTable" pButton (click)="eliminarMaestro(pcMostrar.PuCoId)" icon="fa-trash">  </button>
+                                    <button id="btnTable" pButton (click)="tablaDetalle(pcMostrar.PuCoId)" icon="fa-folder-open">  </button>
+                                </template>
+                            </p-column>
+                            <p-column field="nro"             header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
+                            <p-column field="PuCoDescripcion" header="Descripcion" [style]="{'width':'12em'}"></p-column>
+                            <p-column field="PuCoTiempoBus" header="Tiempo" [style]="{'width':'5em','text-align':'center'}" ></p-column>
+                            <p-column field="PuCoClase"     header="Clase" [style]="{'width':'8em','text-align':'center'}"></p-column>            
+                        </p-dataTable>
+                    </div>
                 </div>
             </div>        
         </div>
 
         <!--GRAFICOS -->
-        <div class="col-xl-6 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-xl-8 col-md-12 col-sm-12 col-xs-12">
             <!--MAPA-->
-            <div class="row ">
-                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+            
                     <div id="mapa">
-                        <p-growl [value]="msgs"></p-growl>
+                        <!--<p-growl [value]="msgs"></p-growl>-->
                         <p-gmap 
                             #gmap
                             [options]="options" 
                             [overlays]="overlays"
-                            [style]="{'width':'100%','height':'380px'}" 
+                            [style]="{'width':'100%','height':'440px'}" 
                             (onMapClick)="handleMapClick($event)"
                             (onOverlayClick)="handleOverClick($event)"
                             (onOverlayDragEnd)="handleDragEnd($event)">
                         </p-gmap>   
                     </div>
-                </div>
-            </div>
+            
 
             <!--BOTONES DEL MAPA-->
             <div class="row">
@@ -353,7 +353,7 @@
         </p-dialog>
 
 
-    <!--VENTANAS MODALES DE CONFIRMACION-->
+<!--VENTANAS MODALES DE CONFIRMACION-->
 
         <!--VENTANA MODALES DE CONFIRMACION ELIMINAR EDITAR ACEPTAR--> 
             <p-dialog [(visible)]="displayElimRegCabecera" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">

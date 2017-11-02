@@ -36,6 +36,21 @@
 .btn_Modal{
     margin-top: 30px;
 }
+
+#tablemodal1{
+    padding-top:20px;
+    height: 300px;
+}
+
 col-xl-12{
     padding: 0;
+}
+
+#valido{
+    position: absolute;
+    color:green;
+}
+#alerta{
+    position: absolute;
+    color:red;
 }

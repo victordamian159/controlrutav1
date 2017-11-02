@@ -1,6 +1,7 @@
 <div *ngIf="ClassGlobal.localstorageItems()==true">
 
     <nav class="navbar navbar-toggleable-md navbar-inverse"  >
+            
         <!--BARRA BOTON PEQUEÑO RESPONSIVE-->
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" 
                 aria-controls="navbarNavDropdown"  aria-expanded="false" aria-label="Toggle navigation">
@@ -12,7 +13,6 @@
             <a class="navbar-brand">
                 <!--a class="navbar-brand" href="#"><img id="icono" src="./src/icons/Aviation_63-512.png" width="30" height="30" alt="">-->
             </a> 
-        
 
         <!--LISTA NAVBAR-->
         <div class="navbar-collapse collapse" id="navbarNavDropdown">
@@ -98,16 +98,14 @@
                 <a href="#" routerLink="/login">Cerrar Sesion</a>
             </li>
         </div>
-        
-        
-        
-        
+
     </nav>
 
  </div>
 
 <!--{{varGlobal.localstorageItems()}}-->
 <!--<alert></alert>-->
+
 <router-outlet></router-outlet>
 
 <footer >

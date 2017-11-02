@@ -1,5 +1,6 @@
 <!--PRINCIPAL TABLAS-->
 <div class="contenedor">
+  
     <!--TITUTO-->
     <div id="titulo">Tabla Programaciones</div>
     
@@ -15,29 +16,31 @@
 
     <!--TABLA PROGRAMACION MAESTRO-->
     <div class="row">
-        <div class="table table-responsive">
-            <!--
-            <p-dataTable [value]="programacionMaestroArrayHTML" [rows]="5" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,15,20]" [globalFilter]="filtroGlobal"
-                scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">
-            -->
-            <p-dataTable [value]="programacionMaestroArrayHTML"  [globalFilter]="filtroGlobal" scrollable="true" scrollHeight="400px" scrollWidth="100%" selectionMode="single" 
-                emptyMessage="Lista vacia" (onRowSelect)="onRowSelectMaestro($event)"> 
-                <!--CAMPOS DE LA TABLA-->
-                <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                    <!--<template pTempalte="header"><button  pButton icon="fa-refresh">  </button></template>-->
-                    <template let-col let-progrRowMaestro="rowData" pTemplate="body">
-                        <button  pButton id="btnTable" (click)="editarCabecera(progrRowMaestro)" icon="fa-pencil-square-o" ></button>
-                        <button  pButton id="btnTable" (click)="eliminarRegistroGrilla(progrRowMaestro.prId)" icon="fa-trash" ></button>
-                    </template>
-                </p-column>
-                <p-column field="nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
-                <p-column field="tipo" header="Tipo"  [style]="{'width':'8em','text-align':'center'}"></p-column>
-                <p-column field="prDescripcion" header="Nombre"  [style]="{'width':'14em','text-align':'center'}"></p-column>
-                <p-column field="PrCantidadBuses" header="Cant."  [style]="{'width':'4em','text-align':'center'}"></p-column>
-                <p-column field="PrFechaInicio" header="Desde" [style]="{'width':'8em','text-align':'center'}"></p-column>
-                <p-column field="PrFechaFin" header="Hasta" [style]="{'width':'8em','text-align':'center'}"></p-column>
-                <p-column field="dias" header="Dias"  [style]="{'width':'4em','text-align':'center'}"></p-column>
-            </p-dataTable>
+        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="table table-responsive">
+                <!--
+                <p-dataTable [value]="programacionMaestroArrayHTML" [rows]="5" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,15,20]" [globalFilter]="filtroGlobal"
+                    scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">
+                -->
+                <p-dataTable [value]="programacionMaestroArrayHTML"  [globalFilter]="filtroGlobal" scrollable="true" scrollHeight="400px" scrollWidth="100%" selectionMode="single" 
+                    emptyMessage="Lista vacia" (onRowSelect)="onRowSelectMaestro($event)"> 
+                    <!--CAMPOS DE LA TABLA-->
+                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                        <!--<template pTempalte="header"><button  pButton icon="fa-refresh">  </button></template>-->
+                        <template let-col let-progrRowMaestro="rowData" pTemplate="body">
+                            <button  pButton id="btnTable" (click)="editarCabecera(progrRowMaestro)" icon="fa-pencil-square-o" ></button>
+                            <button  pButton id="btnTable" (click)="eliminarRegistroGrilla(progrRowMaestro.prId)" icon="fa-trash" ></button>
+                        </template>
+                    </p-column>
+                    <p-column field="nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
+                    <p-column field="tipo" header="Tipo"  [style]="{'width':'8em','text-align':'center'}"></p-column>
+                    <p-column field="prDescripcion" header="Nombre"  [style]="{'width':'14em','text-align':'center'}"></p-column>
+                    <p-column field="PrCantidadBuses" header="Cant."  [style]="{'width':'4em','text-align':'center'}"></p-column>
+                    <p-column field="PrFechaInicio" header="Desde" [style]="{'width':'8em','text-align':'center'}"></p-column>
+                    <p-column field="PrFechaFin" header="Hasta" [style]="{'width':'8em','text-align':'center'}"></p-column>
+                    <p-column field="dias" header="Dias"  [style]="{'width':'4em','text-align':'center'}"></p-column>
+                </p-dataTable>
+            </div>
         </div>
     </div>
     
@@ -325,13 +328,23 @@
 
         <!--MODAL ACEPTAR NUEVA PROGRAMACION (CONFIRMAR)-->
         <p-dialog [(visible)]="displayAceptarProgNueva" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
-            <p>{{mensaje}}</p>
+            <div *ngIf="lengthProgDet==0">
+                <p>{{mensajeEspera}}</p>
+            </div>
+            <div *ngIf="lengthProgDet>0">
+                <p>{{mensaje}}</p>
+            </div>
+            
             <div class="btn_Modal row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                    <button class="btn_modal"  pButton (click)="aceptarNuevaProg()" label="Aceptar"></button>
+                    <button [hidden]="lengthProgDet==0" class="btn_modal"  pButton (click)="aceptarNuevaProg()" label="Aceptar"></button>
                 </div>
             </div>
         </p-dialog>
+
+        
+        
+        
 
         <!--ERROR AL INGRESAR DATOS 1ERA VENTANA MODAL-->
         <p-dialog [(visible)]="displayErrorDatos" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">

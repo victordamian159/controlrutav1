@@ -46,7 +46,7 @@ export class ProgComponent implements OnInit{
         private isLoading: boolean = false;  
         private _progrMaestro:any; /* SALVA OBJETO PROGCABECERA DE GETPROGRAMACIONBYID() */
         private progDescripcion:string; /* PARA EDITAR PROGRAMACION */
-        
+        private lengthProgDet:number;
         //objeto maestro para Mandar al rest
         private objProgVentanaUno : any; // objeto para almacenar datos 1era ventana modal para mandarlo o borrar del sistema al cancelar o guardar
         //objeto detalle para mandar al rest
@@ -64,6 +64,7 @@ export class ProgComponent implements OnInit{
         private nroDiasFilaSelect: number;
         private titleNuevoProgPrimerModal:string;  
         private mensaje:string;     //MENSAJE CONFIRMACION MODAL 
+        private mensajeEspera:string;
         private resBusUnidades:string; /* PARA EL FORMULARIO DE NUEVA PROGRAMACION */
         private modEdit:boolean; /* modEdit=1: editando registro  modEdit=0: no se esta editando registro */
     /* ARRAYS */
@@ -103,6 +104,7 @@ export class ProgComponent implements OnInit{
         private displayConfirmar: boolean = false; /* CONFIRMAR ELIMINAR REG PROGRAMACION */
         private displayAvisoNoPuedeBorrarProg:boolean=false;
         private displayAceptarProgNueva : boolean = false;
+        private displayIniciandoProgramacion:boolean=false;
         private displayErrorDatos : boolean = false; // PRIMERA VENTANA MODAL PROGRAMACION
         private displayErrorTablaProgramacion : boolean=false; // ERROR EN LA TABLA DE PROGRAMACION
         private displayFaltanPlacas : boolean = false;
@@ -119,6 +121,7 @@ export class ProgComponent implements OnInit{
     constructor(private programacionService: ProgramacionService, private placasservice: PlacasService,public ClassGlobal:GlobalVars){
                     this.emid=this.ClassGlobal.GetEmId();
                     this.userid=this.ClassGlobal.GetUsId();
+                    this.lengthProgDet=0;
                     this.anio=0;
                     this.progMaestro.EmId = 1; /* ELIMINAR ESTO */
                     this._tipoProg =[
@@ -228,7 +231,14 @@ export class ProgComponent implements OnInit{
                 this.programacionService.getAllProgramacionDetalleByPrId(_prid).subscribe(
                     data => {
                         this.progBDDetalle = data; 
-                        console.log(this.progBDDetalle);
+                        this.lengthProgDet=this.progBDDetalle.length;
+
+                        if(this.lengthProgDet!=0){
+                            this.mensaje="Se Genero Correctamente La Programacion";
+                        }else if(this.lengthProgDet==0){
+                            this.mensaje="Se encontro un error, elimine y vuelva a generarlo";
+                            this.lengthProgDet=1;
+                        }
                     },
                     err => {this.errorMessage=err},
                     () => this.isLoading=false
@@ -730,12 +740,22 @@ export class ProgComponent implements OnInit{
                 });  
             } 
 
+            this.displayAceptarProgNueva= true; 
+            this.mensajeEspera="Espere un momento...";
+
             //guardando en el rest Programacion detalle   MANDANDO A LA BD
             this.programacionService.saveProgramacionDetalle(this.programacionArrayDetalleBD,this.progMaestro.EmId,this.progMaestro.PrId,this.progMaestro.PrAleatorio)
                 .subscribe( 
-                    realizar => {}, 
+                    realizar => { 
+                            this.getallprogramaciondetallebyprid(this.progMaestro.PrId);
+                            
+                        }, 
                     err => {this.errorMessage = err},
-                    () =>{ this.mensaje="Se Genero Correctamente La Programacion"; this.displayAceptarProgNueva=true; }
+                    () =>{  this.lengthProgDet=0;
+                            //this.mensaje="Se Genero Correctamente La Programacion";
+                            //this.displayIniciandoProgramacion=false;
+                            //this.displayAceptarProgNueva= true; 
+                         }
             );
             
             this.ordenSorteo=[];

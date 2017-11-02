@@ -389,7 +389,7 @@ export class TcontrolComponent implements OnInit{
             this.tcontrolservice.newTarjetaControl() .subscribe(
                     data =>{ 
                                 this._tarjeta=data;
-                                console.log(this._tarjeta);
+                                //console.log(this._tarjeta);
                                 this.tarjeta={
                                     _TaCoId : this._tarjeta.TaCoId,
                                     
@@ -715,7 +715,7 @@ export class TcontrolComponent implements OnInit{
                     RuId : Number(this._ruId),
                     BuId :this._BuId,
                     PrId : Number(this._prId),
-                    TaCoFecha :new Date(),
+                    TaCoFecha :this.tarjeta._TaCoFecha,
                     TaCoHoraSalida :corrigiendoHora(this.tarjeta._TaCoHoraSalida),
                     TaCoCuota :Number(this.tarjeta._TaCoCuota),
                     UsId :this.UsId,
@@ -769,7 +769,10 @@ export class TcontrolComponent implements OnInit{
                     TaCoCuota :this.tarjeta._TaCoCuota,
                     UsId :this.UsId,
                     UsFechaReg :new Date(), /* VER SI ES NECESARIO QUE SE ACTUALICE :s */ 
-                    TaCoNroVuelta : this.tarjeta._TaCoNroVuelta = 1
+                    TaCoNroVuelta : this.tarjeta._TaCoNroVuelta = 1,
+                    TaCoAsignado :1,
+                    TiSaId:this.TiSaObj.TiSaId,
+                    TaCoTipoHoraSalida:1
                 }
 
                 /* CALCULANDO LAS HORA DE SALIDA */
@@ -777,10 +780,10 @@ export class TcontrolComponent implements OnInit{
                 let tvuelta=corrigiendoHoraString(this.tVueltaBus);
                 /*let tvuelta="01:59:59";*/
                 let timeInter=corrigiendoHoraString(this.timeInter);
-                console.log(tvuelta);
+                //console.log(tvuelta);
 
                 arrHSalida=this.calHorasSalida(tsalida,tvuelta,timeInter, this.nroTarjetas).slice(0);
-                console.log(arrHSalida);
+                //console.log(arrHSalida);
 
                 /* CARGANDO ARRAY DE OBJETOS */ 
                 for(let i=0; i< this.nroTarjetas; i++){
@@ -796,6 +799,10 @@ export class TcontrolComponent implements OnInit{
                         TaCoNroVuelta:_tarjeta.TaCoNroVuelta,
                         UsFechaReg:_tarjeta.UsFechaReg,
                         UsId:_tarjeta.UsId,
+
+                        aCoAsignado :_tarjeta.aCoAsignado,
+                        TiSaId:_tarjeta.TiSaId,
+                        TaCoTipoHoraSalida:_tarjeta.TaCoTipoHoraSalida
                     });
                 }
                 
@@ -805,7 +812,7 @@ export class TcontrolComponent implements OnInit{
 
                 /* PROCEDURE ASIGNAR TARJETA (RESIVE UN ARRAY, NORMAL FUNCIONA EN CASO DE UN SOLO OBJETO)) */
                 progUpdate ={ PrDeId : this._prDeId,  PrDeAsignadoTarjeta : 1}  /*  */ 
-                console.log(progUpdate);
+                //console.log(progUpdate);
                 /*console.log(arrObj); 
                 this.displayAsigMultiTarj=false;*/
                 
@@ -820,10 +827,6 @@ export class TcontrolComponent implements OnInit{
                         err => {this.errorMessage=err}
                     );
                 }
-                
-                
-                
-                
 
             }
 

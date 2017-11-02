@@ -31,18 +31,20 @@
         <br>
         <!--TABLA-->
         <div class="row">
-            <div class="table-responsive">
-                <p-dataTable [value]="arrmgtmpsal" emptyMessage="No hay registro" scrollable="true" scrollWidth="auto" selectionMode="single" (onRowSelect)="onRowTiempoSalida($event)" [(selection)]="selectRowtb1">
-                    <p-column styleClass="col-button" [style]="{'width':'3em','height':'3em'}">
-                        <template let-col let-row="rowData" pTemplate="body">
-                            <button type="button" pButton id="btnTable" (click)="editartiemposalida(row.TiSaId)" icon="fa-pencil-square-o"></button>
-                            <button type="button" pButton id="btnTable" (click)="eliminartiemposalida(row.TiSaId)" icon="fa-trash"></button>
-                        </template>
-                    </p-column>
-                    <p-column field="nro" header="N°" [style]="{'width':'3em'}"  ></p-column>
-                    <p-column field="TiSaNombre" header="Nombre" [style]="{'width':'8em'}"  ></p-column>
-                    <p-column field="TiSaValor" header="Valor" [style]="{'width':'8em'}"  ></p-column>
-                </p-dataTable>
+            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="table-responsive">
+                    <p-dataTable [value]="arrmgtmpsal" emptyMessage="No hay registro" scrollable="true" scrollWidth="auto" selectionMode="single" (onRowSelect)="onRowTiempoSalida($event)" [(selection)]="selectRowtb1">
+                        <p-column styleClass="col-button" [style]="{'width':'3em','height':'3em'}">
+                            <template let-col let-row="rowData" pTemplate="body">
+                                <button type="button" pButton id="btnTable" (click)="editartiemposalida(row.TiSaId)" icon="fa-pencil-square-o"></button>
+                                <button type="button" pButton id="btnTable" (click)="eliminartiemposalida(row.TiSaId)" icon="fa-trash"></button>
+                            </template>
+                        </p-column>
+                        <p-column field="nro" header="N°" [style]="{'width':'3em'}"  ></p-column>
+                        <p-column field="TiSaNombre" header="Nombre" [style]="{'width':'8em'}"  ></p-column>
+                        <p-column field="TiSaValor" header="Valor" [style]="{'width':'8em'}"  ></p-column>
+                    </p-dataTable>
+                </div>
             </div>
         </div>
     <br><br>
@@ -75,18 +77,20 @@
 
         <!--TITULO-->
         <div class="row">
-            <div class="table-responsive">
-                <p-dataTable [value]="arrmgtmpprog" emptyMessage="No hay registro" scrollable="true" scrollWidth="auto" selectionMode="single" (onRowSelect)="onRowTiempoProgramado($event)" [(selection)]="selectRowtb1">
-                    <p-column styleClass="col-button" [style]="{'width':'3em','height':'3em'}">
-                        <template let-col let-row="rowData" pTemplate="body">
-                            <button type="button" pButton id="btnTable" (click)="eliminartiempoprogramado(row.TiPrId)" icon="fa-trash"></button>
-                            <!--<button type="button" pButton id="btnTable" (click)="eliminartiemposalida(row.TiSaId)" icon="fa-trash"></button>-->
-                        </template>
-                    </p-column>
-                    <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}"  ></p-column>
-                    <p-column field="BuPlaca" header="Placa" [style]="{'width':'8em','text-align':'center'}"  ></p-column>
-                    <p-column field="BuDescripcion" header="Descripcion" [style]="{'width':'8em'}"></p-column>
-                </p-dataTable>
+            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="table-responsive">
+                    <p-dataTable [value]="arrmgtmpprog" emptyMessage="No hay registro" scrollable="true" scrollWidth="auto" selectionMode="single" (onRowSelect)="onRowTiempoProgramado($event)" [(selection)]="selectRowtb1">
+                        <p-column styleClass="col-button" [style]="{'width':'3em','height':'3em'}">
+                            <template let-col let-row="rowData" pTemplate="body">
+                                <button type="button" pButton id="btnTable" (click)="eliminartiempoprogramado(row.TiPrId)" icon="fa-trash"></button>
+                                <!--<button type="button" pButton id="btnTable" (click)="eliminartiemposalida(row.TiSaId)" icon="fa-trash"></button>-->
+                            </template>
+                        </p-column>
+                        <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}"  ></p-column>
+                        <p-column field="BuPlaca" header="Placa" [style]="{'width':'8em','text-align':'center'}"  ></p-column>
+                        <p-column field="BuDescripcion" header="Descripcion" [style]="{'width':'8em'}"></p-column>
+                    </p-dataTable>
+                </div>
             </div>
         </div>
 
@@ -232,12 +236,16 @@
         </p-dialog>
 
         <!--ASIGNAR A TIEMPO SEPARACION-->
-        <p-dialog header="Asignar a Tiempo de Separacion" [resizable]="false" [(visible)]="disAsignarTimesSeparacion" modal="modal" width="100%" height="100%" [closable]= false>
+        <p-dialog [resizable]="false" [(visible)]="disAsignarTimesSeparacion" modal="modal" width="100%" height="100%" [closable]= false>
+            <p-header>
+                <!--<div>Asignar a Tiempo de Separacion</div>-->
+                <label>Asignar con {{TiSaValor}}</label>
+            </p-header>
             <div class="row">
                 <div class="cont_modal">
                     <div class="container">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            
+                            <!--BOTONES FECHA PROGRAMACIONES-->
                             <div class="row">
                                 <!--PROGRAMACION-->
                                 <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
@@ -247,6 +255,12 @@
                                                 {{prog.prDescripcion}}
                                             </option>
                                         </select> 
+                                        <div *ngIf="arrprogfecha.length!=0" id="valido">
+                                            {{msjEtiquetaProg}}
+                                        </div>
+                                        <div *ngIf="arrprogfecha.length==0" id="alerta">
+                                            {{msjEtiquetaProg}}
+                                        </div>
                                     </div>
                                 </div>
                                 
@@ -262,18 +276,29 @@
                                 </div>
                             </div>
                             
+                            <!--TABLA-->
                             <div class="row">
-                                <!--TABLA-->
                                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class=" form-group ">
-                                        <label>Placa a funcionar con {{TiSaValor}}</label>
-                                        <p-dataTable [value]="arrProgramacion" scrollable="true" scrollWidth="100%" scrollHeight="250px" selectionMode="single" 
-                                                    (onRowSelect)="onRowPlaca($event)" emptyMessage="Lista Vacia" [(selection)]="selectRowtbTimeSep">
-                                            <p-column field="nro" header="N°" [style]="{'width':'2em'}" ></p-column>
-                                            <!--<p-column field="PrDeOrden" header="Sorteo" [style]="{'width':'3em'}" ></p-column>-->
-                                            <p-column field="nroPlaca" header="Placa" [style]="{'width':'5em'}" ></p-column>
-                                            <p-column field="SuEmRSocial" header="Empresa" [style]="{'width':'8em'}" ></p-column>
-                                        </p-dataTable>
+                                    <div id="tablemodal1">
+                                        <div class=" form-group ">
+                                            
+                                            <p-dataTable [value]="arrProgramacion" scrollable="true" scrollWidth="100%" scrollHeight="250px" selectionMode="single" 
+                                                        (onRowSelect)="onRowPlaca($event)" emptyMessage="Lista Vacia" [(selection)]="selectRowtbTimeSep">
+                                                
+                                                <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
+                                                <p-column field="nroPlaca" header="Placa" [style]="{'width':'5em','text-align':'center'}" ></p-column>
+                                                <p-column field="SuEmRSocial" header="Empresa" [style]="{'width':'8em'}" ></p-column>
+                                                <p-column field="TiSaDescripcion" header="Rol" [style]="{'width':'6em','text-align':'center'}" ></p-column>
+                                            
+                                            </p-dataTable>
+
+                                            <div *ngIf="tisa=='********'" id="alerta">
+                                                {{msjEtiquetaRol}}
+                                            </div>
+                                            <div *ngIf="tisa!='********'" id="valido">
+                                                {{msjEtiquetaRol}}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
