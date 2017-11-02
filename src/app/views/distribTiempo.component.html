@@ -1,99 +1,99 @@
 <!--FORMULARIO PRINCIPAL-->
-    <!--TIEMPOSALIDA-->
+    
     <div class="contenedor">
         
-        <div class="row">
-            <div>Tiempos de separacion</div> 
-        </div>
-        <br>
-        <div class="row">
-            <!--BOTON-->
-            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                <button class="btnFormPrin" pButton label="Tiempo Separacion" 
-                       (click)="btnTSeparacion();" [disabled]="SuEmId==0"></button>
-            </div>
-
-            <!--SUBEMPRESAS-->
-            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                <select class="form-control" [(ngModel)]="SuEmId" (change)="funcCboSubEmp($event)">
-                    <!--<option *ngFor="let subemp of arrSubEmps" (change)="funcCboSubEmp()" [ngValue]="subemp">-->
-                    <option *ngFor="let subemp of arrSubEmps"  [value]="subemp.SuEmId">
-                        {{subemp.SuEmRSocial}}
-                    </option>
-                </select>
-            </div>
-
-            <!--FECHA ASIGNACION(TIENE Q SER ACTUAL)
-            <div class="col-xl-3 col-md-4 col-sm-12 col-xs-12">
-                <input class="form-control" type="date" [(ngModel)]="fechaAsigna">
-            </div>-->
-        </div>
-        <br>
-        <!--TABLA-->
-        <div class="row">
-            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="table-responsive">
-                    <p-dataTable [value]="arrmgtmpsal" emptyMessage="No hay registro" scrollable="true" scrollWidth="auto" selectionMode="single" (onRowSelect)="onRowTiempoSalida($event)" [(selection)]="selectRowtb1">
-                        <p-column styleClass="col-button" [style]="{'width':'3em','height':'3em'}">
-                            <template let-col let-row="rowData" pTemplate="body">
-                                <button type="button" pButton id="btnTable" (click)="editartiemposalida(row.TiSaId)" icon="fa-pencil-square-o"></button>
-                                <button type="button" pButton id="btnTable" (click)="eliminartiemposalida(row.TiSaId)" icon="fa-trash"></button>
-                            </template>
-                        </p-column>
-                        <p-column field="nro" header="N°" [style]="{'width':'3em'}"  ></p-column>
-                        <p-column field="TiSaNombre" header="Nombre" [style]="{'width':'8em'}"  ></p-column>
-                        <p-column field="TiSaValor" header="Valor" [style]="{'width':'8em'}"  ></p-column>
-                    </p-dataTable>
-                </div>
-            </div>
-        </div>
-    <br><br>
-
-    <!--TIEMPOPROGRAMADO-->
-        <div class="row">
-            <div>Bus Relacionado</div> 
-        </div>
-        <br>
-
-        <!--BOTONES-->
-        <div class="row">
-            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                <input class="form-control" placeholder="Buscar...">
-            </div>
             
-            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                <button class="btnFormPrin" pButton label="Agregar Bus a Tiempos" [disabled]="_TiSaId==0" (click)="funcBtnAsignarATiempos();"></button>
-            </div>
-            <!--
-            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
-                <button class="btnFormPrin" pButton label="Asignar Buses" (click)="btnAsignarATiempo();"></button>
-            </div>
-            -->
-            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                <button class="btnFormPrin" pButton label="Re-Distribucion Tiempo"></button>
-            </div>
-        </div>
-        <br>
+            <div class="row">Tiempos de separacion</div> 
+            <br>
 
-        <!--TITULO-->
-        <div class="row">
-            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="table-responsive">
-                    <p-dataTable [value]="arrmgtmpprog" emptyMessage="No hay registro" scrollable="true" scrollWidth="auto" selectionMode="single" (onRowSelect)="onRowTiempoProgramado($event)" [(selection)]="selectRowtb1">
-                        <p-column styleClass="col-button" [style]="{'width':'3em','height':'3em'}">
-                            <template let-col let-row="rowData" pTemplate="body">
-                                <button type="button" pButton id="btnTable" (click)="eliminartiempoprogramado(row.TiPrId)" icon="fa-trash"></button>
-                                <!--<button type="button" pButton id="btnTable" (click)="eliminartiemposalida(row.TiSaId)" icon="fa-trash"></button>-->
-                            </template>
-                        </p-column>
-                        <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}"  ></p-column>
-                        <p-column field="BuPlaca" header="Placa" [style]="{'width':'8em','text-align':'center'}"  ></p-column>
-                        <p-column field="BuDescripcion" header="Descripcion" [style]="{'width':'8em'}"></p-column>
-                    </p-dataTable>
+            <div class="row">
+                <!--TIEMPOSALIDA-->
+                <div class="col-xl-5 col-md-6 col-sm-12 col-xs-12">
+                    <div class="row">
+                        <!--BOTON-->
+                        <div class="col-xl-6 col-md-4 col-sm-6 col-xs-12">
+                            <button class="btnFormPrin" pButton label="Tiempo Separacion" 
+                                (click)="btnTSeparacion();" [disabled]="SuEmId==0"></button>
+                        </div>
+
+                        <!--SUBEMPRESAS-->
+                        <div class="col-xl-6 col-md-4 col-sm-6 col-xs-12">
+                            <select class="form-control" [(ngModel)]="SuEmId" (change)="funcCboSubEmp($event)">
+                                <!--<option *ngFor="let subemp of arrSubEmps" (change)="funcCboSubEmp()" [ngValue]="subemp">-->
+                                <option *ngFor="let subemp of arrSubEmps"  [value]="subemp.SuEmId">
+                                    {{subemp.SuEmRSocial}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <!--TABLA-->
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="table-responsive">
+                                <p-dataTable [value]="arrmgtmpsal" emptyMessage="No hay registro" scrollable="true" scrollWidth="auto" selectionMode="single" (onRowSelect)="onRowTiempoSalida($event)" [(selection)]="selectRowtb1">
+                                    <p-column styleClass="col-button" [style]="{'width':'3em','height':'3em'}">
+                                        <template let-col let-row="rowData" pTemplate="body">
+                                            <button type="button" pButton id="btnTable" (click)="editartiemposalida(row.TiSaId)" icon="fa-pencil-square-o"></button>
+                                            <button type="button" pButton id="btnTable" (click)="eliminartiemposalida(row.TiSaId)" icon="fa-trash"></button>
+                                        </template>
+                                    </p-column>
+                                    <p-column field="nro" header="N°" [style]="{'width':'3em'}"  ></p-column>
+                                    <p-column field="TiSaNombre" header="Nombre" [style]="{'width':'8em'}"  ></p-column>
+                                    <p-column field="TiSaValor" header="Valor" [style]="{'width':'8em'}"  ></p-column>
+                                </p-dataTable>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--TIEMPOPROGRAMADO-->
+                <div class="col-xl-7 col-md-6 col-sm-12 col-xs-12">
+                    <!--
+                    <div class="row">Bus Relacionado </div>
+                    -->
+                    <label>Placas Adjuntas</label>
+                    <!--BOTONES-->
+                    <div class="row">
+                        <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
+                            <input class="form-control" placeholder="Buscar...">
+                        </div>
+                        
+                        <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
+                            <button class="btnFormPrin" pButton label="Agregar Bus a Tiempos" [disabled]="_TiSaId==0" (click)="funcBtnAsignarATiempos();"></button>
+                        </div>
+                        <!--
+                        <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                            <button class="btnFormPrin" pButton label="Asignar Buses" (click)="btnAsignarATiempo();"></button>
+                        </div>
+                        -->
+                        <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
+                            <button class="btnFormPrin" pButton label="Re-Distribucion Tiempo"></button>
+                        </div>
+                    </div>
+                    <br>
+                    <!--TITULO-->
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="table-responsive">
+                                
+                                <p-dataTable [value]="arrmgtmpprog" emptyMessage="No hay registro" scrollable="true" scrollWidth="auto" selectionMode="single" (onRowSelect)="onRowTiempoProgramado($event)" [(selection)]="selectRowtb1">
+                                    <p-column styleClass="col-button" [style]="{'width':'3em','height':'3em'}">
+                                        <template let-col let-row="rowData" pTemplate="body">
+                                            <button type="button" pButton id="btnTable" (click)="eliminartiempoprogramado(row.TiPrId)" icon="fa-trash"></button>
+                                            <!--<button type="button" pButton id="btnTable" (click)="eliminartiemposalida(row.TiSaId)" icon="fa-trash"></button>-->
+                                        </template>
+                                    </p-column>
+                                    <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}"  ></p-column>
+                                    <p-column field="BuPlaca" header="Placa" [style]="{'width':'8em','text-align':'center'}"  ></p-column>
+                                    <p-column field="BuDescripcion" header="Descripcion" [style]="{'width':'8em'}"></p-column>
+                                </p-dataTable>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-
+        
     </div>
 
 <!--MODALES-->
@@ -328,11 +328,12 @@
             {{mensajeconfirmar}}
             <div class=" btn_Modal row ">
                 <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                    <button class="btn_modal" type="text" pButton icon="fa-close" (click)="canEliminarTS()" label="Cancelar"></button>
-                </div>
-                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
                     <button class="btn_modal" type="text" pButton icon="fa-trash-o" (click)="acepEliminarTS()" label = "Eliminar"></button>
                 </div>
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                    <button class="btn_modal" type="text" pButton icon="fa-close" (click)="canEliminarTS()" label="Cancelar"></button>
+                </div>
+                
             </div>
         </p-dialog>
 
@@ -341,11 +342,12 @@
             {{mensajeconfirmar}}
             <div class=" btn_Modal row ">
                 <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                    <button class="btn_modal" type="text" pButton icon="fa-close" (click)="canEditarTS()" label="Cancelar"></button>
-                </div>
-                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
                     <button class="btn_modal" type="text" pButton icon="fa-trash-o" (click)="acepEditarTS" label = "Editar"></button>
                 </div>
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                    <button class="btn_modal" type="text" pButton icon="fa-close" (click)="canEditarTS()" label="Cancelar"></button>
+                </div>
+                
             </div>
         </p-dialog>
 
@@ -354,10 +356,11 @@
             {{mensajeconfirmar}}
             <div class=" btn_Modal row ">
                 <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                    <button class="btn_modal" type="text" pButton icon="fa-close" (click)="canEliminarTP()" label="Cancelar"></button>
-                </div>
-                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
                     <button class="btn_modal" type="text" pButton icon="fa-trash-o" (click)="acepEliminarTP()" label = "Eliminar"></button>
                 </div>
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                    <button class="btn_modal" type="text" pButton icon="fa-close" (click)="canEliminarTP()" label="Cancelar"></button>
+                </div>
+                
             </div>
         </p-dialog>

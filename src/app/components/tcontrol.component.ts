@@ -19,8 +19,8 @@ import {ajustaHora,hora,_hora,_cCeroFecha,cCeroHora,corrigiendoHora,corrigiendoH
 })
 
 export class TcontrolComponent implements OnInit{
-     private errorMessage:string='';  //mensaje error del rest
-    private isLoading: boolean = false;  
+        private errorMessage:string='';  //mensaje error del rest
+        private isLoading: boolean = false;  
 
     /* DISPLAY VENTANAS MODAL*/
         displayAsignarTarjeta : boolean = false;
@@ -36,7 +36,7 @@ export class TcontrolComponent implements OnInit{
 
     /* OTRAS VARIABLES */
         private val:number;     //VALOR PARA ASIGNAR TARJETA (ASIGNADO O AUSENTE)
-        private tpHoraS:string;  // TIPO ASIGNAR HORA SAL (MANUAL O AUTOMATICO)
+        private tpHoraS:number;  // TIPO ASIGNAR HORA SAL (MANUAL O AUTOMATICO)
         private actRadioButton:boolean=true;
         private nroTarjetas:number; 
         private timeInter:string; /* TIEMPO INTERMEDIO (ASIGNAR MULTITARJETA) */
@@ -44,6 +44,8 @@ export class TcontrolComponent implements OnInit{
         private titulo : string; /*TITULO PANTALLAS */
         private tVueltaBus : string; /* TIEMPO RECORRIDO BUS */
         private timevueltadescrip:string; 
+        private timevuelta:number; // SABER SI TIENE O NO UN TIEMPOSALIDA
+        private msjestadoplaca:string;
 
         private arrNTarjCabecera : any[] = []; /* ARRAY NUEVAS TARJETAS DE CONTROL (MULTITARJETAS) */
         private arrNTarjDetalle : any[] = []; /* ARRAY NUEVAS TARJETAS DE CONTROL DETALLE (MULTITARJETAS) */
@@ -146,16 +148,16 @@ export class TcontrolComponent implements OnInit{
     _tarjDetalleArray:any[]=[]; //PARA MANDARLO A LA BD
     
     //PROGRAMACION
-    programacion:any[]=[];
-    _programacion:any[]=[];
-    progDetalle:any[]=[];
-    _progDetalle:any[]=[];
-    progD_BD:any[]=[];  //PROGRAMACION RECUPERADA DE LA BD
-    _progD_BD:any[]=[]; //PROGRAMACION PARA PASAR A LA GRILLA
-    _array:any[]=[];  //ARRAY COMO PARAMETRO A PROCEDIMIENTO SAVE TARJETA DETALLE 
-    selectedTarjCab:any[]=[]; /* ROW SELECCIONADOS DE DATATABLE CABECERA TARJETA */
-    selectedPlacaONE:any[]=[];
-    selectedPlacaMULTI:any[]=[];
+        programacion:any[]=[];
+        _programacion:any[]=[];
+        progDetalle:any[]=[];
+        _progDetalle:any[]=[];
+        progD_BD:any[]=[];  //PROGRAMACION RECUPERADA DE LA BD
+        _progD_BD:any[]=[]; //PROGRAMACION PARA PASAR A LA GRILLA
+        _array:any[]=[];  //ARRAY COMO PARAMETRO A PROCEDIMIENTO SAVE TARJETA DETALLE 
+        selectedTarjCab:any[]=[]; /* ROW SELECCIONADOS DE DATATABLE CABECERA TARJETA */
+        selectedPlacaONE:any[]=[];
+        selectedPlacaMULTI:any[]=[];
 
     private rutas:any=[];
     private ptsControl:any=[];
@@ -178,7 +180,7 @@ export class TcontrolComponent implements OnInit{
                 ){
                     this.emID=this.ClassGlobal.GetEmId();
                     this.UsId=this.ClassGlobal.GetUsId();
-                    this.tpHoraS="02";
+                    this.tpHoraS=2;
                     this.tarjeta._UsId = this.UsId; //ARREGLAR ESTO
                     this._ruId=0; /* INICIANDO RUID A CERO PARA DESACTIVAR EL BOTON ASIGNAR TARJETA */
                     this.arrNTarjCabecera=[]; /*INICIANDO ARRAY A VACIO DE NUEVAS TARJETAS */
@@ -260,7 +262,7 @@ export class TcontrolComponent implements OnInit{
             this.tcontrolservice.getAllProgramacionDetalleByPrFecha(PrId, Date).subscribe(
                 data => {
                             this.progDetalle=data;
-                            //console.log(this.progDetalle);
+                            console.log(this.progDetalle);
 
                             if(this.progDetalle.length>0 ){
                                 //this.getallplacasbusbyemsuem(this.emID,0);
@@ -409,7 +411,7 @@ export class TcontrolComponent implements OnInit{
                                     TaCoAsignado:this._tarjeta.TaCoAsignado,
                                     _UsFechaReg :this._tarjeta.UsFechaReg
                                 }
-                                this.tpHoraS="02";
+                                this.tpHoraS=2;
                                 this.TiSaId=this._tarjeta.TiSaId;
 
                         }
@@ -429,8 +431,10 @@ export class TcontrolComponent implements OnInit{
                         TiSaNombre:objvalor[0].TiSaNombre,
                         TiSaValor:_hora(objvalor[0].TiSaValor)
                     }  
+                    this.timevuelta=1; //TIENE TISA
                     this.timevueltadescrip='\t'+_hora(objvalor[0].TiSaValor);
                 }else if(objvalor.length==0){
+                    this.timevuelta=0; //NO TIENE TISA
                     this.timevueltadescrip='\t'+"No Tiene";
                 }
                 this.TiSaObj=_objvalor;
@@ -477,6 +481,7 @@ export class TcontrolComponent implements OnInit{
                                 PrDeOrden:this.progDetalle[i].PrDeOrden,
                                 PrDeId: this.progDetalle[i].PrDeId,
                                 PrDeAsignadoTarjeta:this.progDetalle[i].PrDeAsignadoTarjeta,
+                                PrDeCountVuelta:this.progDetalle[i].PrDeCountVuelta,
                                 SuEmRSocial:this.placas[j].SuEmRSocial,
                                 BuDescripcion:this.placas[j].BuDescripcion
                             });
@@ -495,7 +500,8 @@ export class TcontrolComponent implements OnInit{
                     }
                 }
 
-                //AQUI SE ACTUALIZA EL BUID POR SU PLACA
+                //AQUI SE ACTUALIZA EL BUID POR SU PLACA    
+                //programacion: array con 1era parte de la programacion
                 for(let progD of programacion){
                     /*/FILTRANDO SI ESTA ASIGNADO, SI LO ESTA NO SE PUEDE MOSTRAR
                     if(progD.PrDeAsignadoTarjeta != 1){}*/
@@ -508,7 +514,8 @@ export class TcontrolComponent implements OnInit{
                             PrDeId:progD.PrDeId,
                             PrDeAsignadoTarjeta:progD.PrDeAsignadoTarjeta,
                             SuEmRSocial:progD.SuEmRSocial,
-                            BuDescripcion:progD.BuDescripcion
+                            BuDescripcion:progD.BuDescripcion,
+                            PrDeCountVuelta:progD.PrDeCountVuelta
                             /*
                                 PrDeFecha:progD.PrDeFecha,
                                 UsFechaReg:progD.UsFechaReg,
@@ -595,7 +602,7 @@ export class TcontrolComponent implements OnInit{
 
 /* FUNCIONES */
     /* FUNCIONES ASOCIADAS A FILAS DE DATATABLES */
-            /*SELECCIONAR REGISTRO TARJETA CONTROL (CABECERA- GRILLA)*/
+            /* SELECCIONAR REGISTRO TARJETA CONTROL (CABECERA- GRILLA)*/
                 onRowSelectCabecera(event){
                     this.tarjeta._TaCoId=0; 
                     this.tarjeta._TaCoId = event.data.TaCoId; /* ACTUALIZA EL CAMPO PARA PODER USARLO SI ES CASO SE QUIERA EDITAR EL REGISTRO */ 
@@ -609,6 +616,8 @@ export class TcontrolComponent implements OnInit{
                     /*this.val=2;  REINICIANDO A CERO EL VALOR DEL RADIO BUTTON */
                     this._prDeId = event.data.PrDeId; /* PROGRAMACIONDETALLE ID */
                     this._BuId=event.data.BuId;
+                    this._TaCoNroVuelta=event.data.PrDeCountVuelta;
+                    console.log(event.data);
                     let val=event.data.PrDeAsignadoTarjeta;
                     
                     //console.log(event.data);
@@ -619,10 +628,11 @@ export class TcontrolComponent implements OnInit{
                     if(val==0){
                         this.val=1; /* VALOR POR DEFECTO(ASIGNADO) */
                         this.actRadioButton=false; /* DISABLED:FALSE */
+                        this.msjestadoplaca='\t'+"No Asignado";
                     }else if(val==1 || val==2){
                         this.val=val;
                         this.actRadioButton=true;
-                        
+                        this.msjestadoplaca='\t'+"Asignada";
                     }
                 }
             /* FUNCION ROW BTNELIMINAR CABECERA*/
@@ -703,6 +713,7 @@ export class TcontrolComponent implements OnInit{
 
 
     /* FUNCIONES ASIGNAR TARJETAS */
+
             /* SOLA UNA TARJETA, AQUI SE GUARDA TANTO CABECERA COMO DETALLE Y SE EDITA  LA 
                TABLA PROGRAMACION DETALLE EL CAMPO ASIGNADO*/
             guardarTarjeta(){
@@ -715,15 +726,15 @@ export class TcontrolComponent implements OnInit{
                     RuId : Number(this._ruId),
                     BuId :this._BuId,
                     PrId : Number(this._prId),
-                    TaCoFecha :this.tarjeta._TaCoFecha,
+                    TaCoFecha :fecha(this.tarjeta._TaCoFecha),
                     TaCoHoraSalida :corrigiendoHora(this.tarjeta._TaCoHoraSalida),
                     TaCoCuota :Number(this.tarjeta._TaCoCuota),
                     UsId :this.UsId,
                     UsFechaReg :new Date(),
-                    TaCoNroVuelta : this.tarjeta._TaCoNroVuelta = 1,
-                    TaCoAsignado :1,
+                    TaCoNroVuelta : this._TaCoNroVuelta+1,
+                    TaCoAsignado :Number(this.val),
                     TiSaId:this.TiSaObj.TiSaId,
-                    TaCoTipoHoraSalida:1
+                    TaCoTipoHoraSalida:Number(this.tpHoraS)
                 }
              
                 /*NUEVA TARJETA*/

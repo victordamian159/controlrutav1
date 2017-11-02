@@ -54,6 +54,12 @@
     position: absolute;
 }
 
+#verdadero{
+    color:green;
+    padding: 0;
+    padding: 0;
+    position: absolute;
+}
 
 /* BOTONES (GUARDAR CANCELAR + OTROS) VENTANAS MODALES */
 .btn_modal{

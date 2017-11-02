@@ -1,75 +1,98 @@
-<!--PRINCIPAL TABLAS-->
+<!--FORMULARIO PRINCIPAL-->
     <div class="contenedor">
         <!--TITULO-->
         <div id="titulo"> Tarjetas de Control </div>
-    
-        <!--BUSQUEDA + BTNNUEVO + COMBO RUTA + COMBO PCONTROL-->
+
         <div class="row">
-            <!--COMBO RUTAS-->
-            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
-                <select class="form-control" required [(ngModel)]="_ruId" (change)="rutaId($event)"   #ruta="ngModel">
-                    <!--<option value="" disabled selected hidden>Please Choose...</option>-->
-                    <option *ngFor="let ruta of rutas" [value]="ruta.RuId">{{ruta.RuDescripcion}}</option>
-                </select> 
-            </div>
+            <div class="col-xl-7 col-md-6 col-sm-12 col-xs-12">
+                <!--BUSQUEDA + BTNNUEVO + COMBO RUTA + COMBO PCONTROL-->
+                <div class="row">
+                    <!--COMBO RUTAS-->
+                    <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                        <label>Ruta</label>
+                        <select class="form-control" required [(ngModel)]="_ruId" (change)="rutaId($event)"   #ruta="ngModel">
+                            <!--<option value="" disabled selected hidden>Please Choose...</option>-->
+                            <option *ngFor="let ruta of rutas" [value]="ruta.RuId">{{ruta.RuDescripcion}}</option>
+                        </select> 
+                    </div>
 
-            <!--COMBO PUNTOS CONTROL-->
-            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
-                <select class="form-control" required [(ngModel)]="_pcId" (change)="pControlId($event)"   #pcontrol="ngModel">
-                    <!--<option value="" disabled selected hidden>Please Choose...</option>-->
-                    <option *ngFor="let punto of _puntosControl" [value]="punto.PuCoId">
-                        {{punto.PuCoDescripcion}} / {{punto.PuCoTiempoBus}}
-                    </option>
-                </select> 
-            </div>
+                    <!--COMBO PUNTOS CONTROL-->
+                    <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                        <label>Puntos de Control</label>
+                        <select class="form-control" required [(ngModel)]="_pcId" (change)="pControlId($event)"   #pcontrol="ngModel">
+                            <!--<option value="" disabled selected hidden>Please Choose...</option>-->
+                            <option *ngFor="let punto of _puntosControl" [value]="punto.PuCoId">
+                                {{punto.PuCoDescripcion}} / {{punto.PuCoTiempoBus}}
+                            </option>
+                        </select> 
+                    </div>
 
-            <!--BUSQUEDA-->
-            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
-                <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
-            </div>
+                    <!--BUSQUEDA-->
+                    <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                        <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+                    </div>
 
-            <!--NUEVO REGISTRO style="float:left"-->
-            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
-                <button class="form-control" id="btnNuevo" type="button"  pButton icon="fa-file-text-o" [disabled]="_ruId==0" (click)="nroAsigTarjetas()" label="Asignar Tarjeta" ></button>
-            </div>
-        </div>
-
-        <!--TABLA CABECERA-->
-        <div class="row">
-            <!--<div class="col-xl-12 col-md-12 col-sm-12 col-xs-12"></div>-->
-                <div class=" table table-responsive">
-                    <p-dataTable [value]="_allTarjControl" [rows]="5" [paginator]="true"  [globalFilter]="filtroGlobal" [responsive]="false" emptyMessage="Lista Vacia"
-                        scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedTarjCab" (onRowSelect)="onRowSelectCabecera($event)">
-                        
-                        <!--campos de la datatable-->
-                        <p-column styleClass="col-button" [style]="{'width':'3em','height':'4em'}">
-                            <template let-col let-row="rowData" pTemplate="body">
-                                <!--<button type="button" pButton id="btnTable" (click)="editarC(row.TaCoId)" icon="fa-pencil-square-o" > </button>-->
-                                <button type="button" pButton id="btnTable" (click)="eliminarC(row.TaCoId)" icon="fa-trash" > </button>
-                            </template>
-                        </p-column>
-                        <p-column field="nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
-                        <p-column field="BuDescripcion" header="Descripcion Bus"  [style]="{'width':'17em'}"></p-column>
-                        <p-column field="BuPlaca" header="Placa"  [style]="{'width':'8em','text-align':'center'}"></p-column>
-                        <p-column field="TaCoFecha" header="Fecha"  [style]="{'width':'9em','text-align':'center'}"></p-column>
-                        <p-column field="TaCoHoraSalida" header="Salida"  [style]="{'width':'7em','text-align':'center'}"></p-column>
-                    </p-dataTable>
+                    <!--NUEVO REGISTRO style="float:left"-->
+                    <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                        <button class="form-control" id="btnNuevo" type="button"  pButton icon="fa-file-text-o" [disabled]="_ruId==0" (click)="nroAsigTarjetas()" label="Asignar Tarjeta" ></button>
+                    </div>
                 </div>
-            
-        </div>    
 
-        <!--TABLA DETALLE TARJETA CONTROL-->
-        <div class="row">
-                <div class=" table table-responsive">
-                    <p-dataTable [value]="_allTarjDetalle" [rows]="7"   [responsive]="false"
-                        scrollable="true" [paginator]="true" selectionMode="single" scrollWidth="100%" emptyMessage="Lista Vacia" >
+                <!--TABLA CABECERA-->
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class=" table table-responsive">
+                            <!--
+                            <p-dataTable [value]="_allTarjControl" [rows]="5" [paginator]="true"  [globalFilter]="filtroGlobal" 
+                                [responsive]="false" emptyMessage="Lista Vacia" scrollable="true" scrollWidth="100%" selectionMode="single" 
+                                [(selection)]="selectedTarjCab" (onRowSelect)="onRowSelectCabecera($event)">
+                            -->
+                            <p-dataTable [value]="_allTarjControl" [globalFilter]="filtroGlobal" scrollable="true"
+                                     emptyMessage="Lista Vacia" scrollHeight="400px" scrollWidth="100%" selectionMode="single" 
+                                    [(selection)]="selectedTarjCab" (onRowSelect)="onRowSelectCabecera($event)">
 
-                        <p-column field="nro" header="N°"  [style]="{'width':'2em','text-align':'center'}"></p-column>
-                        <p-column field="TaCoDeDescripcion" header="Punto"  [style]="{'width':'9em'}"></p-column>
-                        <p-column field="TaCoDeHora" header="Control"  [style]="{'width':'5em','text-align':'center'}"></p-column>
-                        <p-column field="TaCoDeTiempo" header="Tiempo"  [style]="{'width':'5em','text-align':'center'}"></p-column>
-                    </p-dataTable>
+                                <!--campos de la datatable-->
+                                <p-column styleClass="col-button" [style]="{'width':'3em','height':'2em'}">
+                                    <template let-col let-row="rowData" pTemplate="body">
+                                        <!--<button type="button" pButton id="btnTable" (click)="editarC(row.TaCoId)" icon="fa-pencil-square-o" > </button>-->
+                                        <button type="button" pButton id="btnTable" (click)="eliminarC(row.TaCoId)" icon="fa-trash" > </button>
+                                    </template>
+                                </p-column>
+                                <p-column field="nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
+                                <p-column field="BuDescripcion" header="Descripcion Bus"  [style]="{'width':'17em'}"></p-column>
+                                <p-column field="BuPlaca" header="Placa"  [style]="{'width':'8em','text-align':'center'}"></p-column>
+                                <p-column field="TaCoFecha" header="Fecha"  [style]="{'width':'9em','text-align':'center'}"></p-column>
+                                <p-column field="TaCoHoraSalida" header="Salida"  [style]="{'width':'7em','text-align':'center'}"></p-column>
+                            </p-dataTable>
+                        </div>
+                    </div>
+                </div>    
+            </div>
+
+            <!--TABLA DETALLE TARJETA CONTROL-->
+            <div class="col-xl-5 col-md-6 col-sm-12 col-xs-12">
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        <div>Tarjeta de Control</div>
+                        <div class=" table table-responsive">
+                            <!--
+                            <p-dataTable [value]="_allTarjDetalle" [rows]="7"   [responsive]="false"
+                                scrollable="true" [paginator]="true" selectionMode="single" scrollWidth="100%" 
+                                emptyMessage="Lista Vacia" >
+                            -->
+                            <p-dataTable [value]="_allTarjDetalle" scrollable="true"
+                                scrollHeight="370px" scrollWidth="100%" selectionMode="single"
+                                emptyMessage="Lista Vacia" >
+
+                                <p-column field="nro" header="N°"  [style]="{'width':'2em','text-align':'center'}"></p-column>
+                                <p-column field="TaCoDeDescripcion" header="Punto"  [style]="{'width':'9em'}"></p-column>
+                                <p-column field="TaCoDeHora" header="Control"  [style]="{'width':'5em','text-align':'center'}"></p-column>
+                                <p-column field="TaCoDeTiempo" header="Tiempo"  [style]="{'width':'5em','text-align':'center'}"></p-column>
+                            </p-dataTable>
+                        </div>
+                    </div>
                 </div>
+            </div>
         </div>
     </div>
 
@@ -108,7 +131,6 @@
             <div class="cont_modal">
                 <div class="container">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-    
                         <div class="row">
                             <div class="col-xl-4 col-md-6 col-sm-12">
                                 <!--Listado de Puntos de Control-->
@@ -165,28 +187,29 @@
                             <!--TABLA-->
                             <div class="col-xl-4 col-md-6 col-sm-12">
                                 <!--Orden de las Placas-->
-                                
-                                    <div class=" form-group ">
-                                        <label>Orden de las Placas:</label>
-                                        <p-dataTable [value]="_progDetalle" scrollable="true" scrollWidth="100%" scrollHeight="250px" selectionMode="single" 
-                                                    (onRowSelect)="onRowPlaca($event)" emptyMessage="Lista Vacia" [(selection)]="selectedPlacaONE" >
-                                            <p-column field="nro" header="N°" [style]="{'width':'2em'}" ></p-column>
-                                            <!--<p-column field="PrDeOrden" header="Sorteo" [style]="{'width':'3em'}" ></p-column>-->
-                                            <p-column field="nroPlaca" header="Placa" [style]="{'width':'5em'}" ></p-column>
-                                            <p-column field="SuEmRSocial" header="Empresa" [style]="{'width':'8em'}" ></p-column>
-                                        </p-dataTable>
-                                    </div>
+                                <div class=" form-group ">
+                                    <label>Placas:</label>
+                                    <p-dataTable [value]="_progDetalle" scrollable="true" scrollWidth="100%" scrollHeight="250px" selectionMode="single" 
+                                                (onRowSelect)="onRowPlaca($event)" emptyMessage="Lista Vacia" [(selection)]="selectedPlacaONE" >
+                                        <p-column field="nro" header="N°" [style]="{'width':'2em'}" ></p-column>
+                                        <!--<p-column field="PrDeOrden" header="Sorteo" [style]="{'width':'3em'}" ></p-column>-->
+                                        <p-column field="nroPlaca" header="Placa" [style]="{'width':'5em'}" ></p-column>
+                                        <p-column field="SuEmRSocial" header="Empresa" [style]="{'width':'8em'}" ></p-column>
+                                    </p-dataTable>
+                                </div>
+                                <div *ngIf="timevuelta==0" id="validation">
                                     Rol:{{timevueltadescrip}}
-                                
-
-                                
+                                </div>
+                                <div *ngIf="timevuelta==1" id="verdadero">
+                                    Rol:{{timevueltadescrip}}
+                                </div>
                             </div>
 
                             <div class="col-xl-4 col-md-6 col-sm-12">
                                 <!--Estado de la Tarjeta    ASIGNAR O AUSENTE-->
                                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="form-group">
-                                        <label>Estado de la Tarjeta:</label>
+                                        <label>Estado Tarjeta: {{msjestadoplaca}}</label>
                                         <div class="row">
                                             <!--<p-radioButton class="radioButton" value="0"  label="No Asignado" [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton>-->
                                             <p-radioButton class="radioButton" value="1"  label="Asignar"     [(ngModel)]="val" [disabled]="actRadioButton" ></p-radioButton>
@@ -200,8 +223,8 @@
                                     <div class="form-group">
                                         <label>Tipo de Hora Salida:</label>
                                         <div class="row">
-                                            <p-radioButton class="radioButton" value="01"  label="Manual" [(ngModel)]="tpHoraS" ></p-radioButton>
-                                            <p-radioButton class="radioButton" value="02"  label="Automatico" [(ngModel)]="tpHoraS" ></p-radioButton>
+                                            <p-radioButton class="radioButton" value=1  label="Manual" [(ngModel)]="tpHoraS" ></p-radioButton>
+                                            <p-radioButton class="radioButton" value=2  label="Automatico" [(ngModel)]="tpHoraS" ></p-radioButton>
                                         </div>
                                     </div>
                                 </div>
@@ -211,7 +234,11 @@
                                     <div class="form-group">
                                         <label >Hora Salida(HH:MM:SS):</label>
                                         <input class="form-control" type="time"[(ngModel)]="tarjeta._TaCoHoraSalida"  
-                                                step="1" [disabled]="tpHoraS=='02'" required #hsal="ngModel" />
+                                                step="1" [disabled]="true" [hidden]="tpHoraS==1" required #hsal="ngModel" />
+
+                                        <input class="form-control" type="time"[(ngModel)]="tarjeta._TaCoHoraSalida"  
+                                                step="1" [hidden]="tpHoraS==2" required #hsal="ngModel" />
+
                                         <span *ngIf="!hsal.valid && (hsal.touched || hsal.dirty)"  >  
                                             <div id="validation" [hidden]="!hsal.errors.required"> obligatorio </div>
                                         </span>   
@@ -230,20 +257,15 @@
                                 </div>
                             </div>
                         </div>
-                    
                     </div>
                 </div>
             </div>
          </div>
-         <!--
-         {{!PC.valid || !PROG.valid || !fprog.valid || (hsal.valid  && tpHoraS=='02')|| !cuota.valid || this.actRadioButton}}
-         {{!PC.valid}}
-         {{!PROG.valid}}
-         {{!fprog.valid}}
-         {{(hsal.valid  && tpHoraS=='02')}}
-         {{!cuota.valid}}
-         {{this.actRadioButton}}
-         -->
+        
+
+        <!--
+            {{!timevuelta==1}} {{!PC.valid}} {{!PROG.valid}} {{!fprog.valid}} {{(!hsal.valid  && tpHoraS=='02')}} {{!cuota.valid}} {{this.actRadioButton}}
+        -->
         <!--BOTONES-->
         <div class=" btn_Modal row ">
             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
@@ -251,7 +273,7 @@
             </div>
             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                 <button class="btn_modal" type="text" pButton icon="fa-save" (click)="guardarTarjeta();  PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset();" 
-                        [disabled]="!PC.valid || !PROG.valid || !fprog.valid || (hsal.valid  && tpHoraS=='02')|| !cuota.valid || this.actRadioButton" label="Guardar"></button>
+                        [disabled]="!timevuelta==1 || !PC.valid || !PROG.valid || !fprog.valid || (!hsal.valid  && tpHoraS=='02')|| !cuota.valid || this.actRadioButton" label="Guardar"></button>
             </div>
             <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
                 <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelarTarjeta();  PC.reset(); PROG.reset(); hsal.reset(); cuota.reset(); fprog.reset(); " label="Cancelar"></button>
@@ -307,14 +329,11 @@
                                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="form-group">
                                         <label>Programacion por Fecha:</label>
-                                        <div class="form-inline">
-                                            <div class="col-xl-9 col-md-9 col-sm-12 col-xs-12">
-                                                <input class="form-control" name="fecha" type="date" [(ngModel)]="tarjeta._TaCoFecha" required #Mfprog="ngModel" />
-                                            </div>
-                                            <div class="col-xl-3 col-md-3 col-sm-12 col-xs-12">
-                                                <button class="btn_modal" type="button" (click)="buscarxFecha()" pButton icon="fa-search" [disabled]="!fprog.valid"></button>
-                                            </div>
-                                        </div>
+                                        
+                                        <input class="form-control" name="fecha" type="date" [(ngModel)]="tarjeta._TaCoFecha" required #Mfprog="ngModel" />
+                                    
+                                        <button class="btn_modal" type="button" (click)="buscarxFecha()" pButton icon="fa-search" [disabled]="!fprog.valid"></button>
+                                       
                                         <div id="validation" [hidden]="Mfprog.valid || !Mfprog.touched">
                                                 Error, revise los datos ingresados
                                         </div> 
@@ -327,17 +346,16 @@
                                 <!-- -> LISTA DE PLACAS - PROGRAMACION, AL ELEGIR UNA  PLACA MULTIPLICARLO POR EL NRO DE TARJETAS
                                     -> ORDEN SORTEO DE LAS PLACAS-->
                             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
-                                <div class=" form-group ">
-                                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                        <label>Orden de las Placas:</label>
-                                        <p-dataTable [value]="_progDetalle" scrollable="true" scrollHeight="100px" selectionMode="single" 
-                                                    (onRowSelect)="onRowPlaca($event)" emptyMessage="Lista Vacia" [(selection)]="selectedPlacaMULTI">
-                                            <p-column field="nro" header="N°" [style]="{'width':'3em'}" ></p-column>
-                                            <p-column field="PrDeOrden" header="Sorteo" [style]="{'width':'3em'}" ></p-column>
-                                            <p-column field="nroPlaca" header="Placa" [style]="{'width':'6em'}" ></p-column>
-                                        </p-dataTable>
-                                    </div>
-                                </div>
+                                
+                                <label>Orden de las Placas:</label>
+                                <p-dataTable [value]="_progDetalle" scrollable="true" scrollHeight="250px" selectionMode="single" 
+                                            (onRowSelect)="onRowPlaca($event)" emptyMessage="Lista Vacia" [(selection)]="selectedPlacaMULTI">
+                                    <p-column field="nro" header="N°" [style]="{'width':'3em'}" ></p-column>
+                                    <!--<p-column field="PrDeOrden" header="Sorteo" [style]="{'width':'3em'}" ></p-column>-->
+                                    <p-column field="nroPlaca" header="Placa" [style]="{'width':'6em'}" ></p-column>
+                                    <p-column field="SuEmRSocial" header="Empresa" [style]="{'width':'8em'}" ></p-column>
+                                </p-dataTable>
+                                Rol:{{timevueltadescrip}}    
                             </div>
 
                             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
@@ -387,13 +405,13 @@
 
         <!--BOTONES-->
         <div class=" btn_Modal row ">
-            <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                 <button class="btn_modal" type="text" pButton icon="fa-fast-backward" (click)="btnAtrasMultiTarj(); MPC.reset(); MPROG.reset(); Mhsal.reset(); Mcuota.reset(); Mfprog.reset(); MtimeInterm.reset();" label="Atras"></button>
             </div>
-            <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                 <button class="btn_modal" type="text" pButton icon="fa-save" (click)="guardarMultiTarjetas(); MPC.reset(); MPROG.reset(); Mhsal.reset(); Mcuota.reset(); Mfprog.reset(); MtimeInterm.reset();" [disabled]="!MPC.valid || !MPROG.valid || !Mhsal.valid || !Mcuota.valid || !MtimeInterm.valid || !Mfprog.valid || this.actRadioButton" label="Guardar"></button>
             </div>
-            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
                 <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelarMultiTarjeta(); MPC.reset(); MPROG.reset(); Mhsal.reset(); Mcuota.reset(); Mfprog.reset(); MtimeInterm.reset();" label="Cancelar"></button>
             </div>
         </div>
@@ -408,11 +426,12 @@
             {{mensaje}}
             <div class=" btn_Modal row ">
                 <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                    <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelar_eliminarC()" label="Cancelar"></button>
-                </div>
-                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
                     <button class="btn_modal" type="text" pButton icon="fa-trash-o" (click)="aceptar_eliminarC()" label = "Eliminar"></button>
                 </div>
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                    <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelar_eliminarC()" label="Cancelar"></button>
+                </div>
+                
             </div>
      </p-dialog>  
 
