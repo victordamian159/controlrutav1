@@ -124,11 +124,11 @@
                                     <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
                                         <div class="form-group">
                                             <label class="control-label">Placa:</label>
-                                            <input class="form-control" type="text" [(ngModel)]="bus.BuPlaca" #placa="ngModel" required minlength="6" maxlength="12"/>
+                                            <input class="form-control" type="text" [(ngModel)]="bus.BuPlaca" #placa="ngModel" required minlength="3" maxlength="12"/>
                                         
                                             <span *ngIf="!placa.valid && placa.touched" id="validation" style="display: inline-block; font-size: 80%;" >
                                                 <div [hidden]="!placa.errors.required"> Obligatorio </div>
-                                                <div [hidden]="!placa.errors.minlength"> Minimo 6 Caracteres </div>
+                                                <div [hidden]="!placa.errors.minlength"> Minimo 3 Caracteres </div>
                                                 <div [hidden]="!placa.errors.maxlength"> Maximo 12 Caracteres </div>
                                             </span>
                                         </div>

@@ -623,7 +623,7 @@ export class BusComponent implements OnInit{
             this.objBus.BuId=this.busId;
         }
 
-        /*console.log(this.objBus);*/
+        console.log(this.objBus);
         /*SERVICIO SAVE BD  */
         this.busService.saveBus(this.objBus).subscribe(
                     realizar => {

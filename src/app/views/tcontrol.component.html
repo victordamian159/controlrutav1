@@ -46,7 +46,7 @@
                                 [(selection)]="selectedTarjCab" (onRowSelect)="onRowSelectCabecera($event)">
                             -->
                             <p-dataTable [value]="_allTarjControl" [globalFilter]="filtroGlobal" scrollable="true"
-                                     emptyMessage="Lista Vacia" scrollHeight="400px" scrollWidth="100%" selectionMode="single" 
+                                     emptyMessage="Lista Vacia" scrollHeight="250px" scrollWidth="100%" selectionMode="single" 
                                     [(selection)]="selectedTarjCab" (onRowSelect)="onRowSelectCabecera($event)">
 
                                 <!--campos de la datatable-->
@@ -79,7 +79,7 @@
                                 emptyMessage="Lista Vacia" >
                             -->
                             <p-dataTable [value]="_allTarjDetalle" scrollable="true"
-                                scrollHeight="370px" scrollWidth="100%" selectionMode="single"
+                                scrollHeight="210px" scrollWidth="100%" selectionMode="single"
                                 emptyMessage="Lista Vacia" >
 
                                 <p-column field="nro" header="N°"  [style]="{'width':'2em','text-align':'center'}"></p-column>
@@ -271,8 +271,7 @@
                 </div>
             </div>
          </div>
-         {{(!hsal.valid  && tpHoraS=='02')}}
-         {{!hsal.valid}} {{tpHoraS=='02'}} {{PrDeAsignadoTarjeta==0}} {{PrDeAsignadoTarjeta}}
+      
         <!--BOTONES-->
         <div class=" btn_Modal row ">
             <!--ATRAS-->

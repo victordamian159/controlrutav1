@@ -72,6 +72,7 @@ export class ProgComponent implements OnInit{
     /* ARRAYS */
         private selectedPlacas: string[] = []; /* NO USO */
         private placas:any[]=[]; //se utiliza para almacenar lo q devuelve el rest de las placas
+        private placasComplet:any[]=[];
         //datos para la picklist (prog base)
         private arrayPlacas:any[] = []; //ESTATICO
         private _arrayPlacas:any[] = []; //DINAMICO
@@ -275,9 +276,14 @@ export class ProgComponent implements OnInit{
 
             //CONSULTA RECUPERAR BUSES POR empId(id de empresa)  suemId(subempresa id) SOLO DA LOS BUSES ACTIVOS
             getAllPlacasBusByEmSuEm(empId: number, suemId : number){
+                let arrPlacas:any[]=[];
                 this.placasservice.getAllPlacasBusByEmSuEm(empId, suemId)
                     .subscribe(
-                        data => {this.placas = data;},
+                        data => {
+                                    arrPlacas=data;
+                                    this.placas = arrPlacas; 
+                                    this.placasComplet=arrPlacas;
+                                },
                         err  => {this.errorMessage = err},
                         () =>this.isLoading = false
                     );
@@ -307,7 +313,7 @@ export class ProgComponent implements OnInit{
         this.ordenSorteo=[]; //SORTEO DE PLACAS
         this.titleNuevoProgPrimerModal = 'Nueva';
         this.extrayendoPlacasBus(); 
-        this.unidadesEstado(); //CALCULA EL NRO DE UNIDADES ACTIVAS Y NO ACTIVAS
+        this.unidadesEstado(this.placasComplet); //CALCULA EL NRO DE UNIDADES ACTIVAS Y NO ACTIVAS
 
 
         this.tipoProg="01"; //PROGRAMACION POR DEFECTO: MANUAL
@@ -381,11 +387,11 @@ export class ProgComponent implements OnInit{
                 }
                 this.ordenSorteo=_arrayplacas;
                 this.arrayPlacas=[];
-                //console.log(this.arrayPlacas);
+               
             /* MANUAL*/
             }else if(tprog=="02"){
                 console.log("manual");
-                console.log(this.arrayPlacas);
+                
             }
             
         }
@@ -707,13 +713,13 @@ export class ProgComponent implements OnInit{
     }
 
     //CONSULTA NUMERO DE BUSES ACTIVOS Y NO ACTIVOS
-    unidadesEstado(){
-        let i=0; let bAct=0; let bNAct=0;
-        
-        while(i<this.arrayPlacas.length){
-            if(this.arrayPlacas[i].BuActivo==true){
+    unidadesEstado(arrayPlacas=[]){
+        let i=0; let bAct=0; let bNAct=0;;
+        console.log(arrayPlacas);
+        while(i<arrayPlacas.length){
+            if(arrayPlacas[i].BuActivo==true){
                 bAct++;
-            }else if(this.arrayPlacas[i].BuActivo==false){
+            }else if(arrayPlacas[i].BuActivo==false){
                 bNAct++;
             }
             i++;
@@ -875,13 +881,21 @@ export class ProgComponent implements OnInit{
     
     //extraer placas y el ID de los buses OPTIMIZAR ESTE CODIGO, MUCHAS VECES SE ESTA USANDO EN EL FUNCIONAMIENTO DEL PROGRAMA
     extrayendoPlacasBus(){
-        for(let i =0; i<this.placas.length ; i++){
-            this.arrayPlacas[i]={
-                nroPlaca: this.placas[i].BuPlaca,
-                BuId: this.placas[i].BuId,
-                BuActivo:this.placas[i].BuActivo
-            };
+        let i =0;
+        while( i<this.placas.length){
+            console.log(this.placas[i].BuActivo);
+            if(this.placas[i].BuActivo==true){
+                this.arrayPlacas.push({
+                    nroPlaca: this.placas[i].BuPlaca,
+                    BuId: this.placas[i].BuId,
+                    BuActivo:this.placas[i].BuActivo
+                });
+            }else if(this.placas[i].BuActivo==false){
+                
+            }
+            i++;
         }
+        console.log(this.arrayPlacas);
     }
 
     //seleccionar fila de la tabla
@@ -984,10 +998,10 @@ export class ProgComponent implements OnInit{
                         //UBICAR EL POR IGUAL BUID
                         while(k<this.arrayPlacas.length  && cen==0){
                             if(a5[i][j]!=this.arrayPlacas[k].BuId){
-                                //console.log(a5[i][j]+" no iguales =c: "+this.arrayPlacas[k].BuId);
+                                
                                 k++; 
                             }else if(a5[i][j]==this.arrayPlacas[k].BuId){
-                                //console.log(a5[i][j]+" son iguales =D: "+this.arrayPlacas[k].BuId);
+                                
                                 cen=1;
                             }
                         }
