@@ -9,8 +9,13 @@
 //private baseUrl:  string = 'http://localhost:8089/bus/rest/puntocontrol/';
 //private baseUrl2: string = 'http://localhost:8089/bus/rest/puntocontroldetalle/';
 
+//SERVIDOR
 export var server:string="http://controlbus.us-east-1.elasticbeanstalk.com/rest/";
 
+//TABLAS
+export var url_registrodiario=server+"registrodiario/";
+export var url_registrodiariodetalle=server+"registrodiariodetalle/";
+export var url_registroreten=server+"registroreten/";
 export var url_tarjetacontrol=server+"tarjetacontrol/";
 export var url_tarjetacontroldetalle=server+"tarjetacontroldetalle/";
 export var url_puntocontrol=server+"puntocontrol/";

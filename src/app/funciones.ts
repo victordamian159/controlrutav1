@@ -225,6 +225,7 @@
 
     export var arrABI=[31,29,31,30,31,30,31,31,30,31,30,31];
     export var arrANBI=[31,28,31,30,31,30,31,31,30,31,30,31];
+    
 
     /* ASIGNAR CARGO */
     export function cargoEmpPer(idCargo:string):string{

@@ -6,10 +6,10 @@
     
     <!--BUSQUEDA-->
     <div class="row">
-        <div class="col-xl-3 col-md-6 col-sm-6 col-xs-12">
+        <div class="col-xl-3 col-md-5 col-sm-6 col-xs-12">
             <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
         </div>
-        <div class="col-xl-3 col-md-6 col-sm-6 col-xs-12">
+        <div class="col-xl-3 col-md-5 col-sm-6 col-xs-12">
            <button class="form-control" id="btnNuevo" icon="fa-file-text-o" (click)="NuevaProgCabecera()" pButton  label="Nueva Programacion"></button>
         </div>
     </div>
@@ -22,14 +22,14 @@
                 <p-dataTable [value]="programacionMaestroArrayHTML" [rows]="5" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,15,20]" [globalFilter]="filtroGlobal"
                     scrollable="true" scrollWidth="100%" selectionMode="single" [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">
                 -->
-                <p-dataTable [value]="programacionMaestroArrayHTML"  [globalFilter]="filtroGlobal" scrollable="true" scrollHeight="400px" scrollWidth="100%" selectionMode="single" 
+                <p-dataTable [value]="programacionMaestroArrayHTML"  [globalFilter]="filtroGlobal" scrollable="true" scrollHeight="350px" scrollWidth="100%" selectionMode="single" 
                     emptyMessage="Lista vacia" (onRowSelect)="onRowSelectMaestro($event)"> 
                     <!--CAMPOS DE LA TABLA-->
                     <p-column styleClass="col-button" [style]="{'width':'3em'}">
                         <!--<template pTempalte="header"><button  pButton icon="fa-refresh">  </button></template>-->
                         <template let-col let-progrRowMaestro="rowData" pTemplate="body">
-                            <button  pButton id="btnTable" (click)="editarCabecera(progrRowMaestro)" icon="fa-pencil-square-o" ></button>
-                            <button  pButton id="btnTable" (click)="eliminarRegistroGrilla(progrRowMaestro.prId)" icon="fa-trash" ></button>
+                            <button type="button" pButton id="btnTable" (click)="editarCabecera(progrRowMaestro)" icon="fa-pencil-square-o" ></button>
+                            <button type="button" pButton id="btnTable" (click)="eliminarRegistroGrilla(progrRowMaestro.prId)" icon="fa-trash" ></button>
                         </template>
                     </p-column>
                     <p-column field="nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
@@ -48,7 +48,7 @@
 
 <!--VENTANAS FORMULARIOS-->
 
-    <!--VENTANA BOTON NUEVO (PROGRAMACION 1ERA VENTANA)-->
+    <!--1ERA VENTANA BOTON NUEVO (PROGRAMACION 1ERA VENTANA)-->
     <p-dialog  [(visible)]="displayNuevaProgramacion" modal="modal" width="100%" height="100%" responsive="true" [resizable]="false" [closable]="false">
         <!--TITULO-->
         <p-header> {{titleNuevoProgPrimerModal }} Programacion </p-header>
@@ -107,7 +107,7 @@
                             <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
                               
                                 <div class="form-group">
-                                    <label  class="control-label">Tipo:</label>
+                                    <label  class="control-label">Tipo Sorteo:</label>
                                     <select class="form-control" [(ngModel)]="tipoProg" (change)="tipoProgramacion($event)" required #tprog="ngModel">
                                         <option *ngFor="let tipo of _tipoProg" [ngValue]="tipo.id">{{tipo.nTipo}}</option>
                                     </select>
@@ -120,7 +120,7 @@
                             <!--FORMA DE PROGRAMACION POR TIEMPO Y CANTIDAD DE BUSES (Escala o Pescadito)-->
                             <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
                                 <div class="form-group">
-                                    <label  class="control-label" >Forma:</label>
+                                    <label  class="control-label" >Forma Programacion:</label>
                                     <select class="form-control" [(ngModel)]="formaProg" (change)="formaProgramacion()" required #fprog="ngModel" >
                                         <option *ngFor="let forma of _formaProg" [ngValue]="forma.id">{{forma.nForma}}</option>
                                     </select>
@@ -130,6 +130,7 @@
                                 </div>
                             </div>
 
+                            
                         </div>
                     </div>
                 </div>
@@ -142,50 +143,48 @@
                 <button class="btn_modal" type="text" pButton icon="fa-check" (click)="showProgBase(); tprog.reset(); fprog.reset(); fde.reset(); fha.reset(); descrip.reset();" label="Continuar" [disabled]="!tprog.valid || !fprog.valid || !fde.valid || !fha.valid || !descrip.valid "></button>
             </div>
             <div class="col-xl-6 col-md-6 col-sm-12 col-sx-12">
-                <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelNewProgramacion(); tprog.reset(); fprog.reset(); fde.reset(); fha.reset(); descrip.reset();" label="Cancelar"></button>
-            </div>
+                    <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelNewProgramacion(); tprog.reset(); fprog.reset(); fde.reset(); fha.reset(); descrip.reset();" label="Cancelar"></button>
+                </div>
         </div>
     </p-dialog> 
     
-    <!--modal del boton guardar (2DA VENTANA  TERMINAR GENERANDO LA PROGRAMACION) -->
-    <p-dialog header="Programacion Base" [resizable]="false" [(visible)]="displayProgramacionBase" modal="modal" width="80%" responsive="true" [closable]="false" >           
+    <!--2DA VENTANA modal del boton guardar (2DA VENTANA  TERMINAR GENERANDO LA PROGRAMACION) -->
+    <p-dialog header="Programacion Base" [resizable]="false" [(visible)]="displayProgramacionBase" modal="modal" width="100%" responsive="true" [closable]="false" >           
+        
+        <!--HORA INICIO
         <div class="row">
-            <div class="cont_modal">
-                <div class="container">
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="row" style="margin:0 ; padding:0">
-                            <!--lista de placas (programacion base) MANUAL -->
-                            <p-pickList [source]="arrayPlacas" [target]="ordenSorteo" sourceHeader="Placa" targetHeader="Orden" [responsive]="true" 
-                                        [sourceStyle]="{'height':'170px','width':'300px','padding':'0', 'margin':'auto'}"  
-                                        [targetStyle]="{'height':'170px','width':'300px','padding':'0', 'margin':'auto'}">
-                                <template let-placa pTemplate="item">
-                                    <div class="ui-helper-clearfix">
-                                        <div style="font-size:14px; float:right; margin:15px 5px 0 0">{{placa.nroPlaca}}</div>
-                                    </div>
-                                </template>
-                            </p-pickList>
-                            <!--
-                                <p-pickList [source]="arrayPlacas" [target]="ordenSorteo" sourceHeader="Placa" targetHeader="Orden" [responsive]="false" 
-                                            [sourceStyle]="{'height':'130px','width':'100px'}"  [targetStyle]="{'height':'130px','width':'100px'}">
-                                    <template let-placa pTemplate="item">
-                                        <div class="ui-helper-clearfix">
-                                            <div style="font-size:12px; float:right; margin:5px 5px 0 0">{{placa.nroPlaca}}</div>
-                                        </div>
-                                    </template>
-                                </p-pickList>
-                            -->
+            
+            <div class="form-group">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                    <label >Primera Hora Salida(HH:MM:SS):</label>
+                    <input class="form-control" type="time" [(ngModel)]="primerHSal"  step="1"  required #phsal="ngModel" />
+                    <span *ngIf="!phsal.valid && (phsal.touched || phsal.dirty)"  >  
+                        <div id="validation" [hidden]="!phsal.errors.required"> obligatorio </div>
+                    </span>   
+                </div> 
+            </div>
+        </div>
+        -->
+        <div class="row">
+           
+            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                <p-pickList [source]="arrayPlacas" [target]="ordenSorteo" sourceHeader="Placa" targetHeader="Orden" [responsive]="false" 
+                            [sourceStyle]="{'height':'130px','width':'100px'}"  [targetStyle]="{'height':'130px','width':'100px'}">
+                    <template let-placa pTemplate="item">
+                        <div class="ui-helper-clearfix">
+                            <div style="font-size:16px; float:right; margin:5px 5px 0 0">{{placa.nroPlaca}}</div>
                         </div>
-                    </div>
-                </div>
+                    </template>
+                </p-pickList>
             </div>
         </div>
                                 
         <!--BOTONES DE LA VENTANA-->           
         <div class="btn_Modal row">
-            <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">  
+            <div class="col-xl-12 col-md-12 col-sm-12 col-sm-12">  
                 <button class="btn_modal"  pButton icon="fa-check" (click)="generarProgramacionSegundoModal()" label="Generar Programacion"></button>
             </div>
-            <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">
+            <div class="col-xl-12 col-md-12 col-sm-12 col-sm-12">
                 <button class="btn_modal"  pButton icon="fa-close" (click)="cancelarProgBaseSegundoModal()" [disabled]="disabledButtonForm()" label="Cancelar"></button>
             </div>
         </div>
@@ -197,40 +196,41 @@
         <div class="row">
             <div class="cont_modal">
                 <div class="container">
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="row">
 
-                        <!--NOMBRE PARA RECONOCER A LA PROGRAMACION  -->
-                        <div class="form-group">
-                            <label class="control-label">Nombre de la Programacion:</label>
-                            <input class="form-control" type="text" [(ngModel)]="progDescripcion" maxlength="30" #desc="ngModel" required />
-                        
-                            <span *ngIf="!descrip.valid && descrip.touched" >
-                                <div id="validation" [hidden]="!descrip.errors.required"> Obligatorio </div>
-                            </span>
-                        </div>
-                        </div>
-                    </div>
+                            <!--NOMBRE PARA RECONOCER A LA PROGRAMACION  -->
+                            <div class="form-group">
+                                <label class="control-label">Nombre de la Programacion:</label>
+                                <input class="form-control" type="text" [(ngModel)]="progDescripcion" maxlength="30" #desc="ngModel" required />
+                            
+                                <span *ngIf="!descrip.valid && descrip.touched" >
+                                    <div id="validation" [hidden]="!descrip.errors.required"> Obligatorio </div>
+                                </span>
+                            </div>
+
                 </div>
             </div>
         </div>
               
-               
-
         <!--BOTONES-->
         <div class="btn_Modal row">
-            <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
-                <button class="btn_modal"  pButton icon="fa-close" (click)="canEditarProgC()"   label="Cancelar"></button>
-            </div>
-            <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+            <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12" 
+                 style="
+                    padding:5px 10px; 
+                    margin:0px; 
+                 ">
                 <button class="btn_modal"  pButton icon="fa-save" (click)="guardarProgramacionC()" label="Guardar"></button>
             </div>
+            <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12"
+                 style="
+                    padding:5px 10px; 
+                    margin:0px; 
+                 ">
+                <button class="btn_modal"  pButton icon="fa-close" (click)="canEditarProgC()"   label="Cancelar"></button>
+            </div>
+            
         </div>
         
     </p-dialog>
-
-    
-
 
     <!--MODAL VISTA PROGRAMACIONES (CLICK SOBRE UN REGISTRO)-->
     <p-dialog [(visible)]="displayProgramacion" modal="modal" width="100%" [closable]="false" [resizable]="false" *ngIf="nroColumn>=5">
@@ -238,7 +238,7 @@
 
         <div class="row">
             <div class="cont_modal">
-                <div class="container">
+                <div id="programacion">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="row">
                             
@@ -298,16 +298,70 @@
         
         <!--BOTONES DE LA VENTANA-->
         <div class="btn_Modal row">
-            <div class="col-xl-6 col-md-6 col-sm-6 col-sm-6">
+            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12" style="padding:5px 10px; margin:0px;">
+                <button class="btn_modal"  icon="fa-download" pButton (click)="datosGenerarArchivo()" label="Bajar Archivo"></button>
+            </div>
+            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12" style=" padding:5px 10px; margin:0px; ">
                 <button class="btn_modal"  icon="fa-close" pButton (click)="cerrarProg()"   label="Cerrar"></button>
-            </div>
-            <div class="col-xl-6 col-md-6 col-sm-6 col-sm-6">
-                <button class="btn_modal"  icon="fa-download" pButton (click)="descargarProgramacion()" label="Descargar"></button>
-            </div>
+            </div>  
         </div>      
     </p-dialog>
 
-    
+    <!--TITULO Y NOMBRE DEL ARCHIVO A DESCARGAR-->
+    <p-dialog  [(visible)]="displayDatosPDF" modal="modal" width="100%" height="100%" responsive="true" [resizable]="false" [closable]="false">
+            <!--TITULO-->
+            <p-header> Datos del Archivo </p-header>
+            
+            <!--CUERPO-->
+            <div class="row">
+                <div class="cont_modal">
+                    <div class="container">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <!--NOMBRE PARA RECONOCER A LA PROGRAMACION  -->
+                            <div class="row">
+                                <!--TITULO DE LA PROGRAMACION-->
+                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label for="descripcion" class="control-label">Titulo de la Programacion:</label>
+                                        <input class="form-control" type="text" [(ngModel)]="titArchivoPDF" #titArc="ngModel"  maxlength="55" required />
+                                    
+                                        <span *ngIf="!titArc.valid && titArc.touched" >
+                                            <div id="validation" [hidden]="!titArc.errors.required"> Obligatorio </div>
+                                        </span>
+                                    </div>
+                                </div>
+                            
+                                <!--NOMBRE DEL ARCHIVO PROGRAMACION-->
+                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label for="descripcion" class="control-label">Nombre del archivo:</label>
+                                        <input class="form-control" type="text" [(ngModel)]="nomArchivoPDF" #nomArc="ngModel" maxlength="30"  required />
+                                    
+                                        <span *ngIf="!nomArc.valid && nomArc.touched" >
+                                            <div id="validation" [hidden]="!nomArc.errors.required"> Obligatorio </div>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!--BOTONES-->
+            <div class="btn_Modal row">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-sx-12">
+                    <button class="btn_modal" type="text" pButton icon="fa-check" 
+                    (click)="generarArchivo(); nomArc.reset(); titArc.reset();" 
+                    label="Descargar" [disabled]="!nomArc.valid || !titArc.valid "></button>
+                </div>
+                <div class="col-xl-12 col-md-12 col-sm-12 col-sx-12">
+                    <button class="btn_modal" type="text" pButton icon="fa-close" 
+                    (click)="cancelarDatosGenerarArchivo(); nomArc.reset(); titArc.reset();" 
+                    label="Cancelar"></button>
+                </div>
+            </div>
+        </p-dialog>
 
 <!--VENTANAS DE CONFIRMACION-->
         <!--MODAL CONFIRMAR EDITAR REGISTRO-->
@@ -341,10 +395,6 @@
                 </div>
             </div>
         </p-dialog>
-
-        
-        
-        
 
         <!--ERROR AL INGRESAR DATOS 1ERA VENTANA MODAL-->
         <p-dialog [(visible)]="displayErrorDatos" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
@@ -402,17 +452,3 @@
 
 
 
-<!--<p-footer>
-        <div class="ui-helper-clearfix" style="width:100%">
-            <button   pButton icon="fa-plus" style="float:left" (click)="nuevaAsignaTarjeta()" label="Nuevo" ></button>
-            <span class="text-xs-right"></span>
-        </div>
-    </p-footer>
-    <div class="win_modal"  style="overflow-y: auto; height:380px; width: 100%;">
--->
-
-    <!--
-        <div class="table-container" > </div>
-        <div class="container" style="overflow-x:auto; overflow-y:auto; height:420px; ">
-                    
-    -->

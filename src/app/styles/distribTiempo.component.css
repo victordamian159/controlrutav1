@@ -54,3 +54,9 @@ col-xl-12{
     position: absolute;
     color:red;
 }
+
+#grupo2{
+    border-style: solid;
+    border-color: green;
+    height: 450px;
+}

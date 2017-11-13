@@ -31,6 +31,10 @@ import {loginUserComponent} from './components/loginUser.component';
 import {distribTiempoComponent} from './components/distribTiempo.component';
 import { AuthGuard } from './components/auth.guard';
 
+//MANTENIMIENTO
+import {RegistroDiarioComponent} from './components/registrodiario.component';
+//OPERACIONES
+
 /* MENU CONSULTAS */
 import {consulVistaEnLineaComponent} from './components/vistaEnLinea.component';
 import {consulAlertNotifComponent} from './components/alertNotificacion.component';
@@ -39,6 +43,8 @@ import {consulIncidenciaComponent} from './components/incidencia.component';
 /* MENU REPORTES */
 import {reportPersonas} from './components/reportPersonas.component';
 import {reportBuses} from './components/reportBus.component';
+
+//OTROS COMPONENTES
 
 /* VAR AND FUNCTION GLOBALES */
 import {GlobalVars} from './variables';
@@ -62,10 +68,15 @@ import {TeleMovilService} from './service/telefono.service';
 import {UserSystemService} from './service/usuarioSistema.service';
 import {distribTiempoService} from './service/distribTiempo.service';
 
-    /* SERVICE CONSULTAS */
-    import {servAlertNotifService} from './service/alertNotificacion.service';
-    import {servIncidenciaService} from './service/incidencia.service';
-    import {servVistaEnLineaService} from './service/vistaEnLinea.service';
+    //SERVICE MANTENIMIENTO
+        import {RegDiarioService} from './service/registrodiario.service';
+    //SERVICE OPERACIONES
+        import {RegRetenService} from './service/registroReten.service';
+    //SERVICE CONSULTAS 
+        import {servAlertNotifService} from './service/alertNotificacion.service';
+        import {servIncidenciaService} from './service/incidencia.service';
+        import {servVistaEnLineaService} from './service/vistaEnLinea.service';
+    //SERVICE REPORTES
 
 
 /* PARA EL LOGIN   BORRAR DESPUES DE TERMINAR DE PROGRAMARLO
@@ -103,6 +114,7 @@ import { BaseRequestOptions } from '@angular/http';*/
     menuComponent,
     loginUserComponent,
     distribTiempoComponent,
+    RegistroDiarioComponent,
     reportPersonas,
     reportBuses,
     consulVistaEnLineaComponent,
@@ -161,7 +173,9 @@ import { BaseRequestOptions } from '@angular/http';*/
       GlobalVars,  /* CLASS GLOBAL :s */
       servAlertNotifService,
       servIncidenciaService,
-      servVistaEnLineaService
+      servVistaEnLineaService,
+      RegDiarioService,
+      RegRetenService
       /* fake backend
       fakeBackendProvider,
       MockBackend,

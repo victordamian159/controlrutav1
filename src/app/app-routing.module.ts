@@ -14,6 +14,7 @@ import {EmpPerComponent} from './components/empresapersonal.component';
 import {EmpSubEmpComponent} from './components/empSubemp.component';
 import {PersComponent} from './components/personal.component';
 import {loginUserComponent} from './components/loginUser.component';
+import {RegistroDiarioComponent} from './components/registrodiario.component';
 
 import {reportPersonas} from './components/reportPersonas.component';
 import {reportBuses} from './components/reportBus.component';
@@ -48,6 +49,7 @@ const app_routes: Routes = [
       {path: 'disttiempo',component:distribTiempoComponent,canActivate: [AuthGuard]},
       {path: 'reportPers', component:reportPersonas,canActivate: [AuthGuard]}, 
       {path: 'reportBus', component:reportBuses,canActivate: [AuthGuard]}, 
+      {path: 'regdiario', component:RegistroDiarioComponent,canActivate:[AuthGuard]},
 
       {path: 'consVistaEnLinea', component:consulVistaEnLineaComponent,canActivate: [AuthGuard]}, 
       {path: 'consAlertNotific', component:consulAlertNotifComponent,canActivate: [AuthGuard]}, 

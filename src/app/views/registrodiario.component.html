@@ -1,0 +1,162 @@
+<div class="contenedor">
+    <div id="titulo">Registro Diario de Vueltas</div>
+    <div class="row">
+            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                <!--BUSQUEDA + BTNNUEVO + COMBO RUTA + COMBO PCONTROL-->
+                <div class="row">
+
+                    <!--BUSQUEDA-->
+                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                        <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+                    </div>
+
+                    <!--NUEVO REGISTRO style="float:left"-->
+                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                        <button class="form-control" id="btnNuevo" type="button" 
+                        pButton icon="fa-file-text-o" [disabled]="_ruId==0" (click)="funcBtnNuevoRegistroDiario()" label="Nuevo Registro Diario" ></button>
+                    </div>
+                </div>
+
+                <!--TABLA CABECERA-->
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class=" table table-responsive">
+                            <!--
+                            <p-dataTable [value]="_allTarjControl" [rows]="5" [paginator]="true"  [globalFilter]="filtroGlobal" 
+                                [responsive]="false" emptyMessage="Lista Vacia" scrollable="true" scrollWidth="100%" selectionMode="single" 
+                                [(selection)]="selectedTarjCab" (onRowSelect)="onRowSelectCabecera($event)">
+                            -->
+                            <p-dataTable [value]="arrRegDiarioByEmId" [globalFilter]="filtroGlobal" scrollable="true"
+                                     emptyMessage="Lista Vacia" scrollHeight="320px" scrollWidth="100%" selectionMode="single" 
+                                    [(selection)]="selectedTarjCab" (onRowSelect)="onRowSelectRegDiario($event)">
+
+                                <!--campos de la datatable-->
+                                <p-column styleClass="col-button" [style]="{'width':'3em','height':'2em'}">
+                                    <template let-col let-row="rowData" pTemplate="body">
+                                        <!--<button type="button" pButton id="btnTable" (click)="btnTabEditReDi(row.ReDiId)" icon="fa-pencil-square-o" > </button>-->
+                                        <button type="button" pButton id="btnTable" (click)="btnTabDelReDi(row.ReDiId)" icon="fa-trash" > </button>
+                                    </template>
+                                </p-column>
+                                <p-column field="Nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
+                                <p-column field="ReDiFeha" header="Fecha"  [style]="{'width':'8em','text-align':'center'}"></p-column>
+                                <p-column field="ReDiTiempoVuelta" header="Tiempo"  [style]="{'width':'8em','text-align':'center'}"></p-column>
+                                <p-column field="ReDiTotalVuelta" header="Vueltas"  [style]="{'width':'8em','text-align':'center'}"></p-column>
+                            </p-dataTable>
+                        </div>
+                    </div>
+                </div>    
+            
+
+                <!--TABLA DETALLE TARJETA CONTROL-->      
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        <div>Vueltas para el Registro de Hoy</div>
+                        <div class=" table table-responsive">
+                            <!--
+                            <p-dataTable [value]="_allTarjDetalle" [rows]="7"   [responsive]="false"
+                                scrollable="true" [paginator]="true" selectionMode="single" scrollWidth="100%" 
+                                emptyMessage="Lista Vacia" >
+                            -->
+                            <p-dataTable [value]="arrRegDiarioDetalleByEmId" scrollable="true"
+                                scrollHeight="270px" scrollWidth="100%" selectionMode="single"
+                                emptyMessage="Lista Vacia" >
+                                <!--
+                                <p-column styleClass="col-button" [style]="{'width':'3em','height':'2em'}">
+                                    <template let-col let-row="rowData" pTemplate="body">
+                                        <button type="button" pButton id="btnTable" (click)="btnTabEditReDiDe(row.reDiDeId)" icon="fa-pencil-square-o" > </button>
+                                        <button type="button" pButton id="btnTable" (click)="btnTabDelReDiDe(row.reDiDeId)" icon="fa-trash" > </button>
+                                    </template>
+                                </p-column>
+                                -->
+                                <p-column field="Nro" header="N°"  [style]="{'width':'2em','text-align':'center'}"></p-column>
+                                <p-column field="ReDiDeNombreVuelta" header="Nombre"  [style]="{'width':'9em'}"></p-column>
+                                <p-column field="ReDiDeNroVuelta" header="Nro Vuelta"  [style]="{'width':'5em','text-align':'center'}"></p-column>
+                                <p-column field="ReDiDeEstado" header="Estado"  [style]="{'width':'5em','text-align':'center'}"></p-column>
+                            </p-dataTable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+<!--MODALES-->
+    <!--formulario-->
+        <p-dialog  [(visible)]="displayNuevoRegistroDiario" modal="modal" width="100%" height="100%" 
+                    responsive="true" [resizable]="false" [closable]="false">
+            <!--TITULO-->
+            <p-header> Nuevo registro diario </p-header>
+
+            <!--CUERPO-->
+            <div class="row">
+                <div class="cont_modal">
+                    <div class="container">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            
+                            <div class="row">
+                                <!--FECHA FUNCIONAR EL REGISTRO DIARIO-->
+                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Fecha Actual:</label>
+                                        <input class="form-control" type="date" [(ngModel)]="fechRegDir" #fechRegDiario="ngModel" required />
+                                    
+                                        <span *ngIf="!fechRegDiario.valid && fechRegDiario.touched" >
+                                            <div id="validation" [hidden]="!fechRegDiario.errors.required"> Obligatorio </div>
+                                        </span>
+                                    </div>
+                                </div>
+                                <!--TOTAL DE VUELTAS POR EL DIA-->
+                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Numero Vueltas:</label>
+                                        <input class="form-control" type="number" [(ngModel)]="nTolVueltas" #ntolvul="ngModel" required />
+                                    
+                                        <span *ngIf="!ntolvul.valid && ntolvul.touched" >
+                                            <div id="validation" [hidden]="!ntolvul.errors.required"> Obligatorio </div>
+                                        </span>
+                                    </div>
+                                </div>
+                                    <!--TIEMPO VUELTA-->
+                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Tiempo Recorrido:</label>
+                                        <input class="form-control" type="text" [(ngModel)]="tmpVuelta" #tmpvul="ngModel" required />
+                                    
+                                        <span *ngIf="!tmpvul.valid && tmpvul.touched" >
+                                            <div id="validation" [hidden]="!tmpvul.errors.required"> Obligatorio </div>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--BOTONES-->
+            <div class="btn_Modal row">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-sx-12">
+                    <button class="btn_modal" type="text" pButton icon="fa-check" 
+                    (click)="guardarRegistroDiario(); fechRegDiario.reset(); ntolvul.reset(); tmpvul.reset();" 
+                    label="Guardar Registro" [disabled]="!fechRegDiario.valid || !ntolvul.valid || !tmpvul.valid"></button>
+                </div>
+                <div class="col-xl-12 col-md-12 col-sm-12 col-sx-12">
+                    <button class="btn_modal" type="text" pButton icon="fa-close" 
+                    (click)="cancelGuardarRegistroDiario(); fechRegDiario.reset(); ntolvul.reset(); tmpvul.reset();" 
+                    label="Cancelar"></button>
+                </div>
+            </div>
+        </p-dialog>
+
+    <!--validacion-->
+        <p-dialog [(visible)]="displayConfDelRegDiario" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
+                <p>{{mensajevalidacion}}</p>
+                <div class="btn_Modal row">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <button class="btn_modal"  pButton (click)="okDelRegDiario()" label="Aceptar"></button>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <button class="btn_modal"  pButton (click)="cancelDelRegDiario()"   label="Cancelar"></button>
+                    </div>
+                </div>
+        </p-dialog>

@@ -1,57 +1,56 @@
 <!--FORMULARIO PRINCIPAL-->
     
     <div class="contenedor">
-        
-            
-            <div class="row">Tiempos de separacion</div> 
-            <br>
+        <div class="row">Tiempos de separacion</div> 
+        <br>
 
-            <div class="row">
-                <!--TIEMPOSALIDA-->
-                <div class="col-xl-5 col-md-6 col-sm-12 col-xs-12">
-                    <div class="row">
-                        <!--BOTON-->
-                        <div class="col-xl-6 col-md-4 col-sm-6 col-xs-12">
-                            <button class="btnFormPrin" pButton label="Tiempo Separacion" 
-                                (click)="btnTSeparacion();" [disabled]="SuEmId==0"></button>
-                        </div>
-
-                        <!--SUBEMPRESAS-->
-                        <div class="col-xl-6 col-md-4 col-sm-6 col-xs-12">
-                            <select class="form-control" [(ngModel)]="SuEmId" (change)="funcCboSubEmp($event)">
-                                <!--<option *ngFor="let subemp of arrSubEmps" (change)="funcCboSubEmp()" [ngValue]="subemp">-->
-                                <option *ngFor="let subemp of arrSubEmps"  [value]="subemp.SuEmId">
-                                    {{subemp.SuEmRSocial}}
-                                </option>
-                            </select>
-                        </div>
+        <div class="row">
+            <!--TIEMPOSALIDA-->
+            <div class="col-xl-5 col-md-6 col-sm-12 col-xs-12">
+                <div class="row">
+                    <!--BOTON-->
+                    <div class="col-xl-6 col-md-4 col-sm-6 col-xs-12">
+                        <button class="btnFormPrin" pButton label="Tiempo Separacion" 
+                            (click)="btnTSeparacion();" [disabled]="SuEmId==0"></button>
                     </div>
-                    <br>
-                    <!--TABLA-->
-                    <div class="row">
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="table-responsive">
-                                <p-dataTable [value]="arrmgtmpsal" emptyMessage="No hay registro" scrollable="true" scrollWidth="auto" selectionMode="single" (onRowSelect)="onRowTiempoSalida($event)" [(selection)]="selectRowtb1">
-                                    <p-column styleClass="col-button" [style]="{'width':'3em','height':'3em'}">
-                                        <template let-col let-row="rowData" pTemplate="body">
-                                            <button type="button" pButton id="btnTable" (click)="editartiemposalida(row.TiSaId)" icon="fa-pencil-square-o"></button>
-                                            <button type="button" pButton id="btnTable" (click)="eliminartiemposalida(row.TiSaId)" icon="fa-trash"></button>
-                                        </template>
-                                    </p-column>
-                                    <p-column field="nro" header="N°" [style]="{'width':'3em'}"  ></p-column>
-                                    <p-column field="TiSaNombre" header="Nombre" [style]="{'width':'8em'}"  ></p-column>
-                                    <p-column field="TiSaValor" header="Valor" [style]="{'width':'8em'}"  ></p-column>
-                                </p-dataTable>
-                            </div>
+
+                    <!--SUBEMPRESAS-->
+                    <div class="col-xl-6 col-md-4 col-sm-6 col-xs-12">
+                        <select class="form-control" [(ngModel)]="SuEmId" (change)="funcCboSubEmp($event)">
+                            <!--<option *ngFor="let subemp of arrSubEmps" (change)="funcCboSubEmp()" [ngValue]="subemp">-->
+                            <option *ngFor="let subemp of arrSubEmps"  [value]="subemp.SuEmId">
+                                {{subemp.SuEmRSocial}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <br>
+                <!--TABLA-->
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="table-responsive">
+                            <p-dataTable [value]="arrmgtmpsal" emptyMessage="No hay registro" scrollable="true" scrollWidth="auto" selectionMode="single" (onRowSelect)="onRowTiempoSalida($event)" [(selection)]="selectRowtb1">
+                                <p-column styleClass="col-button" [style]="{'width':'3em','height':'3em'}">
+                                    <template let-col let-row="rowData" pTemplate="body">
+                                        <button type="button" pButton id="btnTable" (click)="editartiemposalida(row.TiSaId)" icon="fa-pencil-square-o"></button>
+                                        <button type="button" pButton id="btnTable" (click)="eliminartiemposalida(row.TiSaId)" icon="fa-trash"></button>
+                                    </template>
+                                </p-column>
+                                <p-column field="nro" header="N°" [style]="{'width':'3em'}"  ></p-column>
+                                <p-column field="TiSaNombre" header="Nombre" [style]="{'width':'8em'}"  ></p-column>
+                                <p-column field="TiSaValor" header="Valor" [style]="{'width':'8em'}"  ></p-column>
+                            </p-dataTable>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!--TIEMPOPROGRAMADO-->
-                <div class="col-xl-7 col-md-6 col-sm-12 col-xs-12">
-                    <!--
-                    <div class="row">Bus Relacionado </div>
-                    -->
+            <!--TIEMPOPROGRAMADO-->
+            <div class="col-xl-7 col-md-6 col-sm-12 col-xs-12">
+                <!--
+                <div class="row">Bus Relacionado </div>
+                -->
+                <div id="grupo2">
                     <label>Placas Adjuntas</label>
                     <!--BOTONES-->
                     <div class="row">
@@ -92,8 +91,9 @@
                         </div>
                     </div>
                 </div>
+
             </div>
-        
+        </div>
     </div>
 
 <!--MODALES-->
@@ -237,10 +237,7 @@
 
         <!--ASIGNAR A TIEMPO SEPARACION-->
         <p-dialog [resizable]="false" [(visible)]="disAsignarTimesSeparacion" modal="modal" width="100%" height="100%" [closable]= false>
-            <p-header>
-                <!--<div>Asignar a Tiempo de Separacion</div>-->
-                <label>Asignar con {{TiSaValor}}</label>
-            </p-header>
+            <p-header> <label>Asignar con {{TiSaValor}}</label> </p-header>
             <div class="row">
                 <div class="cont_modal">
                     <div class="container">
@@ -342,7 +339,7 @@
             {{mensajeconfirmar}}
             <div class=" btn_Modal row ">
                 <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                    <button class="btn_modal" type="text" pButton icon="fa-trash-o" (click)="acepEditarTS" label = "Editar"></button>
+                    <button class="btn_modal" type="text" pButton icon="fa-trash-o" (click)="acepEditarTS()" label = "Editar"></button>
                 </div>
                 <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
                     <button class="btn_modal" type="text" pButton icon="fa-close" (click)="canEditarTS()" label="Cancelar"></button>

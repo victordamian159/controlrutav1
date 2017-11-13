@@ -175,7 +175,7 @@ export class PcontrolComponent implements OnInit{
 
     tipoTarjeta={nomb:"", val:""};
 
-    //tipoTarjeta:{nomb:string, val:string};
+
     tTarj:string;
     _tipoTarjeta = [
         {nomb:"Hora Punta", val:'01'},

@@ -56,7 +56,9 @@ export class ProgComponent implements OnInit{
         private bNAct:number; //NRO DE BUSES NO ACTIVOS
         private tipoProg:string;    //MANUAL O AUTOMATICA
         private formaProg:string;   //ESCALA O PESCADITO
-
+        private titArchivoPDF:string;
+        private nomArchivoPDF:string;
+        private primerHSal:string;
          //para seleccionar una fila de la tabla
         //private idFilaSeleccionada: number;  CLICK SOBRE REG GRILLA
         private iDReg:number;       //CLICK BOTON DE FILA ELIMINAR
@@ -110,6 +112,7 @@ export class ProgComponent implements OnInit{
         private displayFaltanPlacas : boolean = false;
         private displayDescargaProg : boolean = false;
         private displayEditProgC : boolean = false;
+        private displayDatosPDF:boolean=false;
 
     ngOnInit(){
         /*console.log(fechaSgte("2017/02/07",32));*/  /* TERMINAR ESTO */
@@ -191,7 +194,7 @@ export class ProgComponent implements OnInit{
         /* ACTUALIZACION */
             /* NUEVO */
                 procNuevaProgrC(){
-                    let _finicio = editf1(fechaActual1())
+                    let _finicio = editf1(fechaActual1());
                     let _ffinal  = editf1(addDays(editf1(fechaActual1()),30));
 
                     this.programacionService.newProgramacion().subscribe(
@@ -224,7 +227,19 @@ export class ProgComponent implements OnInit{
                         err => {this.errorMessage = err});
                 }
                 /* DETALLE */
-    
+            /* ELIMINAR */
+                procEliminarProgr(prid:number){
+                    this.programacionService.deleteProgramacionByid(prid).subscribe(
+                        realizar => {
+                                        this.getAllProgramacionByEm(this.emid,this.anio); 
+                                        this.displayConfirmar=false;
+                                    },
+                        err => {this.mensaje="No puede borrar esta programacion, esta siendo utilizada";
+                                this.displayAvisoNoPuedeBorrarProg=true;    
+                                this.displayConfirmar=false;
+                                console.log(err);}
+                    );
+                }
         /* GETTERS -> RECUPERANDO DATOS */
             /*CONSULTA PROGRAMACION DETALLE*/
             getallprogramaciondetallebyprid(_prid:number){
@@ -799,9 +814,9 @@ export class ProgComponent implements OnInit{
     cancelarProgBaseSegundoModal(){
         this.displayProgramacionBase = false; //1era MODAL
         this.displayNuevaProgramacion=false;  //2da MODAL
-        //BORRAR LOS DATOS INGRESADOS 
-      
-        
+        console.log(this.progMaestro.PrId);
+        //BORRAR ULTIMA PROGRAMACION SEMI CREADA
+        this.procEliminarProgr(this.progMaestro.PrId);
     }
 
     //datos para grilla HTML Maestro (consulta especialmente hecha para mostrar en el res)
@@ -1066,7 +1081,7 @@ export class ProgComponent implements OnInit{
         this.displayEditProgC=false;
         this._progrMaestro = null;
         this.progDescripcion="";
-        console.log(this._progrMaestro);
+        //console.log(this._progrMaestro);
     }
 
     //BOTON ELIMINAR REGISTRO 
@@ -1100,29 +1115,45 @@ export class ProgComponent implements OnInit{
         this.displayProgramacion=false;
     }
 
+    datosGenerarArchivo(){
+        this.displayDatosPDF=true;
+        this.displayProgramacion=false;
+    }
+
+    cancelarDatosGenerarArchivo(){
+        this.displayDatosPDF=false;
+    }
+    
+    generarArchivo(){
+        this.descargarProgramacion(this.nomArchivoPDF, this.titArchivoPDF);
+        this.displayDatosPDF=false;
+    }
     
     //DESCARGAR LA PROGRAMACION EN FORMATO PDF 
-    descargarProgramacion(){
+    descargarProgramacion(nombreArchivo:string, tituloArchivo:string){
         //ESTA FUNCION es ASI:  se divide el los array en array de filas para pasarlo a las
         //                      hojas en un total de nro de filas
 
         //VARIABLES 
-            var doc = new jsPDF('l','pt','a4');
+            //HOJAS
+                var doc = new jsPDF('l','pt','a4');
 
-            let arr0=[], i:number =0,j=0,k=0 ,
-                arr1=[], 
-                nrosalto:number = 0, 
-                arrprog=[];
-            let ncol:number, 
-                r, 
-                dividendo=this.nroDiasFilaSelect,//TOTAL DE DIAS DE LA PROGRAMACION
-                c=1;
+                let arr0=[], i:number =0,j=0,k=0 , arr1=[], nrosalto:number = 0, arrprog=[];
+                let ncol:number, r, dividendo=this.nroDiasFilaSelect, c=1;
             
+            //CALENDARIO
+                let arrCalendario:any[]=[], __arrCalendario:any[]=[];
+                let arrCalendarioString:any[]=[], __arrCalendarioString:any[]=[];
+
+                //NUMERICO
+                __arrCalendario=this.calendario.slice(0); __arrCalendario.splice(0,1);
+                //STRING
+                __arrCalendarioString=this.calendarioString.slice(0); __arrCalendarioString.splice(0,1);
+                
+                
+
             //NUMERO DE ARRAYS(FILAS) DE TODA LA TABLA
-                while(i<this.nroBusesFilaSelect){ 
-                    arr0[i]=arr1; 
-                    i++;
-                } 
+                while(i<this.nroBusesFilaSelect){ arr0[i]=arr1; i++;} 
                 arr1=[[],[],[],[],[],[],[]]; //NRO DE HOJAS EN TOTAL Q SE PUEDE DIVIDIR EL CALENDARIO
 
         //ALGORITMOS
@@ -1130,7 +1161,7 @@ export class ProgComponent implements OnInit{
             /* ARRAY DE PROG (SOLO PLACAS) */
                 //CAMBIANDO ARRAY DE PLACAS
                 arrprog=this.placasProgramacion(this.progBDDetalle,this.arrayPlacas);
-                console.log(this.progBDDetalle);
+                //console.log(this.progBDDetalle);
                 //REINICIANDO VARIABLES
                 i=0; let arrAux=[],arrborrar2=[];
 
@@ -1144,33 +1175,35 @@ export class ProgComponent implements OnInit{
                     arrAux.push(arr0[i].slice(0));
                     i++;  nrosalto=0;  j=0;
                 }
+                
+                
             /* ARRAY CON ARRAY DE COLUMNAS */
                 arr0=arrAux;
-                console.log(arr0);
-            /*AJUSTANDO EL NRO DE COLUMNAS A LA HOJA = 15 X HOJA*/
+    
+            /* AJUSTANDO EL NRO DE COLUMNAS A LA HOJA = 15 X HOJA*/
                 //REINICIANDO VARAIBLES A CERO
                     i=j=0;
                 //NUMERO DE COLUMNAS MAXIMO EN CADA HOJA
                     ncol = 15; 
                 //1ER RESIDUO, SABER SI EL TOTAL DE COLUMNAS ES MENOR O IGUAL QUE EL MAXIMO DE COLUMNAS PERMITIDO 
                     r = dividendo - ncol;
-   
-
+                //DIVIDIENDO AL ARRAYS EN ARRAY DE MATRICES(CADA MATRIZ ES UNA HOJA)
+                
         /* HAY 2 A MAS HOJAS */
         if(r>=0){
             //RESIDUO MAYOR AL NRO MAX DE COLUMNAS DE LA HOJA
             //r: RESIDUO TOTAL(ULTIMA HOJA) ,  C: COCIENTE(NRO DE HOJAS)
-            while( r > ncol ){  dividendo = r; r = dividendo - ncol;  dividendo = r;  c++; }
+                while( r > ncol ){  
+                    dividendo = r; r = dividendo - ncol;  
+                    dividendo = r;  c++; 
+                }
 
             //DIVIDIENDO EN ARRAYS (ARRAY DE CALENDARIO)    c:nro de veces en q debe dividirse en otros arrays
             //HOJAS DEL ARCHIVO
                 //VARIABLES
                 let calendarionumber:any[]=[];
-
-                calendarionumber=this.calendario.slice(0);
-                calendarionumber.shift();
-                console.log(calendarionumber);
-
+                calendarionumber=this.calendario.slice(0);   calendarionumber.shift();
+            
                 //DIVIDIENDO EL CALENDARIO
                 while(i<c){ 
                     while( k<ncol && j<15*(i+1)){ 
@@ -1194,20 +1227,17 @@ export class ProgComponent implements OnInit{
                     i++; 
                     j++; 
                 }
-                console.log(c);
-                console.log(arr0);
-                console.log(arr1);
-
-            /* arr0: MATRIZ DE PLACAS(PROGRAMACION) */
-            /* arr1: MATRIZ CALENDARIO NUMERICO */
-            
+            /* arr0: MATRIZ DE PLACAS(PROGRAMACION)  arr1: MATRIZ CALENDARIO NUMERICO */
+                arr0=this.hojasProgracion(arr0,ncol,__arrCalendarioString ,c);
             //GENERANDO EL ARCHIVO PDF
                 i=j=0;
                 //INICIANDO LAS HOJAS DEL PDF
                     while(arr1[i].length != 0 && j<(c)){ 
-                        doc.autoTable(arr1[i],arr0,{ 
+                        doc.setFontSize(10)
+                        doc.text(40, 40, tituloArchivo+' RUTA 13');
+                        doc.autoTable(arr1[i],arr0[i],{ 
                             styles: {fontSize: 7,halign: 'center',cellPadding: 1,},   
-                            margin: {top: 30, right: 10, bottom: 10, left: 10},
+                            margin: {top: 60, right: 10, bottom: 10, left: 10},
                             theme: 'grid',
                             columnWidth: 'auto',
                             valign: 'top',
@@ -1215,14 +1245,13 @@ export class ProgComponent implements OnInit{
                         doc.addPage();
                         i++;
                         j++;
-                    }
-                
-                    
+                    }           
 
                 /* PDF ULTIMA HOJA  -> INTEGRAR EL RESTO DE LAS COLUMNAS QUE FALTAN, USAR EL RESIDUO DE LA DIVISION */
-                    doc.autoTable(arr1[c], arr0,{ 
+                    doc.text(40, 40, tituloArchivo+' RUTA 13');
+                    doc.autoTable(arr1[c], arr0[i],{ 
                             styles: { fontSize: 7, halign: 'center', cellPadding: 1,columnWidth: 60 },   
-                            margin: {top: 30, right: 10, bottom: 10, left: 10},
+                            margin: {top: 60, right: 10, bottom: 10, left: 10},
                             theme: 'striped',
                             columnWidth: 70,
                             valign: 'top',
@@ -1231,42 +1260,162 @@ export class ProgComponent implements OnInit{
 
         /*UNA SOLA HOJA (RESIDUO ES MENOR A CERO)*/
         }else if(r<0){
-            
-            let arrCalendario:any[]=[], __arrCalendario:any[]=[];
-            let arrCalendarioString:any[]=[], __arrCalendarioString:any[]=[];
-
-            //NUMERICO
-            __arrCalendario=this.calendario.slice(0); __arrCalendario.splice(0,1);
-            //STRING
-            __arrCalendarioString=this.calendarioString.slice(0); __arrCalendarioString.splice(0,1);
-            
             arr0.unshift(__arrCalendarioString);
- 
+            //CREANDO TABLA Y TITULO
             doc.autoTable(__arrCalendario, arr0,{ 
-                styles: { 
-                          fontSize: 7,
-                          halign: 'center',
-                          cellPadding: 1,
-                          columnWidth: 60
-                        },   
+                styles: { fontSize: 7, halign: 'center', cellPadding: 1, columnWidth: 60 },   
                 margin: {top: 30, right: 10, bottom: 10, left: 10},
                 theme: 'striped',
                 columnWidth: 70,
                 valign: 'top',
             });
+            
         }
 
         /* GUARDANDO ARCHIVO CON NOMBRE */
-            doc.save('programacion.pdf');
+            console.log(nombreArchivo);
+            console.log(tituloArchivo);
+            doc.save(nombreArchivo+''+'.pdf');
             this.mensaje="Se Descargo La Programacion";
+            this.displayProgramacion=false;
             this.displayDescargaProg=true;
     }
 
-    //DIVIDIENDO LA PROGRAMACION POR HOJAS
-    dividiendoProgramacion(arrprog=[], nroMax=[]){
+    // DESCOMPONIENDO MATRIZ EN ARRAY DE MATRICES(HOJAS)
+    hojasProgracion(arrprog=[], ncol:number, arrCalStr=[] , nrohojas:number){
+        let arrResult:any[]=[];
+            //console.log(arrprog); 
+            
+        //variables
+            let i=0, j=0; let nroRowArr:number;//VARIABLES SIMPLE
+            let _arrcalnum=[], _arrcalstr=[], arrmatprog=[]; //ARRAYS
 
+        //algoritmos
+            //iniciando arrays
+                    //_arrcalnum=this.initarrays(nrohojas,1); //calendario numerico
+                    _arrcalstr=this.initarrays(nrohojas,1); //calendario string
+                //matriz programacion
+                    nroRowArr=arrprog.length;
+                    arrmatprog=this.initarrays(nrohojas,nroRowArr);
+            //DIVIENDO
+                    //_arrcalnum=this.diviendoarrays(ncol, arrCalNum, _arrcalnum, 1, nrohojas); // calendario numerico
+                    _arrcalstr=this.diviendoarrays(ncol, arrCalStr, _arrcalstr, 1, nrohojas); // CALENDARIO STRING
+                    arrmatprog=this.diviendoarrays(ncol, arrprog, arrmatprog, 2, nrohojas);
+                    
+
+            //UNIENDO MATRIZPROG + ARRAYCALSTRING
+            //console.log(_arrcalstr); console.log(arrmatprog);
+
+            
+            if(_arrcalstr.length==arrmatprog.length){
+                i=0;
+                while(i<_arrcalstr.length){
+                    arrmatprog[i].unshift(_arrcalstr[i]);
+                    i++;
+                }
+            }
+            arrResult=arrmatprog.slice(0);
+            //console.log(arrmatprog);
+        return arrResult;
     }
-    diviendoCalendario(arrCalen=[], nroMax=[]){
+
+    //iniciando arrays
+    initarrays(nrohojas:number, nroRowArr:number){
+        //console.log(nroRowArr);
+        let _arrrest1=[]; let _arrrest2=[];
+        let i=0; let j=0; nrohojas++;
+
+        //arr lineal
+        if(nroRowArr==1){
+            while(i<nrohojas){
+                _arrrest1[i]=[];
+                i++;
+            }
+            return _arrrest1;
+
+        //arr multi
+        }else if(nroRowArr>1){
+            while(i<nrohojas){
+                _arrrest2[i]=[];
+                while(j<nroRowArr){
+                    _arrrest2[i][j]=[];
+                    j++;
+                }
+                j=0;
+                i++;
+            }
+
+            return _arrrest2;
+        }    
+    }
+
+    //DIVIDE LOS ARRAY INGRESADOS EN MATRIZ O ARRAYS
+    diviendoarrays(ncol:number, arrcont=[], arrresul=[] , tipoarr:number, nrohojas:number){
+        let i=0; let j=0; let k=0;  let resto:number; let l:number;
+        //console.log(arrcont);
+        
+        //LINEAL
+        if(tipoarr==1){
+            resto=arrcont.length-ncol*nrohojas;
+      
+            //DIVIDIR ARRAY
+            while(i<nrohojas){
+                while(j<ncol){
+                    arrresul[i][j]=arrcont[k]; k++; j++;
+                }
+                j=0; i++;
+            }
+
+            if(resto!=0){
+                while(i<nrohojas+1){
+                    while(j<resto){
+                        arrresul[i][j]=arrcont[k];
+                        k++; j++;
+                    }
+                    j=0; i++;
+                }
+            }
+            return arrresul;
+        //MATRIZ
+        }else if(tipoarr==2){
+            //i: filas;     j: nro hojas prog;      k: nro columnas;  l:salto entre hojas(indices filas)
+            i=0; j=0; k=0; l=0;  resto=arrcont[0].length-ncol*nrohojas;
+
+            //HOJAS ENTERAS
+                while(j<nrohojas){//HOJAS PROG
+                    while(k<ncol*(j+1)){//NRO COLM
+                        while(i<arrcont.length){//NRO FILAS MAT
+                            arrresul[j][i][l]=arrcont[i][k];
+                            i++;
+                        }
+                        l++; i=0; k++;
+                    }
+                    l=0; j++;
+                }
+            
+            //HORAS RESIDUO
+            //console.log(resto); console.log(j); console.log(k);
+            if(resto!=0){
+                while(j<(nrohojas+1)){//HOJAS PROG
+                    //console.log( (ncol*(j+1))+resto);
+                    //console.log( (ncol*j)+resto);
+                    while( k < (ncol*j)+resto) {//NRO COLM
+
+                        while(i<arrcont.length){//NRO FILAS MAT
+                            arrresul[j][i][l]=arrcont[i][k];
+                            i++;
+                        }
+                        l++; i=0; k++;
+                    }
+                    l=0; 
+                    j++;
+
+                }
+            }
+
+            //console.log(arrresul);
+            return arrresul;
+        }
         
     }
 
