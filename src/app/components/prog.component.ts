@@ -3,7 +3,9 @@ import {SelectItem} from 'primeng/primeng';
 import {ProgramacionService} from '../service/prog.service'
 import {PlacasService} from '../service/placas.service'
 import {GlobalVars} from 'app/variables'
-import {formatFechInArr,_fnroDias,fecha,arrABI,arrANBI,tipoAnio,_fecha1,_fecha2,slash_posFecha,formatFech,addDays,_addDays,editf1,fechaActual1} from 'app/funciones';
+import {hora,formatFechInArr,_fnroDias,fecha,arrABI,arrANBI,_hora,
+        tipoAnio,_fecha1,_fecha2,slash_posFecha,horaValida,
+        formatFech,addDays,_addDays,editf1,fechaActual1} from 'app/funciones';
 
 
 declare var jsPDF: any; //PARA PASAR HTML A PDF 
@@ -39,8 +41,12 @@ export class ProgComponent implements OnInit{
         }
 
     /* VARIABLES */
+        private nroTotalMinibuses:number;
+        private nroMiniBus:number;
+        private horaBase:string;
         private emid:number;
         private userid:number;
+        private PrId:number;
         private disabledbutton: boolean = false;
         private errorMessage:string='';  //mensaje error del rest
         private isLoading: boolean = false;  
@@ -59,6 +65,7 @@ export class ProgComponent implements OnInit{
         private titArchivoPDF:string;
         private nomArchivoPDF:string;
         private primerHSal:string;
+        private PrDiasIncluidos:string;
          //para seleccionar una fila de la tabla
         //private idFilaSeleccionada: number;  CLICK SOBRE REG GRILLA
         private iDReg:number;       //CLICK BOTON DE FILA ELIMINAR
@@ -67,6 +74,7 @@ export class ProgComponent implements OnInit{
         private titleNuevoProgPrimerModal:string;  
         private mensaje:string;     //MENSAJE CONFIRMACION MODAL 
         private mensajeEspera:string;
+        private mensajeProcesando:string;
         private resBusUnidades:string; /* PARA EL FORMULARIO DE NUEVA PROGRAMACION */
         private modEdit:boolean; /* modEdit=1: editando registro  modEdit=0: no se esta editando registro */
     /* ARRAYS */
@@ -84,7 +92,8 @@ export class ProgComponent implements OnInit{
         private programacionArrayDetalleBD:any[]=[]; //array objetos detalle para mandar al rest
         private _tipoProg:any[]=[];
         private _formaProg:any[]=[];
-
+        private diasSemana:any[]=[];
+        private dtSelectDias:any[]=[];
         //variables, se recupera las programaciones desde el servidor rest
         private progRest:any[]=[];
         private progRestMaestro:any[]=[]; /* NO USO */
@@ -99,12 +108,15 @@ export class ProgComponent implements OnInit{
         private calendario:any[]=[]; /* CALENDARIO NUMERICO  QUITAR ESTO*/
         private calendarioNumeric:any[]=[]; /* CALENDARIO NUMERICO - NO EN USO */
         private calendarioString:any[]=[]; /*  CALENDARIO EN DIAS DE LA SEMANA */
+        private calNumb:any[]=[];
+        private calString:any[]=[];
         private anio:number;
+        private arrHoraBaseSal:any[]=[];
     /* DISPLAY VENTANAS MODALES */
         private displayNuevaProgramacion: boolean = false;
         private displayProgramacionBase: boolean = false;
         private displayProgramacion: boolean = false;
-        private displayConfirmar: boolean = false; /* CONFIRMAR ELIMINAR REG PROGRAMACION */
+        private displayConfEliminarCabecera: boolean = false; /* CONFIRMAR ELIMINAR REG PROGRAMACION */
         private displayAvisoNoPuedeBorrarProg:boolean=false;
         private displayAceptarProgNueva : boolean = false;
         private displayIniciandoProgramacion:boolean=false;
@@ -114,82 +126,159 @@ export class ProgComponent implements OnInit{
         private displayDescargaProg : boolean = false;
         private displayEditProgC : boolean = false;
         private displayDatosPDF:boolean=false;
+        private displayHoraBase:boolean=false;
 
     ngOnInit(){
         /*console.log(fechaSgte("2017/02/07",32));*/  /* TERMINAR ESTO */
         this.ordenSorteo = [];
         this.getAllPlacasBusByEmSuEm(this.emid,0);  /* EMID + SUEMID*/
         this.getAllProgramacionByEm(this.emid,this.anio); /* EMID + AÑO */
+       
+        //console.log(this.descartarFechas(this.calendarioNumerico('2017-11-13', '2017-12-13'), '1,1,1,0,1,0,1'));
     }
     
-    constructor(private programacionService: ProgramacionService, private placasservice: PlacasService,public ClassGlobal:GlobalVars){
-                    this.emid=this.ClassGlobal.GetEmId();
-                    this.userid=this.ClassGlobal.GetUsId();
-                    this.lengthProgDet=0;
-                    this.anio=0;
-                    this.progMaestro.EmId = 1; /* ELIMINAR ESTO */
-                    this._tipoProg =[
-                        {id:"01",nTipo:"automatico"},
-                        {id:"02",nTipo:"manual"}
-                    ];
-                    this._formaProg=[
-                        {id:"01", nForma:"pescadito"},
-                        {id:"02", nForma:"escala"}
-                    ];
-                }
+    constructor(private programacionService: ProgramacionService, 
+                private placasservice: PlacasService,
+                public ClassGlobal:GlobalVars){
+        this.emid=this.ClassGlobal.GetEmId();
+        this.userid=this.ClassGlobal.GetUsId();
+        this.lengthProgDet=0;
+        this.anio=0;
+        this.progMaestro.EmId = 1; /* ELIMINAR ESTO */
+        this._tipoProg =[
+            {id:"01",nTipo:"automatico"},
+            {id:"02",nTipo:"manual"}
+        ];
+        this._formaProg=[
+            {id:"01", nForma:"pescadito"},
+            {id:"02", nForma:"escala"}
+        ];
+        this.nroMiniBus=0;
+        this.nroTotalMinibuses=0;
+        this.diasSemana=[
+            {id:0,nro:1, nomb:'Lunes'},
+            {id:1,nro:2, nomb:'Martes'},
+            {id:2,nro:3, nomb:'Miercoles'},
+            {id:3,nro:4, nomb:'Jueves'},
+            {id:4,nro:5, nomb:'Viernes'},
+            {id:5,nro:6, nomb:'Sabado'},
+            {id:6,nro:7, nomb:'Domingo'},
+        ];
+    }
         
-    /* FUNCION VALIDAR FECHA DE INICIO DE LA PROGRAMACION */
-        funcValidaFIni(fant:string, fini:string):boolean{
-            let arrfant=fant.split("-"), arrfini=fini.split("-"), resp:boolean;
-            /* A_ANT: año anterior, A_INI: año inicio */
-            /* M_ANT: mes anterior, M_INI: mes inicio */
-            /* D_ANT: dia anterior, D_INI: dia inicio */
+    funcCalendarioNumerico(refFecha1:string, refFecha2:string){
+        let diaHoy = new Date(); let arrCalendar:any[]=[]; let i:number=1; 
+        let f1=refFecha1.split('-'); let f2=refFecha2.split('-'); let nf1, nf2;
+        nf1=_fnroDias(f1); nf2=_fnroDias(f2); let nroDias:number=nf2 - nf1; 
 
-            /* A_ANT MENOR A A_INI */
-            if(arrfant[0]<arrfini[0] ){
-                resp=true;
-            /* A_ANT IGUALES A_INI */
-            }else if( arrfant[0]==arrfini[0]  ){
-                /* M_ANT MENOR A M_INI */
-                if(arrfant[1]<arrfini[1]){
-                    resp=true;
-                /* M_ANT IGUALES A M_INI */
-                }else if(arrfant[1]==arrfini[1]){
-                    /* D_ANT MENOR A D_INI */
-                    if(arrfant[2]<arrfini[2]){
-                        resp=true;
-                    /* D_ANT IGUALES A D_INI */
-                    }else if(arrfant[2]==arrfini[2]){
-                        resp=false;
-                    /* D_ANT MAYOR A D_INI */
-                    }else if(arrfant[2]>arrfini[2]){
-                        resp=false;
-                    }
+    
+        let initfecha = fecha(refFecha1);
 
-                /* M_ANT MAYOR A M_INI */
-                }else if(arrfant[1]>arrfini[1]){
-                    resp=true;
-                }
-                
-            /* A_ANT MAYOR A A_INI */
-            }else if(arrfant[0]>arrfini[0]){
-                resp=false;
-            }
+       
+        let arrDaysSemana:any[]=[];
+        arrCalendar[0]=fecha(refFecha1).getTime();
 
-            return resp;
+        while(i<nroDias){ 
+            arrCalendar[i]=new Date(arrCalendar[0]+(i*(24*60*60*1000)));  
+            i++; 
         }
+        arrCalendar[0]=new Date(arrCalendar[0]);
+        return arrCalendar;
+    }
+            
+    //QUITAR DIAS DE LA SEMANA DE TODO EL CALENDARIO
+    descartarFechas(arrFechas=[], diasValidos:string){
+        let fechasValidas=[]; let arrDiasValidos=diasValidos.split(',');
+        let i:number=0; let j=0; let _arrDiasValidos=[];
+       
+        while(j<arrDiasValidos.length){
+            if(arrDiasValidos[j]=='1'){
+                if(j>=0 && j<6){
+                    _arrDiasValidos.push(j+1);
+                }else if(j==6){ _arrDiasValidos.push(0) }
+            }
+            j++;
+        }
+        //console.log(_arrDiasValidos);
+        while(i<arrFechas.length){
+            if(this.validarFechaCalendario(arrFechas[i],_arrDiasValidos) == 1 ){
+                fechasValidas.push(arrFechas[i]);
+            } else if(this.validarFechaCalendario(arrFechas[i],_arrDiasValidos) == 0 ){
+
+            }
+            i++;
+        }
+        
+        //console.log(fechasValidas);
+        return fechasValidas;
+    }
+
+    validarFechaCalendario(fecha:Date, arrDiasValidos=[]):number{
+        let i=0;  let cen=0; let _arrDiasValidos=arrDiasValidos;
+        
+        while(i<arrDiasValidos.length && cen==0){
+            if(fecha.getDay()==_arrDiasValidos[i]){
+                cen=1;
+            }else if(fecha.getDay()!=_arrDiasValidos[i]){
+                i++;
+                cen=0;
+            }
+        }
+        return cen;
+    }
+
+    /* FUNCION VALIDAR FECHA DE INICIO DE LA PROGRAMACION */
+    funcValidaFIni(fant:string, fini:string):boolean{
+        let arrfant=fant.split("-"), arrfini=fini.split("-"), resp:boolean;
+        /* A_ANT: año anterior, A_INI: año inicio */
+        /* M_ANT: mes anterior, M_INI: mes inicio */
+        /* D_ANT: dia anterior, D_INI: dia inicio */
+
+        /* A_ANT MENOR A A_INI */
+        if(arrfant[0]<arrfini[0] ){
+            resp=true;
+        /* A_ANT IGUALES A_INI */
+        }else if( arrfant[0]==arrfini[0]  ){
+            /* M_ANT MENOR A M_INI */
+            if(arrfant[1]<arrfini[1]){
+                resp=true;
+            /* M_ANT IGUALES A M_INI */
+            }else if(arrfant[1]==arrfini[1]){
+                /* D_ANT MENOR A D_INI */
+                if(arrfant[2]<arrfini[2]){
+                    resp=true;
+                /* D_ANT IGUALES A D_INI */
+                }else if(arrfant[2]==arrfini[2]){
+                    resp=false;
+                /* D_ANT MAYOR A D_INI */
+                }else if(arrfant[2]>arrfini[2]){
+                    resp=false;
+                }
+
+            /* M_ANT MAYOR A M_INI */
+            }else if(arrfant[1]>arrfini[1]){
+                resp=true;
+            }
+            
+        /* A_ANT MAYOR A A_INI */
+        }else if(arrfant[0]>arrfini[0]){
+            resp=false;
+        }
+
+        return resp;
+    }
     
     /* OBTENER ULTIMA FECHA PARA VALIDAR FECHAS DE LA SIGUEINTE PROGRAMACION */
-        ultFecha(arrAllProg=[]):string{
-            let f:string;
-            f=_fecha1(arrAllProg[arrAllProg.length - 1].PrFechaFin);
-            f=formatFech(slash_posFecha(f));
-            return f;
-        }
+    ultFecha(arrAllProg=[]):string{
+        let f:string;
+        f=_fecha1(arrAllProg[arrAllProg.length - 1].PrFechaFin);
+        f=formatFech(slash_posFecha(f));
+        return f;
+    }
 
-        formaProgramacion($event){
-            console.log(this.formaProg);
-        }
+    formaProgramacion($event){
+        console.log(this.formaProg);
+    }
 
     /* PROCEDURES */
         /* ACTUALIZACION */
@@ -216,6 +305,7 @@ export class ProgComponent implements OnInit{
                 procSaveProgramacion(objProg:Object){
                     this.programacionService.saveProgramacion(objProg).subscribe( 
                         data => {this.progMaestro=data;  //RECUPERANDO OBJETO PARA SACAR EL PRID
+                                    this.PrId=data.PrId;
                                  if(this.modEdit==true){
                                     this.getAllProgramacionByEm(this.emid,this.anio);
                                     this.mostrargrillaProgramacionMaestro() ;
@@ -233,11 +323,11 @@ export class ProgComponent implements OnInit{
                     this.programacionService.deleteProgramacionByid(prid).subscribe(
                         realizar => {
                                         this.getAllProgramacionByEm(this.emid,this.anio); 
-                                        this.displayConfirmar=false;
+                                        this.displayConfEliminarCabecera=false;
                                     },
                         err => {this.mensaje="No puede borrar esta programacion, esta siendo utilizada";
                                 this.displayAvisoNoPuedeBorrarProg=true;    
-                                this.displayConfirmar=false;
+                                this.displayConfEliminarCabecera=false;
                                 console.log(err);}
                     );
                 }
@@ -250,7 +340,11 @@ export class ProgComponent implements OnInit{
                         this.lengthProgDet=this.progBDDetalle.length;
 
                         if(this.lengthProgDet!=0){
-                            this.mensaje="Se Genero Correctamente La Programacion";
+                            this.nroMiniBus=0; 
+                            this.nroTotalMinibuses=-1;
+                            this.mensajeProcesando="Procesando nueva programacion";
+            
+                            this.cargarPrDeId(this.programacionArrayDetalleBD,this.progBDDetalle);
                         }else if(this.lengthProgDet==0){
                             this.mensaje="Se encontro un error, elimine y vuelva a generarlo";
                             this.lengthProgDet=1;
@@ -258,6 +352,23 @@ export class ProgComponent implements OnInit{
                     },
                     err => {this.errorMessage=err},
                     () => this.isLoading=false
+                );
+            }
+
+            //CARGAR PRDEID para guardar horabasesalida
+            cargarPrDeId(arrProgBase=[], arrProg=[]){
+                
+                for(let i=0; i<arrProgBase.length; i++){
+                    arrProgBase[i].PrDeId=arrProg[i].PrDeId;
+                }
+                this.programacionService.saveProgDetalleHsalida(arrProgBase).subscribe(
+                    realizar => {   console.log(realizar);
+                                    this.lengthProgDet=0;
+                                    this.mensaje="Se Genero Correctamente La Programacion";
+                                    
+                    },
+                    error => {},
+                    () => {}
                 );
             }
 
@@ -291,20 +402,15 @@ export class ProgComponent implements OnInit{
 
             /*TODAS LAS PROGRAMACIONES POR EMPRESA Y AÑO*/
             getAllProgramacionByEm( empId: number, anio: number){
-                this.programacionService.getAllProgramacionByEm(empId, anio)
-                    .subscribe(
-                        datos => {
-                            this.progRest = datos ; 
-                           
-                            this.mostrargrillaProgramacionMaestro(this.progRest);
-                        },
+                this.programacionService.getAllProgramacionByEm(empId, anio).subscribe(
+                        datos => { this.progRest = datos; console.log(this.progRest); this.mostrargrillaProgramacionMaestro(this.progRest); },
                         err => {this.errorMessage = err}, 
                         () =>this.isLoading = false
                     );
                 
             }
 
-
+            
     //ABRIR 1ERA VENTANA MODAL(BOTON NUEVO)
     NuevaProgCabecera(){
         this.modEdit=false;
@@ -314,113 +420,165 @@ export class ProgComponent implements OnInit{
         this.titleNuevoProgPrimerModal = 'Nueva';
         this.extrayendoPlacasBus(); 
         this.unidadesEstado(this.placasComplet); //CALCULA EL NRO DE UNIDADES ACTIVAS Y NO ACTIVAS
-
-
+        this.progBDDetalle=[];
+        this.lengthProgDet=0;
+        this.dtSelectDias=[];
         this.tipoProg="01"; //PROGRAMACION POR DEFECTO: MANUAL
         this.formaProg="01"; /* (1)MANUAL O (2)AUTOMATICO */
     }
 
     //1ERA VENTANA MODAL aqui recien se guarda la tabla MAESTRO en el REST 
-    showProgBase(){
-            let progCab:any;
-            let fIni=this.progMaestro.PrFechaInicio; let fFin=this.progMaestro.PrFechaFin;
-            //VALIDANDO FECHA
-            if( this.validandoFechas(fIni,fFin)==1){
-                    //FECHA CORRECTA
-                    this.tipoProgramacion(); /* MANUAL O AUTOMATICO */
-                    progCab = {
-                        PrId : this.progMaestro.PrId, //number
-                        EmId : this.emid, //number
-                        PrCantidadBuses : this.bAct, //number
-                        PrDescripcion : this.progMaestro.PrDescripcion, //string
-                        PrFecha : new Date(), //string
-                        PrFechaInicio : this.fecha(this.progMaestro.PrFechaInicio), //string
-                        PrFechaFin : this.fecha(this.progMaestro.PrFechaFin), //string
-                        PrTipo : Number(this.tipoProg), //string escala pescadito
-                        PrAleatorio : Number(this.formaProg), //string manual automatico(aleatorio)
-                        UsId : this.userid, //number
-                        UsFechaReg : new Date() //string
-                    }
-                    console.log(progCab);
-                    this.procSaveProgramacion(progCab);
-                   
-                    this.displayNuevaProgramacion=false; //cerrar 1era ventana
-                    this.displayProgramacionBase=true; //abrir 2da ventana
-                }else if(this.validandoFechas(fIni,fFin)==0){
-                    //FECHA NO CORRECTA
-            }
+    guardarProgCabecera(){
+        let progCab:any;
+        let fIni=this.progMaestro.PrFechaInicio; let fFin=this.progMaestro.PrFechaFin;
+        //VALIDANDO FECHA
+        if( this.validandoFechas(fIni,fFin)==1){
+                //FECHA CORRECTA
+                this.tipoProgramacion(); /* MANUAL O AUTOMATICO */
+                
+
+                progCab = {
+                    PrId : this.progMaestro.PrId, //number
+                    EmId : this.emid, //number
+                    PrCantidadBuses : this.bAct, //number
+                    PrDescripcion : this.progMaestro.PrDescripcion, //string
+                    PrFecha : new Date(), //string
+                    PrFechaInicio : this.fecha(this.progMaestro.PrFechaInicio), //string
+                    PrFechaFin : this.fecha(this.progMaestro.PrFechaFin), //string
+                    PrTipo : Number(this.tipoProg), //string escala pescadito
+                    PrAleatorio : 0, //string manual automatico(aleatorio)
+                    PrDiasIncluidos:this.diasIncluidos(this.dtSelectDias),
+                    UsId : this.userid, //number
+                    UsFechaReg : new Date() //string
+                }
+                
+                //console.log(progCab);
+                this.procSaveProgramacion(progCab);
+            
+                this.displayNuevaProgramacion=false; //cerrar 1era ventana
+                this.displayProgramacionBase=true; //abrir 2da ventana
+            }else if(this.validandoFechas(fIni,fFin)==0){
+                //FECHA NO CORRECTA
+        }
                 
     }
+
+    //BORRAR ARR arrPrDiasIncluidos
+    diasIncluidos(arrDias=[]):string{
+        let dias:string; let i:number=0; let arrPrDiasIncluidos=[0,0,0,0,0,0,0];
+        //{id:0,nro:1, nomb:'Lunes'},
+        while(i<arrDias.length){
+            arrPrDiasIncluidos[arrDias[i].id] = 1;
+            i++;
+        }
+        
+        dias=arrPrDiasIncluidos.join(',');
+        //console.log(dias);
+        return dias;
+    }
+
+   
     /* FUNCION -> FORMA DE SORTEO MANUAL O AUTOMATICO */
-        tipoProgramacion(){
-            let tprog=this.tipoProg;
-            this.ordenSorteo=[];/* LIMPIANDO ARRAY DE SORTEOS */
-            
-            /* AUTOMATICO*/
-            if(tprog=="01"){ 
-                let array = ["c"];  let nro;//ARRAY NUMEROS ALEATORIOS NO REPETIDOS
-                let arrayplacas= this.arrayPlacas;  let long = this.arrayPlacas.length; 
-                let _arrayplacas=[];  let i=0,j=0, cen=0; // cen=0: no existe         cen=1: existe
-                //ALGORITMO NROS ALEATORIOS
-                while(i<long ){
-                    nro = Math.floor(Math.random()*long);//NUMEROS ALEATORIOS ENTRE 0 Y LONG(7)
-                    while(j<array.length ){
-                        if(array[j]!=nro){
-                            cen=0;
-                        }else if(array[j]==nro){ 
-                            cen=1; j=array.length;
-                        }
-                        j++;
+    tipoProgramacion(){
+        let tprog=this.tipoProg;
+        this.ordenSorteo=[];/* LIMPIANDO ARRAY DE SORTEOS */
+        
+        /* AUTOMATICO*/
+        if(tprog=="01"){ 
+            let array = ["c"];  let nro;//ARRAY NUMEROS ALEATORIOS NO REPETIDOS
+            let arrayplacas= this.arrayPlacas;  let long = this.arrayPlacas.length; 
+            let _arrayplacas=[];  let i=0,j=0, cen=0; // cen=0: no existe         cen=1: existe
+            //ALGORITMO NROS ALEATORIOS
+            while(i<long ){
+                nro = Math.floor(Math.random()*long);//NUMEROS ALEATORIOS ENTRE 0 Y LONG(7)
+                while(j<array.length ){
+                    if(array[j]!=nro){
+                        cen=0;
+                    }else if(array[j]==nro){ 
+                        cen=1; j=array.length;
                     }
-                    if(cen==0){  
-                        array[i]=nro;   
-                        i++;    
-                    }
-                    cen=0; j=0;
+                    j++;
                 }
-                //console.log(array);
-                //APLICANDO ALGORITMO, BUSCANDO INDICES CON ARRAY DE PLACAS
-                i=0; nro=0;
-                while(i<array.length){
-                    _arrayplacas.push(arrayplacas[array[i]]);
-                    i++;
+                if(cen==0){  
+                    array[i]=nro;   
+                    i++;    
                 }
-                this.ordenSorteo=_arrayplacas;
-                this.arrayPlacas=[];
-               
-            /* MANUAL*/
-            }else if(tprog=="02"){
-                console.log("manual");
-                
+                cen=0; j=0;
             }
+            //console.log(array);
+            //APLICANDO ALGORITMO, BUSCANDO INDICES CON ARRAY DE PLACAS
+            i=0; nro=0;
+            while(i<array.length){
+                _arrayplacas.push(arrayplacas[array[i]]);
+                i++;
+            }
+        
+            this.ordenSorteo=_arrayplacas;
+            this.arrayPlacas=[];
+            
+        /* MANUAL*/
+        }else if(tprog=="02"){
+            console.log("manual");
             
         }
+        
+    }
  
     //ARRAY DIAS PROGRAMACION//      1 : NO BISIESTO    2017-05-02   0 : BISIESTO
-    calendarioProg(f1 : string, f2 : string){
-        this.calendario=this.calendarioNumb(f1,f2);
-        this.calendarioString=this.calendarioChar(f1,f2,this.calendario);
-        //console.log(this.calendarioString);
+    calendarioProg(f1 : string, f2 : string, diasIncl:string){
+        let calendario= this.descartarFechas(this.funcCalendarioNumerico(f1,f2), diasIncl);
+        let i=0; let arrCalNumber:any[]=[]; let arrCalString:any[]=[];
+
+        //EXTRAENDO NUMERICO
+        while(i<calendario.length){
+            arrCalNumber[i]=calendario[i].getDate();
+            i++;
+        }
+
+        //EXTRAENDO DIAS SEMANA
+        i=0;
+        while(i<calendario.length){
+            if(calendario[i].getDay()==1){
+                arrCalString[i]='lu';
+            }else if(calendario[i].getDay()==2){
+                arrCalString[i]='ma';
+            }else if(calendario[i].getDay()==3){
+                arrCalString[i]='mi';
+            }else if(calendario[i].getDay()==4){
+                arrCalString[i]='ju';
+            }else if(calendario[i].getDay()==5){
+                arrCalString[i]='vi';
+            }else if(calendario[i].getDay()==6){
+                arrCalString[i]='sa';
+            }else if(calendario[i].getDay()==0){
+                arrCalString[i]='do';
+            }
+            i++;
+        }
+        this.calNumb=arrCalNumber.slice(0);
+        this.calString=arrCalString.slice(0);
+        //this.calendario=this.calendarioNumb(f1,f2);
+        //this.calendarioString=this.calendarioChar(f1,f2,this.calendario);
     }
-    
-    /* CALENDARIO NUMERICO */
+
+    /* CALENDARIO NUMERICO 
     calendarioNumb(f1:string, f2:string){
         let _f1, _f2;  let a1, a2; let res=[]; let _res=[]; let i=0,j=0, k,l,m,n;
         let ab=[31,29,31,30,31,30,31,31,30,31,30,31], anb=[31,28,31,30,31,30,31,31,30,31,30,31];
         {
-            _f1 = f1.split('-'); /* DIV EN FORMA DE ARRAY */
-            _f2 = f2.split('-'); /* DIV EN FORMA DE ARRAY */
+            _f1 = f1.split('-'); // DIV EN FORMA DE ARRAY 
+            _f2 = f2.split('-'); // DIV EN FORMA DE ARRAY 
             
-            _f1.push(this.bisiesto(_f1[0])); /* RECONOCIENDO BI O NOBI */
-            _f2.push(this.bisiesto(_f2[0])); /* RECONOCIENDO BI O NOBI */
+            _f1.push(this.bisiesto(_f1[0])); // RECONOCIENDO BI O NOBI 
+            _f2.push(this.bisiesto(_f2[0])); // RECONOCIENDO BI O NOBI 
 
             //CONVIRTIENDO ELEMENTOS A NROS -- CONTIENE SU AÑO BISIESTO(0) O NO BISIESTO(1)
             while(i<_f1.length){ _f1[i]=Number(_f1[i]); i++;}   _f1[1]=_f1[1]-1;   
             while(j<_f2.length){ _f2[j]=Number(_f2[j]); j++;}   _f2[1]=_f2[1]-1;
-            /*console.log(_f1); console.log(_f2);*/
+        
         }
 
-        /* CALENDARIO NUMERICO */
+        //* CALENDARIO NUMERICO 
          //MESES IGUALES  -  AÑOS IGUALES - DIAS DIFERENTES _F2 > _F1
         if(_f2[1]-_f1[1]==0 && _f2[0]-_f1[0]==0){
             if(_f2[1]==1){//FEBRERO
@@ -448,7 +606,7 @@ export class ProgComponent implements OnInit{
 
         //DIFERENCIA DE MESES  AÑOS IGUALES (1,2,3 DE DIFERENCIA)
         else if(_f2[1]-_f1[1]>0){
-            k=_f1[2]; j=_f2[2];/*DIAS*/
+            k=_f1[2]; j=_f2[2];//DIAS
             
             //CORREGIR ESTO, TIENE PROBLEMA CON RECONOCER SI ES AÑO BISIESTO O NO
             if(_f1[3]==0){ // BISIESTO
@@ -457,7 +615,7 @@ export class ProgComponent implements OnInit{
                     k++;
                 }
                 k=_f1[1]+1;
-                while(k<_f2[1]){/*OTROS MESES */ 
+                while(k<_f2[1]){//OTROS MESES 
                     l=1;
                     while(l<=ab[k]){
                         res.push(l);
@@ -476,7 +634,7 @@ export class ProgComponent implements OnInit{
                     k++;
                 }
                 k=_f1[1]+1;
-                while(k<_f2[1]){/*OTROS MESES */ 
+                while(k<_f2[1]){//OTROS MESES 
                     l=1;
                     while(l<=anb[k]){
                         res.push(l);
@@ -494,17 +652,17 @@ export class ProgComponent implements OnInit{
 
         //AÑOS DIFERENTES
         }else if(_f2[1]-_f1[1]<0){
-            i=_f1[1]; j=_f2[1]; /*MESES*/ 
-            k=_f1[2]; l=_f2[2] /*DIAS*/
+            i=_f1[1]; j=_f2[1]; //MESES 
+            k=_f1[2]; l=_f2[2] //DIAS
             
-            if(_f1[3]==0 && _f2[3]==1){       /* B NB */ 
+            if(_f1[3]==0 && _f2[3]==1){       // B NB 
 
                 //DIAS 1ER MES-MAYOR AÑO BISIESTO
                 while(k<=ab[_f1[1]]){ 
                     res.push(k);
                     k++;
                 }
-                /*MESES QUE ESTAN ENTRE LAS FECHAS*/
+                //MESES QUE ESTAN ENTRE LAS FECHAS
                 i=_f1[1]+1;//SGTE MES AL 1ERO 
                 j=_f2[1]-1;//ANT  MES AL ULT
                 while(i<=11){ //AB
@@ -530,13 +688,13 @@ export class ProgComponent implements OnInit{
                     k++;
                 }
 
-            }else if(_f1[3]==1 && _f2[3]==0){ /* NB B */
+            }else if(_f1[3]==1 && _f2[3]==0){ //* NB B 
                 //DIAS 1ER MES-MAYOR AÑO NO BISIESTO
                 while(k<=anb[_f1[1]]){ 
                     res.push(k);
                     k++;
                 }
-                /*MESES QUE ESTAN ENTRE LAS FECHAS*/
+                //MESES QUE ESTAN ENTRE LAS FECHAS
                 i=_f1[1]+1;//SGTE MES AL 1ERO 
                 j=_f2[1]-1;//ANT  MES AL ULT
                 while(i<=11){ //ANB
@@ -561,13 +719,13 @@ export class ProgComponent implements OnInit{
                     res.push(k);
                     k++;
                 }
-            }else if(_f1[3]==1 && _f2[3]==1){ /* NB NB */
+            }else if(_f1[3]==1 && _f2[3]==1){ // NB NB 
                 //DIAS 1ER MES-MAYOR AÑO NO BISIESTO
                 while(k<=anb[_f1[1]]){ 
                     res.push(k);
                     k++;
                 }
-                /*MESES QUE ESTAN ENTRE LAS FECHAS*/
+                //MESES QUE ESTAN ENTRE LAS FECHAS
                 i=_f1[1]+1;//SGTE MES AL 1ERO 
                 j=_f2[1]-1;//ANT  MES AL ULT
                 while(i<=11){ //ANB
@@ -597,19 +755,23 @@ export class ProgComponent implements OnInit{
             }
         }
         return res;
-    }
+    }*/
     
-    /* CALENDARIO EN DIAS DE LA SEMANA */
+    /* CALENDARIO EN DIAS DE LA SEMANA 
     calendarioChar(f1:string, f2:string, arrCal=[]){
         let arr:any[]=["x"], arrf1:any[]=[], arrf2:any[]=[]; 
         let nrof1:number, nrof2:number, fresp:number , nroTotDias:number,i:number, diaSemana:string;
 
         arrf1=formatFechInArr(f1);  arrf2=formatFechInArr(f2);
-        nrof1=_fnroDias(arrf1); nrof2=_fnroDias(arrf2); nroTotDias=nrof2-nrof1+1+1;
+        nrof1=_fnroDias(arrf1); nrof2=_fnroDias(arrf2); //nroTotDias=nrof2-nrof1+1+1;
+        nroTotDias=arrCal.length;
+
+
         for(let i=0; i<nroTotDias;i++){ arr[i]="x"; }
-        /*console.log( (_addDays(f1,i)).getDay() );*/
+        //console.log( (_addDays(f1,i)).getDay() );
         
         for(let i=0; i<nroTotDias;i++){
+            //console.log(i);
             if((_addDays(f1,i)).getDay()==1){
                 arr[i]="Lu";
             }else if((_addDays(f1,i)).getDay()==2){
@@ -626,8 +788,9 @@ export class ProgComponent implements OnInit{
                 arr[i]="do";
             }
         }
+        //console.log(arr);
         return arr;
-    }
+    }*/
     
     //CERRAR MENSAJE DE SE ENCONTRO ERROR EN LOS DATOS INGRESADOS
     errorDatos(){
@@ -715,7 +878,7 @@ export class ProgComponent implements OnInit{
     //CONSULTA NUMERO DE BUSES ACTIVOS Y NO ACTIVOS
     unidadesEstado(arrayPlacas=[]){
         let i=0; let bAct=0; let bNAct=0;;
-        console.log(arrayPlacas);
+        //console.log(arrayPlacas);
         while(i<arrayPlacas.length){
             if(arrayPlacas[i].BuActivo==true){
                 bAct++;
@@ -733,65 +896,113 @@ export class ProgComponent implements OnInit{
 
     //2DA VENTANA MODAL(boton continuar)
     //BOTON GENERAR PROGRAMACION 
-    generarProgramacionSegundoModal(){
+    programacionSegundoModal(){
+        this.programacionArrayDetalleBD=[];
+      
+        
         //condicional para ver si esta cumpliendo con el total de placas a mandar para generar la programacion
-        if(this.progMaestro.PrCantidadBuses>this.ordenSorteo.length){
+        if(this.progMaestro.PrCantidadBuses!=this.ordenSorteo.length){
             //cantidad ingresada es mayor a la cantidad de placas ingresadas (falta terminar programacion base)
             //MOSTRAR EN UNA VENTANA MODAL
-            this.mensaje="Faltan Placas Por Ingresar a la Lista Del Sorteo";
+            this.mensaje="Error en las Placas Del Sorteo";
             this.displayFaltanPlacas=true;
-           
         //SE INGRESARON TODAS LAS PLACAS AL SORTEO
         }else if(this.progMaestro.PrCantidadBuses == this.ordenSorteo.length){
+
             //si las cantidades son iguales la programacion puede terminar
             this.displayProgramacionBase=false; //cerrar 2da ventana Prog Base
-            this.progMaestro.PrCantidadBuses=0;
+            this.displayHoraBase=true;  //HORA BASE
+
+            //this.progMaestro.PrCantidadBuses=0;
+           
             this.progDetalle.PrDeFecha = new Date();
             
             //CARGAR EN ARRAY DE OBJETOS PARA MANDAR A LA BD
-            for(let i=1; i<=this.ordenSorteo.length ; i++){
+            for(let i=0; i<this.ordenSorteo.length ; i++){
                 this.programacionArrayDetalleBD.push({
-                    PrId : this.progMaestro.PrId,
-                    BuId : this.ordenSorteo[i-1].BuId,
-                    PrDeFecha: this.progDetalle.PrDeFecha,
+                    PrId : this.PrId,
+                    BuId : this.ordenSorteo[i].BuId,
+                    PrDeFecha: new Date(),
                     PrDeBase: this.progDetalle.PrDeBase,
-                    PrDeOrden: i,
-                    UsId: this.progDetalle.UsId,
-                    UsFechaReg: this.progDetalle.PrDeFecha
+                    PrDeOrden: i+1,
+                    UsId: this.userid,
+                    UsFechaReg: new Date(),
+
+                    PrDeId:0,
+                    PrDeAsignadoTarjeta:0,
+                    PrDeCountVuelta:0,
+                    PrDeHoraBase:0,
                 });  
             } 
-
-            this.displayAceptarProgNueva= true; 
-            this.mensajeEspera="Espere un momento...";
-
-            //guardando en el rest Programacion detalle   MANDANDO A LA BD
-            this.programacionService.saveProgramacionDetalle(this.programacionArrayDetalleBD,this.progMaestro.EmId,this.progMaestro.PrId,this.progMaestro.PrAleatorio)
-                .subscribe( 
-                    realizar => { 
-                            this.getallprogramaciondetallebyprid(this.progMaestro.PrId);
-                            
-                        }, 
-                    err => {this.errorMessage = err},
-                    () =>{  this.lengthProgDet=0;
-                            //this.mensaje="Se Genero Correctamente La Programacion";
-                            //this.displayIniciandoProgramacion=false;
-                            //this.displayAceptarProgNueva= true; 
-                         }
-            );
             
-            this.ordenSorteo=[];
-
-            //PROGRAMACION AUTOMATICA O MANUAL
-            if(this.tipoProg == "01"){ //AUTOMATICA
-                this.arrayPlacas=this._arrayPlacas;
-                this._arrayPlacas = [];
-            }else if(this.tipoProg == "02"){ //MANUAL
-                //NO SE HACE NADA
+            for(let i=0; i<this.ordenSorteo.length; i++){
+                this.ordenSorteo[i].nro=i+1;
             }
-
+            this.nroTotalMinibuses=this.ordenSorteo.length;
+            
+            
+            
         }
     }
     
+   
+
+    AgregarHBase(){
+        if(this.nroMiniBus<this.nroTotalMinibuses){         
+            this.ordenSorteo[this.nroMiniBus].HoraBase=this.horaBase;
+            this.horaBase="";
+            this.nroMiniBus++;
+        }else if(this.nroMiniBus==this.nroTotalMinibuses){
+            console.log("programacion terminada");
+        }
+    }
+
+    generarProgramacionDetalle(){
+        this.mensajeEspera="Espere un momento...";
+        this.displayAceptarProgNueva= true; 
+        
+        //console.log(this.progMaestro.PrAleatorio);
+        //
+
+        for(let i=0; i<this.ordenSorteo.length ; i++){
+            this.programacionArrayDetalleBD[i].PrDeHoraBase=hora(this.ordenSorteo[i].HoraBase);
+        } 
+
+
+        this.tablahorabase(this.programacionArrayDetalleBD, this.progMaestro.PrCantidadBuses);
+
+        //PROGRAMACION AUTOMATICA O MANUAL
+        if(this.tipoProg == "01"){ //AUTOMATICA
+            this.arrayPlacas=this._arrayPlacas;
+            this._arrayPlacas = [];
+        }else if(this.tipoProg == "02"){ //MANUAL
+            //NO SE HACE NADA
+        }
+    }
+
+    //guardar programacion base- programacion detalle()
+    guardarProgDetalle(arrProg=[], emid:number, prid:number, base:boolean){
+       
+            this.programacionService.saveProgramacionDetalle(arrProg,emid,prid,base)
+                .subscribe( 
+                    realizar => {this.getallprogramaciondetallebyprid(this.PrId); }, 
+                    err => {this.errorMessage = err},
+                    () =>{  this.lengthProgDet=0;}
+            );
+    }
+
+    //cargar tabla hora base
+    tablahorabase(arrplacaSorteo=[], nroMiniBus){
+        this.ordenSorteo=[];
+       
+        this.displayHoraBase=false;
+        this.guardarProgDetalle(arrplacaSorteo, this.emid, this.PrId, true);
+    }
+
+    cargarHoraBaseSalida(){
+        //this.guardarProgDetalle(arrplacaSorteo, this.emid, this.PrId, true);
+    }
+
     //MENSAJE FALTAN PLACAS
     faltanPlacas(){
         this.mensaje="";
@@ -813,14 +1024,22 @@ export class ProgComponent implements OnInit{
     cancelNewProgramacion(){
          this.displayNuevaProgramacion=false;
          this.progMaestro={};
-         console.log(this.progMaestro);
+         
     }
 
     //CERRAR 2 MODALES (1ER Y 2DO MODAL ) cerrar ventanas new programacion (2do Modal)
     cancelarProgBaseSegundoModal(){
         this.displayProgramacionBase = false; //1era MODAL
         this.displayNuevaProgramacion=false;  //2da MODAL
-        console.log(this.progMaestro.PrId);
+        
+        //BORRAR ULTIMA PROGRAMACION SEMI CREADA
+        this.procEliminarProgr(this.progMaestro.PrId);
+    }
+
+    cancelarProgBaseTercerModal(){
+        this.displayHoraBase=false;
+        this.nroMiniBus=0;
+        this.nroTotalMinibuses=-1;
         //BORRAR ULTIMA PROGRAMACION SEMI CREADA
         this.procEliminarProgr(this.progMaestro.PrId);
     }
@@ -830,20 +1049,21 @@ export class ProgComponent implements OnInit{
         this.programacionMaestroArrayHTML=[];
 
         //progRest es la variable q almacena las programaciones recuperadas desde el Rest de internet
-        for(let programacionMaestro of arrProg){
+        for(let prog of arrProg){
             this.programacionMaestroArrayHTML.push({
                 nro:0,
                 tipo:"",
-                EmConsorcio : programacionMaestro.EmConsorcio,
-                PrCantidadBuses : programacionMaestro.PrCantidadBuses,
-                PrFecha : programacionMaestro.PrFecha,
-                PrFechaInicio : this._fecha(programacionMaestro.PrFechaInicio),
-                PrFechaFin : this._fecha(programacionMaestro.PrFechaFin),
-                PrAleatorio : "0"+programacionMaestro.PrAleatorio, 
-                PrTipo : "0"+programacionMaestro.PrTipo,
-                dias : programacionMaestro.dias,
-                prDescripcion : programacionMaestro.prDescripcion,
-                prId : programacionMaestro.prId
+                EmConsorcio : prog.EmConsorcio,
+                PrCantidadBuses : prog.PrCantidadBuses,
+                PrFecha : prog.PrFecha,
+                PrFechaInicio : this._fecha(prog.PrFechaInicio),
+                PrFechaFin : this._fecha(prog.PrFechaFin),
+                PrAleatorio : "0"+prog.PrAleatorio, 
+                PrTipo : "0"+prog.PrTipo,
+                dias : prog.dias,
+                prDescripcion : prog.prDescripcion,
+                prId : prog.prId,
+                PrDiasIncluidos:prog.PrDiasIncluidos
             });
         }
 
@@ -861,54 +1081,47 @@ export class ProgComponent implements OnInit{
                 this.programacionMaestroArrayHTML[i].tipo="Automatico";
             }
         }
-
-        /*
-             this._tipoProg =[
-                        {id:"01",nTipo:"automatico"},
-                        {id:"02",nTipo:"manual"}
-                    ];
-                    this._formaProg=[
-                        {id:"01", nForma:"pescadito"},
-                        {id:"02", nForma:"escala"}
-                    ];
-        */
     }
 
-    //CARGAR COLUMNAS Y ARRAY DE PROGRAMACION
-
-
-  
-    
     //extraer placas y el ID de los buses OPTIMIZAR ESTE CODIGO, MUCHAS VECES SE ESTA USANDO EN EL FUNCIONAMIENTO DEL PROGRAMA
     extrayendoPlacasBus(){
+        this.arrayPlacas=[];
         let i =0;
         while( i<this.placas.length){
-            console.log(this.placas[i].BuActivo);
+            //console.log(this.placas[i].BuActivo);
             if(this.placas[i].BuActivo==true){
                 this.arrayPlacas.push({
+                    nro:0,
                     nroPlaca: this.placas[i].BuPlaca,
                     BuId: this.placas[i].BuId,
-                    BuActivo:this.placas[i].BuActivo
+                    BuActivo:this.placas[i].BuActivo,
+                    HoraBase:'HH:MM:SS'
                 });
             }else if(this.placas[i].BuActivo==false){
                 
             }
             i++;
         }
-        console.log(this.arrayPlacas);
+        for(let i=0; i<this.arrayPlacas.length; i++){
+            this.arrayPlacas[i].nro=i+1;
+        }
+
     }
 
     //seleccionar fila de la tabla
     onRowSelectMaestro(event){
-        let fi, ff , prId;
+        let fi, ff , prId , PrDiasIncluidos:string;
         prId = event.data.prId; //ID DE LA FILA 
         this.nroBusesFilaSelect = event.data.PrCantidadBuses; // CANT BUSES
         this.nroDiasFilaSelect  = event.data.dias; //CANT DIAS
+        fi = this.formatoCal(event.data.PrFechaInicio);  
+        ff = this.formatoCal(event.data.PrFechaFin);
+        PrDiasIncluidos='1,1,1,1,1,1,1';
 
-        fi = this.formatoCal(event.data.PrFechaInicio); ff = this.formatoCal(event.data.PrFechaFin);  
-
-        this.calendarioProg(fi,ff); /* TANTO NUMERICO Y CARACTERES */
-        this.displayProgramacion = true; this.nroDias=[]; this.progBDDetalle=[];
+        
+        this.calendarioProg(fi,ff,PrDiasIncluidos);
+        this.progBDDetalle=[];
+        this.arrayPlacas=[];
 
         //LIMPIANDO VARIABLES
         this.columnas=[]; //COLUMNAS
@@ -917,16 +1130,52 @@ export class ProgComponent implements OnInit{
         //CONSULTA PROGRAMACION DETALLE
         this.programacionService.getAllProgramacionDetalleByPrId(prId).subscribe(
             data => {
-                        this.progBDDetalle = data; 
-                        /*console.log(this.progBDDetalle);*/
-                        this.tablaProgramaciones();
+                     this.progBDDetalle = data; 
+                     //console.log(this.progBDDetalle);
+                     this.extraerHoraBase(this.progBDDetalle, this.nroBusesFilaSelect);
+                     this.tablaProgramaciones(this.progBDDetalle, this.nroBusesFilaSelect, this.nroDiasFilaSelect);
                     },
             err => {this.errorMessage=err},
             () => this.isLoading=false
         );
     }
 
-   
+    extraerHoraBase(arrProg=[], nroRows:number){
+        let i:number=0; let arrHoraBase:any[]=[];
+
+        while(i<nroRows){
+            if(arrProg[i].PrDeBase==true && arrProg[i].PrDeOrden==(i+1)){
+                arrHoraBase.push({
+                    BuId:arrProg[i].BuId,
+                    PrDeBase:arrProg[i].PrDeBase,
+                    PrDeHoraBase:_hora(arrProg[i].PrDeHoraBase),
+                    PrDeOrden:arrProg[i].PrDeOrden
+                });
+                i++;
+            }
+        }
+        this.arrHoraBaseSal=arrHoraBase;
+    }
+
+    onEditCompleteHB(event){
+        let hBSal=event.data.HoraBase; let index=event.data.nro-1;
+        if( horaValida(hBSal)==false ){
+            this.ordenSorteo[index].HoraBase='HH:MM:SS'
+            
+        }else if(horaValida(hBSal)==true){
+            this.nroMiniBus=this.nroMiniBus+1;
+        }
+    }
+
+    onEditCancelHB(event){
+        let index=event.data.nro-1;
+        console.log(event.data.HoraBase);
+        this.ordenSorteo[index].HoraBase='HH:MM:SS';
+        this.nroMiniBus=this.nroMiniBus-1;
+    }
+    
+    
+
     formatoCal(fi:string) : string{
         let _fi,aux;
         _fi=fi.split("/");
@@ -937,18 +1186,16 @@ export class ProgComponent implements OnInit{
     }
     
     //TABLA PROGRAMACIONES, VERIFICA SI LA PROGRAMACION ESTA COMPLETA
-    tablaProgramaciones(){
-        //PARA COLUMNAS, CUENTA EL NUMERO DE DIAS DE LA PROGRAMACION
-        //CONDICIONAL PARA CAPTURAR ERROR EN CASO DE QUE LA PROGRAMACION NO SE GENERO DE FORMA COMPLETA
-        if(  (this.progBDDetalle.length > this.nroBusesFilaSelect )){
+    tablaProgramaciones(progBDDetalle=[], nroBusesFilaSelect:number, nroDiasFilaSelect:number ){
+
+        if(  (progBDDetalle.length > nroBusesFilaSelect )){
                 //ALGORITMO PARA PASAR LOS ID DE BUSES DE LOS PRIMEROS 
                 //1ERA MATRIZ
-                let a1 :any[]=[]; let a2 :any[]=[]; let a3 :any[]=[]; 
-                let i=0; let j=0; let k=0;       
-                while(i<this.nroDiasFilaSelect){
+                let a1 :any[]=[]; let a2 :any[]=[]; let a3 :any[]=[]; let i=0; let j=0; let k=0;       
+                while(i<nroDiasFilaSelect){
                     //PARA FILAS
-                    while(j<(this.nroBusesFilaSelect*this.nroDiasFilaSelect) && k<this.nroBusesFilaSelect){
-                        a2.push(this.progBDDetalle[j].BuId);
+                    while(j<(nroBusesFilaSelect*nroDiasFilaSelect) && k<nroBusesFilaSelect){
+                        a2.push(progBDDetalle[j].BuId);
                         a1[i]={field:i, header:i}; //COLUMNAS                                   
                         j++; k++;
                     }
@@ -956,27 +1203,22 @@ export class ProgComponent implements OnInit{
                 }
 
                 //2DA MATRIZ (TRANSPUESTA DE LA 1ERA)
-                let a4: any[]=[]; let a5: any[]=[];
-                let l=0; let m=0; let n=0; let aux=0;
+                let a4: any[]=[]; let a5: any[]=[]; let l=0; let m=0; let n=0; let aux=0;
 
                 //TRANSPUESTA 
                 //INICIANDO MATRIZ
-                while(l<this.nroBusesFilaSelect){
-                    while(m<this.nroDiasFilaSelect){
-                        a4.push(0); 
-                        m++;
+                while(l<nroBusesFilaSelect){
+                    while(m<nroDiasFilaSelect){
+                        a4.push(0);  m++;
                     }
                     a5[l]=a4; m=0; l++; a4=[];
                 }
 
                 l=0; m=0;
                 //MOVIENDO 
-                while(l<this.nroBusesFilaSelect){
-                    while(m<this.nroDiasFilaSelect){
-                    //console.log(a3[m][l]);
-                        a5[l][m]=a3[m][l];
-                        //console.log(a5[l][m]);
-                        m++; 
+                while(l<nroBusesFilaSelect){
+                    while(m<nroDiasFilaSelect){
+                        a5[l][m]=a3[m][l]; m++; 
                     }
                     l++; m=0;
                 }
@@ -985,11 +1227,11 @@ export class ProgComponent implements OnInit{
                 this.getAllPlacasBusByEmSuEm(this.emid, 0);
 
                 //VERIFICANDO SI EL ARRAY DE PLACAS YA ESTA CARGADO O NO
-                
                 if(this.arrayPlacas.length==0){  
-                    this.extrayendoPlacasBus(); //EXTRAER PLACAS PARA LA PROGRAMACION
-                    
-                }else if(this.arrayPlacas.length>0){console.log("ya se extrayeron las placas");}
+                    this.extrayendoPlacasBus(); 
+                }else if(this.arrayPlacas.length>0){
+                    console.log("ya se extrayeron las placas");
+                }
 
                 //ACTUALIZANDO EL ARRAY a5, cambiando BUID por su respectiva PLACA---BUSQUEDA
                 i=0; let cen=0; j=0; k=0; //0: EXISTE  1:NO EXISTE
@@ -998,22 +1240,18 @@ export class ProgComponent implements OnInit{
                         //UBICAR EL POR IGUAL BUID
                         while(k<this.arrayPlacas.length  && cen==0){
                             if(a5[i][j]!=this.arrayPlacas[k].BuId){
-                                
                                 k++; 
                             }else if(a5[i][j]==this.arrayPlacas[k].BuId){
-                                
                                 cen=1;
                             }
                         }
                         //SI SE EENCONTRO
                         if(cen==1){
-                            //console.log("pasando");
                             a5[i][j]=this.arrayPlacas[k].nroPlaca;
                             k=0;
                             j++;
                             cen=0;
                         }else if(cen==0){
-                            //console.log("no existe");
                         }
                         
                     }
@@ -1021,30 +1259,23 @@ export class ProgComponent implements OnInit{
                     i++;
                 }//FIN WHILE BUSQUEDA
 
-
-
                 this._detalle = a5;
-                //console.log(this._detalle);
-                //CALCULANDO EL NRO DE COLUMNAS (NRODIAS PROGRAMACION)
-                for(l=1; l<=this.nroDiasFilaSelect; l++){ this.nroDias.push(l);} 
 
-                /* INSERTANDO EL NRO DE DE FILA EN LA TABLA */
+                // INSERTANDO EL NRO DE DE FILA EN LA TABLA 
                 for(i=0; i<this._detalle.length;i++){
                     (this._detalle[i]).splice(0,0,(i+1).toString());
                 }
                 
-                this.calendario.unshift(" ");
-                this.calendarioString.unshift(" ");
-                //console.log(this._detalle);
-
-                this.nroDias=this.calendario; /* PASANDO CALENDARIO */
-                this.nroColumn=this.nroDias.length-1; //PARA ELEGIR TAMAÑO DE TABLA 2000PX O 500PX
-               
-        }else{
-                //MOSTRAR MENSAJE AL MOMENTO DE CAPTURAR EL ERROR
+                this.calNumb.unshift(" ");
+                this.calString.unshift(" ");
+                this.nroColumn=nroDiasFilaSelect;
+                //this.calNumb=this.calendario; // PASANDO CALENDARIO 
+                this.displayProgramacion = true;
+        }else if(progBDDetalle.length == nroBusesFilaSelect || progBDDetalle.length < nroBusesFilaSelect){
                 this.mensaje="Error al Generar la Programacion, Vuelva a Generarlo";
                 this.displayErrorTablaProgramacion=true;
         }
+        
     }
 
     errorTablaProgramacion(){
@@ -1058,12 +1289,14 @@ export class ProgComponent implements OnInit{
         this.getProgramacionById(reg.prId);
     }
 
-    /* GUARDAR EDITAR REGISTRO PROGRAMACION */
-    guardarProgramacionC(){
+    /* PARA EL CASO DE EDITAR LA PROGRAMACION CREADA, SOLO NOMBRE DE LA PROGRAMACION*/
+    EditarProgCabecera(){
         let obj:any;
+
+        this._progrMaestro.PrAleatorio=0;
         /* CARGANDO OBJETO */
         obj = {
-            EmId:this._progrMaestro.EmId,
+            EmId:this.emid,
             PrAleatorio:this._progrMaestro.PrAleatorio,
             PrCantidadBuses:this._progrMaestro.PrCantidadBuses,
             PrDescripcion:this.progDescripcion,
@@ -1073,14 +1306,14 @@ export class ProgComponent implements OnInit{
             PrId:Number(this._progrMaestro.PrId),
             PrTipo:this._progrMaestro.PrTipo,
             UsFechaReg:new Date(),
-            UsId:this._progrMaestro.UsId
+            UsId:this.userid
         }
         this.displayEditProgC=false;
         console.log(obj);
         this.programacionService.saveProgramacion(obj)
             .subscribe( 
                 data => {this.progMaestro=data;  //RECUPERANDO OBJETO PARA SACAR EL PRID
-                         console.log(this.progMaestro.PrId);
+                   
                          this.progDescripcion="";
                          this.mostrargrillaProgramacionMaestro(this.progMaestro) ;
                          this.getAllProgramacionByEm(this.emid,this.anio);
@@ -1102,7 +1335,7 @@ export class ProgComponent implements OnInit{
     eliminarRegistroGrilla(_PrId : number){
         //console.log("eliminar "+_PrId);
         this.mensaje = "¿Esta Seguro de Eliminar Este Registro de la Tabla?";
-        this.displayConfirmar = true
+        this.displayConfEliminarCabecera = true
         this.iDReg = _PrId;
     }
 
@@ -1112,11 +1345,12 @@ export class ProgComponent implements OnInit{
             realizar => {
                             this.getAllProgramacionByEm(this.emid,this.anio); 
                             this.iDReg=0;
-                            this.displayConfirmar=false;
+                            
+                            this.displayConfEliminarCabecera=false;
                         },
             err => {this.mensaje="No puede borrar esta programacion, esta siendo utilizada";
                     this.displayAvisoNoPuedeBorrarProg=true;    
-                    this.displayConfirmar=false;
+                    this.displayConfEliminarCabecera=false;
                     console.log(err);}
          );
     }
@@ -1139,160 +1373,206 @@ export class ProgComponent implements OnInit{
     }
     
     generarArchivo(){
-        this.descargarProgramacion(this.nomArchivoPDF, this.titArchivoPDF);
+        let nroDias=this.calNumb.length-1; //DESCONTANDO PRIMER ESPACIO EN BLANCO
+        //console.log(this.calNumb);
+        //console.log(this.calString);
+        this.descargarProgramacion(this.nomArchivoPDF, this.titArchivoPDF, this.calNumb,this.calString, nroDias );
         this.displayDatosPDF=false;
     }
     
     //DESCARGAR LA PROGRAMACION EN FORMATO PDF 
-    descargarProgramacion(nombreArchivo:string, tituloArchivo:string){
-        //ESTA FUNCION es ASI:  se divide el los array en array de filas para pasarlo a las
-        //                      hojas en un total de nro de filas
-
+    descargarProgramacion(nombreArchivo:string, tituloArchivo:string,calNumb=[],calString=[],nroDiasFilaSelect:number ){
         //VARIABLES 
             //HOJAS
                 var doc = new jsPDF('l','pt','a4');
-
-                let arr0=[], i:number =0,j=0,k=0 , arr1=[], nrosalto:number = 0, arrprog=[];
-                let ncol:number, r, dividendo=this.nroDiasFilaSelect, c=1;
+                let arr0=[], i:number =0,j=0,k=0 , arr1=[], nrosalto:number = 0, arrprog=[]; 
+                let ncol:number, r, dividendo=nroDiasFilaSelect, c=1;
             
             //CALENDARIO
-                let arrCalendario:any[]=[], __arrCalendario:any[]=[];
+                let arrCalendario:any[]=[], __arrCalendario:any[]=[]; 
                 let arrCalendarioString:any[]=[], __arrCalendarioString:any[]=[];
 
-                //NUMERICO
-                __arrCalendario=this.calendario.slice(0); __arrCalendario.splice(0,1);
-                //STRING
-                __arrCalendarioString=this.calendarioString.slice(0); __arrCalendarioString.splice(0,1);
-                
-                
+                __arrCalendario=this.calNumb.slice(0); __arrCalendario.splice(0,1);  
+                __arrCalendarioString=this.calString.slice(0); __arrCalendarioString.splice(0,1);
 
             //NUMERO DE ARRAYS(FILAS) DE TODA LA TABLA
-                while(i<this.nroBusesFilaSelect){ arr0[i]=arr1; i++;} 
+                while(i<this.nroBusesFilaSelect){ 
+                    arr0[i]=arr1; i++;
+                } 
                 arr1=[[],[],[],[],[],[],[]]; //NRO DE HOJAS EN TOTAL Q SE PUEDE DIVIDIR EL CALENDARIO
 
         //ALGORITMOS
 
-            /* ARRAY DE PROG (SOLO PLACAS) */
-                //CAMBIANDO ARRAY DE PLACAS
-                arrprog=this.placasProgramacion(this.progBDDetalle,this.arrayPlacas);
-                //console.log(this.progBDDetalle);
-                //REINICIANDO VARIABLES
+            // ARRAY DE PROG (SOLO PLACAS) 
+                arrprog=this.placasProgramacion(this.progBDDetalle,this.arrayPlacas); //CAMBIANDO PROG DE BUID A NROPLACAS
                 i=0; let arrAux=[],arrborrar2=[];
 
-            /* ARRAY DE ARRAYCOLUMNAS - PREPARANDO PROGRAMACION*/
+            // ARRAY DE ARRAYCOLUMNAS - PREPARANDO PROGRAMACION (no dividido por hojas)
                 while(i<this.nroBusesFilaSelect){
-                    while(j<this.nroDiasFilaSelect && i+nrosalto<arrprog.length){
-                        arr0[i][j]=arrprog[i+nrosalto];
-                        nrosalto=nrosalto+this.nroBusesFilaSelect;
-                        j++;
+                    while(j<nroDiasFilaSelect && i+nrosalto<arrprog.length){
+                        arr0[i][j]=arrprog[i+nrosalto]; nrosalto=nrosalto+this.nroBusesFilaSelect; j++;
                     }
-                    arrAux.push(arr0[i].slice(0));
-                    i++;  nrosalto=0;  j=0;
+                    arrAux.push(arr0[i].slice(0)); i++;  nrosalto=0;  j=0;
                 }
-                
-                
-            /* ARRAY CON ARRAY DE COLUMNAS */
                 arr0=arrAux;
-    
-            /* AJUSTANDO EL NRO DE COLUMNAS A LA HOJA = 15 X HOJA*/
-                //REINICIANDO VARAIBLES A CERO
-                    i=j=0;
-                //NUMERO DE COLUMNAS MAXIMO EN CADA HOJA
-                    ncol = 15; 
+            // AJUSTANDO EL NRO DE COLUMNAS A LA HOJA = 15 X HOJA
+                    i=j=0; ncol = 15; 
                 //1ER RESIDUO, SABER SI EL TOTAL DE COLUMNAS ES MENOR O IGUAL QUE EL MAXIMO DE COLUMNAS PERMITIDO 
                     r = dividendo - ncol;
                 //DIVIDIENDO AL ARRAYS EN ARRAY DE MATRICES(CADA MATRIZ ES UNA HOJA)
                 
-        /* HAY 2 A MAS HOJAS */
-        if(r>=0){
-            //RESIDUO MAYOR AL NRO MAX DE COLUMNAS DE LA HOJA
+      
+        // HAY 2 A MAS HOJAS 
+        if(r>0){
             //r: RESIDUO TOTAL(ULTIMA HOJA) ,  C: COCIENTE(NRO DE HOJAS)
                 while( r > ncol ){  
-                    dividendo = r; r = dividendo - ncol;  
-                    dividendo = r;  c++; 
+                    dividendo = r; 
+                    r = dividendo - ncol;  
+                    dividendo = r;  
+                    c++; 
                 }
 
             //DIVIDIENDO EN ARRAYS (ARRAY DE CALENDARIO)    c:nro de veces en q debe dividirse en otros arrays
             //HOJAS DEL ARCHIVO
                 //VARIABLES
-                let calendarionumber:any[]=[];
-                calendarionumber=this.calendario.slice(0);   calendarionumber.shift();
-            
+                let calendarionumber:any[]=[];  calendarionumber=__arrCalendario.slice(0); 
                 //DIVIDIENDO EL CALENDARIO
-                while(i<c){ 
-                    while( k<ncol && j<15*(i+1)){ 
-                        arr1[i][k]=calendarionumber[j];  
-                        j++; 
-                        k++; 
+                while(i<=c){ 
+                    while( k<ncol &&  (j<15*(i+1) && j<calendarionumber.length )  ){ 
+                        arr1[i][k]=calendarionumber[j]; j++; k++; 
                     } 
-                    k=0; 
-                    i++; 
+                    k=0; i++; 
                 }
-
-            //TOMANDO EL RESIDUO DE DIVIDIR LA TABLA 
-            //CALENDARIO
-                dividendo=this.nroDiasFilaSelect; //NRO DIAS
-                i=ncol*c;  //
-                j=0;
-
-            //DIVIDENDO = NRO DE COLUMNAS TOTAL -- DIVIDIENDO EL CALENDARIO NUMERICO
-                while(i<dividendo){ 
-                    arr1[c][j]=calendarionumber[i]; 
-                    i++; 
-                    j++; 
-                }
-            /* arr0: MATRIZ DE PLACAS(PROGRAMACION)  arr1: MATRIZ CALENDARIO NUMERICO */
+                
+                // arr0: MATRIZ DE PLACAS(PROGRAMACION)  
+                // arr1: MATRIZ CALENDARIO NUMERICO 
                 arr0=this.hojasProgracion(arr0,ncol,__arrCalendarioString ,c);
-            //GENERANDO EL ARCHIVO PDF
+                arr1=this.insertEspacio(arr1,c+1, 'arrArr');
+                arr0=this.insertEspacio(arr0,c+1, 'arrMat');
+
+                j=i=0;
+                while(i<c+1){arr0[i]=this.insertNumbRows(arr0[i]); i++;}
+                while(j<c+1){arr0[j]=this.insertHoraSalidaBase(this.arrHoraBaseSal,arr0[j]);j++;}
+
+                //GENERANDO EL ARCHIVO PDF
                 i=j=0;
                 //INICIANDO LAS HOJAS DEL PDF
-                    while(arr1[i].length != 0 && j<(c)){ 
-                        doc.setFontSize(10)
-                        doc.text(40, 40, tituloArchivo+' RUTA 13');
-                        doc.autoTable(arr1[i],arr0[i],{ 
-                            styles: {fontSize: 7,halign: 'center',cellPadding: 1,},   
-                            margin: {top: 60, right: 10, bottom: 10, left: 10},
-                            theme: 'grid',
-                            columnWidth: 'auto',
-                            valign: 'top',
-                        });
-                        doc.addPage();
-                        i++;
-                        j++;
-                    }           
-
-                /* PDF ULTIMA HOJA  -> INTEGRAR EL RESTO DE LAS COLUMNAS QUE FALTAN, USAR EL RESIDUO DE LA DIVISION */
+                while(arr1[i].length != 0 && j<(c)){ 
+                    doc.setFontSize(10)
                     doc.text(40, 40, tituloArchivo+' RUTA 13');
-                    doc.autoTable(arr1[c], arr0[i],{ 
-                            styles: { fontSize: 7, halign: 'center', cellPadding: 1,columnWidth: 60 },   
-                            margin: {top: 60, right: 10, bottom: 10, left: 10},
-                            theme: 'striped',
-                            columnWidth: 70,
-                            valign: 'top',
+                    doc.autoTable(arr1[i],arr0[i],{ 
+                        styles: {fontSize: 8,halign: 'center',cellPadding: 1},   
+                        margin: {top: 60, right: 10, bottom: 10, left: 11},
+                        theme: 'grid',
+                        columnWidth: 'auto',
+                        valign: 'top',
                     });
-    
+                    doc.addPage();
+                    i++;
+                    j++;
+                }           
 
-        /*UNA SOLA HOJA (RESIDUO ES MENOR A CERO)*/
-        }else if(r<0){
-            arr0.unshift(__arrCalendarioString);
-            //CREANDO TABLA Y TITULO
+                // PDF ULTIMA HOJA  -> INTEGRAR EL RESTO DE LAS COLUMNAS QUE FALTAN, USAR EL RESIDUO DE LA DIVISION 
+                doc.text(40, 40, tituloArchivo+' RUTA 13');
+                doc.autoTable(arr1[c], arr0[i],{ 
+                        styles: { fontSize: 8, halign: 'center', cellPadding: 1,columnWidth: 48 },   
+                        margin: {top: 60, right: 10, bottom: 10, left: 11},
+                        theme: 'grid',
+                        columnWidth: 'auto',
+                        valign: 'top',
+                });
+        
+
+        //UNA SOLA HOJA (RESIDUO ES MENOR A CERO)
+        }else if(r<=0){
+            arr0.unshift(__arrCalendarioString); 
+            doc.setFontSize(10); doc.text(40, 40, tituloArchivo+' RUTA 13');
+
+            __arrCalendario=this.insertEspacio(__arrCalendario,1, 'arr');
+            arr0=this.insertEspacio(arr0,1, 'mat');
+
+            arr0=this.insertNumbRows(arr0);
+            arr0=this.insertHoraSalidaBase(this.arrHoraBaseSal,arr0);
+
             doc.autoTable(__arrCalendario, arr0,{ 
-                styles: { fontSize: 7, halign: 'center', cellPadding: 1, columnWidth: 60 },   
-                margin: {top: 30, right: 10, bottom: 10, left: 10},
-                theme: 'striped',
-                columnWidth: 70,
+                styles: { fontSize: 8, halign: 'center', cellPadding: 1},   
+                margin: {top: 60, right: 10, bottom: 10, left: 11},
+                theme: 'grid',
+                columnWidth: 60,
                 valign: 'top',
             });
             
         }
 
-        /* GUARDANDO ARCHIVO CON NOMBRE */
-            console.log(nombreArchivo);
-            console.log(tituloArchivo);
+        //GUARDANDO ARCHIVO CON NOMBRE 
             doc.save(nombreArchivo+''+'.pdf');
             this.mensaje="Se Descargo La Programacion";
             this.displayProgramacion=false;
             this.displayDescargaProg=true;
+        
+    }
+
+    //insertando espacios vacios
+    insertEspacio(arr=[], nroRep:number, tipo: string){
+        if(tipo==='arr'){
+            let i:number=0; let _arr=arr.slice(0);
+            while(i<nroRep){
+                _arr.splice(0,0,' ',' ');
+                i++;
+            }
+            return _arr;
+        }else if(tipo==='mat'){
+            let i:number=0; let mat=arr.slice(0);
+            
+             while(i<nroRep){
+                
+                 mat[0].splice(0,0,' ',' ');
+                 i++;
+             }
+             return mat;
+        
+        }else if(tipo==='arrArr'){
+            let i:number=0; let _arr=arr.slice(0);
+            while(i<nroRep){
+                _arr[i].splice(0,0,' ',' ');
+                i++;
+            }
+            return _arr;
+        }else if(tipo==='arrMat'){
+            let i:number=0; let mat=arr.slice(0);
+           
+            while(i<nroRep){
+               
+                mat[i][0].splice(0,0,' ',' ');
+                i++;
+            }
+            return mat;
+        }
+    }
+
+    //INSERTAR NUMERACION
+    insertNumbRows(arrProg=[]){
+        let result:any[]=[];let i=1;
+        //arrProg[0].unshift(''); arrProg[0].unshift('');
+        while(i<arrProg.length){
+            arrProg[i].unshift(i.toString());
+            i++;
+        }
+        result=arrProg;
+        return result;
+    }
+
+    //INSERTAR HORA BASE DE SALIDAS
+    insertHoraSalidaBase(arrHSal=[], arrProg=[]){
+        let result; let i:number=0, j:number=0; let _arrProg=arrProg.slice(0);
+        //console.log(_arrProg);
+        while(i<arrHSal.length){
+            //_arrProg[i+1][1]=arrHSal[i].PrDeHoraBase;
+            _arrProg[i+1].splice(1,0,arrHSal[i].PrDeHoraBase);
+            i++;
+        }
+       result=_arrProg;
+        return result;
     }
 
     // DESCOMPONIENDO MATRIZ EN ARRAY DE MATRICES(HOJAS)
@@ -1318,9 +1598,6 @@ export class ProgComponent implements OnInit{
                     
 
             //UNIENDO MATRIZPROG + ARRAYCALSTRING
-            //console.log(_arrcalstr); console.log(arrmatprog);
-
-            
             if(_arrcalstr.length==arrmatprog.length){
                 i=0;
                 while(i<_arrcalstr.length){

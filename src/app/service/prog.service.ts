@@ -85,6 +85,13 @@ export class ProgramacionService{
             .catch((error:any) => Observable.throw(error.json().error || 'server error'));
     }
 
+    //guardar programacion detalle PROGRAMACION BASE (PARAMETROS)
+    saveProgDetalleHsalida(programacionDetalle : Object[]){
+        return this.http.post(this.baseUrl2+"registrahorabase/",programacionDetalle)
+            .map((res:Response) => res.json() )
+            .catch((error:any) => Observable.throw(error.json().error || 'server error'));
+    }
+
     //CHOFER AUSENTE ACTUALIZAR PROGRAMACION DETALLE - ACTUALIZA CAMPO PRDEASIGNADO
 	actualizarProgDetalleAusente(obj : Object[]){
 		return this.http.post(this.baseUrl2+ "update/", obj) // ...using post request

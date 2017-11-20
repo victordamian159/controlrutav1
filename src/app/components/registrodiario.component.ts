@@ -79,7 +79,7 @@ export class RegistroDiarioComponent implements OnInit{
             //SAVE
                 saveRegistroDiario(objRegDiario:Object){
                     this.registrodiarioservice.saveregistrodiario(objRegDiario).subscribe(
-                        data=>{console.log("guardado =D");},
+                        data=>{ this.getAllRegistroDiarionByemId(this.emid); console.log("guardado =D");},
                         err =>{console.log(err);}
                     );
                 }

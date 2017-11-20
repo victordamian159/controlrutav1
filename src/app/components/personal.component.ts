@@ -56,7 +56,7 @@ export class PersComponent implements OnInit{
     ngOnInit(){
         this.getallpersonal();
         this.usid=1; /* AQUI PONER EL VALOR DEVUELTO DEL LOGIN */
-        this.genero=[{id:false,sexo:"Masculino"},{id:true,sexo:"Femenino"}];
+        this.genero=[{id:0,sexo:"Masculino"},{id:1,sexo:"Femenino"}];
         this.estCivil=[{id:"01",estado:"Soltero"},{id:"02",estado:"Casado"},{id:"03",estado:"Conviviente"},{id:"04",estado:"Viudo"},{id:"05",estado:"Divorciado"}];
     }
 
@@ -184,7 +184,6 @@ export class PersComponent implements OnInit{
                 PeDNI : this.personal.PeDni,
                 PeFecNac : fecha(this.personal.PeFecNac),
                 PeDireccion :this.personal.PeDireccion,
-                //PeTipo :this.personal.PeTipo,
                 PeTipoLicencia :this.personal.PeTipoLicencia,
                 PeCelular :this.personal.PeNMovil,
                 PeTelefonoFijo :this.personal.PeNFijo,
@@ -193,7 +192,7 @@ export class PersComponent implements OnInit{
                 PeFechaSal : fecha(this.personal.PeFechaSal),
                 UsId:this.personal.UsId,
                 UsFechaReg : this.personal.UsFechaReg,
-                PeSexo:this.personal.PeSexo,
+                PeSexo:Number(this.personal.PeSexo),
                 PeEstadoCivil :this.personal.PeEstCivil,
             };
 
@@ -206,7 +205,7 @@ export class PersComponent implements OnInit{
                
             }
 
-            /*console.log(this._personal);*/
+            console.log(this._personal);
             /* CONSULTA GUARDAR PERSONAL*/
             this.savepersonal(this._personal);
             this.mensaje="";

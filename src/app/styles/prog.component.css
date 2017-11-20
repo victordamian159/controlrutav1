@@ -68,8 +68,16 @@
 /*USADO EN LOS BOTONES DE LAS VENTANAS MODALES*/
 .container{
     margin-bottom: 20px;
-     max-width: 500px;
+     max-width: 750px;
      max-height: 350px;
+}
+
+.formHoraBase{
+    width: 420px;
+}
+
+.dataArchPDF{
+    width: 350px;
 }
 
 #programacion{
@@ -84,7 +92,7 @@
     height:100%;
     width: 100%;
     margin:auto;
-    padding:0px;
+    /*padding:0px;*/
 }
 col-xl-12{
     padding: 0;
@@ -98,7 +106,10 @@ col-xl-12{
     .table{
         margin-top:20px;
     }
-
+    .horaBase{
+        height: 370px;
+        width: 340px;
+    }
     /* 30 DIAS */
     #progTPlacas1{
         width:3500px;
@@ -125,6 +136,8 @@ col-xl-12{
         border-spacing: 0;
         /*width: 100%;*/
         border: 1px solid #ddd;
+        padding: 0;
+        margin:0;
     }
 
     th, td {
@@ -139,6 +152,13 @@ col-xl-12{
     }
 
 
+    .dias_Sorteo{
+        height: 340px;
+        max-width: 540px;
+        margin-left:40px;
+        padding:0;
+    }
+
 /* RESPONSIVE */
     /*ipad PRO*/
     @media(max-width:1100px){ 
@@ -147,8 +167,16 @@ col-xl-12{
         #programacion{
             margin-bottom: 20px;
             max-width: 900px;
-            max-height: 500px;
+            max-height: 350px;
         } 
+
+        .formHoraBase{
+            width: 420px;
+        }
+
+        .dataArchPDF{
+            width: 350px;
+        }
     }
     
     /* ipad*/
@@ -166,8 +194,15 @@ col-xl-12{
         #programacion{
             margin-bottom: 20px;
             max-width: 700px;
-            max-height: 500px;
+            max-height: 350px;
         } 
+        .formHoraBase{
+            width: 420px;
+        }
+
+        .dataArchPDF{
+            width: 350px;
+        }
     }
 
     /* iphone 6 plus*/
@@ -178,14 +213,29 @@ col-xl-12{
         }
         .col-xs-12{
             /*background: yellow;*/
-            padding: 0 8px;
+            padding: 5px 8px;
             margin: 0;
         }
         #programacion{
             margin-bottom: 20px;
             max-width: 350px;
-            max-height: 350px;
+            max-height: 340px;
         } 
+
+        .formHoraBase{
+            width: 350px;
+        }
+
+        .dataArchPDF{
+            max-height: 260px;
+            max-width: 310px;
+            padding:0px 0px;
+            margin:10px 25px;
+        }
+
+        .btn_modal{
+            padding: 5px 0px;
+        }
     }
 
     /* iphone 6 */
@@ -202,8 +252,15 @@ col-xl-12{
         #programacion{
             margin-bottom: 20px;
             max-width: 310px;
-            max-height: 350px;
+            max-height: 340px;
         } 
+        .formHoraBase{
+            width: 310px;
+        }
+
+        .dataArchPDF{
+            width: 310px;
+        }
     }
 
     /* iphone 5 */
@@ -222,6 +279,12 @@ col-xl-12{
             max-width: 250px;
             max-height: 270px;
         } 
+        .formHoraBase{
+            width: 250px;
+        }
+        .dataArchPDF{
+            width: 250px;
+        }
     }
 
     /* iphone 4 */
@@ -240,4 +303,11 @@ col-xl-12{
             max-width: 250px;
             max-height: 180px;
         } 
+
+        .formHoraBase{
+            width: 250px;
+        }
+        .dataArchPDF{
+            width: 250px;
+        }
     }

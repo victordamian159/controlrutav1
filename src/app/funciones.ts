@@ -478,152 +478,44 @@
         return ArrRept;
     }
 
+    export function horaValida(h:string):boolean{
+        let result:boolean;
+        if(h.length!=8){
+            result=false;
+            return result;
+        }else if(h.length==8){
+           if(h[2]==':' && h[5]==':'){
+                let hora=h.split(':'); let _hora=[];
+
+                for(let i=0; i<hora.length; i++){
+                    _hora[i]=Number(hora[i]);
+                }
+
+                if(validTime(_hora[0],_hora[1],_hora[2] ) ==true ){
+                    result=true;
+                    return result;
+                } else  if(validTime(_hora[0],_hora[1],_hora[2] ) ==false ){
+                    result=false;
+                    return result;
+                }
+           }else if(h[2]!=':' || h[5]!=':'){
+                result=false;
+                return result;
+           }
+        }
+    }
+
+    function validTime(h:number, m:number, s:number):boolean{
+        let result:boolean;
+        if( (h>0 && h<=23) && (m>0 && m<=60) && (s>0 && s<=60) ){
+            result = true;
+        }else {
+            result = false;
+        }
+        return result;
+    }
     // VARIABLES EXPORTADAS
     export var arrABI=[31,29,31,30,31,30,31,31,30,31,30,31];
     export var arrANBI=[31,28,31,30,31,30,31,31,30,31,30,31];
-    export var arrHInit=[
-        '04:28:00',
-        '04:30:00',
-        '04:32:00',
-        '04:34:00',
-        '04:36:00',
-        '04:38:00',
-        '04:40:00',
-        '04:42:00',
-        '04:44:00',
-        '04:46:00',
-        '04:48:00',
-        '04:50:00',
-        '04:52:00',
-        '04:54:00',
-        '04:56:00',
-        '04:58:00',
-        '05:00:00',
-        '05:04:00',
-        '05:08:00',
-        '05:12:00',
-        '05:16:00',
-        '05:20:00',
-        '05:24:00',
-        '05:28:00',
-        '05:32:00',
-        '05:36:00',
-        '05:40:00',
-        '05:44:00',
-        '05:48:00',
-        '05:52:00',
-        '05:56:00',
-        '06:00:00',
-        '06:04:00',
-        '06:08:00',
-        '06:12:00',
-        '06:16:00',
-        '06:20:00',
-    ];
+    
 
-/*  DEVUELVE FECHA DADO UNA  FECHA INICIAL Y UN 
-        NRO DE DIAS EN FORMATO  ->  YYYY/MM/SS
-        export function fechaSgte(f:string, nrodias):string{
-            let _f:any[]=[], tipAnio:number, fResp:string; _f=f.split("/");
-            _f[0]=Number(_f[0]); _f[1]=Number(_f[1]); _f[2]=Number(_f[2]);_f.push(tipoAnio(_f[0])); 
-            
-            let i,sum:number,mes,_mes:number, res1,res2:number;
-            mes=_f[1]-1; _mes=0;
-
-            AÑO NO BISIESTO 
-            if(_f[3]==1){
-                sum=0;i=1;
-                while(sum<nrodias){ sum=sum+arrANBI[mes+i-1]; i++;}
-                i--; 
-                res1=sum-nrodias; res2=Number(_f[2])-res1; dias - res1 
-
-                if(res2>=0){
-                    _f[2]=res2;  DIAS  _f[1]=_f[1]+i;   MES 
-                }else if(res2<0){
-                    mes=mes+i-1;  MES  _f[2]=arrANBI[mes]+res2;  DIAS 
-                }
-
-            AÑO BISIESTO 
-            }else if(_f[3]==0){
-                sum=0;i=1;
-                while(sum<nrodias){
-                    sum=sum+arrABI[mes+i-1];
-                    i++;
-                }
-                i--; console.log("i: "+i+" sum: "+sum); res1=sum-nrodias; res2=Number(_f[2])-res1;dias - res1 
-                if(res2>=0){
-                    _f[2]=res2;  DIAS 
-                    _f[1]=_f[1]+i;   MES 
-                }else if(res2<0){
-                    console.log("mes: "+mes);
-                    mes=mes+i-1;  MES 
-                    _f[2]=arrABI[mes]+res2;  DIAS 
-                    console.log("mes: "+mes+" _f[2]: "+_f[2]);
-                }
-
-                if(mes>11){
-                    mes=mes-11;  MES 
-                    _f[0]=_f[0]+1;        AÑOS 
-                }
-            }
-            
-            _f.pop();_f[1]=_f[1]+1;
-            fResp=_f.join("/");
-        return fResp;
-        } 
-    */
-
-    /*
-        DEVUELVE EL NRO DE DIAS ENTRE DOS FECHAS DADAS
-        export function diasEntreFecha(){
-            
-        }
-    */
-     /* AJUSTANDO LAS HORAS A 24 HORAS 00:00:00   ---> arrH
-                j=0; i=1; let auxS,_auxS,auxM,_auxM,auxH,_auxH;
-                while(i<nroTarjetas){
-                    // SEGUNDOS
-                    if(arrH[i][2]>59){
-                        if(arrH[i][2]%60==0){
-                            auxS = arrH[i][2];
-                            arrH[i][2]=0;
-                            arrH[i][1]=arrH[i][1]+(auxS/60);
-                        }else if(arrH[i][2]%60>0){
-                            auxS = arrH[i][2];
-                            arrH[i][2] = arrH[i][2]%60;
-                            arrH[i][1] = arrH[i][1]+((auxS-auxS%60)/60);
-                        }
-                    }else if(arrH[i][2]<=59){
-                        // NO HACE NADA 
-                    }
-                        
-                    // MINUTOS 
-                    if(arrH[i][1]>59){
-                        if(arrH[i][1]%60==0){
-                            auxM = arrH[i][1];
-                            arrH[i][1]=0;
-                            arrH[i][0]=arrH[i][0]+(auxM/60);
-                        }else if(arrH[i][1]%60>0){
-                            auxM = arrH[i][1];
-                            arrH[i][1] = arrH[i][1]%60;
-                            arrH[i][0] = arrH[i][0]+((auxM-auxM%60)/60) ; // SUMANDO A LA HORA 
-                        }
-                    }else if(arrH[i][1]<=59){
-                        // NO HACE NADA 
-                    }
-
-                    // HORAS 
-                    if(arrH[i][0]>23){
-                        //PASA AL SIGUIENTE DIA 
-                        if(arrH[i][0]%24==0){
-                            arrH[i][0]=0;
-                            // arrH[i][3]= arrH[i][0]/24 
-                        }else if(arrH[i][0]%24>0){
-                            arrH[i][0]=arrH[i][0]%24;
-                            // arrH[i][3] = arrH[i][3]+(arrH[i][0]-arrH[i][0]%24)/60 ; 
-                        }
-                    }else if(arrH[i][0]<=23){
-                        // NO HACE NADA 
-                    }
-                    i++;
-                }*/

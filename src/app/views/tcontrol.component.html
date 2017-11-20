@@ -1,7 +1,7 @@
 <!--FORMULARIO PRINCIPAL-->
     <div class="contenedor">
         <!--TITULO-->
-        <div id="titulo"> Tarjetas de Control </div>
+        <div id="titulo">Tarjetas de Control</div>
         
         <div class="row">
             <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
@@ -195,18 +195,10 @@
                                                 (onRowSelect)="onRowPlaca($event)" emptyMessage="Lista Vacia" [(selection)]="selectedPlacaONE" >
                                         <p-column field="nro" header="N°" [style]="{'width':'2em'}" ></p-column>
                                         <p-column field="nroPlaca" header="Placa" [style]="{'width':'5em'}" ></p-column>
-                                        <p-column field="SuEmRSocial" header="Salida" [style]="{'width':'8em'}" ></p-column>
+                                        <p-column field="" header="Ant. Salida" [style]="{'width':'6em'}" ></p-column>
+                                        <p-column field="" header="Ant. Actual" [style]="{'width':'6em'}" ></p-column>
                                     </p-dataTable>
                                 </div>
-                                <!--
-                                    <div *ngIf="timevuelta==0" id="validation">
-                                        Rol:{{timevueltadescrip}}
-                                    </div>
-                                    <div *ngIf="timevuelta==1" id="verdadero">
-                                        Rol:{{timevueltadescrip}}
-                                    </div>
-                                -->
-
                             </div>
 
                             <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">

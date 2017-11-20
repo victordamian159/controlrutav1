@@ -27,7 +27,7 @@
                                 [(selection)]="selectedTarjCab" (onRowSelect)="onRowSelectCabecera($event)">
                             -->
                             <p-dataTable [value]="arrRegDiarioByEmId" [globalFilter]="filtroGlobal" scrollable="true"
-                                     emptyMessage="Lista Vacia" scrollHeight="320px" scrollWidth="100%" selectionMode="single" 
+                                     emptyMessage="Lista Vacia" scrollHeight="100px" scrollWidth="100%" selectionMode="single" 
                                     [(selection)]="selectedTarjCab" (onRowSelect)="onRowSelectRegDiario($event)">
 
                                 <!--campos de la datatable-->
@@ -58,7 +58,7 @@
                                 emptyMessage="Lista Vacia" >
                             -->
                             <p-dataTable [value]="arrRegDiarioDetalleByEmId" scrollable="true"
-                                scrollHeight="270px" scrollWidth="100%" selectionMode="single"
+                                scrollHeight="170px" scrollWidth="100%" selectionMode="single"
                                 emptyMessage="Lista Vacia" >
                                 <!--
                                 <p-column styleClass="col-button" [style]="{'width':'3em','height':'2em'}">

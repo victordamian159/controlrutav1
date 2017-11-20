@@ -21,8 +21,8 @@
           "styles.css",
           "../node_modules/bootstrap/dist/css/bootstrap.min.css",
           "../node_modules/primeng/resources/themes/omega/theme.css",
-          "../node_modules/primeng/resources/primeng.min.css",
-          "./content/font-awesome-4.7.0/css/font-awesome.min.css"
+          "../node_modules/primeng/resources/primeng.min.css"
+          //"./content/font-awesome-4.7.0/css/font-awesome.min.css"
       ],
    
       "scripts": [

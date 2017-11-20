@@ -262,16 +262,18 @@ export class TcontrolComponent implements OnInit{
 
         //REGISTRO DIARIO DE VUELTAS
             getAllRegistroDiario(emId:number){
+                let regDir:any[]=[];
                 this.regdiarioService.getAllRegistroDiarionByemId(emId).subscribe(
-                    data=>{console.log(data);this.mRegistroDiario(data);},
+                    data=>{regDir=data; this.mRegistroDiario(regDir);},
                     err=>{console.log(err);}
                 );
             }
 
         // GET REGISTRO RETEN   /registroreten/getallregistroretenbyredide",params = {"reDiDeId"}
             getAllRegistroRetenByredide(reDiDeId:number){
+                let regReten:any[]=[];
                 this.regRetenService.getAllRegistroRetenByemId(reDiDeId).subscribe(
-                    data=>{console.log(data);},
+                    data=>{regReten=data; console.log(regReten);},
                     err=>{console.log(err);}
                 );
             }
@@ -731,7 +733,6 @@ export class TcontrolComponent implements OnInit{
                 }
             }
             mRegistroDiarioDetalle(objRegDet:any){
-                console.log(objRegDet);
                 this.ReDiDeNroVuelta=objRegDet.ReDiDeNroVuelta;
                 this.ReDiDeId=objRegDet.ReDiDeId;
                 this.getAllRegistroRetenByredide(objRegDet.ReDiDeId);
