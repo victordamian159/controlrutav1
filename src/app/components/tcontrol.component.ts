@@ -745,6 +745,9 @@ export class TcontrolComponent implements OnInit{
             this.router.navigate(['/regdiario']);
         }
     // FUNCIONES BUSQUEDA
+        //buscar tarjetas asignadas , castigada o ausentes
+        buscarEstadoTarjeta
+
         buscarRegDiarioActual(arrReg=[]){
             let ReDiId:any;
             let i:number=0, cen:boolean=false;

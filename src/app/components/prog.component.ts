@@ -561,237 +561,7 @@ export class ProgComponent implements OnInit{
         //this.calendarioString=this.calendarioChar(f1,f2,this.calendario);
     }
 
-    /* CALENDARIO NUMERICO 
-    calendarioNumb(f1:string, f2:string){
-        let _f1, _f2;  let a1, a2; let res=[]; let _res=[]; let i=0,j=0, k,l,m,n;
-        let ab=[31,29,31,30,31,30,31,31,30,31,30,31], anb=[31,28,31,30,31,30,31,31,30,31,30,31];
-        {
-            _f1 = f1.split('-'); // DIV EN FORMA DE ARRAY 
-            _f2 = f2.split('-'); // DIV EN FORMA DE ARRAY 
-            
-            _f1.push(this.bisiesto(_f1[0])); // RECONOCIENDO BI O NOBI 
-            _f2.push(this.bisiesto(_f2[0])); // RECONOCIENDO BI O NOBI 
-
-            //CONVIRTIENDO ELEMENTOS A NROS -- CONTIENE SU AÑO BISIESTO(0) O NO BISIESTO(1)
-            while(i<_f1.length){ _f1[i]=Number(_f1[i]); i++;}   _f1[1]=_f1[1]-1;   
-            while(j<_f2.length){ _f2[j]=Number(_f2[j]); j++;}   _f2[1]=_f2[1]-1;
-        
-        }
-
-        //* CALENDARIO NUMERICO 
-         //MESES IGUALES  -  AÑOS IGUALES - DIAS DIFERENTES _F2 > _F1
-        if(_f2[1]-_f1[1]==0 && _f2[0]-_f1[0]==0){
-            if(_f2[1]==1){//FEBRERO
-                k=_f1[2];
-                if(_f1[3]==0){  //  BISIESTO
-                    while(k<=_f2[2] && k<anb[1]){
-                        res.push(k);
-                        k++
-                    }
-                }else if(_f1[3]==1){// NO BISIESTO
-                    while(k<=_f2[2] && k<ab[1]){
-                        res.push(k);
-                        k++
-                    }
-                }
-            }else if(_f2[1]!=1){//CUALQUIER MES
-                k=_f1[2];
-                while(k<=_f2[2] && k<=anb[1]){
-                    res.push(k);
-                    k++;
-                }
-            }
-        }
-        //
-
-        //DIFERENCIA DE MESES  AÑOS IGUALES (1,2,3 DE DIFERENCIA)
-        else if(_f2[1]-_f1[1]>0){
-            k=_f1[2]; j=_f2[2];//DIAS
-            
-            //CORREGIR ESTO, TIENE PROBLEMA CON RECONOCER SI ES AÑO BISIESTO O NO
-            if(_f1[3]==0){ // BISIESTO
-                while(k<=ab[_f1[1]]){ //1ER MES
-                    res.push(k);
-                    k++;
-                }
-                k=_f1[1]+1;
-                while(k<_f2[1]){//OTROS MESES 
-                    l=1;
-                    while(l<=ab[k]){
-                        res.push(l);
-                        l++;
-                    }
-                    k++;
-                }
-                k=1;
-                while(k<=j){ //ULT MES
-                    res.push(k);
-                    k++;
-                }
-            }else if(_f1[3]==1){// NO BISIESTO
-                while(k<=anb[_f1[1]]){ //1ER MES
-                    res.push(k);
-                    k++;
-                }
-                k=_f1[1]+1;
-                while(k<_f2[1]){//OTROS MESES 
-                    l=1;
-                    while(l<=anb[k]){
-                        res.push(l);
-                        l++;
-                    }
-                    k++;
-                }
-                k=1;
-                while(k<=j){ //ULT MES
-                    res.push(k);
-                    k++;
-                }
-            }
-        //
-
-        //AÑOS DIFERENTES
-        }else if(_f2[1]-_f1[1]<0){
-            i=_f1[1]; j=_f2[1]; //MESES 
-            k=_f1[2]; l=_f2[2] //DIAS
-            
-            if(_f1[3]==0 && _f2[3]==1){       // B NB 
-
-                //DIAS 1ER MES-MAYOR AÑO BISIESTO
-                while(k<=ab[_f1[1]]){ 
-                    res.push(k);
-                    k++;
-                }
-                //MESES QUE ESTAN ENTRE LAS FECHAS
-                i=_f1[1]+1;//SGTE MES AL 1ERO 
-                j=_f2[1]-1;//ANT  MES AL ULT
-                while(i<=11){ //AB
-                    k=1;
-                    while(k<ab[i]){
-                        res.push(k);
-                        k++;
-                    }
-                    i++;
-                }
-                while(j>=0){ //ANB
-                    k=1;
-                    while(k<anb[j]){
-                        res.push(k);
-                        k++;
-                    }
-                    j--;
-                }
-                //DIAS ULTIMO MES-MENOR AÑO NO BISIESTO
-                k=1;
-                while(k<=l){
-                    res.push(k);
-                    k++;
-                }
-
-            }else if(_f1[3]==1 && _f2[3]==0){ //* NB B 
-                //DIAS 1ER MES-MAYOR AÑO NO BISIESTO
-                while(k<=anb[_f1[1]]){ 
-                    res.push(k);
-                    k++;
-                }
-                //MESES QUE ESTAN ENTRE LAS FECHAS
-                i=_f1[1]+1;//SGTE MES AL 1ERO 
-                j=_f2[1]-1;//ANT  MES AL ULT
-                while(i<=11){ //ANB
-                    k=1;
-                    while(k<anb[i]){
-                        res.push(k);
-                        k++;
-                    }
-                    i++;
-                }
-                while(j>=0){ //AB
-                    k=1;
-                    while(k<ab[j]){
-                        res.push(k);
-                        k++;
-                    }
-                    j--;
-                }
-                //DIAS ULTIMO MES-MENOR AÑO BISIESTO
-                k=1;
-                while(k<=l){
-                    res.push(k);
-                    k++;
-                }
-            }else if(_f1[3]==1 && _f2[3]==1){ // NB NB 
-                //DIAS 1ER MES-MAYOR AÑO NO BISIESTO
-                while(k<=anb[_f1[1]]){ 
-                    res.push(k);
-                    k++;
-                }
-                //MESES QUE ESTAN ENTRE LAS FECHAS
-                i=_f1[1]+1;//SGTE MES AL 1ERO 
-                j=_f2[1]-1;//ANT  MES AL ULT
-                while(i<=11){ //ANB
-                    k=1;
-                    while(k<anb[i]){
-                        res.push(k);
-                        k++;
-                    }
-                    i++;
-                }
-                
-                //SI ESTA FEBRERO DENTRO DE ESTOS MESES       //SI ES FEBRERO EL ULTIMO MES
-                while(j>=0){ //ANB
-                    k=1;
-                    while(k<anb[j]){
-                        res.push(k);
-                        k++;
-                    }
-                    j--;
-                }
-                //DIAS ULTIMO MES-MENOR AÑO BISIESTO 
-                k=1;
-                while(k<=l){
-                    res.push(k);
-                    k++;
-                }
-            }
-        }
-        return res;
-    }*/
-    
-    /* CALENDARIO EN DIAS DE LA SEMANA 
-    calendarioChar(f1:string, f2:string, arrCal=[]){
-        let arr:any[]=["x"], arrf1:any[]=[], arrf2:any[]=[]; 
-        let nrof1:number, nrof2:number, fresp:number , nroTotDias:number,i:number, diaSemana:string;
-
-        arrf1=formatFechInArr(f1);  arrf2=formatFechInArr(f2);
-        nrof1=_fnroDias(arrf1); nrof2=_fnroDias(arrf2); //nroTotDias=nrof2-nrof1+1+1;
-        nroTotDias=arrCal.length;
-
-
-        for(let i=0; i<nroTotDias;i++){ arr[i]="x"; }
-        //console.log( (_addDays(f1,i)).getDay() );
-        
-        for(let i=0; i<nroTotDias;i++){
-            //console.log(i);
-            if((_addDays(f1,i)).getDay()==1){
-                arr[i]="Lu";
-            }else if((_addDays(f1,i)).getDay()==2){
-                arr[i]="ma";
-            }else if((_addDays(f1,i)).getDay()==3){
-                arr[i]="mi";
-            }else if((_addDays(f1,i)).getDay()==4){
-                arr[i]="ju";
-            }else if((_addDays(f1,i)).getDay()==5){
-                arr[i]="vi";
-            }else if((_addDays(f1,i)).getDay()==6){
-                arr[i]="sa";
-            }else if((_addDays(f1,i)).getDay()==0){
-                arr[i]="do";
-            }
-        }
-        //console.log(arr);
-        return arr;
-    }*/
-    
+   
     //CERRAR MENSAJE DE SE ENCONTRO ERROR EN LOS DATOS INGRESADOS
     errorDatos(){
         this.mensaje="";
@@ -960,15 +730,13 @@ export class ProgComponent implements OnInit{
     generarProgramacionDetalle(){
         this.mensajeEspera="Espere un momento...";
         this.displayAceptarProgNueva= true; 
-        
-        //console.log(this.progMaestro.PrAleatorio);
-        //
-
+ 
+        console.log(this.ordenSorteo.length);
         for(let i=0; i<this.ordenSorteo.length ; i++){
             this.programacionArrayDetalleBD[i].PrDeHoraBase=hora(this.ordenSorteo[i].HoraBase);
         } 
-
-
+    
+        console.log(this.programacionArrayDetalleBD);
         this.tablahorabase(this.programacionArrayDetalleBD, this.progMaestro.PrCantidadBuses);
 
         //PROGRAMACION AUTOMATICA O MANUAL
@@ -982,13 +750,12 @@ export class ProgComponent implements OnInit{
 
     //guardar programacion base- programacion detalle()
     guardarProgDetalle(arrProg=[], emid:number, prid:number, base:boolean){
-       
-            this.programacionService.saveProgramacionDetalle(arrProg,emid,prid,base)
-                .subscribe( 
-                    realizar => {this.getallprogramaciondetallebyprid(this.PrId); }, 
-                    err => {this.errorMessage = err},
-                    () =>{  this.lengthProgDet=0;}
-            );
+        this.programacionService.saveProgramacionDetalle(arrProg,emid,prid,base)
+            .subscribe( 
+                realizar => {console.log(realizar); console.log("guardado"); this.getallprogramaciondetallebyprid(this.PrId); }, 
+                err => {this.errorMessage = err},
+                () =>{ console.log("guardado"); this.lengthProgDet=0;}
+        );
     }
 
     //cargar tabla hora base
@@ -1131,7 +898,7 @@ export class ProgComponent implements OnInit{
         this.programacionService.getAllProgramacionDetalleByPrId(prId).subscribe(
             data => {
                      this.progBDDetalle = data; 
-                     //console.log(this.progBDDetalle);
+                     console.log(this.progBDDetalle);
                      this.extraerHoraBase(this.progBDDetalle, this.nroBusesFilaSelect);
                      this.tablaProgramaciones(this.progBDDetalle, this.nroBusesFilaSelect, this.nroDiasFilaSelect);
                     },
