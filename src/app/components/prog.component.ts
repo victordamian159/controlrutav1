@@ -131,7 +131,7 @@ export class ProgComponent implements OnInit{
     ngOnInit(){
         /*console.log(fechaSgte("2017/02/07",32));*/  /* TERMINAR ESTO */
         this.ordenSorteo = [];
-        this.getAllPlacasBusByEmSuEm(this.emid,0);  /* EMID + SUEMID*/
+        //this.getAllPlacasBusByEmSuEm(this.emid,0); 
         this.getAllProgramacionByEm(this.emid,this.anio); /* EMID + AÑO */
        
         //console.log(this.descartarFechas(this.calendarioNumerico('2017-11-13', '2017-12-13'), '1,1,1,0,1,0,1'));
@@ -390,10 +390,11 @@ export class ProgComponent implements OnInit{
                 let arrPlacas:any[]=[];
                 this.placasservice.getAllPlacasBusByEmSuEm(empId, suemId)
                     .subscribe(
-                        data => {
-                                    arrPlacas=data;
-                                    this.placas = arrPlacas; 
-                                    this.placasComplet=arrPlacas;
+                        data => { arrPlacas=data;
+                                  this.extrayendoPlacasBus(arrPlacas); 
+                                  this.placas = arrPlacas; 
+                                  this.placasComplet=arrPlacas;
+                                  this.unidadesEstado(arrPlacas);
                                 },
                         err  => {this.errorMessage = err},
                         () =>this.isLoading = false
@@ -418,8 +419,8 @@ export class ProgComponent implements OnInit{
         this.displayNuevaProgramacion=true; /* ABRIR VENTANA */
         this.ordenSorteo=[]; //SORTEO DE PLACAS
         this.titleNuevoProgPrimerModal = 'Nueva';
-        this.extrayendoPlacasBus(); 
-        this.unidadesEstado(this.placasComplet); //CALCULA EL NRO DE UNIDADES ACTIVAS Y NO ACTIVAS
+        this.getAllPlacasBusByEmSuEm(this.emid,0);
+         //CALCULA EL NRO DE UNIDADES ACTIVAS Y NO ACTIVAS
         this.progBDDetalle=[];
         this.lengthProgDet=0;
         this.dtSelectDias=[];
@@ -429,36 +430,35 @@ export class ProgComponent implements OnInit{
 
     //1ERA VENTANA MODAL aqui recien se guarda la tabla MAESTRO en el REST 
     guardarProgCabecera(){
-        let progCab:any;
-        let fIni=this.progMaestro.PrFechaInicio; let fFin=this.progMaestro.PrFechaFin;
-        //VALIDANDO FECHA
-        if( this.validandoFechas(fIni,fFin)==1){
-                //FECHA CORRECTA
-                this.tipoProgramacion(); /* MANUAL O AUTOMATICO */
-                
+        let progCab:any;  let fIni=this.progMaestro.PrFechaInicio; let fFin=this.progMaestro.PrFechaFin;
 
-                progCab = {
-                    PrId : this.progMaestro.PrId, //number
-                    EmId : this.emid, //number
-                    PrCantidadBuses : this.bAct, //number
-                    PrDescripcion : this.progMaestro.PrDescripcion, //string
-                    PrFecha : new Date(), //string
-                    PrFechaInicio : this.fecha(this.progMaestro.PrFechaInicio), //string
-                    PrFechaFin : this.fecha(this.progMaestro.PrFechaFin), //string
-                    PrTipo : Number(this.tipoProg), //string escala pescadito
-                    PrAleatorio : 0, //string manual automatico(aleatorio)
-                    PrDiasIncluidos:this.diasIncluidos(this.dtSelectDias),
-                    UsId : this.userid, //number
-                    UsFechaReg : new Date() //string
-                }
-                
-                //console.log(progCab);
-                this.procSaveProgramacion(progCab);
+        //VALIDANDO FECHA
+        //FECHA CORRECTA
+        if( this.validandoFechas(fIni,fFin)==1){
+            this.tipoProgramacion(this.arrayPlacas,this.arrayPlacas.length,this.tipoProg );//FORMA SORTEO
+            progCab = {
+                PrId : this.progMaestro.PrId, //number
+                EmId : this.emid, //number
+                PrCantidadBuses : this.bAct, //number
+                PrDescripcion : this.progMaestro.PrDescripcion, //string
+                PrFecha : new Date(), //string
+                PrFechaInicio : this.fecha(this.progMaestro.PrFechaInicio), //string
+                PrFechaFin : this.fecha(this.progMaestro.PrFechaFin), //string
+                PrTipo : Number(this.tipoProg), //string escala pescadito
+                PrAleatorio : 0, //string manual automatico(aleatorio)
+                PrDiasIncluidos:this.diasIncluidos(this.dtSelectDias),
+                UsId : this.userid, //number
+                UsFechaReg : new Date() //string
+            }
             
-                this.displayNuevaProgramacion=false; //cerrar 1era ventana
-                this.displayProgramacionBase=true; //abrir 2da ventana
-            }else if(this.validandoFechas(fIni,fFin)==0){
-                //FECHA NO CORRECTA
+            //console.log(progCab);
+            this.procSaveProgramacion(progCab);
+        
+            this.displayNuevaProgramacion=false; //cerrar 1era ventana
+            this.displayProgramacionBase=true; //abrir 2da ventana
+        //FECHA NO CORRECTA
+        }else if(this.validandoFechas(fIni,fFin)==0){
+            
         }
                 
     }
@@ -479,18 +479,17 @@ export class ProgComponent implements OnInit{
 
    
     /* FUNCION -> FORMA DE SORTEO MANUAL O AUTOMATICO */
-    tipoProgramacion(){
-        let tprog=this.tipoProg;
-        this.ordenSorteo=[];/* LIMPIANDO ARRAY DE SORTEOS */
+    tipoProgramacion(arrayplacas=[], long:number, tprog:string){
+       this.ordenSorteo=[];
         
         /* AUTOMATICO*/
         if(tprog=="01"){ 
             let array = ["c"];  let nro;//ARRAY NUMEROS ALEATORIOS NO REPETIDOS
-            let arrayplacas= this.arrayPlacas;  let long = this.arrayPlacas.length; 
             let _arrayplacas=[];  let i=0,j=0, cen=0; // cen=0: no existe         cen=1: existe
+
             //ALGORITMO NROS ALEATORIOS
             while(i<long ){
-                nro = Math.floor(Math.random()*long);//NUMEROS ALEATORIOS ENTRE 0 Y LONG(7)
+                nro = Math.floor(Math.random()*long);//NUMEROS ALEATORIOS ENTRE 0 Y LONG
                 while(j<array.length ){
                     if(array[j]!=nro){
                         cen=0;
@@ -505,21 +504,18 @@ export class ProgComponent implements OnInit{
                 }
                 cen=0; j=0;
             }
-            //console.log(array);
+            
             //APLICANDO ALGORITMO, BUSCANDO INDICES CON ARRAY DE PLACAS
             i=0; nro=0;
             while(i<array.length){
                 _arrayplacas.push(arrayplacas[array[i]]);
                 i++;
             }
-        
             this.ordenSorteo=_arrayplacas;
             this.arrayPlacas=[];
-            
         /* MANUAL*/
         }else if(tprog=="02"){
             console.log("manual");
-            
         }
         
     }
@@ -668,23 +664,16 @@ export class ProgComponent implements OnInit{
     //BOTON GENERAR PROGRAMACION 
     programacionSegundoModal(){
         this.programacionArrayDetalleBD=[];
-      
-        
-        //condicional para ver si esta cumpliendo con el total de placas a mandar para generar la programacion
+
         if(this.progMaestro.PrCantidadBuses!=this.ordenSorteo.length){
-            //cantidad ingresada es mayor a la cantidad de placas ingresadas (falta terminar programacion base)
-            //MOSTRAR EN UNA VENTANA MODAL
             this.mensaje="Error en las Placas Del Sorteo";
             this.displayFaltanPlacas=true;
-        //SE INGRESARON TODAS LAS PLACAS AL SORTEO
         }else if(this.progMaestro.PrCantidadBuses == this.ordenSorteo.length){
 
             //si las cantidades son iguales la programacion puede terminar
             this.displayProgramacionBase=false; //cerrar 2da ventana Prog Base
             this.displayHoraBase=true;  //HORA BASE
 
-            //this.progMaestro.PrCantidadBuses=0;
-           
             this.progDetalle.PrDeFecha = new Date();
             
             //CARGAR EN ARRAY DE OBJETOS PARA MANDAR A LA BD
@@ -704,14 +693,10 @@ export class ProgComponent implements OnInit{
                     PrDeHoraBase:0,
                 });  
             } 
-            
             for(let i=0; i<this.ordenSorteo.length; i++){
                 this.ordenSorteo[i].nro=i+1;
             }
             this.nroTotalMinibuses=this.ordenSorteo.length;
-            
-            
-            
         }
     }
     
@@ -738,23 +723,23 @@ export class ProgComponent implements OnInit{
     
         console.log(this.programacionArrayDetalleBD);
         this.tablahorabase(this.programacionArrayDetalleBD, this.progMaestro.PrCantidadBuses);
-
+        /*
         //PROGRAMACION AUTOMATICA O MANUAL
         if(this.tipoProg == "01"){ //AUTOMATICA
             this.arrayPlacas=this._arrayPlacas;
             this._arrayPlacas = [];
         }else if(this.tipoProg == "02"){ //MANUAL
             //NO SE HACE NADA
-        }
+        }*/
     }
 
     //guardar programacion base- programacion detalle()
     guardarProgDetalle(arrProg=[], emid:number, prid:number, base:boolean){
         this.programacionService.saveProgramacionDetalle(arrProg,emid,prid,base)
             .subscribe( 
-                realizar => {console.log(realizar); console.log("guardado"); this.getallprogramaciondetallebyprid(this.PrId); }, 
+                realizar => {this.getallprogramaciondetallebyprid(this.PrId); }, 
                 err => {this.errorMessage = err},
-                () =>{ console.log("guardado"); this.lengthProgDet=0;}
+                () =>{this.lengthProgDet=0;}
         );
     }
 
@@ -851,28 +836,27 @@ export class ProgComponent implements OnInit{
     }
 
     //extraer placas y el ID de los buses OPTIMIZAR ESTE CODIGO, MUCHAS VECES SE ESTA USANDO EN EL FUNCIONAMIENTO DEL PROGRAMA
-    extrayendoPlacasBus(){
+    extrayendoPlacasBus(placas=[]){
         this.arrayPlacas=[];
+        let arrPlacas:any[]=[];
         let i =0;
-        while( i<this.placas.length){
-            //console.log(this.placas[i].BuActivo);
-            if(this.placas[i].BuActivo==true){
-                this.arrayPlacas.push({
+        while( i<placas.length){
+            if(placas[i].BuActivo==true){
+                arrPlacas.push({
                     nro:0,
-                    nroPlaca: this.placas[i].BuPlaca,
-                    BuId: this.placas[i].BuId,
-                    BuActivo:this.placas[i].BuActivo,
+                    nroPlaca: placas[i].BuPlaca,
+                    BuId: placas[i].BuId,
+                    BuActivo:placas[i].BuActivo,
                     HoraBase:'HH:MM:SS'
                 });
-            }else if(this.placas[i].BuActivo==false){
-                
-            }
+            }else if(placas[i].BuActivo==false){}
             i++;
         }
-        for(let i=0; i<this.arrayPlacas.length; i++){
-            this.arrayPlacas[i].nro=i+1;
+        for(let i=0; i<arrPlacas.length; i++){
+            arrPlacas[i].nro=i+1;
         }
 
+        this.arrayPlacas=arrPlacas.slice(0);
     }
 
     //seleccionar fila de la tabla
@@ -990,15 +974,6 @@ export class ProgComponent implements OnInit{
                     l++; m=0;
                 }
 
-                //CAPTURANDO LAS PLACAS POR BUID
-                this.getAllPlacasBusByEmSuEm(this.emid, 0);
-
-                //VERIFICANDO SI EL ARRAY DE PLACAS YA ESTA CARGADO O NO
-                if(this.arrayPlacas.length==0){  
-                    this.extrayendoPlacasBus(); 
-                }else if(this.arrayPlacas.length>0){
-                    console.log("ya se extrayeron las placas");
-                }
 
                 //ACTUALIZANDO EL ARRAY a5, cambiando BUID por su respectiva PLACA---BUSQUEDA
                 i=0; let cen=0; j=0; k=0; //0: EXISTE  1:NO EXISTE
@@ -1033,10 +1008,7 @@ export class ProgComponent implements OnInit{
                     (this._detalle[i]).splice(0,0,(i+1).toString());
                 }
                 
-                this.calNumb.unshift(" ");
-                this.calString.unshift(" ");
-                this.nroColumn=nroDiasFilaSelect;
-                //this.calNumb=this.calendario; // PASANDO CALENDARIO 
+                this.calNumb.unshift(" "); this.calString.unshift(" ");  this.nroColumn=nroDiasFilaSelect;
                 this.displayProgramacion = true;
         }else if(progBDDetalle.length == nroBusesFilaSelect || progBDDetalle.length < nroBusesFilaSelect){
                 this.mensaje="Error al Generar la Programacion, Vuelva a Generarlo";
