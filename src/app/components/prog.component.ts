@@ -785,13 +785,10 @@ export class ProgComponent implements OnInit{
     AgregarHBase(){
         if(this.nroMiniBus<this.nroTotalMinibuses){         
             let indicePorInicio=this.buscarPrimerHMS(this.ordenSorteo);
-            console.log('xInicio: '+indicePorInicio);
-
             this.ordenSorteo[indicePorInicio].HoraBase=this.horaBase;
             this.nroMiniBus=this.conteoHBAgregadas(this.ordenSorteo);
-            
             let indexNextPos=this.buscarSigtePosicion(this.ordenSorteo);
-            console.log('nexPos: '+indexNextPos);
+          
 
             if(indexNextPos-indicePorInicio==1){
                 if(this.nroTotalMinibuses==indexNextPos){
@@ -799,8 +796,6 @@ export class ProgComponent implements OnInit{
                 }else{
                     this.placaEditarCelda=this.ordenSorteo[indexNextPos].nroPlaca;
                 }
-                  
-            
             }else if(indexNextPos-indicePorInicio>1){
                 this.placaEditarCelda=this.ordenSorteo[indicePorInicio].nroPlaca;  
             }
@@ -814,20 +809,13 @@ export class ProgComponent implements OnInit{
         this.mensajeEspera="Espere un momento...";
         this.displayAceptarProgNueva= true; 
         this.horaBase="";
-
+        /*
         for(let i=0; i<this.ordenSorteo.length ; i++){
             this.programacionArrayDetalleBD[i].PrDeHoraBase=hora(this.ordenSorteo[i].HoraBase);
-        } 
+        } */
     
-        this.tablahorabase(this.programacionArrayDetalleBD, this.progMaestro.PrCantidadBuses);
-        /*
-        //PROGRAMACION AUTOMATICA O MANUAL
-        if(this.tipoProg == "01"){ //AUTOMATICA
-            this.arrayPlacas=this._arrayPlacas;
-            this._arrayPlacas = [];
-        }else if(this.tipoProg == "02"){ //MANUAL
-            //NO SE HACE NADA
-        }*/
+        this.tablahorabase(this.programacionArrayDetalleBD);
+     
     }
 
     //guardar programacion base- programacion detalle()
@@ -842,7 +830,7 @@ export class ProgComponent implements OnInit{
     }
 
     //cargar tabla hora base
-    tablahorabase(arrplacaSorteo=[], nroMiniBus){
+    tablahorabase(arrplacaSorteo=[]){
         this.ordenSorteo=[];
        
         this.displayHoraBase=false;
