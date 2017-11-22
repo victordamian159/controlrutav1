@@ -685,9 +685,6 @@ export class ProgComponent implements OnInit{
     //BOTON GENERAR PROGRAMACION 
     programacionSegundoModal(){
         this.programacionArrayDetalleBD=[];
-        console.log(this.progMaestro.PrCantidadBuses);
-        console.log(this.ordenSorteo.length);
-
         if(this.progMaestro.PrCantidadBuses!=this.ordenSorteo.length){
             this.mensaje="Error en las Placas Del Sorteo";
             this.displayFaltanPlacas=true;
