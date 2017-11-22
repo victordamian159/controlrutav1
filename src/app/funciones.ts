@@ -482,22 +482,24 @@
         let result:boolean;
         if(h.length!=8){
             result=false;
+            
             return result;
         }else if(h.length==8){
+            
            if(h[2]==':' && h[5]==':'){
                 let hora=h.split(':'); let _hora=[];
-
+                
                 for(let i=0; i<hora.length; i++){
                     _hora[i]=Number(hora[i]);
                 }
-
                 if(validTime(_hora[0],_hora[1],_hora[2] ) ==true ){
                     result=true;
-                    return result;
+                  
                 } else  if(validTime(_hora[0],_hora[1],_hora[2] ) ==false ){
                     result=false;
-                    return result;
+                   
                 }
+                return result;
            }else if(h[2]!=':' || h[5]!=':'){
                 result=false;
                 return result;
@@ -507,13 +509,45 @@
 
     function validTime(h:number, m:number, s:number):boolean{
         let result:boolean;
-        if( (h>0 && h<=23) && (m>0 && m<=60) && (s>0 && s<=60) ){
+        if( (h>=0 && h<24) && (m>=0 && m<60) && (s>=0 && s<60) ){
             result = true;
         }else {
             result = false;
         }
         return result;
     }
+
+    export function cambianBuIdxNroPlaca(arrProtoProg=[], arrPlacas=[]){
+        //ACTUALIZANDO EL ARRAY a5, cambiando BUID por su respectiva PLACA---BUSQUEDA
+        let i=0; let cen=0, j=0, k=0; //0: EXISTE  1:NO EXISTE
+
+        while(i<arrProtoProg.length){//SOBRE EL ARRAY RAIZ
+            while(j<arrProtoProg[i].length){ //SOBRE LOS ARRAY INTERIOR 
+                //UBICAR EL POR IGUAL BUID
+                while(k<arrPlacas.length  && cen==0){
+                    if(arrProtoProg[i][j]!=arrPlacas[k].BuId){
+                        k++; 
+                    }else if(arrProtoProg[i][j]==arrPlacas[k].BuId){
+                        cen=1;
+                    }
+                }
+                //SI SE EENCONTRO
+                if(cen==1){
+                    arrProtoProg[i][j]=arrPlacas[k].nroPlaca;
+                    k=0;
+                    j++;
+                    cen=0;
+                }else if(cen==0){
+                }
+                
+            }
+            j=0;
+            i++;
+        }//FIN WHILE BUSQUEDA
+        
+        return arrProtoProg;
+    }
+
     // VARIABLES EXPORTADAS
     export var arrABI=[31,29,31,30,31,30,31,31,30,31,30,31];
     export var arrANBI=[31,28,31,30,31,30,31,31,30,31,30,31];

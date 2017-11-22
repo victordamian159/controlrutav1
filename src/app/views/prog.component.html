@@ -1,6 +1,5 @@
 <!--PRINCIPAL TABLAS-->
 <div class="contenedor">
-  
     <!--TITUTO-->
     <div id="titulo">Tabla Programaciones</div>
     
@@ -97,30 +96,32 @@
                                                 <label >Buses:</label>
                                                 <div class="control-label">
                                                     <label>{{resBusUnidades}}</label>
+                                                    <label [hidden]="bAct>0 && bAct!=0">catherine</label>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <!--DESDE-->
-                                            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                                                <div class="form-group">
-                                                    <label  class="control-label">Del:</label>
-                                                    <input class="form-control" name="finicio"  type="date" [(ngModel)]="progMaestro.PrFechaInicio" required #fde="ngModel" />
-                                                    <span *ngIf="!fde.valid && fde.touched"  >   
-                                                        <div id="validation" [hidden]="!fde.errors.required"> Obligatorio </div>
-                                                    </span>
-                                                </div>
+                                        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                                            <div class="form-group">
+                                                <label  class="control-label">Del:</label>
+                                                <input class="form-control" name="finicio"  type="date" [(ngModel)]="progMaestro.PrFechaInicio" required #fde="ngModel" />
+                                                <span *ngIf="!fde.valid && fde.touched"  >   
+                                                    <div id="validation" [hidden]="!fde.errors.required"> Obligatorio </div>
+                                                </span>
                                             </div>
+                                        </div>
+
                                         <!--HASTA-->
-                                            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                                                <div class="form-group">
-                                                    <label  class="control-label" >Hasta:</label>
-                                                    <input class="form-control" name="ffinal"  type="date" [(ngModel)]="progMaestro.PrFechaFin"  required #fha="ngModel" />
-                                                    <span *ngIf="!fha.valid && fha.touched"  >  
-                                                        <div id="validation" [hidden]="!fha.errors.required"> Obligatorio </div>
-                                                    </span>
-                                                </div>
+                                        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                                            <div class="form-group">
+                                                <label  class="control-label" >Hasta:</label>
+                                                <input class="form-control" name="ffinal"  type="date" [(ngModel)]="progMaestro.PrFechaFin"  required #fha="ngModel" />
+                                                <span *ngIf="!fha.valid && fha.touched"  >  
+                                                    <div id="validation" [hidden]="!fha.errors.required"> Obligatorio </div>
+                                                </span>
                                             </div>
+                                        </div>
 
                                         <!--TIPO DE PROGRAMACION MANUAL O AUTOMATICO-->
                                         <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
@@ -156,12 +157,14 @@
                     </div>
                 </div>
             </div>
-            
+           
             <!--BOTONES-->
             <div class="btn_Modal row">
                 <div class="col-xl-6 col-md-6 col-sm-12 col-sx-12">
-                    <button class="btn_modal" type="text" pButton icon="fa-check" (click)="guardarProgCabecera(); tprog.reset(); fprog.reset(); fde.reset(); fha.reset(); descrip.reset();" 
-                    label="Continuar" [disabled]="!tprog.valid || !fprog.valid || !fde.valid || !fha.valid || !descrip.valid || !(dtSelectDias.length>4 && dtSelectDias.length<8)"></button>
+                    <button class="btn_modal" type="text" pButton icon="fa-check" 
+                    (click)="guardarProgCabecera(); tprog.reset(); fprog.reset(); fde.reset(); fha.reset(); descrip.reset();" 
+                    label="Continuar" 
+                    [disabled]=" !(bAct>0 && bAct!=0) || !tprog.valid || !fprog.valid || !fde.valid || !fha.valid || !descrip.valid || !(dtSelectDias.length>4 && dtSelectDias.length<8)"></button>
                 </div>
                 <div class="col-xl-6 col-md-6 col-sm-12 col-sx-12">
                     <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelNewProgramacion(); tprog.reset(); fprog.reset(); fde.reset(); fha.reset(); descrip.reset();" label="Cancelar"></button>
@@ -173,30 +176,28 @@
         <p-dialog [resizable]="false" [(visible)]="displayProgramacionBase" modal="modal" width="100%" responsive="true" [closable]="false" >            
             <div class="row">
                 <div class="cont_modal">
-                    
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="row">
-                               
-                                <div class="form-group">
-                                    <label>Orden de Sorteo</label>
-                                    <p-pickList [source]="arrayPlacas" [target]="ordenSorteo" sourceHeader="Placa" targetHeader="Orden" [responsive]="false" 
-                                                [sourceStyle]="{'height':'220px','width':'100px'}"  
-                                                [targetStyle]="{'height':'220px','width':'100px'}">
-                                        <template let-placa pTemplate="item">
-                                            <div class="ui-helper-clearfix">
-                                                <div style="font-size:16px; float:right; margin:5px 5px 0 0">{{placa.nroPlaca}}</div>
-                                            </div>
-                                        </template>
-                                    </p-pickList>
-                                </div>
-                              
-                                
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="row">
+                            
+                            <div class="form-group">
+                                <label>Orden de Sorteo</label>
+                                <p-pickList [source]="arrayPlacas" [target]="ordenSorteo" sourceHeader="Placa" targetHeader="Orden" [responsive]="false" 
+                                            [sourceStyle]="{'height':'220px','width':'100px'}"  
+                                            [targetStyle]="{'height':'220px','width':'100px'}">
+                                    <template let-placa pTemplate="item">
+                                        <div class="ui-helper-clearfix">
+                                            <div style="display:inline-block; margin:5px 2px 2px 2px" >{{placa.nro}}</div>
+                                            <div style="font-size:16px; float:right; margin:5px 5px 0 0">{{placa.nroPlaca}}</div>
+                                        </div>
+                                    </template>
+                                </p-pickList>
                             </div>
+                            
+                            
                         </div>
-                   
+                    </div>
                 </div>
-            </div>
-                                    
+            </div>                 
             <!--BOTONES DE LA VENTANA-->           
             <div class="btn_Modal row">
                 <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">  
@@ -211,27 +212,34 @@
         </p-dialog> 
 
     <!--3RA VENTANA, HORA BASE DE SALIDA-->
-        <p-dialog header="Hora Base de Salidas" [resizable]="false" [(visible)]="displayHoraBase" modal="modal" width="100%" responsive="true" [closable]="false" >
-                <div class="row">
+        <p-dialog [resizable]="false" [(visible)]="displayHoraBase" modal="modal" width="100%" responsive="true" [closable]="false" >
+            <p-header>Hora Base de Salidas</p-header>
+            <div class="row">
                     <div class="cont_modal">
                         <div class="formHoraBase">
                             <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="row">
                                     <!--HORAS-->
                                     <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                        <label [hidden]="nroMiniBus==nroTotalMinibuses">Placa {{nroMiniBus+1}} de {{nroTotalMinibuses}}</label>
+                                        <label id="PlacaSelectHB" [hidden]="nroMiniBus==nroTotalMinibuses">Placa {{placaEditarCelda}}</label>
+                                        <br>
+                                        <label id="PlacaSelectHB" [hidden]="nroMiniBus==nroTotalMinibuses">Agregados --> {{nroMiniBus+1}} de {{nroTotalMinibuses}}</label>
                                         <label [hidden]="nroMiniBus!=nroTotalMinibuses">Programacion Terminada</label>
                                     </div>
                                     <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" [(ngModel)]="horaBase" [hidden]="nroMiniBus==nroTotalMinibuses" >
+                                            <input type="text" class="form-control" [(ngModel)]="horaBase" #hBase="ngModel" required pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})" [hidden]="nroMiniBus==nroTotalMinibuses" >
+                                        </div>
+                                        <div id="validation" [hidden]="!hBase.touched || hBase.valid ">
+                                            Error en los datos
                                         </div>
                                     </div>
                                     <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                                         <button class="btn_modal" type="text" pButton icon="fa-check" 
                                         (click)="AgregarHBase();" 
                                         [hidden]="nroMiniBus==nroTotalMinibuses"
-                                        label="Agregar" ></button>
+                                        label="Agregar" [disabled]="!hBase.valid "></button>
+                                        
                                     </div>
                                     
 
@@ -241,6 +249,7 @@
                                             <p-dataTable [value]="ordenSorteo" [editable]="true"
                                                         (onEditComplete)="onEditCompleteHB($event)"
                                                         (onEditCancel)="onEditCancelHB($event)"
+                                                        (onEditInit)="onEditInitHB($event)"
                                                         scrollable="true" scrollHeight="250px" scrollWidth="100%" 
                                                         emptyMessage="Lista vacia"> 
                                                 <p-column field="nro" header="N°"  [style]="{'width':'3em','text-align':'center'}"></p-column>
@@ -448,6 +457,7 @@
             </div>
         </p-dialog>
 
+
 <!--VENTANAS DE CONFIRMACION-->
         <!--MODAL CONFIRMAR EDITAR REGISTRO-->
         
@@ -535,6 +545,17 @@
                 <div class="btn_Modal row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                         <button class="btn_modal"  pButton (click)="OkProgNoPuedoBorrar()" label="Aceptar"></button>
+                    </div>
+                </div>
+        </p-dialog>
+
+         <!--ERROR  NO SE PUEDE DESCARGAR LAS PLACAS DE LA BD-->
+         <p-dialog [(visible)]="displayErrorCargarPlacas" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
+                <p>{{mensaje}}</p>
+               
+                <div class="btn_Modal row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        <button class="btn_modal"  pButton (click)="aceptarErrorPlacas()" label="Aceptar"></button>
                     </div>
                 </div>
         </p-dialog>
