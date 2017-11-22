@@ -1,9 +1,6 @@
 <!--PRINCIPAL TABLAS-->
 <div class="contenedor">
-    <!--TITUTO-->
     <div id="titulo">Tabla Programaciones</div>
-    
-    <!--BUSQUEDA-->
     <div class="row">
         <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
             <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
@@ -17,9 +14,9 @@
     <div class="row">
         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
             <div class="table table-responsive">
-                <p-dataTable [value]="programacionMaestroArrayHTML"  [globalFilter]="filtroGlobal" scrollable="true" scrollHeight="350px" scrollWidth="100%" selectionMode="single" 
+                <p-dataTable [value]="programacionMaestroArrayHTML"  [globalFilter]="filtroGlobal" 
+                    scrollable="true" scrollHeight="350px" dataKey="nro" scrollWidth="100%" selectionMode="single" 
                     emptyMessage="Lista vacia" (onRowSelect)="onRowSelectMaestro($event)"> 
-                    <!--CAMPOS DE LA TABLA-->
                     <p-column styleClass="col-button" [style]="{'width':'3em'}">
                         <template let-col let-progrRowMaestro="rowData" pTemplate="body">
                             <button type="button" pButton id="btnTable" (click)="editarCabecera(progrRowMaestro)" icon="fa-pencil-square-o" ></button>
@@ -555,7 +552,16 @@
                 </div>
         </p-dialog>
 
-
+        <!--SE GENERO CORRECTAMENTE LA PROGRAMACION-->
+        <p-dialog [(visible)]="displayTerminoTodoGenerarProg" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
+            <p>{{mensaje}}</p>
+           
+            <div class="btn_Modal row">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                    <button class="btn_modal"  pButton (click)="aceptarGenProgComplet()" label="Aceptar"></button>
+                </div>
+            </div>
+    </p-dialog>
 <!---->
 
 

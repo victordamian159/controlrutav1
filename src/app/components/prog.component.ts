@@ -90,6 +90,7 @@ export class ProgComponent implements OnInit{
         private progMaestroArray:any[]= [];/* NO USO */
         private progDetalleArray:any[]=[];/* NO USO */
         private programacionArrayDetalleBD:any[]=[]; //array objetos detalle para mandar al rest
+        private _programacionArrayDetalleBD:any[]=[];
         private _tipoProg:any[]=[];
         private _formaProg:any[]=[];
         private diasSemana:any[]=[];
@@ -129,6 +130,7 @@ export class ProgComponent implements OnInit{
         private displayDatosPDF:boolean=false;
         private displayHoraBase:boolean=false;
         private displayErrorCargarPlacas=false;
+        private displayTerminoTodoGenerarProg=false;
 
     ngOnInit(){
         /*console.log(fechaSgte("2017/02/07",32));*/  /* TERMINAR ESTO */
@@ -335,7 +337,7 @@ export class ProgComponent implements OnInit{
                 }
         /* GETTERS -> RECUPERANDO DATOS */
             /*CONSULTA PROGRAMACION DETALLE*/
-            getallprogramaciondetallebyprid(_prid:number){
+            getallprogramaciondetallebyprid(_prid:number, arrPlacaSorteo=[]){
                 this.programacionService.getAllProgramacionDetalleByPrId(_prid).subscribe(
                     data => {
                         this.progBDDetalle = data; 
@@ -346,7 +348,7 @@ export class ProgComponent implements OnInit{
                             this.nroTotalMinibuses=-1;
                             this.mensajeProcesando="Procesando nueva programacion";
             
-                            this.cargarPrDeId(this.programacionArrayDetalleBD,this.progBDDetalle);
+                            this.cargarPrDeId(arrPlacaSorteo,this.progBDDetalle);
                         }else if(this.lengthProgDet==0){
                             this.mensaje="Se encontro un error, elimine y vuelva a generarlo";
                             this.lengthProgDet=1;
@@ -360,18 +362,33 @@ export class ProgComponent implements OnInit{
             //CARGAR PRDEID para guardar horabasesalida
             cargarPrDeId(arrProgBase=[], arrProg=[]){
                 
+                for(let i=0; i<this.ordenSorteo.length ; i++){
+                    arrProgBase[i].PrDeHoraBase=hora(this.ordenSorteo[i].HoraBase);
+                } 
+
                 for(let i=0; i<arrProgBase.length; i++){
                     arrProgBase[i].PrDeId=arrProg[i].PrDeId;
                 }
                 this.programacionService.saveProgDetalleHsalida(arrProgBase).subscribe(
                     realizar => {   console.log(realizar);
-                                    this.lengthProgDet=0;
-                                    this.mensaje="Se Genero Correctamente La Programacion";
-                                    
+                                    if(realizar==true){
+                                        this.lengthProgDet=0;
+                                        this.displayTerminoTodoGenerarProg=true;
+                                        this.mensaje="Se Genero Correctamente La Programacion";
+                                    }else if(realizar==false){
+                                        this.lengthProgDet=0;
+                                        this.displayTerminoTodoGenerarProg=true;
+                                        this.mensaje="Hubo un problema al generar la programaicon";
+                                    }
                     },
                     error => {},
                     () => {}
                 );
+            }
+
+            aceptarGenProgComplet(){
+                this.mensaje="";
+                this.displayTerminoTodoGenerarProg=false;
             }
 
             /* CONSULTA PROGRAMACION CABECERA POR SU ID - USANDO EN EDITAR PROGRAMACION */
@@ -684,20 +701,20 @@ export class ProgComponent implements OnInit{
     //2DA VENTANA MODAL(boton continuar)
     //BOTON GENERAR PROGRAMACION 
     programacionSegundoModal(){
-        this.programacionArrayDetalleBD=[];
+        let arrProgDetalle=[];
+        //this.programacionArrayDetalleBD=[];
         if(this.progMaestro.PrCantidadBuses!=this.ordenSorteo.length){
             this.mensaje="Error en las Placas Del Sorteo";
             this.displayFaltanPlacas=true;
         }else if(this.progMaestro.PrCantidadBuses == this.ordenSorteo.length){
             this.displayProgramacionBase=false; 
-            this.displayHoraBase=true;  
+              
             this.placaEditarCelda=this.ordenSorteo[0].nroPlaca;
-
             this.progDetalle.PrDeFecha = new Date();
             
             //CARGAR EN ARRAY DE OBJETOS PARA MANDAR A LA BD
             for(let i=0; i<this.ordenSorteo.length ; i++){
-                this.programacionArrayDetalleBD.push({
+                arrProgDetalle.push({
                     PrId : this.PrId,
                     BuId : this.ordenSorteo[i].BuId,
                     PrDeFecha: new Date(),
@@ -712,7 +729,12 @@ export class ProgComponent implements OnInit{
                     PrDeHoraBase:0,
                 });  
             } 
-            console.log(this.programacionArrayDetalleBD);
+
+            this._programacionArrayDetalleBD=arrProgDetalle.slice(0);  // SEPARO ESTO PARA DESPUES CARGARLO CON LOS PRDEID
+            
+            this.guardarProgDetalle(arrProgDetalle, this.emid, this.PrId, true);
+
+
             for(let i=0; i<this.ordenSorteo.length; i++){
                 this.ordenSorteo[i].nro=i+1;
             }
@@ -806,35 +828,52 @@ export class ProgComponent implements OnInit{
     }
 
     generarProgramacionDetalle(){
-        this.mensajeEspera="Espere un momento...";
-        this.displayAceptarProgNueva= true; 
-        this.horaBase="";
-        /*
+
         for(let i=0; i<this.ordenSorteo.length ; i++){
-            this.programacionArrayDetalleBD[i].PrDeHoraBase=hora(this.ordenSorteo[i].HoraBase);
-        } */
+            this._programacionArrayDetalleBD[i].PrDeHoraBase=hora(this.ordenSorteo[i].HoraBase);
+        } 
     
-        this.tablahorabase(this.programacionArrayDetalleBD);
+        this.tablahorabase(this._programacionArrayDetalleBD);
      
     }
 
     //guardar programacion base- programacion detalle()
     guardarProgDetalle(arrProg=[], emid:number, prid:number, base:boolean){
         console.log(arrProg);
+        console.log(emid);
+        console.log(prid);
+        console.log(base);
         this.programacionService.saveProgramacionDetalle(arrProg,emid,prid,base)
             .subscribe( 
-                realizar => {this.getallprogramaciondetallebyprid(this.PrId); }, 
-                err => {this.errorMessage = err},
-                () =>{this.lengthProgDet=0;}
+                realizar => {   console.log(realizar);
+                                this.mensajeEspera="Iniciando la Programacion...";
+                                this.displayAceptarProgNueva= true; 
+                                //this.horaBase="";
+                                if(realizar==true){
+                                    this.mensajeEspera="";
+                                    this.displayAceptarProgNueva= false; 
+                                    this.displayHoraBase=true;
+                                }else if(realizar==false){
+                                    this.mensajeEspera="Error al iniciar la Programacion";
+                                    this.displayAceptarProgNueva= true; 
+                                }    
+                                //this.getallprogramaciondetallebyprid(prid); 
+                            }, 
+                err => {this.errorMessage = err;
+                            console.log(err);
+                            this.mensajeEspera="Error al iniciar la Programacion";
+                            this.displayAceptarProgNueva= true; 
+                        },
+                () =>{this.lengthProgDet=0; console.log('guardado');}
         );
     }
 
     //cargar tabla hora base
     tablahorabase(arrplacaSorteo=[]){
         this.ordenSorteo=[];
-       
         this.displayHoraBase=false;
-        this.guardarProgDetalle(arrplacaSorteo, this.emid, this.PrId, true);
+        this.getallprogramaciondetallebyprid(this.PrId, arrplacaSorteo); 
+        //this.guardarProgDetalle(arrplacaSorteo, this.emid, this.PrId, true);
     }
 
     cargarHoraBaseSalida(){
