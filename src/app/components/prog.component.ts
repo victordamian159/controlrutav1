@@ -715,6 +715,7 @@ export class ProgComponent implements OnInit{
                     PrDeHoraBase:0,
                 });  
             } 
+            console.log(this.programacionArrayDetalleBD);
             for(let i=0; i<this.ordenSorteo.length; i++){
                 this.ordenSorteo[i].nro=i+1;
             }
@@ -815,6 +816,7 @@ export class ProgComponent implements OnInit{
     generarProgramacionDetalle(){
         this.mensajeEspera="Espere un momento...";
         this.displayAceptarProgNueva= true; 
+        this.horaBase="";
 
         for(let i=0; i<this.ordenSorteo.length ; i++){
             this.programacionArrayDetalleBD[i].PrDeHoraBase=hora(this.ordenSorteo[i].HoraBase);
@@ -833,6 +835,7 @@ export class ProgComponent implements OnInit{
 
     //guardar programacion base- programacion detalle()
     guardarProgDetalle(arrProg=[], emid:number, prid:number, base:boolean){
+        console.log(arrProg);
         this.programacionService.saveProgramacionDetalle(arrProg,emid,prid,base)
             .subscribe( 
                 realizar => {this.getallprogramaciondetallebyprid(this.PrId); }, 
@@ -893,6 +896,7 @@ export class ProgComponent implements OnInit{
 
     cancelarProgBaseTercerModal(){
         this.displayHoraBase=false;
+        this.horaBase="";
         this.nroMiniBus=0;
         this.nroTotalMinibuses=-1;
         //BORRAR ULTIMA PROGRAMACION SEMI CREADA
@@ -989,6 +993,8 @@ export class ProgComponent implements OnInit{
         prId = event.data.prId; //ID DE LA FILA 
         this.nroBusesFilaSelect = event.data.PrCantidadBuses; // CANT BUSES
         this.nroDiasFilaSelect  = event.data.dias; //CANT DIAS
+        console.log(event.data.PrDiasIncluidos);
+
         fi = this.formatoCal(event.data.PrFechaInicio);  
         ff = this.formatoCal(event.data.PrFechaFin);
         PrDiasIncluidos='1,1,1,1,1,1,1';
@@ -1007,7 +1013,7 @@ export class ProgComponent implements OnInit{
         this.programacionService.getAllProgramacionDetalleByPrId(prId).subscribe(
             data => {
                         this.progBDDetalle = data; 
-                        //console.log(this.progBDDetalle);
+                        console.log(this.progBDDetalle);
                         if(this.progBDDetalle.length!=0){
                             this.extraerHoraBase(this.progBDDetalle, this.nroBusesFilaSelect);
                             this.tablaProgramaciones(this.progBDDetalle, this.nroBusesFilaSelect, this.nroDiasFilaSelect, this.extrayendoPlacasBus(this.placas,'tablavista'));
