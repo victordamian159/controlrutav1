@@ -1,26 +1,33 @@
-<div class="loginContainer">
-    <h3>Iniciar Sesion</h3>
-    <!--INPUTS-->
-    <div class="row">
-        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="form-group">
-                <label>Nombre de Usuario</label>
-                <input type="text" class="form-control" [(ngModel)]="LoginUser.Usuario">
+<body>
+    <div class="loginContainer">
+        <h3>Iniciar Sesion</h3>
+        <!--INPUTS-->
+        <div (keyup.enter)="enterDataUser(username.value, password.value)"  class="row">
+            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <label>Nombre de Usuario</label>
+                    <input #username type="text" class="form-control" placeholder="username" [(ngModel)]="LoginUser.Usuario">
+                </div>
+            </div>
+            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input #password type="password" class="form-control" placeholder="password" [(ngModel)]="LoginUser.Password">
+                </div>
             </div>
         </div>
-        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="form-group">
-            
-                <label>Contraseña</label>
-                <input type="password" class="form-control" [(ngModel)]="LoginUser.Password">
-            </div>
-        </div>
+        
         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
             <div class="form-group">
                 <button id="btnLogin" class="form-control" pButton icon="fa-check" (click)="login()" label="Iniciar Sesion"></button>
             </div>
         </div>
+
+        <!--
+            <input #box (keyup.enter)="onEnter(box.value)"> <p>{{value}}</p>
+        -->
+
+        <!--MENSAJE-->
+        <label [hidden]="inicioSesion!=0" id="errorSesion"> {{mnjeSesionError}} </label>
     </div>
-    <!--BOTONES-->
-    
-</div>
+</body>

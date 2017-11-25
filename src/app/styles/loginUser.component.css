@@ -1,29 +1,45 @@
  .loginContainer{
-     margin:auto;
-     width: 80%;
-     padding: 50px 0;
-     max-width: 500px;
+     margin:0;
+     width: 70%;
+     /*padding:100px 350px;
+     max-width: 400px;
+     max-height: 600px;*/
  }
 
  .form-control{
      width: 100%;
  }
 
-.col{
+/*.col{
     margin-top:10px;
     margin-left:80px;
     margin-right:80px;
     margin-bottom:0px;
-}
+}*/
 
 /*APARIENCIA BOTON NUEVO (ARRIBA DE GRILLA PRINCIPAL)*/
 #btnLogin{
     padding:4px;
     width: 100%;
     background: #4CAF50; 
+    top:0;
 }
 
 h3{
     text-align: center;
     color:#00796B;
+}
+
+#errorSesion{
+    color:red;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+body{
+    background: white;
+    height: 100%;
+    width: 100%;
+    top:0;
+    position:absolute;
 }

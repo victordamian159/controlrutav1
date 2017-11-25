@@ -24,12 +24,13 @@
                         </template>
                     </p-column>
                     <p-column field="nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
-                    <p-column field="tipo" header="Tipo"  [style]="{'width':'8em','text-align':'center'}"></p-column>
-                    <p-column field="prDescripcion" header="Nombre"  [style]="{'width':'14em','text-align':'center'}"></p-column>
-                    <p-column field="PrCantidadBuses" header="Cant."  [style]="{'width':'4em','text-align':'center'}"></p-column>
+                    <p-column field="prDescripcion" header="Nombre"  [style]="{'width':'14em'}"></p-column>
+                    <p-column field="PrCantidadBuses" header="N° MBuses"  [style]="{'width':'6em','text-align':'center'}"></p-column>
                     <p-column field="PrFechaInicio" header="Desde" [style]="{'width':'8em','text-align':'center'}"></p-column>
                     <p-column field="PrFechaFin" header="Hasta" [style]="{'width':'8em','text-align':'center'}"></p-column>
-                    <p-column field="dias" header="Dias"  [style]="{'width':'4em','text-align':'center'}"></p-column>
+                    <p-column field="dias" header="N° Dias"  [style]="{'width':'4em','text-align':'center'}"></p-column>
+                    <p-column field="PrDiasIncluidosString" header="Dias Incluidos"  [style]="{'width':'10em','text-align':'center'}"></p-column>
+                    <p-column field="tipo" header="Sorteo"  [style]="{'width':'8em','text-align':'center'}"></p-column>
                 </p-dataTable>
             </div>
         </div>
@@ -54,18 +55,18 @@
 
                                 <!--DIAS DE SEMANA INCLUIDOS-->
                                 <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
-                                    <div class="row">
-                                        <div class=" form-group ">
+                                   
+                                        
                                             <label>Dias de la Semana</label>
                                             <p-dataTable [value]="diasSemana" [(selection)]="dtSelectDias">
                                                 <p-column [style]="{'width':'2em'}" selectionMode="multiple"></p-column>
                                                 <p-column [style]="{'width':'2em'}" field="nro" header="N°"></p-column>
                                                 <p-column [style]="{'width':'4em'}" field="nomb" header="Dia"></p-column>
                                             </p-dataTable>
-                                        </div>
+                                       
 
                                         <label>Dias considerados: {{dtSelectDias.length}}</label>
-                                    </div>
+                                   
                                 </div>
 
                                 <div class="col-xl-8 col-md-8 col-sm-12 col-xs-12">
@@ -152,13 +153,13 @@
            
             <!--BOTONES-->
             <div class="btn_Modal row">
-                <div class="col-xl-6 col-md-6 col-sm-12 col-sx-12">
+                <div class="col-xl-4 col-md-6 col-sm-12 col-sx-12">
                     <button class="btn_modal" type="text" pButton icon="fa-check" 
-                    (click)="guardarProgCabecera(); tprog.reset(); fprog.reset(); fde.reset(); fha.reset(); descrip.reset();" 
+                    (click)="guardarProgCabecera();" 
                     label="Continuar" 
                     [disabled]=" !(bAct>0 && bAct!=0) || !tprog.valid || !fprog.valid || !fde.valid || !fha.valid || !descrip.valid || !(dtSelectDias.length>4 && dtSelectDias.length<8)"></button>
                 </div>
-                <div class="col-xl-6 col-md-6 col-sm-12 col-sx-12">
+                <div class="col-xl-4 col-md-6 col-sm-12 col-sx-12">
                     <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelNewProgramacion(); tprog.reset(); fprog.reset(); fde.reset(); fha.reset(); descrip.reset();" label="Cancelar"></button>
                 </div>
             </div>
@@ -242,7 +243,7 @@
                                                         (onEditComplete)="onEditCompleteHB($event)"
                                                         (onEditCancel)="onEditCancelHB($event)"
                                                         (onEditInit)="onEditInitHB($event)"
-                                                        scrollable="true" scrollHeight="250px" scrollWidth="100%" 
+                                                        scrollable="true" scrollHeight="210px" scrollWidth="100%" 
                                                         emptyMessage="Lista vacia"> 
                                                 <p-column field="nro" header="N°"  [style]="{'width':'3em','text-align':'center'}"></p-column>
                                                 <p-column field="nroPlaca" header="Placa"  [style]="{'width':'6em','text-align':'center'}"></p-column>
@@ -561,7 +562,25 @@
                     <button class="btn_modal"  pButton (click)="aceptarGenProgComplet()" label="Aceptar"></button>
                 </div>
             </div>
-    </p-dialog>
+        </p-dialog>
+
+         <!--ERROR ENTRE FECHAS IGNRESADAS EN EL PRIMER FORMULARIO CREAR PROGRAMACION-->
+         <p-dialog [(visible)]="displayErrorFechIngrFormUno" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
+                <p>{{mensaje}}</p>
+               
+            <div class="btn_Modal row">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                    <button class="btn_modal"  pButton (click)="aceptarErrorFechasValidas()" label="Aceptar"></button>
+                </div>
+            </div>
+        </p-dialog>
+
+        <!--MENSAJE DE ESPERA-->
+        <p-dialog [(visible)]="displayMensajeEspera" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
+            <p>{{mensajeEspera}}</p>
+        </p-dialog>
+
+
 <!---->
 
 

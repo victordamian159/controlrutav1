@@ -13,20 +13,32 @@ import { Router} from '@angular/router';
 })
 
 export class loginUserComponent implements OnInit{
+
+    //VARIABLES
+    private value = '';
     private errorMessage:string='';  //mensaje error del rest
     private LoginUser:any={
         Usuario:"",
         Password:""
     };
-    public userValid:any;
+    private userValid:any;
     public user:any={};
+    private inicioSesion:number;
+    private mnjeSesionCorrect:string;
+    private mnjeSesionError:string;
 
-    constructor(private userservice: UserSystemService, private router: Router,private appcomp:AppComponent){}
+    
 
     ngOnInit(){
         this.procNuevoUser();
         this.logout();
         /*console.log(localStorage.getItem('DATOSUSER'));*/
+    }
+
+    constructor(private userservice: UserSystemService, private router: Router,private appcomp:AppComponent){
+        this.mnjeSesionCorrect='';
+        this.mnjeSesionError='';
+        this.inicioSesion=1;
     }
 
     /* CALLING PROCEDURES */
@@ -42,13 +54,15 @@ export class loginUserComponent implements OnInit{
             this.userservice.autenticacion(user).subscribe(
                 data => {   validUser=data; 
                             if(validUser.length!=0){
-                                console.log("se inicio sesion c:"); 
                                 this.userValid=validUser;
                                 localStorage.setItem('DATOSUSER',JSON.stringify(validUser));
                                 localStorage.getItem('DATOSUSER');
                                 this.router.navigate(['/regempper']);
                             }else{
-                                console.log("no se pudo iniciar sesion :c");
+                                this.userValid=validUser;
+                                console.log(this.userValid);
+                                this.mnjeSesionError="Error en el usuario o contraseña";
+                                this.inicioSesion=0;
                             }
                         },
                 error => {this.errorMessage=error;}
@@ -56,15 +70,23 @@ export class loginUserComponent implements OnInit{
         }
     
     /* FUNCIONES */
-    login(){
-        this.user.UsUserName=this.LoginUser.Usuario;
-        this.user.UsPassword=this.LoginUser.Password;
-        this.procAutenticar(this.user); 
-        this.appcomp.ocNavBar=true;
-        console.log(this.appcomp.ocNavBar);
-    }
+    
+        //onEnter(value: string) { this.value = value; }
+        enterDataUser(username:string, password:string){
+            console.log(username);
+            console.log(password);
+            //this.procAutenticar(this.user); 
+        }
 
-    logout(){
-        localStorage.removeItem('DATOSUSER');
-    }
+        login(){
+            this.user.UsUserName=this.LoginUser.Usuario;
+            this.user.UsPassword=this.LoginUser.Password;
+            this.procAutenticar(this.user); 
+            this.appcomp.ocNavBar=true;
+            console.log(this.appcomp.ocNavBar);
+        }
+
+        logout(){
+            localStorage.removeItem('DATOSUSER');
+        }
 }
