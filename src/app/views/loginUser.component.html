@@ -1,8 +1,8 @@
 <body>
-    <div class="loginContainer">
-        <h3>Iniciar Sesion</h3>
-        <!--INPUTS-->
-        <div (keyup.enter)="enterDataUser(username.value, password.value)"  class="row">
+    <div class="form-container">
+        <header>Iniciar Sesion</header>
+
+        <div (keyup.enter)="enterDataUser(username.value, password.value)">
             <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="form-group">
                     <label>Nombre de Usuario</label>
@@ -16,18 +16,11 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="form-group">
-                <button id="btnLogin" class="form-control" pButton icon="fa-check" (click)="login()" label="Iniciar Sesion"></button>
-            </div>
+            <button id="btnLogin" class="form-control" pButton icon="fa-check" (click)="login()" label="Iniciar Sesion"></button>
         </div>
-
-        <!--
-            <input #box (keyup.enter)="onEnter(box.value)"> <p>{{value}}</p>
-        -->
-
-        <!--MENSAJE-->
+        
         <label [hidden]="inicioSesion!=0" id="errorSesion"> {{mnjeSesionError}} </label>
     </div>
 </body>

@@ -58,7 +58,7 @@ export class ProgComponent implements OnInit{
         private objProgVentanaDos : any; //nuevo detalle 
         private nroColumn:number;
         private bAct:number; //NRO BUSES ACTIVOS
-        private bNAct:number; //NRO DE BUSES NO ACTIVOS
+        //private bNAct:number; //NRO DE BUSES NO ACTIVOS
         private tipoProg:string;    //MANUAL O AUTOMATICA
         private formaProg:string;   //ESCALA O PESCADITO
         private titArchivoPDF:string;
@@ -411,22 +411,16 @@ export class ProgComponent implements OnInit{
                 let arrPlacas:any[]=[];
                 this.placasservice.getAllPlacasBusByEmSuEm(empId, suemId)
                     .subscribe(
-                        data => {   arrPlacas=data;
-                                    //this.placas=arrPlacas;
-                                 
+                        data => {   
+                                    arrPlacas=data;
                                     if(arrPlacas.length>0){
                                         this.extrayendoPlacasBus(arrPlacas,'nuevaprog'); 
                                         this.placas = arrPlacas; 
-                                        //this.placasComplet=arrPlacas;
-                                        //this.unidadesEstado(arrPlacas);
-                                        //this.displayNuevaProgramacion=true;
                                     }else 
                                     if(arrPlacas.length==0 && arrPlacas.length<0 ){
                                         this.mensaje="Error al descargar las placas, compruebe su conexion a internet";
                                         this.displayErrorCargarPlacas=true;
                                     }
-                                
-
                                 },
                         err  => {
                                     this.errorMessage = err;
@@ -440,7 +434,7 @@ export class ProgComponent implements OnInit{
             /*TODAS LAS PROGRAMACIONES POR EMPRESA Y AÑO*/
             getAllProgramacionByEm( empId: number, anio: number){
                 this.programacionService.getAllProgramacionByEm(empId, anio).subscribe(
-                        datos => { this.progRest = datos; console.log(this.progRest); this.mostrargrillaProgramacionMaestro(this.progRest); },
+                        datos => { this.progRest = datos; this.mostrargrillaProgramacionMaestro(this.progRest); },
                         err => {this.errorMessage = err}, 
                         () =>this.isLoading = false
                     );
@@ -451,22 +445,16 @@ export class ProgComponent implements OnInit{
     //ABRIR 1ERA VENTANA MODAL(BOTON NUEVO)
     NuevaProgCabecera(){
         this.modEdit=false;
-        this.procNuevaProgrC(); /* PROCEDURE */
-        /* ABRIR VENTANA */
+        this.procNuevaProgrC();
         this.ordenSorteo=[]; //SORTEO DE PLACAS
         this.titleNuevoProgPrimerModal = 'Nueva';
         this.getAllPlacasBusByEmSuEm(this.emid,0);
-        
-        //this.arrayPlacas=
 
         this.unidadesEstado(this.extrayendoPlacasBus(this.placas,'nuevaprog'));
-        this.displayNuevaProgramacion=true;
-        
+        this.displayNuevaProgramacion=true;        
 
          //CALCULA EL NRO DE UNIDADES ACTIVAS Y NO ACTIVAS
-        this.progBDDetalle=[];
-        this.lengthProgDet=0;
-        this.dtSelectDias=[];
+        this.progBDDetalle=[]; this.lengthProgDet=0; this.dtSelectDias=[];
         this.tipoProg="01"; //PROGRAMACION POR DEFECTO: MANUAL
         this.formaProg="01"; /* (1)MANUAL O (2)AUTOMATICO */
     }
@@ -697,7 +685,7 @@ export class ProgComponent implements OnInit{
     //CONSULTA NUMERO DE BUSES ACTIVOS Y NO ACTIVOS
     unidadesEstado(arrayPlacas=[]){
         let i=0; let bAct=0; let bNAct=0;;
-        //console.log(arrayPlacas);
+        
         while(i<arrayPlacas.length){
             if(arrayPlacas[i].BuActivo==true){
                 bAct++;
@@ -708,8 +696,8 @@ export class ProgComponent implements OnInit{
         }
         
         this.bAct = bAct;
-        this.bNAct= bNAct;
-        this.resBusUnidades="  Activos: "+this.bAct+"    -      No Activos: "+this.bNAct;
+        //this.bNAct= bNAct;
+        this.resBusUnidades="  En Sorteo: "+this.bAct;
     }
 
 
@@ -968,7 +956,7 @@ export class ProgComponent implements OnInit{
 
         arrAllProgrm=this.arrAllProgramacion(arrAllProgrm);
         
-        console.log(arrAllProgrm);
+        //console.log(arrAllProgrm);
         this.programacionMaestroArrayHTML=arrAllProgrm.slice(0);
     }
 

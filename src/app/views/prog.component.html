@@ -54,19 +54,14 @@
                             <div class="row">
 
                                 <!--DIAS DE SEMANA INCLUIDOS-->
-                                <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
-                                   
-                                        
-                                            <label>Dias de la Semana</label>
-                                            <p-dataTable [value]="diasSemana" [(selection)]="dtSelectDias">
-                                                <p-column [style]="{'width':'2em'}" selectionMode="multiple"></p-column>
-                                                <p-column [style]="{'width':'2em'}" field="nro" header="N°"></p-column>
-                                                <p-column [style]="{'width':'4em'}" field="nomb" header="Dia"></p-column>
-                                            </p-dataTable>
-                                       
-
-                                        <label>Dias considerados: {{dtSelectDias.length}}</label>
-                                   
+                                <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">    
+                                    <label>Dias de la Semana</label>
+                                    <p-dataTable [value]="diasSemana" [(selection)]="dtSelectDias">
+                                        <p-column [style]="{'width':'2em'}" selectionMode="multiple"></p-column>
+                                        <p-column [style]="{'width':'2em'}" field="nro" header="N°"></p-column>
+                                        <p-column [style]="{'width':'4em'}" field="nomb" header="Dia"></p-column>
+                                    </p-dataTable>     
+                                    <label>Dias considerados: {{dtSelectDias.length}}</label>  
                                 </div>
 
                                 <div class="col-xl-8 col-md-8 col-sm-12 col-xs-12">
@@ -89,7 +84,7 @@
                                                 <label >Buses:</label>
                                                 <div class="control-label">
                                                     <label>{{resBusUnidades}}</label>
-                                                    <label [hidden]="bAct>0 && bAct!=0">catherine</label>
+                                                    <label [hidden]="bAct>0 && bAct!=0"></label>
                                                 </div>
                                             </div>
                                         </div>

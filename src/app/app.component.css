@@ -285,7 +285,9 @@ DESPLAZANDO AL FORMNULARIO*/
        position: initial;
    }*/
 
-
+#loginSmartphone{
+    display: none;
+}
    
 /* RESPONSIVE */
     /*ipad PRO*/
@@ -312,6 +314,9 @@ DESPLAZANDO AL FORMNULARIO*/
         footer{
             font-size: 10px;
         }
+        #loginSmartphone{
+            display: initial;
+        }
     }
 
     /* iphone 6 plus*/
@@ -327,6 +332,9 @@ DESPLAZANDO AL FORMNULARIO*/
         }*/
         footer{
             font-size: 10px;
+        }
+        #loginSmartphone{
+            display: initial;
         }
     }
 
@@ -344,6 +352,9 @@ DESPLAZANDO AL FORMNULARIO*/
         footer{
             font-size: 10px;
         }
+        #loginSmartphone{
+            display: initial;
+        }
     }
 
     /* iphone 5 */
@@ -360,6 +371,9 @@ DESPLAZANDO AL FORMNULARIO*/
         footer{
             font-size: 10px;
         }
+        #loginSmartphone{
+            display: initial;
+        }
     }
 
     /* iphone 4 */
@@ -375,5 +389,8 @@ DESPLAZANDO AL FORMNULARIO*/
         }*/
         footer{
             font-size: 10px;
+        }
+        #loginSmartphone{
+            display: initial;
         }
     }

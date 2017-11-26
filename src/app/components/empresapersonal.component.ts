@@ -71,7 +71,7 @@ export class EmpPerComponent implements OnInit{
         this.userid=1;
         this.nombre="x";*/
         //this.getallempPerByEmIdSuEmId(1,1);
-        console.log(this.selectPersona);
+        //console.log(this.selectPersona);
         this.getallsuembyemid(this.emid);
         this.getAllPersonas();  /*TODAS LAS PERSONAS AGREGADAS AL SISTEMA(EMPRESA) */                    
         this.procGetAllUserSystembyEmId(this.emid);
@@ -359,8 +359,8 @@ export class EmpPerComponent implements OnInit{
 
             /* TABLE PERSONA (FORM NUEVO EMPRESAPERSONA) */
             onRowSelPers(event){
-                console.log(event.data.PeId); 
-                console.log(this.selectPersona);
+                //console.log(event.data.PeId); 
+                //console.log(this.selectPersona);
                 this.selectPersona=true;
                 this.PeId=event.data.PeId;
             }

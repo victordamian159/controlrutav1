@@ -17,10 +17,7 @@ export class loginUserComponent implements OnInit{
     //VARIABLES
     private value = '';
     private errorMessage:string='';  //mensaje error del rest
-    private LoginUser:any={
-        Usuario:"",
-        Password:""
-    };
+    private LoginUser:any;
     private userValid:any;
     public user:any={};
     private inicioSesion:number;
@@ -39,6 +36,7 @@ export class loginUserComponent implements OnInit{
         this.mnjeSesionCorrect='';
         this.mnjeSesionError='';
         this.inicioSesion=1;
+        this.LoginUser={Usuario:"",Password:""};
     }
 
     /* CALLING PROCEDURES */
@@ -55,12 +53,17 @@ export class loginUserComponent implements OnInit{
                 data => {   validUser=data; 
                             if(validUser.length!=0){
                                 this.userValid=validUser;
+                                localStorage.removeItem('DATOSUSER');
                                 localStorage.setItem('DATOSUSER',JSON.stringify(validUser));
                                 localStorage.getItem('DATOSUSER');
                                 this.router.navigate(['/regempper']);
+                                this.appcomp.ocNavBar=true;
+
+                                //cargando datos a la variable global
+                                
+                              
                             }else{
                                 this.userValid=validUser;
-                                console.log(this.userValid);
                                 this.mnjeSesionError="Error en el usuario o contraseña";
                                 this.inicioSesion=0;
                             }
@@ -73,17 +76,18 @@ export class loginUserComponent implements OnInit{
     
         //onEnter(value: string) { this.value = value; }
         enterDataUser(username:string, password:string){
-            console.log(username);
-            console.log(password);
-            //this.procAutenticar(this.user); 
+            //console.log(username);  console.log(password);
+            this.user.UsUserName=username;
+            this.user.UsPassword=password;
+            this.procAutenticar(this.user); 
         }
 
         login(){
             this.user.UsUserName=this.LoginUser.Usuario;
             this.user.UsPassword=this.LoginUser.Password;
             this.procAutenticar(this.user); 
-            this.appcomp.ocNavBar=true;
-            console.log(this.appcomp.ocNavBar);
+            //this.appcomp.ocNavBar=true;
+            //console.log(this.appcomp.ocNavBar);
         }
 
         logout(){

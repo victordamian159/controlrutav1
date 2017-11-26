@@ -17,15 +17,20 @@ export class AppComponent implements OnInit {
 
   ngOnInit(){
     console.log(this.dataUser);
+    this.iniciarVarGlobals(this.dataUser);
   }
   constructor(public ClassGlobal:GlobalVars){
     this.dataUser=this.ClassGlobal.GetDatosUsuario();
-    if(this.dataUser!=null || this.dataUser!=undefined){
+  }
+
+  iniciarVarGlobals(dataUser:any){
+    if(dataUser!=null || dataUser!=undefined){
       this.nombre=this.dataUser[0].PeNombres;
       this.userid=this.ClassGlobal.GetUsId();
       this.emid=this.ClassGlobal.GetEmId();
     }
   }
+
 }
 
 
