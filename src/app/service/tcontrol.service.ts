@@ -38,6 +38,15 @@ export class TControlService{
             .catch(this.handleError);
     }
 
+	//CUADRO DE VUELTAS DE LA EMPRESA
+	getallregistrovueltasdiariasbyemprfe(emid:number, prid:number, fecha:string){
+		return this.http
+			.get(this.baseUrl+"getallregistrovueltasdiariasbyemprfe?emId="+emid+'&prId='+prid+"&fechaDiario="+fecha)
+			//.get(this.baseUrl6+'prid/'+PrId)
+			.map( (r:Response) => r.json())
+			.catch( (error:any) => Observable.throw(error.json.error || 'server error') );
+	}
+
 	//CONSULTA PROGRAMACION DETALLE
 	getAllProgramacionDetalleByPrFecha(PrId:number, date: string){
         return this.http
@@ -46,17 +55,6 @@ export class TControlService{
             .map( (r:Response) => r.json())
             .catch( (error:any) => Observable.throw(error.json.error || 'server error') );
     }
-	/*
-    getAllProgramacionDetalleByPrId(PrId:number){
-        return this.http
-            .get(this.baseUrl6+'prid/'+PrId)
-            .map( (r:Response) => r.json())
-            .catch( (error:any) => Observable.throw(error.json.error || 'server error') );
-    }
-	*/
-
-
-
 
 	//CONSULTA RECUPERAR PUNTOS DE CONTROL  (1,0)
 	getAllPuntoControlByEmRu(emId: number,ruId:number) {
@@ -172,6 +170,9 @@ export class TControlService{
 						.map((res:Response) => res.json()) // ...and calling .json() on the response to return data
 						.catch((error:any) => Observable.throw(error.json().error || 'Server error')); 
 	}
+
+	
+
 //capturar error
 	handleError (error: any) {
 		// log error

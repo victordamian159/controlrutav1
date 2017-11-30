@@ -59,7 +59,7 @@ export class ProgComponent implements OnInit{
         private nroColumn:number;
         private bAct:number; //NRO BUSES ACTIVOS
         //private bNAct:number; //NRO DE BUSES NO ACTIVOS
-        private tipoProg:string;    //MANUAL O AUTOMATICA
+        private tipoProg:number;    //MANUAL O AUTOMATICA
         private formaProg:string;   //ESCALA O PESCADITO
         private titArchivoPDF:string;
         private nomArchivoPDF:string;
@@ -152,8 +152,8 @@ export class ProgComponent implements OnInit{
         this.anio=0;
         this.progMaestro.EmId = 1; /* ELIMINAR ESTO */
         this._tipoProg =[
-            {id:"01",nTipo:"automatico"},
-            {id:"02",nTipo:"manual"}
+            {id:0,nTipo:"automatico"},
+            {id:1,nTipo:"manual"}
         ];
         this._formaProg=[
             {id:"01", nForma:"pescadito"},
@@ -280,6 +280,10 @@ export class ProgComponent implements OnInit{
         f=_fecha1(arrAllProg[arrAllProg.length - 1].PrFechaFin);
         f=formatFech(slash_posFecha(f));
         return f;
+    }
+
+    fcboTipoProg(){
+        console.log(this.tipoProg);
     }
 
     formaProgramacion($event){
@@ -455,21 +459,18 @@ export class ProgComponent implements OnInit{
 
          //CALCULA EL NRO DE UNIDADES ACTIVAS Y NO ACTIVAS
         this.progBDDetalle=[]; this.lengthProgDet=0; this.dtSelectDias=[];
-        this.tipoProg="01"; //PROGRAMACION POR DEFECTO: MANUAL
+        this.tipoProg=0; //PROGRAMACION POR DEFECTO: MANUAL
         this.formaProg="01"; /* (1)MANUAL O (2)AUTOMATICO */
     }
 
     //1ERA VENTANA MODAL aqui recien se guarda la tabla MAESTRO en el REST 
     guardarProgCabecera(){
         let progCab:any;  let fIni=this.progMaestro.PrFechaInicio; let fFin=this.progMaestro.PrFechaFin;
+      
         let placas=this.extrayendoPlacasBus(this.placas,'nuevaprog');
-        let validez=this.validandoFechas(fIni,fFin);
-        console.log(validez);
 
-     
+        let validez=this.validandoFechas(fIni,fFin);
         if(validez==1){
-            console.log("error fechas :S");
-            //console.log(this.tipoProg);
             this.tipoProgramacion(placas,placas.length,this.tipoProg );//FORMA SORTEO
             progCab = {
                 PrId : this.progMaestro.PrId, //number
@@ -479,18 +480,18 @@ export class ProgComponent implements OnInit{
                 PrFecha : new Date(), //string
                 PrFechaInicio : this.fecha(this.progMaestro.PrFechaInicio), //string
                 PrFechaFin : this.fecha(this.progMaestro.PrFechaFin), //string
-                PrTipo : Number(this.tipoProg), //string escala pescadito
-                PrAleatorio : 0, //string manual automatico(aleatorio)
+                PrTipo : Number(this.formaProg), //string escala pescadito
+                PrAleatorio : Number(this.tipoProg), //string manual automatico(aleatorio)
                 PrDiasIncluidos:this.diasIncluidos(this.dtSelectDias),
                 UsId : this.userid, //number
                 UsFechaReg : new Date() //string
             }
+            console.log(progCab);
             this.procSaveProgramacion(progCab);
             this.displayNuevaProgramacion=false; //cerrar 1era ventana
             this.displayProgramacionBase=true; //abrir 2da ventana
        
         }else if(validez==0){
-            console.log("error fechas :S");
             this.displayErrorFechIngrFormUno=true;
             this.mensaje="Error en las fechas ingresada, es menos de 9 dias o mayor a 62 dias entre las fechas ingresadas";
 
@@ -518,12 +519,12 @@ export class ProgComponent implements OnInit{
 
    
     /* FUNCION -> FORMA DE SORTEO MANUAL O AUTOMATICO */
-    tipoProgramacion(arrayplacas=[], long:number, tprog:string){
+    tipoProgramacion(arrayplacas=[], long:number, tprog:number){
         console.log(arrayplacas);
-       this.ordenSorteo=[];
         
+        this.ordenSorteo=[];
         /* AUTOMATICO*/
-        if(tprog=="01"){ 
+        if(tprog==0){ 
             let array = ["c"];  let nro;//ARRAY NUMEROS ALEATORIOS NO REPETIDOS
             let _arrayplacas=[];  let i=0,j=0, cen=0; // cen=0: no existe         cen=1: existe
 
@@ -554,7 +555,7 @@ export class ProgComponent implements OnInit{
             this.ordenSorteo=_arrayplacas;
             this.arrayPlacas=[];
         /* MANUAL*/
-        }else if(tprog=="02"){
+        }else if(tprog==1){
             console.log("manual");
             this.arrayPlacas=arrayplacas;
         }
@@ -732,7 +733,7 @@ export class ProgComponent implements OnInit{
                     PrDeHoraBase:0,
                 });  
             } 
-
+            console.log(arrProgDetalle);
             this._programacionArrayDetalleBD=arrProgDetalle.slice(0);  // SEPARO ESTO PARA DESPUES CARGARLO CON LOS PRDEID
             
             this.guardarProgDetalle(arrProgDetalle, this.emid, this.PrId, true);
@@ -851,7 +852,7 @@ export class ProgComponent implements OnInit{
         
         this.programacionService.saveProgramacionDetalle(arrProg,emid,prid,base)
             .subscribe( 
-                realizar => {  
+                realizar => {   
                                 if(realizar==true){
                                     this.mensajeEspera="";
                                     this.displayMensajeEspera= false; 

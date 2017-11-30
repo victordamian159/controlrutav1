@@ -21,7 +21,7 @@ export class RegistroDiarioComponent implements OnInit{
                 private userid:number;
                 private ReDiId:number;
             //string 
-                private tmpVuelta:string;
+                private ReDiHoraInicioDiario:string;
                 private fechRegDir:string;
                 private mensajevalidacion:string;
             //any(objeto)
@@ -43,8 +43,8 @@ export class RegistroDiarioComponent implements OnInit{
             this.displayNuevoRegistroDiario=false;
             this.displayConfDelRegDiario=false;
             this.nTolVueltas=null;
-            this.tmpVuelta=null;
-            this.arrEtdRegDiario=[{id:'01',nomb:'POR REALIZAR'},{id:'02',nomb:'ACTUAL'},{id:'03',nomb:'REALIZO'}];
+            this.ReDiHoraInicioDiario=null;
+            this.arrEtdRegDiario=[{id:'01',nomb:'POR REALIZAR'},{id:'02',nomb:'ACTUAL'},{id:'03',nomb:'COMPLETADO'}];
         }
         //funciones
         //btn nuevo registro diario ---- form principal
@@ -161,7 +161,7 @@ export class RegistroDiarioComponent implements OnInit{
                                 Nro:0,
                                 ReDiFeha:_fecha1(arrReg.ReDiFeha),
                                 ReDiId:arrReg.ReDiId,
-                                ReDiTiempoVuelta:_hora(arrReg.ReDiTiempoVuelta),
+                                ReDiHoraInicioDiario:_hora(arrReg.ReDiHoraInicioDiario),
                                 ReDiTotalVuelta:arrReg.ReDiTotalVuelta,
                             }); 
                         }
@@ -203,7 +203,7 @@ export class RegistroDiarioComponent implements OnInit{
                     let objSaveRegDiario:any;
                     console.log(this.fechRegDir);
                     console.log(this.nTolVueltas);
-                    console.log(this.tmpVuelta);
+                    console.log(this.ReDiHoraInicioDiario);
 
                     objSaveRegDiario={
                         UsFechaReg:new Date(),
@@ -212,7 +212,7 @@ export class RegistroDiarioComponent implements OnInit{
                         ReDiId :this.ReDiId,
                         ReDiFeha :fecha(this.fechRegDir),
                         ReDiTotalVuelta:this.nTolVueltas,
-                        ReDiTiempoVuelta:hora(this.tmpVuelta)
+                        ReDiHoraInicioDiario:hora(this.ReDiHoraInicioDiario)
                     }
                     console.log(objSaveRegDiario);
                     this.displayNuevoRegistroDiario=false;

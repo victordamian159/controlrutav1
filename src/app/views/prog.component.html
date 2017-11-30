@@ -111,12 +111,12 @@
                                             </div>
                                         </div>
 
-                                        <!--TIPO DE PROGRAMACION MANUAL O AUTOMATICO-->
+                                        <!--TIPO DE SORTEO MANUAL O AUTOMATICO-->
                                         <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
                                         
                                             <div class="form-group">
                                                 <label  class="control-label">Tipo Sorteo:</label>
-                                                <select class="form-control" [(ngModel)]="tipoProg" (change)="tipoProgramacion($event)" required #tprog="ngModel">
+                                                <select class="form-control" [(ngModel)]="tipoProg" (change)="fcboTipoProg()" required #tprog="ngModel">
                                                     <option *ngFor="let tipo of _tipoProg" [ngValue]="tipo.id">{{tipo.nTipo}}</option>
                                                 </select>
                                                 <div id="validation" [hidden]="!tprog.touched || tprog.valid ">

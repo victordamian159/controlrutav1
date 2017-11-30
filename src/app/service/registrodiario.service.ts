@@ -73,8 +73,9 @@ export class RegDiarioService{
                 .catch( (error:any) => Observable.throw(error.json.error || 'server error') );
         }
         //eliminar registrodiario DETALLE
-        deleteregistrodiarioDetalleByPrId(PrId : number){
-            return this.http.delete(this.baseUrl2 + "delete/prid/"+PrId)
+        deleteregistrodiarioDetalleByPrId(reDiDeId : number){
+            //return this.http.delete(this.baseUrl2 + "delete/prid/"+PrId)
+            return this.http.delete(this.baseUrl2 + reDiDeId)
                 .map((res:Response) => res.json() )
                 .catch((error:any) => Observable.throw(error.json().error || 'server error') );
         }

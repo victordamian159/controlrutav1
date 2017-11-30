@@ -142,6 +142,7 @@ export class PcontrolComponent implements OnInit{
     displayEditDetPC : boolean = false;
     displayErrorNoSaveEditPC:boolean=false;
     displayNoPuedeOnrowselect:boolean=false;
+    displayNroValidoListasPtsControl:boolean=false;
     /*displayGuardarPuntosDetalle:boolean=false;*/
 
     mapa:any;
@@ -192,6 +193,10 @@ export class PcontrolComponent implements OnInit{
         private valueTypeSavePC:number; /* TIPO DE CASO SAVE PNTS CTRL */
         private modoSaveActivo:boolean;
         private arrptsRuta:any[]=[];
+        private PuCoActivo:number;
+        private objPuCoActivo:any;
+        private arrPuCoActivo:any[]=[];
+        private nroPtosValidos:number;
     
     constructor( private pcontrolService: PuntoControlService,/*public el: ElementRef*/ private rutaService: RutaService, public ClassGlobal:GlobalVars){
         this.modoSaveActivo=false;
@@ -215,6 +220,13 @@ export class PcontrolComponent implements OnInit{
          this.ocEditar=false;
          this.ocCancelar=true;
          this.ocBorrar=false;
+
+         this.PuCoActivo=null;
+
+         //ARRAYS
+         this.objPuCoActivo={id:null,nomb:""};
+         this.arrPuCoActivo=[{id:0,nomb:'NO'}, {id:1,nomb:'SI'}];
+         this.nroPtosValidos=2;
     }
 
     //iniciar 
@@ -298,7 +310,11 @@ export class PcontrolComponent implements OnInit{
                     getAllPuntoControlByEmRu(emId: number, ruId: number){
                         this.pcontrolService.getAllPuntoControlByEmRu(emId,ruId)
                         .subscribe(
-                                data => { this.pCArrayMaestroBD = data; this.mgPuntoControlMaestro();},
+                                data => { 
+                                          this.pCArrayMaestroBD = data; 
+                                          console.log(this.pCArrayMaestroBD);
+                                          this.mgPuntoControlMaestro();
+                                        },
                                 err  => { this.errorMessage = err}, 
                                 ()   =>   this.isLoading = false
                             );
@@ -568,7 +584,7 @@ export class PcontrolComponent implements OnInit{
                 this.overlays.splice(indexInOverlays+1, 1,
                     new google.maps.Circle({ 
                         center: {lat:x , lng:y},
-                        radius:100,
+                        radius:50,
                         strokeColor: '#FF0000', 
                         strokeOpacity: 0.8, 
                         strokeWeight: 2, 
@@ -618,7 +634,7 @@ export class PcontrolComponent implements OnInit{
                         fillColor: '#FF0000',
                         fillOpacity: 0.35,
                         center: this.selectedPosition,
-                        radius:100
+                        radius:50
                     }));
                     this.j++;
                     //console.log(this.overlays);
@@ -685,7 +701,7 @@ export class PcontrolComponent implements OnInit{
                             new google.maps.Circle({strokeColor: '#FF0000', strokeOpacity: 0.8, 
                                                     strokeWeight: 2, fillColor:'#FF0000',fillOpacity: 0.35,
                                                     center: {lat:marker.PuCoDeLatitud,lng:marker.PuCoDeLongitud},
-                                                    radius:100}));
+                                                    radius:50}));
                     }
 
                 // EDITANDO ACTIVADO (SE PUEDE ARRASTRAR MARKER)
@@ -705,7 +721,7 @@ export class PcontrolComponent implements OnInit{
                         this.overlays.push(
                             new google.maps.Circle({ strokeColor: '#FF0000', strokeOpacity: 0.8, strokeWeight: 2, fillColor: '#FF0000', fillOpacity: 0.35,
                                 center: {lat:marker.PuCoDeLatitud , lng:marker.PuCoDeLongitud},
-                                radius:100
+                                radius:50
                             })
                         );
 
@@ -782,6 +798,7 @@ export class PcontrolComponent implements OnInit{
             this.descr="";
             this.timeRec="";
             this.tTarj="";
+            this.PuCoActivo=null;
         });
         
     }
@@ -861,6 +878,7 @@ export class PcontrolComponent implements OnInit{
     
     //para editar la tabla maestro (grilla)BOTON DE LAS FILAS EDITAR CABECERA
     editarMaestro(_puCoId:number){
+        let objPtoControl:any;
         this.displayListaPuntos=true; //MOSTRAR CUADRO DE NUEVA LISTA PUNTOS(CABECERA)
         this.headertitle="Editar Lista" //TITULO PARA LA VENTANA
         this.tipoTarjeta.val="";
@@ -868,17 +886,24 @@ export class PcontrolComponent implements OnInit{
         
         //CONSULTAR A LA BD Y CARGAR EL OBJETO PARA EDITAR this.pcMaestro
         this.pcontrolService.getPuntoControlById(_puCoId).subscribe(
-            data => {this.pcMaestro = data; 
-                    /* HORA */
-                     this.pcMaestro.PuCoTiempoBus=_hora(this.pcMaestro.PuCoTiempoBus);
-                     this.timeRec=this.pcMaestro.PuCoTiempoBus;
-                    /* DESCRIPCION */
-                     this.descr=this.pcMaestro.PuCoDescripcion;
-                    /* TIPO TARJETA */ 
-                     this.tipoTarjeta.val=this.pcMaestro.PuCoClase;
-                     this.tTarj=this.pcMaestro.PuCoClase;
+            data => {objPtoControl = data; 
+                     //HORA 
+                     this.pcMaestro.PuCoTiempoBus=_hora(objPtoControl.PuCoTiempoBus);
+                     this.timeRec=_hora(objPtoControl.PuCoTiempoBus);
+                     
+                     // DESCRIPCION 
+                     this.descr=objPtoControl.PuCoDescripcion;
+                    
+                     // TIPO TARJETA 
+                     this.tipoTarjeta.val=objPtoControl.PuCoClase; //ARR COMBO
+                     this.tTarj=objPtoControl.PuCoClase;   //OBJ PARA GUARDAR EN BD
+                     
+                     //REGISTRO ACTIVO
+                     this.objPuCoActivo.id=Number(objPtoControl.PuCoActivo);
+                     this.PuCoActivo=Number(objPtoControl.PuCoActivo);
                     }, 
-            err =>{this.errorMessage = err}, () =>this.isLoading=false);
+            err =>{this.errorMessage = err}, 
+            () =>this.isLoading=false);
     }
 
     //ELIMINAR UN REGISTRO DE LA TABLA MAESTRO PUNTOCONTROL
@@ -891,10 +916,12 @@ export class PcontrolComponent implements OnInit{
 
     _eliminarMaestro(){
         this.pcontrolService.deletePuntoControl(this._PuCoId).subscribe(
-            realizar => {this.getAllPuntoControlByEmRu(1,51);
-                        this.mgPuntoControlMaestro();
-                        this.displayElimRegCabecera=false;
-                        this.mensaje ="";}, 
+            realizar => {
+                            this.getAllPuntoControlByEmRu(this.emID,this._ruid);
+                            this.mgPuntoControlMaestro();
+                            this.displayElimRegCabecera=false;
+                            this.mensaje ="";
+                        }, 
             err => {console.log(err);}
         );
     }
@@ -903,7 +930,6 @@ export class PcontrolComponent implements OnInit{
         this._PuCoId = 0;
         this.mensaje ="";
         this.displayElimRegCabecera = false;
-        console.log("aqui");
     }
 
     //ELIMINAR EL DETALLE DE LOS PUNTOS CONTROL
@@ -968,6 +994,7 @@ export class PcontrolComponent implements OnInit{
             RuId : this.pcMaestro.RuId,
             PuCoTiempoBus : hora(this.timeRec),
             PuCoClase :  this.pcMaestro.PuCoClase,
+            PuCoActivo:this.PuCoActivo,
             UsId : this.userId,
             UsFechaReg : new Date()
         }
@@ -1510,8 +1537,7 @@ export class PcontrolComponent implements OnInit{
 
     // mostrar los puntos de control en la grilla (1era grilla)
     mgPuntoControlMaestro(){
-        this.pCMaestroMostrar=[];// para mostrarlo en la grilla
-        let i:number;
+        this.pCMaestroMostrar=[]; let nroSI:number=0;
 
         for(let puntoMaestro of this.pCArrayMaestroBD){
             this.pCMaestroMostrar.push({
@@ -1523,11 +1549,12 @@ export class PcontrolComponent implements OnInit{
                 PuCoTiempoBus: _hora(puntoMaestro.PuCoTiempoBus),  
                 RuDescripcion:puntoMaestro.RuDescripcion, 
                 RuId: puntoMaestro.RuId,    
+                //PuCoActivo:Number(puntoMaestro.PuCoActivo)
+                PuCoActivo:1
             });
-      
-        }//fin for punto control Maestro
+        }
 
-        for(i=0; i<this.pCMaestroMostrar.length; i++){
+        for(let i=0; i<this.pCMaestroMostrar.length; i++){
             this.pCMaestroMostrar[i].nro = i+1;
             if(this.pCMaestroMostrar[i].PuCoClase=='01' ){
                 this.pCMaestroMostrar[i].PuCoClase = 'Hora Punta';
@@ -1536,8 +1563,27 @@ export class PcontrolComponent implements OnInit{
             }else if(this.pCMaestroMostrar[i].PuCoClase=='03' ){
                 this.pCMaestroMostrar[i].PuCoClase = 'Dias Normal';
             }
+            
+            if(this.pCMaestroMostrar[i].PuCoActivo==1){
+                this.pCMaestroMostrar[i].PuCoActivo = 'SI';
+                nroSI++;
+            }else if(this.pCMaestroMostrar[i].PuCoActivo==0){
+                this.pCMaestroMostrar[i].PuCoActivo = 'NO';
+            }
         }
+
+        if(this.nroPtosValidos!=nroSI){
+            this.mensaje="EL Nro de Listas de Puntos Activos no es valido, verifique y corrija ese problema";
+            this.displayNroValidoListasPtsControl=true;
+        }
+        console.log(nroSI);
+        console.log(this.pCMaestroMostrar);
     }// fin funcion
+
+    aceptarNroValidoListasPts(){
+        this.mensaje="";
+        this.displayNroValidoListasPtsControl=false;
+    }
 
     /* MOSTRAR ELEMENTOS EN LA GRILLAS */
     mgPuntosControlDetalle(ptsCtrl:any){
@@ -1776,10 +1822,14 @@ export class PcontrolComponent implements OnInit{
             }
         }
 
-    //FUNCION COMBOBOX TIPO TARJETA
+    //FUNCION COMBOBOX 
         ftipoTarjeta(event){ 
             /*console.log(this.tTarj);*/
             this.pcMaestro.PuCoClase = this.tTarj;  
+        }
+
+        fCboPuCoActivo(event){
+            //console.log(this.PuCoActivo);
         }
 
     //SI SUMATORIA TODOS PUNTOS DE CONTROL IGUAL AL TIEMPO DE RECORRIDO BUS

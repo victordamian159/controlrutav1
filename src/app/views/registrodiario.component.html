@@ -39,7 +39,7 @@
                             </p-column>
                             <p-column field="Nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
                             <p-column field="ReDiFeha" header="Fecha"  [style]="{'width':'8em','text-align':'center'}"></p-column>
-                            <p-column field="ReDiTiempoVuelta" header="Tiempo"  [style]="{'width':'8em','text-align':'center'}"></p-column>
+                            <p-column field="ReDiHoraInicioDiario" header="Hora Inicio"  [style]="{'width':'8em','text-align':'center'}"></p-column>
                             <p-column field="ReDiTotalVuelta" header="Vueltas"  [style]="{'width':'8em','text-align':'center'}"></p-column>
                         </p-dataTable>
                     </div>
@@ -118,8 +118,8 @@
                                     <!--TIEMPO VUELTA-->
                                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="form-group">
-                                        <label class="control-label">Tiempo Recorrido:</label>
-                                        <input class="form-control" type="text" [(ngModel)]="tmpVuelta" #tmpvul="ngModel" required />
+                                        <label class="control-label">Hora de Inicio:</label>
+                                        <input class="form-control" type="text" [(ngModel)]="ReDiHoraInicioDiario" #tmpvul="ngModel" required />
                                     
                                         <span *ngIf="!tmpvul.valid && tmpvul.touched" >
                                             <div id="validation" [hidden]="!tmpvul.errors.required"> Obligatorio </div>

@@ -34,7 +34,7 @@
                         <!--<p-dataTable [value]="pCMaestroMostrar" [rows]="5" [paginator]="true" [pageLinks]="2" [globalFilter]="filtroGlobal" scrollable="true" scrollWidth="100%" selectionMode="single" 
                         emptyMessage="Lista vacia"  [(selection)]="selectedProgPresentar" (onRowSelect)="onRowSelectMaestro($event)">     -->
                         <p-dataTable [value]="pCMaestroMostrar"  [globalFilter]="filtroGlobal" scrollable="true" 
-                        scrollHeight="330px" scrollWidth="100%" selectionMode="single" 
+                        scrollHeight="320px" scrollWidth="100%" selectionMode="single" 
                         emptyMessage="Lista vacia" (onRowSelect)="onRowSelectMaestro($event)"> 
 
                             <p-column styleClass="col-button" [style]="{'width':'3em'}">
@@ -46,6 +46,7 @@
                             </p-column>
                             <p-column field="nro"             header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
                             <p-column field="PuCoDescripcion" header="Descripcion" [style]="{'width':'12em'}"></p-column>
+                            <p-column field="PuCoActivo" header="Activo" [style]="{'width':'5em','text-align':'center'}" ></p-column>
                             <p-column field="PuCoTiempoBus" header="Tiempo" [style]="{'width':'5em','text-align':'center'}" ></p-column>
                             <p-column field="PuCoClase"     header="Clase" [style]="{'width':'8em','text-align':'center'}"></p-column>            
                         </p-dataTable>
@@ -64,7 +65,7 @@
                             #gmap
                             [options]="options" 
                             [overlays]="overlays"
-                            [style]="{'width':'100%','height':'440px'}" 
+                            [style]="{'width':'100%','height':'420px'}" 
                             (onMapClick)="handleMapClick($event)"
                             (onOverlayClick)="handleOverClick($event)"
                             (onOverlayDragEnd)="handleDragEnd($event)">
@@ -93,6 +94,66 @@
 <!--VENTANAS MODALES-->
 
     <!--FORMULARIOS MODALES-->
+        
+        <!--MODAL BOTON  NUEVO PC CABECERA, SEGUN EL CASO ES NUEVA TABLA O EDITARLA-->
+        <p-dialog  [(visible)]="displayListaPuntos" [style]="{'font-size':'14px'}" [resizable]="false" [closable]="false" modal="modal" width="320" responsive="true" >
+            <p-header>{{headertitle}}</p-header>
+                <!--DESCRIPCION -->
+                <div class="form-group">
+                    <label  >Nombre:</label>
+                    <input class="form-control" type="text" maxlength="20" [(ngModel)]="descr" #desc="ngModel" required/>
+                    <div id="validation" [hidden]="!desc.touched || desc.valid ">
+                        Error en los datos
+                    </div>
+                </div>
+
+                <!--TIEMPO RECORRIDO-->
+                <div class="form-group">
+                    <label  for="timeb">Tiempo de Recorrido(HH:MM:SS):</label>
+                    <input class="form-control" type="text" maxlength="8" [(ngModel)]="timeRec" 
+                        pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})"  #time="ngModel" required/>
+                    <div id="validation" [hidden]="!time.touched || time.valid ">
+                        Error en los datos
+                    </div>
+                </div>
+
+                <!--TIPO DE TARJETA     COMBO_BOX-->
+                <div class="form-group">
+                    <label class="col-form-label">Tipo de Tarjeta:</label>
+                    <select class="form-control" [(ngModel)]="tTarj" (change)="ftipoTarjeta($event)" required #tipotarj="ngModel" >
+                        <option *ngFor="let tipo of _tipoTarjeta" [ngValue]="tipo.val" [selected]="tipo.val===tipoTarjeta.val ">
+                            {{tipo.nomb}}
+                        </option>
+                    </select>
+                    <div id="validation" [hidden]="!tipotarj.touched || tipotarj.valid">
+                        Error en los datos
+                    </div>
+                </div>
+
+                <!--EN USO-->
+                <div class="form-group">
+                    <label class="col-form-label">En Uso:</label>
+                    <select class="form-control" [(ngModel)]="PuCoActivo" (change)="fCboPuCoActivo($event)" required #VarPuCoActivo="ngModel" >
+                        <option *ngFor="let PuCoAct of arrPuCoActivo" [ngValue]="PuCoAct.id" [selected]="PuCoAct.id===objPuCoActivo.id ">
+                            {{PuCoAct.nomb}}
+                        </option>
+                    </select>
+                    <div id="validation" [hidden]="!VarPuCoActivo.touched || VarPuCoActivo.valid">
+                        Error en los datos
+                    </div>
+                </div>
+
+            <!--BOTONES DE LA VENTANA-->
+            <div class="btn_Modal row ">
+                <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">
+                    <button class="btn_modal" pButton icon="fa-save" (click)="guardarPCMaestro(); desc.reset();  time.reset(); tipotarj.reset();" label="Guardar" [disabled]="!desc.valid || !time.valid || !tipotarj.valid"></button>
+                </div>
+                <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12"> 
+                    <button class="btn_modal" pButton icon="fa-close" (click)="cancelarPCMaestro(); desc.reset();  time.reset(); tipotarj.reset();" label="Cancelar"></button>
+                </div>
+            </div>
+        </p-dialog>  
+
         <!--MODAL DETALLE REGISTRO PUNTO CONTROL CABECERA (SOLO PARA VISUALIZACION)-->
         <p-dialog [(visible)]="displayReaderDetPC" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
             <div class="row">
@@ -166,52 +227,6 @@
                     </div>
                 </div>
         </p-dialog>
-
-        <!--MODAL BOTON  NUEVO PC CABECERA, SEGUN EL CASO ES NUEVA TABLA O EDITARLA-->
-        <p-dialog  [(visible)]="displayListaPuntos" [style]="{'font-size':'14px'}" [resizable]="false" [closable]="false" modal="modal" width="320" responsive="true" >
-            <p-header>{{headertitle}}</p-header>
-            <!--DESCRIPCION -->
-            <div class="form-group">
-                <label  >Nombre:</label>
-                <input class="form-control" type="text" maxlength="20" [(ngModel)]="descr" #desc="ngModel" required/>
-                <div id="validation" [hidden]="!desc.touched || desc.valid ">
-                    Error en los datos
-                </div>
-            </div>
-
-            <!--TIEMPO RECORRIDO-->
-            <div class="form-group">
-                <label  for="timeb">Tiempo de Recorrido(HH:MM:SS):</label>
-                <input class="form-control" type="text" maxlength="8" [(ngModel)]="timeRec" 
-                    pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})"  #time="ngModel" required/>
-                <div id="validation" [hidden]="!time.touched || time.valid ">
-                    Error en los datos
-                </div>
-            </div>
-
-            <!--TIPO DE TARJETA     COMBO_BOX-->
-            <div class="form-group">
-                <label class="col-form-label">Tipo de Tarjeta:</label>
-                <select class="form-control" [(ngModel)]="tTarj" (change)="ftipoTarjeta($event)" required #tipotarj="ngModel" >
-                    <option *ngFor="let tipo of _tipoTarjeta" [ngValue]="tipo.val" [selected]="tipo.val===tipoTarjeta.val ">
-                        {{tipo.nomb}}
-                    </option>
-                </select>
-                <div id="validation" [hidden]="!tipotarj.touched || tipotarj.valid">
-                    Error en los datos
-                </div>
-            </div>
-
-            <!--BOTONES DE LA VENTANA-->
-            <div class="btn_Modal row ">
-                <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">
-                    <button class="btn_modal" pButton icon="fa-save" (click)="guardarPCMaestro(); desc.reset();  time.reset(); tipotarj.reset();" label="Guardar" [disabled]="!desc.valid || !time.valid || !tipotarj.valid"></button>
-                </div>
-                <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12"> 
-                    <button class="btn_modal" pButton icon="fa-close" (click)="cancelarPCMaestro(); desc.reset();  time.reset(); tipotarj.reset();" label="Cancelar"></button>
-                </div>
-            </div>
-        </p-dialog>  
 
         <!--CORREGIR AGREGAR VALIDACION -->
         <!--NUEVO PUNTO DE CONTROL DETALLE ADDMARKER-->
@@ -504,7 +519,16 @@
                         <button class="btn_modal" pButton icon="fa-check" label="OK" (click)="aceptarNoPuedeSelRow()"></button>
                     </div>
                 </div>
-                
             </p-dialog>
+
+        <!--VENTANA MENSAJE, NO PUEDE HACER CLIC SOBRE OTRA FILA HASTA NO GUARDAR LO TRABAJADO EN ESE MOMENTO --> 
+        <p-dialog [(visible)]="displayNroValidoListasPtsControl" modal="modal" [resizable]="false" width="100%" responsive="true" [closable]="false">
+            {{mensaje}}
+            <div class="btn_Modal row ">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xm-12">
+                    <button class="btn_modal" pButton icon="fa-check" label="OK" (click)="aceptarNroValidoListasPts()"></button>
+                </div>
+            </div>
+        </p-dialog>
 
 
