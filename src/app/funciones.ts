@@ -223,6 +223,12 @@
         return _horaAct;
     }
 
+    //adaptar fecha
+    export function guion_slash_inver(fecha:string):string{
+        let _fecha=fecha.split('-'), result:string;
+        result=_fecha[2]+'/'+_fecha[1]+'/'+_fecha[0];
+        return result;
+    }
 
     /* ASIGNAR CARGO */
     export function cargoEmpPer(idCargo:string):string{

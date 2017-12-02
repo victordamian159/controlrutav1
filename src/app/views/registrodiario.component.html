@@ -108,7 +108,7 @@
                                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="form-group">
                                         <label class="control-label">Numero Vueltas:</label>
-                                        <input class="form-control" type="number" [(ngModel)]="nTolVueltas" #ntolvul="ngModel" required />
+                                        <input class="form-control" type="number" [(ngModel)]="nTolVueltas" max=20 #ntolvul="ngModel" required />
                                     
                                         <span *ngIf="!ntolvul.valid && ntolvul.touched" >
                                             <div id="validation" [hidden]="!ntolvul.errors.required"> Obligatorio </div>
@@ -156,6 +156,15 @@
                     </div>
                     <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
                         <button class="btn_modal"  pButton (click)="cancelDelRegDiario()"   label="Cancelar"></button>
+                    </div>
+                </div>
+        </p-dialog>
+
+        <p-dialog [(visible)]="displayErrorMismaFecha" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
+                <p>{{mensaje}}</p>
+                <div class="btn_Modal row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xm-12">
+                        <button class="btn_modal"  pButton (click)="aceptarErrorMismoRegFecha()" label="Aceptar"></button>
                     </div>
                 </div>
         </p-dialog>

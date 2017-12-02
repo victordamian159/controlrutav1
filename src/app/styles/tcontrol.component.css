@@ -120,33 +120,60 @@
 
     #tablaSalidas{
         width:6500px;
+        
     }
 
     thead{
         width: 100%;
+        border:none;
     }
 
     thead tr{
         width: 6500px;
-        
+        border:none;
     }
 
     table thead tr th{
-        text-align: center;
-        border: 1px solid black;
-    }
-
-    table thead tr th tr{
-        text-align: center;
-        padding:10px 20px;
+        /*text-align: center;
+       
+        margin:auto;
+        padding:5px 10px;
+        width:40px;
+        flex-grow: 1;*/
         
-        width:auto;
-        height: auto;
+        border:none;
     }
 
-    table{
-        border-collapse: collapse;
+    /*able tbody td tr td{
+        width: 100%;
+        border-color: red;
+        display:center;
+        justify-content: left;
+        text-align:center;
+    }*/
+
+    
+    table tbody td{
+        text-align:center;
+        border:none;
+        margin:auto;
+        padding:10px 14px;
+        width:147px;
     }
+
+    /*
+        table thead tr th tr{
+            text-align: center;
+            padding:10px 20px;
+            
+            width:auto;
+            height: auto;
+        }
+
+        table{
+            border-collapse: collapse;
+        }
+    */
 /*ESTILOS TABLAS*/
     #btnTable{
         background-color: #4CAF50;

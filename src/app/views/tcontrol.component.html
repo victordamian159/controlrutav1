@@ -186,10 +186,10 @@
                 <div class="cuadroSalidas">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="row">
-                            <table id="tablaSalidas">
-                                <thead>
+                            <table class="table" id="tablaSalidas">
+                                <thead >
                                     <tr>
-                                        <th *ngFor="let headCol of headerTabCuadroNumber;">
+                                        <th *ngFor="let headCol of headerTabCuadroNumber;" style="text-align:center;">
                                             {{headCol}}
                                         </th>
                                     </tr>
@@ -205,7 +205,7 @@
                                     </tr>
                                 </thead>
 
-                                <tbody>
+                                <tbody >
                                     <td *ngFor="let nrovuelta of arrCuadroSalidas">
                                         <tr *ngFor="let horas of nrovuelta">
                                             <td *ngFor="let hora of horas">
@@ -264,13 +264,15 @@
                                                 {{valtj.nomb}}
                                             </option>
                                         </select>
-                            
+                                        <span *ngIf="!ValTarj.valid && ValTarj.touched" >
+                                            <div id="validation" [hidden]="!ValTarj.errors.required"> Obligatorio </div>
+                                        </span>
                                     </div>
                                 </div>
 
                                 <!--Tipo Asignar Hora Manual o Automatica-->
                                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="form-group">
+                                    <div class="form-group" [hidden]="ReDiDeNroVuelta==1">
                                         <label>Tipo de Hora Salida:</label>
                                         
                                         <select class="form-control" [(ngModel)]="tpHoraS" required #TpHora="ngModel">
@@ -284,7 +286,7 @@
 
                                 <!--TIEMPO RETEN(HH:MM:SS):  ReReTiempo  tarjeta._TaCoHoraSalida-->
                                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="form-group">
+                                    <div class="form-group" [hidden]="ReDiDeNroVuelta==1">
                                         <label >Tiempo Rente(HH:MM:SS):</label>
                                         <input class="form-control" type="text"[(ngModel)]="ReReTiempo"  
                                                 step="1" [disabled]="true" [hidden]="tpHoraS==1" required #hsal="ngModel" />
@@ -303,7 +305,7 @@
                 </div>
             </div>
          </div>
-      
+
         <!--BOTONES-->
         <div class=" btn_Modal row ">
             <!--ATRAS-->
@@ -314,12 +316,12 @@
             <!--GUARDAR-->
             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                 <button class="btn_modal" type="text" pButton icon="fa-save" (click)="guardarTarjeta();  hsal.reset();" 
-                        [disabled]=" (!hsal.valid  && tpHoraS=='02')" label="Guardar"></button>
+                        [disabled]=" (!ValTarj.valid || !(estadoPlaca==0)) && ((!hsal.valid || tpHoraS=='02') || !(ReDiDeNroVuelta==1))" label="Guardar"></button>
             </div>
             <!--CANCELAR-->
             <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
                 <button class="btn_modal" type="text" pButton icon="fa-close" 
-                (click)="cancelarTarjeta();  hsal.reset(); " label="Cancelar"></button>
+                (click)="cancelarTarjeta();  hsal.reset(); ValTarj.reset();" label="Cancelar"></button>
             </div>
         </div>
     </p-dialog>
@@ -447,8 +449,8 @@
             </div>
      </p-dialog>  -->
 
-     <!--MODAL NO VALIDO LISTA DE PUNTOS DE CONTROL DETALLE
-     <p-dialog [(visible)] = "displayErrorNoHayPCModalNuevo" [resizable]="false" modal="modal" width="100%" [closable]=false>
+     <!--MODAL ERROR, NO PUEDE CREAR DOS VECES LA MISMA TARJETA
+     <p-dialog [(visible)] = "displayNoPuedeCrearMismaTarjeta" [resizable]="false" modal="modal" width="100%" [closable]=false>
             {{mensaje}}
             <div class=" btn_Modal row ">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">

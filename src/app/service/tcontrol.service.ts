@@ -88,6 +88,14 @@ export class TControlService{
 				.catch(this.handleError);
 	}
 
+	//tarjetas control por fecha y todos los buses
+	getalltarjetacontrolbybuidfecha(buId:number, taCoFecha:string){
+		return this.http
+			.get(this.baseUrl+"getalltarjetacontrolbybuidfecha?buId="+buId+"&taCoFecha="+taCoFecha)
+			.map((r: Response) => r.json() )   
+			.catch(this.handleError)
+	}
+
 //CABECERA
     //TARJETAS DE CONTROL POR ID
     getAllTarjetaControlById(taCoId:number){

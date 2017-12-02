@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {GlobalVars} from 'app/variables'
-import {editf1,fechaActual1, _fecha1, _hora, fecha, hora} from 'app/funciones';
+import {editf1,fechaActual1,fechaActual2, _fecha1, _hora, fecha, hora,guion_slash_inver} from 'app/funciones';
 import {RegDiarioService} from '../service/registrodiario.service'
 
 @Component({
@@ -15,6 +15,7 @@ export class RegistroDiarioComponent implements OnInit{
             //display modal
                 private displayNuevoRegistroDiario:boolean;
                 private displayConfDelRegDiario:boolean;
+                private displayErrorMismaFecha:boolean;
             //number
                 private nTolVueltas:number;
                 private emid:number;
@@ -24,6 +25,7 @@ export class RegistroDiarioComponent implements OnInit{
                 private ReDiHoraInicioDiario:string;
                 private fechRegDir:string;
                 private mensajevalidacion:string;
+                private mensaje:string;
             //any(objeto)
                 
         //arrays
@@ -40,8 +42,11 @@ export class RegistroDiarioComponent implements OnInit{
             this.userid=this.ClassGlobal.GetUsId();
             this.arrRegDiarioByEmId=[];
             this.arrRegDiarioDetalleByEmId=[];
+
             this.displayNuevoRegistroDiario=false;
             this.displayConfDelRegDiario=false;
+            this.displayErrorMismaFecha=false;
+
             this.nTolVueltas=null;
             this.ReDiHoraInicioDiario=null;
             this.arrEtdRegDiario=[{id:'01',nomb:'POR REALIZAR'},{id:'02',nomb:'ACTUAL'},{id:'03',nomb:'COMPLETADO'}];
@@ -65,7 +70,7 @@ export class RegistroDiarioComponent implements OnInit{
                 getAllregistrodiarioDetalleByPrId(reDiId:number){
                     let arrReg:any[]=[];
                     this.registrodiarioservice.getAllregistrodiarioDetalleByPrId(reDiId).subscribe(
-                        data=>{arrReg=data; this.mgAllRegDiarioDetalle(arrReg);},
+                        data=>{arrReg=data; console.log(arrReg); this.mgAllRegDiarioDetalle(arrReg);},
                         error=>{console.log(error);}
                     );
                 }
@@ -201,9 +206,7 @@ export class RegistroDiarioComponent implements OnInit{
             //aceptar
                 guardarRegistroDiario(){
                     let objSaveRegDiario:any;
-                    console.log(this.fechRegDir);
-                    console.log(this.nTolVueltas);
-                    console.log(this.ReDiHoraInicioDiario);
+                    //console.log(this.fechRegDir); console.log(this.nTolVueltas); console.log(this.ReDiHoraInicioDiario); console.log(this.arrRegDiarioByEmId); console.log(this.ReDiId);
 
                     objSaveRegDiario={
                         UsFechaReg:new Date(),
@@ -214,14 +217,45 @@ export class RegistroDiarioComponent implements OnInit{
                         ReDiTotalVuelta:this.nTolVueltas,
                         ReDiHoraInicioDiario:hora(this.ReDiHoraInicioDiario)
                     }
-                    console.log(objSaveRegDiario);
-                    this.displayNuevoRegistroDiario=false;
-                    this.saveRegistroDiario(objSaveRegDiario);
+
+                    if(this.nTolVueltas>20){
+                        this.nTolVueltas=20;
+                    }else if(this.nTolVueltas==0){
+                        this.nTolVueltas=1;
+                    }
+
+                    //console.log(objSaveRegDiario);  console.log(this.arrRegDiarioByEmId);  console.log(guion_slash_inver(this.fechRegDir));
+                    //console.log(this.buscarFechaIgual(this.arrRegDiarioByEmId,guion_slash_inver(this.fechRegDir)));
+                    
+                    if(this.buscarFechaIgual(this.arrRegDiarioByEmId,guion_slash_inver(this.fechRegDir))==0){
+                        this.displayNuevoRegistroDiario=false;
+                        this.saveRegistroDiario(objSaveRegDiario);
+                    }else if(this.buscarFechaIgual(this.arrRegDiarioByEmId,guion_slash_inver(this.fechRegDir))==1){
+                        this.mensaje="No puede crear dos registros con la misma fecha actual";
+                        this.displayErrorMismaFecha=true;
+                    }
+
+                    
                 }
             //cancelar
+                aceptarErrorMismoRegFecha(){
+                    this.mensaje="";
+                    this.displayErrorMismaFecha=false;
+                }
                 cancelGuardarRegistroDiario(){
                     this.displayNuevoRegistroDiario=false;
                 }
         //funcvariados
-
+                buscarFechaIgual(arrRegDiario=[],fecha:string):number{
+                    let cen=0, i=0;
+                    while(i<arrRegDiario.length && cen==0){
+                        if(arrRegDiario[i].ReDiFeha==fecha){
+                            cen=1;
+                        }else{
+                            cen=0;
+                            i++
+                        }
+                    }
+                    return cen;
+                }
 }
