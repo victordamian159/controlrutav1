@@ -91,41 +91,38 @@
             <div class="row">
                 <div class="cont_modal">
                     <div class="container">
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="row">
-                                <!--FECHA FUNCIONAR EL REGISTRO DIARIO-->
-                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="form-group">
-                                        <label class="control-label">Fecha Actual:</label>
-                                        <input class="form-control" type="date" [(ngModel)]="fechRegDir" #fechRegDiario="ngModel" required />
-                                    
-                                        <span *ngIf="!fechRegDiario.valid && fechRegDiario.touched" >
-                                            <div id="validation" [hidden]="!fechRegDiario.errors.required"> Obligatorio </div>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!--TOTAL DE VUELTAS POR EL DIA-->
-                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="form-group">
-                                        <label class="control-label">Numero Vueltas:</label>
-                                        <input class="form-control" type="number" [(ngModel)]="nTolVueltas" max=20 #ntolvul="ngModel" required />
-                                    
-                                        <span *ngIf="!ntolvul.valid && ntolvul.touched" >
-                                            <div id="validation" [hidden]="!ntolvul.errors.required"> Obligatorio </div>
-                                        </span>
-                                    </div>
-                                </div>
-                                    <!--TIEMPO VUELTA-->
-                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="form-group">
-                                        <label class="control-label">Hora de Inicio:</label>
-                                        <input class="form-control" type="text" [(ngModel)]="ReDiHoraInicioDiario" #tmpvul="ngModel" required />
-                                    
-                                        <span *ngIf="!tmpvul.valid && tmpvul.touched" >
-                                            <div id="validation" [hidden]="!tmpvul.errors.required"> Obligatorio </div>
-                                        </span>
-                                    </div>
-                                </div>
+                        <div class="row">
+                            <!--FECHA FUNCIONAR EL REGISTRO DIARIO-->
+                        
+                            <div class="form-group">
+                                <label class="control-label">Fecha Actual:</label>
+                                <input class="form-control" type="date" [(ngModel)]="fechRegDir" #fechRegDiario="ngModel" required />
+                            
+                                <span *ngIf="!fechRegDiario.valid && fechRegDiario.touched" >
+                                    <div id="validation" [hidden]="!fechRegDiario.errors.required"> Obligatorio </div>
+                                </span>
+                            </div>
+                        
+                            <!--TOTAL DE VUELTAS POR EL DIA-->
+                        
+                            <div class="form-group">
+                                <label class="control-label">Numero Vueltas:</label>
+                                <input class="form-control" type="number" [(ngModel)]="nTolVueltas" max=20 #ntolvul="ngModel" required />
+                            
+                                <span *ngIf="!ntolvul.valid && ntolvul.touched" >
+                                    <div id="validation" [hidden]="!ntolvul.errors.required"> Obligatorio </div>
+                                </span>
+                            </div>
+                        
+                            <!--TIEMPO VUELTA-->
+                        
+                            <div class="form-group">
+                                <label class="control-label">Hora de Inicio:</label>
+                                <input class="form-control" type="text" [(ngModel)]="ReDiHoraInicioDiario" #tmpvul="ngModel" required />
+                            
+                                <span *ngIf="!tmpvul.valid && tmpvul.touched" >
+                                    <div id="validation" [hidden]="!tmpvul.errors.required"> Obligatorio </div>
+                                </span>
                             </div>
                         </div>
                     </div>

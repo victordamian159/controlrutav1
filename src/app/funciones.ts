@@ -1,11 +1,22 @@
+    //VALIDAR HORA
+    /*export function horaValida(hora:string): boolean{
+        let result:boolean;
+            if(hora.length==8){
+
+            }else if(hora.length!=8){
+                result=false;
+            }
+        return result;
+    }    */
+    
     //CONVERTIR HORA DE STRING A DATE FORMULARIO A LA BD  
-    export function hora(fecha : string) : Date{
+    export function hora(hora:string):Date{
             //FECHA               
-            let thoy:Date,  otra:Date, horaTarjeta:string;
+            let thoy:Date,  otra:Date;
             thoy=new Date();
-            if(fecha.length<=5){ fecha = fecha+":00"; }
-            horaTarjeta=fecha;
-            let resultado=horaTarjeta.split(':');
+            //console.log(hora);
+            //if(fecha.length<=5){ fecha = fecha+":00"; }
+            let resultado=hora.split(':');
             otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));    
             //console.log(otra);
             return otra; 
@@ -348,6 +359,7 @@
             i++;
         }
        /*     sarrH=arrH.join(":");*/
+       //console.log(arrH);
         return arrH;
     }
 
@@ -369,7 +381,7 @@
         return _rest;
     }
     /* OPERACION SUMA CON TIEMPOS */
-    export function operSHoras(tmp1:string, tmp2:string){
+    export function operSHoras(tmp1:string, tmp2:string):string{
         let rest:any[]=[]; let t1=extFuncArrHora(tmp1), t2=extFuncArrHora(tmp2), _rest:string;;
         rest[0]=(t1[0]+t2[0]).toString();
         rest[1]=(t1[1]+t2[1]).toString();
@@ -395,6 +407,7 @@
 
     /* CORREGIR HORA CUANDO ESTAN EJEMPLO   17:80:185 --->  18:23:05 */
     export function extFuncCorrecHora(t:string):string{
+        //console.log(t);
         let arrH, rest, _rest;
         let hAux:number, auxM:number, auxS:number;
         arrH=extFuncConvHora1(t);
@@ -443,6 +456,7 @@
 
         _rest=arrH.splice(0);
         _rest=extFuncConvHora2(_rest);
+        //console.log(_rest);
         return _rest;
     }
 

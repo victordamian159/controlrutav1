@@ -1,7 +1,7 @@
 /*COMPONENTES ANGULAR 2*/ 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import {HashLocationStrategy, LocationStrategy}	from '@angular/common';
@@ -127,7 +127,7 @@ import { BaseRequestOptions } from '@angular/http';*/
     BrowserModule,
     FormsModule,
     HttpModule,
-
+    ReactiveFormsModule,
     AppRoutingModule,
     
     //componentes de primeng
