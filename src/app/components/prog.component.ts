@@ -189,23 +189,30 @@ export class ProgComponent implements OnInit{
             i++; 
         }
         arrCalendar[0]=new Date(arrCalendar[0]);
+        console.log(arrCalendar);
         return arrCalendar;
     }
             
     //QUITAR DIAS DE LA SEMANA DE TODO EL CALENDARIO
     descartarFechas(arrFechas=[], diasValidos:string){
-        let fechasValidas=[]; let arrDiasValidos=diasValidos.split(',');
-        let i:number=0; let j=0; let _arrDiasValidos=[];
-       
+        let fechasValidas=[], arrDiasValidos=diasValidos.split(',');
+        let i:number=0, j=0, _arrDiasValidos=[];
+        console.log(diasValidos);
+
         while(j<arrDiasValidos.length){
+
             if(arrDiasValidos[j]=='1'){
                 if(j>=0 && j<6){
                     _arrDiasValidos.push(j+1);
-                }else if(j==6){ _arrDiasValidos.push(0) }
+                }else if(j==6){ 
+                    _arrDiasValidos.push(0) 
+                }
             }
             j++;
+
         }
-        //console.log(_arrDiasValidos);
+        console.log(_arrDiasValidos);
+
         while(i<arrFechas.length){
             if(this.validarFechaCalendario(arrFechas[i],_arrDiasValidos) == 1 ){
                 fechasValidas.push(arrFechas[i]);
@@ -564,9 +571,9 @@ export class ProgComponent implements OnInit{
  
     //ARRAY DIAS PROGRAMACION//      1 : NO BISIESTO    2017-05-02   0 : BISIESTO
     calendarioProg(f1 : string, f2 : string, diasIncl:string){
-        let i=0; let arrCalNumber:any[]=[]; let arrCalString:any[]=[];
+        let i=0, arrCalNumber:any[]=[], arrCalString:any[]=[];
         let calendario= this.descartarFechas(this.funcCalendarioNumerico(f1,f2), diasIncl);
-
+        console.log(calendario);
         //EXTRAENDO NUMERICO
         while(i<calendario.length){
             arrCalNumber[i]=calendario[i].getDate();
@@ -1073,6 +1080,9 @@ export class ProgComponent implements OnInit{
                         this.progBDDetalle = data; 
                         if(this.progBDDetalle.length!=0){
                             this.extraerHoraBase(this.progBDDetalle, this.PrCantidadBuses);
+
+                            this.calendarioProgramacion(this.progBDDetalle,this.PrCantidadBuses, this.dias);
+                           
                             this.tablaProgramaciones(this.progBDDetalle, this.PrCantidadBuses, this.dias, this.extrayendoPlacasBus(this.placas,'tablavista'));
                         }else if(this.progBDDetalle.length==0){
                             this.mensaje="Error al Generar la Programacion, Vuelva a Generarlo";
@@ -1178,7 +1188,7 @@ export class ProgComponent implements OnInit{
                 
                 // INSERTANDO EL NRO DE DE FILA EN LA TABLA 
                 for(i=0; i<this._detalle.length;i++){ (this._detalle[i]).splice(0,0,(i+1).toString());}
-                console.log(this._detalle);    
+                //console.log(this._detalle);    
 
                 this.calNumb.unshift(" "); this.calString.unshift(" ");  this.nroColumn=nroDias;
                     this.displayProgramacion = true;
@@ -1190,7 +1200,21 @@ export class ProgComponent implements OnInit{
         
     }
 
-    
+    //obtener calendario - recuperar calendario de la programacion detalle que me devuelve del servicio
+    calendarioProgramacion(arrProgramacion=[],PrCantidadBuses, NroDias:number){
+        let i:number=0, nrod:number=arrProgramacion.length/PrCantidadBuses; let arrCalendario:any[]=[];
+        console.log(nrod);
+        console.log(arrProgramacion);
+        console.log(PrCantidadBuses);
+        console.log(NroDias);
+        while(i<nrod){
+            arrCalendario.push(_fecha1(arrProgramacion[i*PrCantidadBuses].PrDeFecha));
+            i++;
+        }
+
+        console.log(arrCalendario.length);
+        console.log(arrCalendario);
+    }
 
 
     errorTablaProgramacion(){

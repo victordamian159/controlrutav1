@@ -16,6 +16,7 @@ export class RegistroDiarioComponent implements OnInit{
                 private displayNuevoRegistroDiario:boolean;
                 private displayConfDelRegDiario:boolean;
                 private displayErrorMismaFecha:boolean;
+                private displayRegDiarioDetalle:boolean;
             //number
                 private nTolVueltas:number;
                 private emid:number;
@@ -46,6 +47,7 @@ export class RegistroDiarioComponent implements OnInit{
             this.displayNuevoRegistroDiario=false;
             this.displayConfDelRegDiario=false;
             this.displayErrorMismaFecha=false;
+            this.displayRegDiarioDetalle=false;
 
             this.nTolVueltas=null;
             this.ReDiHoraInicioDiario=null;
@@ -70,10 +72,27 @@ export class RegistroDiarioComponent implements OnInit{
                 getAllregistrodiarioDetalleByPrId(reDiId:number){
                     let arrReg:any[]=[];
                     this.registrodiarioservice.getAllregistrodiarioDetalleByPrId(reDiId).subscribe(
-                        data=>{arrReg=data; console.log(arrReg); this.mgAllRegDiarioDetalle(arrReg);},
-                        error=>{console.log(error);}
+                        data=>{ 
+                                arrReg=data; //console.log(arrReg); 
+                                if(arrReg.length!=0){
+                                    this.mgAllRegDiarioDetalle(arrReg);
+                                    this.displayRegDiarioDetalle=true;
+                                }else{
+                                    alert('No hay registro diario creado');
+                                }
+                                
+                              },
+                        error=>{
+                                console.log(error);
+                                alert('Error al descargar el registro diario detalle, vuelva a intentarlo');
+                                }
                     );
                 }
+
+                cerrarTabRegDiarioDetalle(){
+                    this.displayRegDiarioDetalle=false;
+                }
+
                 getRegistroDiario(ReDiId:number){
                     let objReg:any;
                     this.registrodiarioservice.getregistrodiarioById(ReDiId).subscribe(
@@ -111,7 +130,7 @@ export class RegistroDiarioComponent implements OnInit{
         //onrowselect
                 onRowSelectRegDiario(event){
                     let ReDiId:number;
-                    console.log(event.data.ReDiId);
+                    //console.log(event.data.ReDiId);
                     ReDiId=event.data.ReDiId;
                     this.getAllregistrodiarioDetalleByPrId(ReDiId);
                 }

@@ -15,15 +15,15 @@
                     </select> 
                 </div>
 
-                <!--COMBO PUNTOS CONTROL-->
+                <!--COMBO PUNTOS CONTROL
                 <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
                     <select class="form-control" required [(ngModel)]="_pcId" (change)="pControlId($event)"   #pcontrol="ngModel">
-                        <!--<option value="" disabled selected hidden>Please Choose...</option>-->
+                        <option value="" disabled selected hidden>Please Choose...</option>
                         <option *ngFor="let punto of _puntosControl" [value]="punto.PuCoId">
                             {{punto.PuCoDescripcion}} / {{punto.PuCoTiempoBus}}
                         </option>
                     </select> 
-                </div>
+                </div>-->
 
                 <!--BUSQUEDA-->
                 <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
@@ -41,58 +41,30 @@
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                     <div class=" table table-responsive">
-                        <!--
-                        <p-dataTable [value]="_allTarjControl" [rows]="5" [paginator]="true"  [globalFilter]="filtroGlobal" 
-                            [responsive]="false" emptyMessage="Lista Vacia" scrollable="true" scrollWidth="100%" selectionMode="single" 
-                            [(selection)]="selectedTarjCab" (onRowSelect)="onRowSelectCabecera($event)">
-                        -->
                         <p-dataTable [value]="_allTarjControl" [globalFilter]="filtroGlobal" scrollable="true"
-                                    emptyMessage="Lista Vacia" scrollHeight="250px" scrollWidth="100%" selectionMode="single" 
+                                    emptyMessage="Lista Vacia" scrollHeight="360px" scrollWidth="100%" selectionMode="single" 
                                 [(selection)]="selectedTarjCab" (onRowSelect)="onRowSelectCabecera($event)">
 
                             <!--campos de la datatable-->
-                            <p-column styleClass="col-button" [style]="{'width':'3em','height':'2em'}">
+                            <p-column styleClass="col-button" [style]="{'width':'3em','height':'2em','text-align':'center'}">
                                 <template let-col let-row="rowData" pTemplate="body">
                                     <!--<button type="button" pButton id="btnTable" (click)="editarC(row.TaCoId)" icon="fa-pencil-square-o" > </button>-->
                                     <button type="button" pButton id="btnTable" (click)="eliminarC(row.TaCoId)" icon="fa-trash" > </button>
                                 </template>
                             </p-column>
-                            <p-column field="nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
-                            <p-column field="BuDescripcion" header="Descripcion Bus"  [style]="{'width':'17em'}"></p-column>
-                            <p-column field="BuPlaca" header="Placa"  [style]="{'width':'8em','text-align':'center'}"></p-column>
-                            <p-column field="TaCoFecha" header="Fecha"  [style]="{'width':'9em','text-align':'center'}"></p-column>
-                            <p-column field="NomTaCoFinish" header="Cerrado"  [style]="{'width':'8em','text-align':'center'}"></p-column>
-                            <p-column field="NomTaCoAsignado" header="Estado"  [style]="{'width':'9em','text-align':'center'}"></p-column>
-                            <p-column field="TaCoHoraSalida" header="Salida" sortable="true" [style]="{'width':'7em','text-align':'center'}"></p-column>
+                            <p-column field="Nro" header="N°"  [style]="{'width':'2em','text-align':'center'}"></p-column>
+                            <!--<p-column field="BuDescripcion" header="Descripcion Bus"  [style]="{'width':'17em'}"></p-column>
+                            <p-column field="BuPlaca" header="Placa"  [style]="{'width':'8em','text-align':'center'}"></p-column>-->
+                            <p-column field="TaCoFecha" header="Fecha"  [style]="{'width':'7em','text-align':'center'}"></p-column>
+                            <p-column field="NomTaCoNroVuelta" header="Vuelta"  [style]="{'width':'3em','text-align':'center'}"></p-column>
+                            <p-column field="NomTaCoMultiple" header="Tipo"  [style]="{'width':'6em','text-align':'center'}"></p-column>
+                            <p-column field="NomTaCoFinish" header="Cerrado"  [style]="{'width':'3em','text-align':'center'}"></p-column>
+                            <p-column field="NomTaCoAsignado" header="Estado"  [style]="{'width':'6em','text-align':'center'}"></p-column>
+                            <p-column field="TaCoHoraSalida" header="Salida" sortable="true" [style]="{'width':'6em','text-align':'center'}"></p-column>
                         </p-dataTable>
                     </div>
                 </div>
             </div>    
-        
-
-        <!--TABLA DETALLE TARJETA CONTROL-->
-        
-            <div class="row">
-                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                    <div>Tarjeta de Control</div>
-                    <div class=" table table-responsive">
-                        <!--
-                        <p-dataTable [value]="_allTarjDetalle" [rows]="7"   [responsive]="false"
-                            scrollable="true" [paginator]="true" selectionMode="single" scrollWidth="100%" 
-                            emptyMessage="Lista Vacia" >
-                        -->
-                        <p-dataTable [value]="_allTarjDetalle" scrollable="true"
-                            scrollHeight="210px" scrollWidth="100%" selectionMode="single"
-                            emptyMessage="Lista Vacia" >
-
-                            <p-column field="nro" header="N°" sortable="true" [style]="{'width':'2em','text-align':'center'}"></p-column>
-                            <p-column field="TaCoDeDescripcion" header="Punto"  [style]="{'width':'9em'}"></p-column>
-                            <p-column field="TaCoDeHora" header="Control"  [style]="{'width':'5em','text-align':'center'}"></p-column>
-                            <p-column field="TaCoDeTiempo" header="Tiempo"  [style]="{'width':'5em','text-align':'center'}"></p-column>
-                        </p-dataTable>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -330,6 +302,34 @@
         </div>
     </p-dialog>
     
+    <!--CUADRO TARJETA CONTROL DETALLE-->
+    <p-dialog header="Tarjeta de Control" [resizable]="false" [(visible)]="displayTarjetaControlDetalle" modal="modal" width="100%" height="100%" [closable]= false>
+        <div class="row">
+            <div class="tbTarjCtrlDet">
+                <div class="_tbTarjCtrlDet">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        
+                        <p-dataTable [value]="_allTarjDetalle" scrollable="true"
+                            scrollHeight="340px" scrollWidth="100%" selectionMode="single"
+                            emptyMessage="Lista Vacia" >
+
+                            <p-column field="nro" header="N°" [style]="{'width':'2em','text-align':'center'}"></p-column>
+                            <p-column field="TaCoDeDescripcion" header="Punto"  [style]="{'width':'9em'}"></p-column>
+                            <p-column field="TaCoDeHora" header="Control"  [style]="{'width':'5em','text-align':'center'}"></p-column>
+                            <p-column field="TaCoDeTiempo" header="Tiempo"  [style]="{'width':'5em','text-align':'center'}"></p-column>
+                        </p-dataTable>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class=" btn_Modal row ">
+            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                <button class="btn_modal" type="text" pButton icon="fa-trash-o" (click)="cerrarTarjetaControl();" label = "Cerrar"></button>
+            </div>   
+        </div>
+    </p-dialog>
+
     <!--MODAL ASIGNAR SOLO UNA TARJETA DE CONTROL-->
     <p-dialog [resizable]="false" [(visible)]="displayAsignarTarjeta" modal="modal" width="100%" height="100%" [closable]= false>
         <!--CONTENIDO-->
@@ -339,7 +339,7 @@
                 <div class="asignaUnaTarj">
                    
                     <!--Estado de la Tarjeta    ASIGNAR O AUSENTE-->
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                             
                             <!--<label>Estado Tarjeta: {{msjestadoplaca}}</label>-->
@@ -379,7 +379,7 @@
                         </div>    
                     </div>
                     <!--TABLA-->
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                                                 
                                 <p-dataTable [value]="arrprogxfecha" scrollable="true" scrollWidth="100%" scrollHeight="200px" selectionMode="single" 
@@ -402,24 +402,24 @@
         <!--BOTONES-->
         <div class="btn_Modal row ">
             
-           <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+           <div class="col-xl-3 col-md-6 col-sm-12 col-xs-12">
                 <button class="btn_modal" type="text" pButton icon="fa-save" 
                 (click)="guardarTarjeta(tmpSalida.valid, tmpReten.valid);" 
                 [disabled]="(  (!(val!='x') || !(estadoPlaca==0))  )" label="Guardar"></button>
                 
             </div>
             
-            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="col-xl-3 col-md-6 col-sm-12 col-xs-12">
                 <button class="btn_modal" type="text" pButton icon="fa-close" 
                 (click)="cancelarTarjeta();" label="Cancelar"></button>
             </div>
             
-            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="col-xl-3 col-md-6 col-sm-12 col-xs-12">
                 <button class="btn_modal" type="text" pButton icon="fa-fast-backward" 
                 (click)="btnAtrasFormGuardarTarjetas(); " label="Atras"></button>
             </div>
 
-            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="col-xl-3 col-md-6 col-sm-12 col-xs-12">
                 <button class="btn_modal" type="text" (click)="abrirCuadroSalidas();"
                 pButton icon="fa-file-o" label="Cuadro de Salidas"></button>
             </div>
@@ -429,20 +429,19 @@
     <!-- MODAL ASIGNAR MULTI TARJETAS DE CONTROL A LA VEZ-->
     <p-dialog [resizable]="false" [(visible)]="displayAsigMultiTarj" modal="modal" width="100%" height="100%" [closable]= false>
         <p-header>{{titulo}}</p-header>
-
+        <label>Nro de Tarjetas {{nroMultiTarjetas}} de {{ReDiTotalVuelta}}</label>
         <!--CONTENIDO-->
         <div class="row">
             <div class="cont_modal">
                 <div class="asignaUnaTarj">
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="row">
+                   
+                        <div class="form-group row">
                             <!-- 
                                  -> LISTA DE PLACAS - PROGRAMACION, AL ELEGIR UNA  PLACA MULTIPLICARLO POR EL NRO DE TARJETAS
                                  -> ORDEN SORTEO DE LAS PLACAS
                             -->
                             
-                            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                <div class="row">
+                           
 
                                     <!--Estado de la Tarjeta    ASIGNAR O AUSENTE-->
                                     <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12"> 
@@ -496,12 +495,12 @@
                                             </div>
                                         </div>
                                     </div> 
-                                </div>
-                            </div>
+                           
 
                             <!--TABLA-->
-                            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                <div class="row">                                
+                            <div class="form-group row">  
+                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                                              
                                     <p-dataTable [value]="arrprogxfecha" scrollable="true" scrollWidth="100%" scrollHeight="250px" selectionMode="single" 
                                                 (onRowSelect)="onRowPlaca($event)" emptyMessage="Lista Vacia" [(selection)]="selectedPlacaONE" >
                                         
@@ -514,7 +513,7 @@
                             </div>
                             
                         </div>
-                    </div>
+                   
                 </div>
             </div>
         </div>

@@ -93,6 +93,20 @@
         margin-top:20px;
     }
 
+    .modalRegDetalle{
+        overflow-y: auto; 
+        overflow-x: auto;
+        /*height:100%;
+        width: 100%;*/
+        max-width: 600px;
+        max-height: 430px;
+        margin:auto;
+    }
+    ._modalRegDetalle{
+        margin-bottom: 20px;
+        width: 600px;
+        height: 410px;
+    }
 /* RESPONSIVE */
     /*ipad PRO*/
     @media(max-width:1100px){ 
