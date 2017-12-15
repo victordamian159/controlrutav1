@@ -67,7 +67,7 @@ export class loginUserComponent implements OnInit{
                             validUser=data;     
                             if(validUser.length!=0){
                                 this.userValid=validUser;
-                                
+
                                 localStorage.removeItem('DATOSUSER');
                                 localStorage.setItem('DATOSUSER',JSON.stringify(validUser));
                                 localStorage.getItem('DATOSUSER');
@@ -90,9 +90,10 @@ export class loginUserComponent implements OnInit{
         //onEnter(value: string) { this.value = value; }
         enterDataUser(username:string, password:string){
             //console.log(username);  console.log(password);
-            this.user.UsUserName=username;
-            this.user.UsPassword=password;
-            
+            this.user={
+                UsUserName:this.LoginUser.Usuario,
+                UsPassword:this.LoginUser.Password
+            };
             this.procAutenticar(this.user); 
         }
 
@@ -101,8 +102,6 @@ export class loginUserComponent implements OnInit{
                 UsUserName:this.LoginUser.Usuario,
                 UsPassword:this.LoginUser.Password
             };
-            //this.user.UsUserName=this.LoginUser.Usuario;
-            //this.user.UsPassword=this.LoginUser.Password;
             //console.log(this.user);
             
             this.procAutenticar(this.user); 
