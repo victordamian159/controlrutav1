@@ -10,6 +10,7 @@ import {
 			url_programaciondetalle,
 			url_bus
 		} from 'app/urls';
+import { TimeInterval } from 'rxjs/operator/timeInterval';
 
 @Injectable()
 
@@ -168,6 +169,13 @@ export class TControlService{
 	//asignarTarjetaControl(tarjetaControl:Object[]){
 	asignarTarjetaControl(tarjetaControl:Object[]){
 		return this.http.post(this.baseUrl+ "asignartarjeta/", tarjetaControl) // ...using post request
+						.map((res:Response) => res.json()) // ...and calling .json() on the response to return data
+						.catch((error:any) => Observable.throw(error.json().error || 'Server error')); //...errors if any
+	}
+
+	//asignarTarjetaControl(tarjetaControl:Object[]){
+	asignarTarjetaMultiple(tarjetaControl:Object[], reten1:Date, reten2:Date){
+		return this.http.post(this.baseUrl+ "asignartarjetamultiple/"+reten1+"/"+reten2+"/", tarjetaControl) // ...using post request
 						.map((res:Response) => res.json()) // ...and calling .json() on the response to return data
 						.catch((error:any) => Observable.throw(error.json().error || 'Server error')); //...errors if any
 	}

@@ -106,16 +106,16 @@
         /*max-width: 750px;
         max-height: 400px;*/
     }
-    .nrotarj{
+    .nrotarj {
         margin-bottom: 20px;
-        padding:10px 20px;
-        margin:0;       
-        /*max-width: 380px;
-        max-height: 450px;*/
-        overflow: hidden;
         width: 350px;
         height: 100%;
     }
+
+    .nrotarj .col-xl-12{
+        margin-top :40px;
+    }
+
     .cont_modal{
         overflow-y: auto; 
         overflow-x: auto;

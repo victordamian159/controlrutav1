@@ -53,14 +53,13 @@
                                 </template>
                             </p-column>
                             <p-column field="Nro" header="N°"  [style]="{'width':'2em','text-align':'center'}"></p-column>
-                            <!--<p-column field="BuDescripcion" header="Descripcion Bus"  [style]="{'width':'17em'}"></p-column>
-                            <p-column field="BuPlaca" header="Placa"  [style]="{'width':'8em','text-align':'center'}"></p-column>-->
-                            <p-column field="TaCoFecha" header="Fecha"  [style]="{'width':'7em','text-align':'center'}"></p-column>
+                            <p-column field="BuPlaca" header="Placa"  [style]="{'width':'5em','text-align':'center'}"></p-column>
                             <p-column field="NomTaCoNroVuelta" header="Vuelta"  [style]="{'width':'3em','text-align':'center'}"></p-column>
+                            <p-column field="NomPuntosControl" header="P. Control"  [style]="{'width':'14em'}"></p-column>
                             <p-column field="NomTaCoMultiple" header="Tipo"  [style]="{'width':'6em','text-align':'center'}"></p-column>
-                            <p-column field="NomTaCoFinish" header="Cerrado"  [style]="{'width':'3em','text-align':'center'}"></p-column>
+                            <p-column field="NomTaCoFinish" header="Term."  [style]="{'width':'3em','text-align':'center'}"></p-column>
                             <p-column field="NomTaCoAsignado" header="Estado"  [style]="{'width':'6em','text-align':'center'}"></p-column>
-                            <p-column field="TaCoHoraSalida" header="Salida" sortable="true" [style]="{'width':'6em','text-align':'center'}"></p-column>
+                            <p-column field="TaCoHoraSalida" header="H. Sal" sortable="true" [style]="{'width':'6em','text-align':'center'}"></p-column>
                         </p-dataTable>
                     </div>
                 </div>
@@ -78,61 +77,44 @@
         <!--CONTENIDO-->
         <div class="row">
             <div class="cont_modal">
-                
-                    <div class="container">
-                        <div class="row">
-                            <!--NRO DE TARJETAS QUE SE VA ASIGNAR A LA PLACA-->
-                            
-                                <div class="form-group">    
-                                    <label>Nro Tarjetas:</label>
+                    <div class="nrotarj">
+                        <div class="form-group row">
+                            <!--NRO DE TARJETAS QUE SE VA ASIGNAR A LA PLACA-->                           
+                            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">    
+                                <label>Nro Tarjetas:</label>
 
-                                    <input class="form-control" type="number" [(ngModel)]="nroTarjetas" min=1 required #nroTarj="ngModel" />
-                                    <!--<span *ngIf="!nroTarj.valid && (nroTarj.touched || nroTarj.dirty)"  >  
-                                        <div id="validation" [hidden]="!nroTarj.errors.required"> obligatorio </div>
-                                    </span>-->
-                                    <div id="validation" *ngIf="mnjNroTarjetaValido.length!=0">{{mnjNroTarjetaValido}}</div>
-                                </div>   
+                                <input class="form-control" type="number" [(ngModel)]="nroTarjetas" min=1 required #nroTarj="ngModel" />
+                                <!--<span *ngIf="!nroTarj.valid && (nroTarj.touched || nroTarj.dirty)"  >  
+                                    <div id="validation" [hidden]="!nroTarj.errors.required"> obligatorio </div>
+                                </span>-->
+                                <div id="validation" *ngIf="mnjNroTarjetaValido.length!=0">{{mnjNroTarjetaValido}}</div>
+                            </div>   
                             
-
                             <!--Listado de Puntos de Control-->
-                            
-                                <div class="form-group">
-                                    <label>Listado de Puntos de Control:</label>
-                                    <select class="form-control" [(ngModel)]="puntoControl" (change)="puntosControlId($event)" required #PC="ngModel">
-                                        <option *ngFor="let punto of _puntosControl" [ngValue]="punto" selected="selected">
-                                            {{punto.PuCoDescripcion}} / {{punto.PuCoTiempoBus}}
-                                        </option>
-                                    </select>  
-                                    <div [hidden]="displayErrorNoHayPCModalNuevo" style="color:red;padding: 0;margin: 0;position: absolute;">{{mensaje}}</div>
-                                    <div [hidden]="displayHayPCModalNuevo" style="color:green;padding: 0;padding: 0;position: absolute;">{{mensaje}}</div>
-                                    <div id="validation" [hidden]="!PC.touched || PC.valid ">
-                                        Error, revise los datos ingresados
-                                    </div>
-                                </div>   
-                            
+                            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>Listado de Puntos de Control:</label>
+                                <select class="form-control" [(ngModel)]="puntoControl" (change)="puntosControlId($event)" required #PC="ngModel">
+                                    <option *ngFor="let punto of _puntosControl" [ngValue]="punto" selected="selected">
+                                        {{punto.PuCoDescripcion}} / {{punto.PuCoTiempoBus}}
+                                    </option>
+                                </select>  
+                                <div [hidden]="displayErrorNoHayPCModalNuevo" id="validation">{{mensaje}}</div>
+                                <div [hidden]="displayHayPCModalNuevo" id="verdadero">{{mensaje}}</div>
+                                <div id="validation" [hidden]="!PC.touched || PC.valid ">
+                                    Error, revise los datos ingresados
+                                </div>
+                            </div>                              
 
                             <!--Programaciones-->
-                           
-                                <div class="form-group">
-                                    <label>Programaciones:</label>
-                                    <select class="form-control" required [(ngModel)]="_prId" (change)="programacionId($event)"   #PROG="ngModel">
-                                        <option *ngFor="let prog of _programacion" [value]="prog.prId">
-                                            {{prog.prDescripcion}}
-                                        </option>
-                                    </select> 
-                                    <div id="validation" [hidden]="!PROG.touched || PROG.valid "> Error, revise los datos ingresados</div>
-                                </div>
-                            
-
-                            <!--Fecha
-                            
-                                <div class="form-group">
-                                    <label>Fecha de la Programacion:</label>
-                                        <input class="form-control" name="fecha" type="date" [(ngModel)]="tarjeta._TaCoFecha" required #fprog="ngModel" />                           
-                                        <button class="btn_modal" type="button" (click)="buscarxFecha()" pButton icon="fa-search" [disabled]="!fprog.valid"></button>
-                                    <div id="validation" [hidden]="fprog.valid || !fprog.touched"> Error, revise los datos ingresados </div> 
-                                </div>
-                            -->
+                            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>Programaciones:</label>
+                                <select class="form-control" required [(ngModel)]="_prId" (change)="programacionId($event)"   #PROG="ngModel">
+                                    <option *ngFor="let prog of _programacion" [value]="prog.prId">
+                                        {{prog.prDescripcion}}
+                                    </option>
+                                </select> 
+                                <div id="validation" [hidden]="!PROG.touched || PROG.valid "> Error, revise los datos ingresados</div>
+                            </div>
                         </div>
                     </div>
                 
@@ -382,15 +364,15 @@
                     <div class="form-group row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                                                 
-                                <p-dataTable [value]="arrprogxfecha" scrollable="true" scrollWidth="100%" scrollHeight="200px" selectionMode="single" 
-                                            (onRowSelect)="onRowPlaca($event)" emptyMessage="Lista Vacia" [(selection)]="selectedPlacaONE" >
-                                    <p-column field="nro" header="N°"  [style]="{'width':'2em','text-align':'center'}" ></p-column>
-                                    <!--<p-column field="BuId" header="Placa" [style]="{'width':'5em','text-align':'center'}" ></p-column>-->
-                                    <p-column field="BuPlaca" header="Placa" [style]="{'width':'6em','text-align':'center'}" ></p-column>
-                                    <!--<p-column field="PrDeOrden" header="Orden" [style]="{'width':'5em','text-align':'center'}" ></p-column>-->
-                                    <p-column field="EstadoAsignado" header="Estado" [style]="{'width':'6em','text-align':'center'}" ></p-column>
-                                    <!--<p-column field="TaCoHoraSalida" header="Salida" [style]="{'width':'6em','text-align':'center'}" ></p-column>-->
-                                </p-dataTable>
+                            <p-dataTable [value]="arrprogxfecha" scrollable="true" scrollWidth="100%" scrollHeight="200px" selectionMode="single" 
+                                        (onRowSelect)="onRowPlaca($event)" emptyMessage="Lista Vacia" [(selection)]="selectedPlacaONE" >
+                                <p-column field="nro" header="N°"  [style]="{'width':'2em','text-align':'center'}" ></p-column>
+                                <!--<p-column field="BuId" header="Placa" [style]="{'width':'5em','text-align':'center'}" ></p-column>-->
+                                <p-column field="BuPlaca" header="Placa" [style]="{'width':'6em','text-align':'center'}" ></p-column>
+                                <!--<p-column field="PrDeOrden" header="Orden" [style]="{'width':'5em','text-align':'center'}" ></p-column>-->
+                                <p-column field="EstadoAsignado" header="Estado" [style]="{'width':'6em','text-align':'center'}" ></p-column>
+                                <!--<p-column field="TaCoHoraSalida" header="Salida" [style]="{'width':'6em','text-align':'center'}" ></p-column>-->
+                            </p-dataTable>
                         
                         </div>
                     </div>

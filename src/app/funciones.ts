@@ -387,6 +387,7 @@
         rest[1]=(t1[1]+t2[1]).toString();
         rest[2]=(t1[2]+t2[2]).toString();
         _rest=cCeroHora(rest.join(":"));
+        _rest=extFuncCorrecHora(_rest);
         return _rest;
     }
 

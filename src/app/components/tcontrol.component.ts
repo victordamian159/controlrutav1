@@ -599,7 +599,8 @@ export class TcontrolComponent implements OnInit{
                 this.tcontrolservice.deleteTarjetaControl(TaCoId).subscribe(
                 realizar =>{
                                 //this.getalltarjetasbyemidpucoid(this.emID,this._pcId);
-                                this.getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2()));
+                                //this.getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2()));
+                                this._getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2()));
                             },
                 err => {console.log(err);}
                 );
@@ -629,8 +630,12 @@ export class TcontrolComponent implements OnInit{
                 );
             }
         /*VARIAS TARJETAS*/
-            procAsigMulTarj(){
-
+            procAsigMultiTarjetas(tarjetaInicial:any,reten1:Date, reten2:Date){
+                this.tcontrolservice.asignarTarjetaMultiple(tarjetaInicial,reten1,reten2).subscribe(
+                    data=>{console.log(data);},
+                    error=>{alert('no se pudo crear la multitarjeta'); console.log(error);},
+                    ()=>{}
+                );
             }
 
         //ABRIR MODAL ASIGNAR NUEVA TARJETA CONTROL
@@ -829,7 +834,11 @@ export class TcontrolComponent implements OnInit{
                         TaCoMultiple: TarjControl.TaCoMultiple,
                         TaCoCodEnvioMovil: TarjControl.TaCoCodEnvioMovil,
                         TaCoCuota: TarjControl.TaCoCuota,
+                        BuPlaca: TarjControl.BuPlaca,
+                        PuCoDescripcion: TarjControl.PuCoDescripcion,
+                        PuCoTiempoBus: _hora(TarjControl.PuCoTiempoBus),
 
+                        NomPuntosControl:'',
                         NomTaCoFinish:"",
                         NomTaCoAsignado:"",
                         NomTaCoMultiple:"",
@@ -856,10 +865,10 @@ export class TcontrolComponent implements OnInit{
 
                     if(_arrTarjetasControl[i].TaCoMultiple==0){
                         _arrTarjetasControl[i].NomTaCoMultiple='Individual'
-                    }else if(_arrTarjetasControl[i].TaCoMultiple==0){
+                    }else if(_arrTarjetasControl[i].TaCoMultiple==1){
                         _arrTarjetasControl[i].NomTaCoMultiple='Multiple'
                     }
-
+                    _arrTarjetasControl[i].NomPuntosControl=_arrTarjetasControl[i].PuCoDescripcion+' / '+_arrTarjetasControl[i].PuCoTiempoBus,
                     _arrTarjetasControl[i].NomTaCoNroVuelta=(_arrTarjetasControl[i].TaCoNroVuelta).toString()+'v';
                 }
                 console.log(_arrTarjetasControl);
@@ -1072,7 +1081,7 @@ export class TcontrolComponent implements OnInit{
                     eliminarC(TaCoId :number){
                         /*console.log(TaCoId);*/
                         this._TaCoId = TaCoId;
-
+                        
                         this.displayConfirmarEliminar = true;
                         this.mensaje ="¿Esta Seguro de Eliminar el Registro?";
                     }
@@ -1317,8 +1326,8 @@ export class TcontrolComponent implements OnInit{
                     console.log(this.HoraSalidaRecEslavon);
                     console.log(this.MultiReten);
                 */
-                let estadoTarjetaAnterior=this.modoTarjeta, estadoActualTarjeta=this.estadoPlaca, 
-                    estadoNuevaTarjeta=this.val,  ReDiDeNroVuelta=this.ReDiDeNroVuelta, objTarjeta:any, TaCoFinish=1;
+                let estadoTarjetaAnterior=this.modoTarjeta, estadoActualTarjeta=this.estadoPlaca, estadoNuevaTarjeta=this.val, 
+                    ReDiDeNroVuelta=this.ReDiDeNroVuelta, objTarjeta:any, TaCoFinish=1;
                 //objeto
                 objTarjeta ={
                     TaCoId : this._TaCoId,
@@ -1348,61 +1357,69 @@ export class TcontrolComponent implements OnInit{
 
                     //asignado 
                     if(estadoActualTarjeta==1){
-                        //validacion
-                        
-                            if(estadoNuevaTarjeta=='01'){
-                                if(MulRetenValid==true && PrimerRetenValid==false && tmpEslavonValid==false){
-                                    objTarjeta.ReDiDeId++;
-                                    objTarjeta.HoraSalida=operSHoras(this.ReReTiempo,this.HoraLlegadaTarjAnterior);
-                                    this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas-1, this.ReReTiempo, this.MultiReten);
-                                }else if(MulRetenValid==false && PrimerRetenValid==false && tmpEslavonValid==false){
-                                    //this.mnjNroValido="Esta hora no es valida";
-                                }
-
-                            }else if(estadoNuevaTarjeta=='02' || estadoNuevaTarjeta=='03'){
-                                if(MulRetenValid==false && PrimerRetenValid==false && tmpEslavonValid==false){
-                                    objTarjeta.ReDiDeId++;
-                                    objTarjeta.HoraSalida='00:00:00';
-                                    this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas-1, '00:00:00', '00:00:00');
-                                }else{
-                                    //mensaje error en los datos ingresados
-                                }
+                        //validacion         
+                        if(estadoNuevaTarjeta=='01'){
+                            if(MulRetenValid==true && PrimerRetenValid==false && tmpEslavonValid==false){
+                                objTarjeta.TaCoFinish=0;
+                                objTarjeta.ReDiDeId++;
+                                objTarjeta.TaCoHoraSalida=operSHoras(this.ReReTiempo,this.HoraLlegadaTarjAnterior);
+                                this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas-1, this.ReReTiempo, this.MultiReten);
+                            }else if(MulRetenValid==false && PrimerRetenValid==false && tmpEslavonValid==false){
+                                //this.mnjNroValido="Esta hora no es valida";
                             }
 
-                        
-
+                        }else if(estadoNuevaTarjeta=='02' || estadoNuevaTarjeta=='03'){
+                            if(MulRetenValid==false && PrimerRetenValid==false && tmpEslavonValid==false){
+                                objTarjeta.ReDiDeId++;
+                                objTarjeta.TaCoHoraSalida='00:00:00';
+                                this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas-1, '00:00:00', '00:00:00');
+                            }else{
+                                //mensaje error en los datos ingresados
+                            }
+                        }
                     //ausente o castigado 
                     }else if(estadoActualTarjeta==2 || estadoActualTarjeta==3){
-                        
-                            //en caso de asignar tarjetas asignado
-                            if(estadoNuevaTarjeta=='01'){
-                                if(MulRetenValid==true && PrimerRetenValid==false && tmpEslavonValid==true){
-                                    objTarjeta.ReDiDeId++;
-                                    objTarjeta.TaCoHoraSalida=this.HoraSalidaRecEslavon;
-                                    this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas-1, '00:00:00',this.MultiReten);
-                                }else{
-                                    //mensaje error en los datos ingresados
-                                }
-                            //caso de poner a todas las tarjetas como no asignado
-                            }else if(estadoNuevaTarjeta=='02' || estadoNuevaTarjeta=='03'){
-                                if(MulRetenValid==false && PrimerRetenValid==false && tmpEslavonValid==false){
-                                    objTarjeta.ReDiDeId++;
-                                    objTarjeta.TaCoHoraSalida='00:00:00';
-                                    this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas-1, '00:00:00','00:00:00');
-                                }else{
-                                    //mensaje error en los datos ingresados
-                                }
-                            }    
+                        //en caso de asignar tarjetas asignado
+                        if(estadoNuevaTarjeta=='01'){
+                            if(MulRetenValid==true && PrimerRetenValid==false && tmpEslavonValid==true){
+                                objTarjeta.TaCoFinish=0;
+                                objTarjeta.ReDiDeId++;
+                                objTarjeta.TaCoHoraSalida=this.HoraSalidaRecEslavon;
+                                this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas-1, '00:00:00',this.MultiReten);
+                            }else{
+                                //mensaje error en los datos ingresados
+                            }
+                        //caso de poner a todas las tarjetas como no asignado
+                        }else if(estadoNuevaTarjeta=='02' || estadoNuevaTarjeta=='03'){
+                            if(MulRetenValid==false && PrimerRetenValid==false && tmpEslavonValid==false){
+                                objTarjeta.ReDiDeId++;
+                                objTarjeta.TaCoHoraSalida='00:00:00';
+                                this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas-1, '00:00:00','00:00:00');
+                            }else{
+                                //mensaje error en los datos ingresados
+                            }
+                        }    
                         
                     //no asignado
                     }else if(estadoActualTarjeta==0){
+                        //estado para nueva tarjeta: asignado
                         if(estadoNuevaTarjeta=='01'){
-                            objTarjeta.TaCoHoraSalida=this.TaCoHoraSalida;
-                            this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas, '00:00:00', this.MultiReten);
-        
+                            if(MulRetenValid==true && PrimerRetenValid==false && tmpEslavonValid==false){
+                                objTarjeta.TaCoFinish=0;
+                                objTarjeta.TaCoHoraSalida=this.TaCoHoraSalida;
+                                this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas, '00:00:00', this.MultiReten);
+                            }else{
+
+                            }
+
+                        //estado para nueva tarjeta: ausente o castigado
                         }else if(estadoNuevaTarjeta=='02' || estadoNuevaTarjeta=='03'){
-                            objTarjeta.TaCoHoraSalida='00:00:00';
-                            this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas, '00:00:00', '00:00:00');
+                            if(MulRetenValid==false && PrimerRetenValid==false && tmpEslavonValid==false){
+                                objTarjeta.TaCoHoraSalida='00:00:00';
+                                this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas, '00:00:00', '00:00:00');
+                            }else{
+                                
+                            }
                         }
                         
                     }
@@ -1411,15 +1428,16 @@ export class TcontrolComponent implements OnInit{
                 }else if(ReDiDeNroVuelta>1 && ReDiDeNroVuelta!=0){
                     //estado antererio: asignado
                     if(estadoTarjetaAnterior==0){
-                        //nueva tarjeta: asignado 
+                        //estado placa selecionada: asignado 
                         if(estadoActualTarjeta==1){
                             
                             // nueva tarjeta: asignado
                             if(estadoNuevaTarjeta=='01'){
                                 //validacion
                                 if(MulRetenValid==true && PrimerRetenValid==true && tmpEslavonValid==false){
+                                    objTarjeta.TaCoFinish=0;
                                     objTarjeta.ReDiDeId++;
-                                    objTarjeta.HoraSalida=operSHoras(this.ReReTiempo,this.HoraLlegadaTarjActual);
+                                    objTarjeta.TaCoHoraSalida=operSHoras(this.ReReTiempo,this.HoraLlegadaTarjActual);
                                     this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas-1, this.ReReTiempo, this.MultiReten);
                                 //no valido
                                 }else{
@@ -1430,7 +1448,7 @@ export class TcontrolComponent implements OnInit{
                                 //validacion
                                 if(MulRetenValid==false && PrimerRetenValid==false && tmpEslavonValid==false){
                                     objTarjeta.ReDiDeId++;
-                                    objTarjeta.HoraSalida='00:00:00';
+                                    objTarjeta.TaCoHoraSalida='00:00:00';
                                     this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas-1, '00:00:00', '00:00:00');
                                 //no valido
                                 }else{
@@ -1439,14 +1457,15 @@ export class TcontrolComponent implements OnInit{
 
                             }
                             
-                        //nueva tarjeta: ausente o castigado
+                        //estado placa selecionada: ausente o castigado
                         }else if(estadoActualTarjeta==2 || estadoActualTarjeta==3){
                             //nueva tarj= asignado
                             if(estadoNuevaTarjeta=='01'){
                                 //validacion
                                 if(MulRetenValid==true && PrimerRetenValid==false && tmpEslavonValid==false){
+                                    objTarjeta.TaCoFinish=0;
                                     objTarjeta.ReDiDeId++;
-                                    objTarjeta.HoraSalida=this.HoraSalidaRecEslavon;
+                                    objTarjeta.TaCoHoraSalida=this.HoraSalidaRecEslavon;
                                     this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas-1, '00:00:00', this.MultiReten);
                                 //no valido
                                 }else{
@@ -1456,7 +1475,7 @@ export class TcontrolComponent implements OnInit{
                                 //validacion
                                 if(MulRetenValid==false && PrimerRetenValid==false && tmpEslavonValid==false){
                                     objTarjeta.ReDiDeId++;
-                                    objTarjeta.HoraSalida='00:00:00';
+                                    objTarjeta.TaCoHoraSalida='00:00:00';
                                     this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas-1, '00:00:00', '00:00:00');
                                 //no valido
                                 }else{
@@ -1464,22 +1483,25 @@ export class TcontrolComponent implements OnInit{
                                 }
                             }
                             
-                        //no asignado
+                        //estado placa selecionada: no asignado
                         }else if(estadoActualTarjeta==0){
-                            
+                            //nueva tarjeta: asignado
                             if(estadoNuevaTarjeta=='01'){
-                                //validacion
+                                //console.log(this.ReReTiempo); console.log(this.HoraLlegadaTarjAnterior); console.log(this.MultiReten);
                                 if(MulRetenValid==true && PrimerRetenValid==true && tmpEslavonValid==false){
-                                    objTarjeta.HoraSalida=operSHoras(this.ReReTiempo,this.HoraLlegadaTarjAnterior);
+                                    objTarjeta.TaCoFinish=0;
+                                    objTarjeta.TaCoHoraSalida=extFuncCorrecHora(operSHoras(this.ReReTiempo,this.HoraLlegadaTarjAnterior));
                                     this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas, this.ReReTiempo, this.MultiReten);
-                                //no valido
+                             
                                 }else{
                                     //mensaje de error en la validacion
                                 }
+
+                            //nueva tarjeta: ausente o castigado
                             }else if(estadoNuevaTarjeta=='02' || estadoNuevaTarjeta=='03'){
                                 //validacion
                                 if(MulRetenValid==false && PrimerRetenValid==false && tmpEslavonValid==false){
-                                    objTarjeta.HoraSalida='00:00:00';
+                                    objTarjeta.TaCoHoraSalida='00:00:00';
                                     this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas, '00:00:00', '00:00:00');
                                 //no valido
                                 }else{
@@ -1489,6 +1511,7 @@ export class TcontrolComponent implements OnInit{
                         }
                     //castigado o ausente
                     }else if(estadoTarjetaAnterior==1){
+                        
                         //asignado 
                         if(estadoActualTarjeta==1){
                                 
@@ -1496,8 +1519,9 @@ export class TcontrolComponent implements OnInit{
                             if(estadoNuevaTarjeta=='01'){
                                 //validacion
                                 if(MulRetenValid==true && PrimerRetenValid==true && tmpEslavonValid==false){
+                                    objTarjeta.TaCoFinish=0;
                                     objTarjeta.ReDiDeId++;
-                                    objTarjeta.HoraSalida=operSHoras(this.ReReTiempo,this.HoraLlegadaTarjActual);
+                                    objTarjeta.TaCoHoraSalida=operSHoras(this.ReReTiempo,this.HoraLlegadaTarjActual);
                                     this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas-1, this.ReReTiempo, this.MultiReten);
                                 //no valido
                                 }else{
@@ -1508,8 +1532,9 @@ export class TcontrolComponent implements OnInit{
                             }else if(estadoNuevaTarjeta=='02' || estadoNuevaTarjeta=='03'){
                                 //validacion
                                 if(MulRetenValid==false && PrimerRetenValid==false && tmpEslavonValid==false){
+                                    objTarjeta.TaCoFinish=0;
                                     objTarjeta.ReDiDeId++;
-                                    objTarjeta.HoraSalida='00:00:00';
+                                    objTarjeta.TaCoHoraSalida='00:00:00';
                                     this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas-1, '00:00:00', '00:00:00');
                                 //no valido
                                 }else{
@@ -1519,39 +1544,39 @@ export class TcontrolComponent implements OnInit{
                                 
                         //ausente o castigado
                         }else if(estadoActualTarjeta==2 || estadoActualTarjeta==3){
-                            
-                                //nueva tarj= asignado
-                                if(estadoNuevaTarjeta=='01'){
-                                    //validacion
-                                    if(MulRetenValid==true && PrimerRetenValid==false && tmpEslavonValid==true){
-                                        objTarjeta.ReDiDeId++;
-                                        objTarjeta.HoraSalida=this.HoraSalidaRecEslavon;
-                                        this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas-1, '00:00:00', this.MultiReten);
+                            //nueva tarj= asignado
+                            if(estadoNuevaTarjeta=='01'){
+                                //validacion
+                                if(MulRetenValid==true && PrimerRetenValid==false && tmpEslavonValid==true){
+                                    objTarjeta.TaCoFinish=0;
+                                    objTarjeta.ReDiDeId++;
+                                    objTarjeta.TaCoHoraSalida=this.HoraSalidaRecEslavon;
+                                    this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas-1, '00:00:00', this.MultiReten);
 
-                                    //no valido
-                                    }else{
-                                        //mensaje de error en la validacion
-                                    }
+                                //no valido
+                                }else{
+                                    //mensaje de error en la validacion
+                                }
 
-                                }else if(estadoNuevaTarjeta=='02' || estadoNuevaTarjeta=='03'){
-                                    //validacion
-                                    if(MulRetenValid==false && PrimerRetenValid==false && tmpEslavonValid==false){
-                                        objTarjeta.ReDiDeId++;
-                                        objTarjeta.HoraSalida='00:00:00';
-                                        this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas-1, '00:00:00', '00:00:00');
-                                    //no valido
-                                    }else{
-                                        //mensaje de error en la validacion
-                                    }
-                                }   
-                            
-                        //no asignado
+                            }else if(estadoNuevaTarjeta=='02' || estadoNuevaTarjeta=='03'){
+                                //validacion
+                                if(MulRetenValid==false && PrimerRetenValid==false && tmpEslavonValid==false){
+                                    objTarjeta.ReDiDeId++;
+                                    objTarjeta.TaCoHoraSalida='00:00:00';
+                                    this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas-1, '00:00:00', '00:00:00');
+                                //no valido
+                                }else{
+                                    //mensaje de error en la validacion
+                                }
+                            }   
+                        //estado actual de placa: no asignado
                         }else if(estadoActualTarjeta==0){
                             
                             if(estadoNuevaTarjeta=='01'){
                                 //validacion
                                 if(MulRetenValid==true && PrimerRetenValid==true && tmpEslavonValid==false){
-                                    objTarjeta.HoraSalida=operSHoras(this.ReReTiempo,this.HoraLlegadaTarjAnterior);
+                                    objTarjeta.TaCoFinish=0;
+                                    objTarjeta.TaCoHoraSalida=operSHoras(this.ReReTiempo,this.HoraLlegadaTarjAnterior);
                                     this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas, this.ReReTiempo, this.MultiReten);
                                 //no valido
                                 }else{
@@ -1561,7 +1586,7 @@ export class TcontrolComponent implements OnInit{
                             }else if(estadoNuevaTarjeta=='02' || estadoNuevaTarjeta=='03'){
                                 //validacion
                                 if(MulRetenValid==false && PrimerRetenValid==false && tmpEslavonValid==false){
-                                    objTarjeta.HoraSalida='00:00:00';
+                                    objTarjeta.TaCoHoraSalida='00:00:00';
                                     this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas, '00:00:00', '00:00:00');
                                 //no valido
                                 }else{
@@ -1576,12 +1601,16 @@ export class TcontrolComponent implements OnInit{
 
             //guardar objeto - mandar a procedimiento guardar multitarjeta
             guardarMultiTarjeta(objTarjetaInicial:any, nroTarjetasCrear:number, PrimerReten:string, MultiReten:string){
-                console.log(objTarjetaInicial.TaCoHoraSalida);
                 objTarjetaInicial.TaCoCountMultiple=nroTarjetasCrear;
+                objTarjetaInicial.TaCoHoraSalida=hora(objTarjetaInicial.TaCoHoraSalida);
+                
+                
+                console.log(objTarjetaInicial.TaCoHoraSalida);
                 console.log(objTarjetaInicial);
                 console.log(nroTarjetasCrear);
-                console.log(PrimerReten);
-                console.log(MultiReten);
+                console.log(hora(PrimerReten));
+                console.log(hora(MultiReten));
+                this.procAsigMultiTarjetas(objTarjetaInicial,hora(PrimerReten),hora(MultiReten));
             }
             
                 //-> GUARDAR MULTIPLES TARJETAS en la base de datos
