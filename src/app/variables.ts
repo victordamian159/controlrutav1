@@ -25,13 +25,15 @@ export class GlobalVars{
         public GetEmId():number{
             let emid:number, objdata:any;
             objdata = JSON.parse(localStorage.getItem('DATOSUSER'));
-            emid=objdata[0].EmId;
+            //emid=objdata[0].EmId;
+            emid=objdata.EmId;
             return emid;
         }
         public GetUsId():number{
             let usid:number, objdata:any;
             objdata = JSON.parse(localStorage.getItem('DATOSUSER'));
-            usid=objdata[0].UsId;
+            //usid=objdata[0].UsId;
+            usid=objdata.UsId;
             return usid;
         }
 }

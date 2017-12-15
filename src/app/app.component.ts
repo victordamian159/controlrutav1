@@ -25,9 +25,12 @@ export class AppComponent implements OnInit {
 
   iniciarVarGlobals(dataUser:any){
     if(dataUser!=null || dataUser!=undefined){
-      this.nombre=this.dataUser[0].PeNombres;
+      this.nombre=this.dataUser.PeNombres;
       this.userid=this.ClassGlobal.GetUsId();
       this.emid=this.ClassGlobal.GetEmId();
+      console.log(this.nombre);
+      console.log(this.userid);
+      console.log(this.emid);
     }
   }
 

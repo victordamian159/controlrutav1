@@ -33,35 +33,47 @@ export class loginUserComponent implements OnInit{
     }
 
     constructor(private userservice: UserSystemService, private router: Router,private appcomp:AppComponent){
+   
         this.mnjeSesionCorrect='';
         this.mnjeSesionError='';
         this.inicioSesion=1;
         this.LoginUser={Usuario:"",Password:""};
+        this.user={UsUserName:"",UsPassword:""};
     }
 
-    /* CALLING PROCEDURES */
+    // CALLING PROCEDURES 
         procNuevoUser(){
             let nuevoUser:any;
             this.userservice.newUserSystem().subscribe(
-                data => {this.user=data; /*console.log(this.user);*/}
+                data => {this.user=data; }
             );
         }
 
+        /*  NO FUNCIONA
         procAutenticar(user:Object){
             let validUser:any;
             this.userservice.autenticacion(user).subscribe(
-                data => {   validUser=data; 
+                data => { console.log(data);},
+                error => {this.errorMessage=error;}
+            );
+        }*/
+
+    
+        procAutenticar(user:Object){
+            let validUser:any[]=[];
+            this.userservice.autenticacion(user).subscribe(
+                data => {   
+                            console.log(data);
+                            validUser=data;     
                             if(validUser.length!=0){
                                 this.userValid=validUser;
+                                
                                 localStorage.removeItem('DATOSUSER');
                                 localStorage.setItem('DATOSUSER',JSON.stringify(validUser));
                                 localStorage.getItem('DATOSUSER');
+
                                 this.router.navigate(['/regempper']);
                                 this.appcomp.ocNavBar=true;
-
-                                //cargando datos a la variable global
-                                
-                              
                             }else{
                                 this.userValid=validUser;
                                 this.mnjeSesionError="Error en el usuario o contraseña";
@@ -71,6 +83,7 @@ export class loginUserComponent implements OnInit{
                 error => {this.errorMessage=error;}
             );
         }
+        
     
     /* FUNCIONES */
     
@@ -79,15 +92,21 @@ export class loginUserComponent implements OnInit{
             //console.log(username);  console.log(password);
             this.user.UsUserName=username;
             this.user.UsPassword=password;
+            
             this.procAutenticar(this.user); 
         }
 
         login(){
-            this.user.UsUserName=this.LoginUser.Usuario;
-            this.user.UsPassword=this.LoginUser.Password;
+            this.user={
+                UsUserName:this.LoginUser.Usuario,
+                UsPassword:this.LoginUser.Password
+            };
+            //this.user.UsUserName=this.LoginUser.Usuario;
+            //this.user.UsPassword=this.LoginUser.Password;
+            //console.log(this.user);
+            
             this.procAutenticar(this.user); 
-            //this.appcomp.ocNavBar=true;
-            //console.log(this.appcomp.ocNavBar);
+            //this.appcomp.ocNavBar=true; console.log(this.appcomp.ocNavBar);
         }
 
         logout(){

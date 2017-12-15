@@ -76,10 +76,15 @@ export class EmpPerComponent implements OnInit{
         this.getAllPersonas();  /*TODAS LAS PERSONAS AGREGADAS AL SISTEMA(EMPRESA) */                    
         this.procGetAllUserSystembyEmId(this.emid);
         
+        console.log(this.ClassGlobal.GetEmId());
+        console.log(this.ClassGlobal.GetUsId());
     }
 
     /* CONSTRUCTOR */
-    constructor(private empPerservice : EmpPerService,  private empSubempservice : EmpSubEmpService, private persService : PersService, private userService: UserSystemService, public ClassGlobal:GlobalVars){
+    constructor(private empPerservice : EmpPerService,  private empSubempservice : EmpSubEmpService, 
+                private persService : PersService, private userService: UserSystemService, 
+                public ClassGlobal:GlobalVars){
+
         this.emid=this.ClassGlobal.GetEmId();
         this.userid=this.ClassGlobal.GetUsId();
         this.nombre="x";    
