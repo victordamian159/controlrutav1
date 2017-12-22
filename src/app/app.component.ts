@@ -1,7 +1,7 @@
 import { Component,OnInit } from '@angular/core';
 //import {AuthGuard} from './components/auth.guard';
 import {GlobalVars} from 'app/variables';
-import {classDataUsuario} from 'app/DataUsuario';
+
 /*import {DatosCompartidosService} from './service/dataComunicationApp.service';
 import {ConfiguraService} from './service/configura.service';*/
 
@@ -24,12 +24,8 @@ export class AppComponent implements OnInit {
     this.iniciarVarGlobals(this.dataUser);
     
   }
-  constructor(public ClassGlobal:GlobalVars, 
-              public ClassDataUser:classDataUsuario,
-              /*public DatosAppGlobal:DatosCompartidosService,
-              private configService : ConfiguraService,*/
-              ){
-    this.dataUser=this.ClassGlobal.GetDatosUsuario();
+  constructor(public ClassGlobal:GlobalVars){
+      this.dataUser=this.ClassGlobal.GetDatosUsuario();
   }
 
   

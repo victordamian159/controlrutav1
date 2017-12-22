@@ -48,8 +48,7 @@ import {reportBuses} from './components/reportBus.component';
 
 /* VAR AND FUNCTION GLOBALES */
 import {GlobalVars} from './variables';
-import {classDataUsuario} from './DataUsuario'
-//import {classDataUsuario} from './DataUsuario';
+
 
 
 //ROUTING MODULE
@@ -176,7 +175,6 @@ import { BaseRequestOptions } from '@angular/http';*/
       TeleMovilService,
       UserSystemService,
       GlobalVars,  /* CLASS GLOBAL :s */
-      classDataUsuario,
       DatosCompartidosService,
       //classDataUsuario,
       servAlertNotifService,

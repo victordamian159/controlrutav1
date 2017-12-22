@@ -14,7 +14,7 @@ import {DatosCompartidosService} from '../service/dataComunicationApp.service';
 import {ConfiguraService} from '../service/configura.service';
 
 import {GlobalVars} from 'app/variables';
-import {classDataUsuario} from 'app/DataUsuario';
+
 import {cCeroFechaForEditar,slash_posFecha,fechaActual2,ajustaHora,
         hora,_hora,_cCeroFecha,cCeroHora,guion_posFecha, corrigiendoHora,
         corrigiendoHoraString,fecha,_fecha1,fechaActual1,horaValida,
@@ -253,7 +253,7 @@ export class TcontrolComponent implements OnInit{
         private regRetenService:RegRetenService,
         private router: Router, 
         private fb : FormBuilder, 
-        public ClassDataUsuario:classDataUsuario,
+       
         public DatosGlobalService:DatosCompartidosService,
         private configService : ConfiguraService
     )
@@ -377,12 +377,14 @@ export class TcontrolComponent implements OnInit{
             this.tcontrolservice.getallregistrovueltasdiariasbyemprfe(emid,prid,fecha).subscribe(
                 data => {
                             arrCuadro=data;
-                            //console.log(arrCuadro);
+                            console.log(arrCuadro);
                             if(arrCuadro.length!=0 && arrCuadro.length>0){
                                 //console.log(this.ReDiDeId);
+
                                 this.ReDiDeNroVuelta=arrCuadro[arrCuadro.length-1].ReDiDeNroVuelta;
                                 this.ReDiDeId=arrCuadro[arrCuadro.length-1].ReDiDeId;
                                 this.ReDiId=arrCuadro[arrCuadro.length-1].ReDiId;
+
                                 this.arrCuadro=arrCuadro;
                                 this.arrCuadroBusqueda=arrCuadro; //para la busqueda y validacion de reten
                             }else{
@@ -399,8 +401,7 @@ export class TcontrolComponent implements OnInit{
             let index:number;
             this.tcontrolservice.getallregistrovueltasdiariasbyemprfe(emid,prid,fecha).subscribe(
                 data => {
-                            arrCuadro=data;
-                            //console.log(arrCuadro);
+                            arrCuadro=data;  //console.log(arrCuadro);
                             if(arrCuadro.length!=0 && arrCuadro.length>0){
                                 //console.log(this.ReDiDeId);
                                 this.ReDiDeNroVuelta=arrCuadro[arrCuadro.length-1].ReDiDeNroVuelta;
