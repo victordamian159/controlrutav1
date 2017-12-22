@@ -1,6 +1,9 @@
 import { Component,OnInit } from '@angular/core';
 //import {AuthGuard} from './components/auth.guard';
-import {GlobalVars} from 'app/variables'
+import {GlobalVars} from 'app/variables';
+import {classDataUsuario} from 'app/DataUsuario';
+/*import {DatosCompartidosService} from './service/dataComunicationApp.service';
+import {ConfiguraService} from './service/configura.service';*/
 
 @Component({
   selector: 'app-root',
@@ -16,24 +19,52 @@ export class AppComponent implements OnInit {
   private nombre:string;
 
   ngOnInit(){
-    console.log(this.dataUser);
+    //console.log(this.dataUser);
+    
     this.iniciarVarGlobals(this.dataUser);
+    
   }
-  constructor(public ClassGlobal:GlobalVars){
+  constructor(public ClassGlobal:GlobalVars, 
+              public ClassDataUser:classDataUsuario,
+              /*public DatosAppGlobal:DatosCompartidosService,
+              private configService : ConfiguraService,*/
+              ){
     this.dataUser=this.ClassGlobal.GetDatosUsuario();
   }
+
+  
 
   iniciarVarGlobals(dataUser:any){
     if(dataUser!=null || dataUser!=undefined){
       this.nombre=this.dataUser.PeNombres;
       this.userid=this.ClassGlobal.GetUsId();
       this.emid=this.ClassGlobal.GetEmId();
-      console.log(this.nombre);
-      console.log(this.userid);
-      console.log(this.emid);
+      //console.log(this.nombre); console.log(this.userid);  console.log(this.emid);
     }
   }
 
+    /*//consulta por periodos
+    procConsultarConfiguracionSistemaXPeriodo(){
+        let añoActual=new Date().getFullYear().toString(), EmId=this.emid;
+        //console.log(añoActual); console.log(EmId);
+        this.configService.getAllConfiguraByEmPeriodo(EmId , añoActual).subscribe(
+        data=>{
+                console.log(data); 
+                if(data.length!=0){
+                    this.addDataGlobalFunction(data);
+                }else{
+                    alert('error, no se pudo descargar la configuracion del sistema');
+                }
+                
+                },
+        error=>{alert('error al iniciar el periodo: '+error);},
+        ()=>{}
+        );
+    }
+
+    addDataGlobalFunction(data):void{
+        this.DatosAppGlobal.compartirDatosGlobal(data);
+    }*/
 }
 
 

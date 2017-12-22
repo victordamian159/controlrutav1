@@ -13,6 +13,7 @@
 export var server:string="http://controlbus.us-east-1.elasticbeanstalk.com/rest/";
 
 //TABLAS
+export var url_configura=server+"configura/";
 export var url_registrodiario=server+"registrodiario/";
 export var url_registrodiariodetalle=server+"registrodiariodetalle/";
 export var url_registroreten=server+"registroreten/";

@@ -5,12 +5,7 @@
     text-decoration: none;
     text-align: left;
 }
-/*col{
-    margin-top:10px;
-    margin-left:80px;
-    margin-right:80px;
-    margin-bottom:0px;
-}*/
+
 .contenedor{
     margin-top:20px;
     margin-left:30px;
@@ -24,8 +19,6 @@
     margin:0;
 }
 
-/*.win_modal{}*/
-
 .form-control{
     height: 38px;
     margin:0;
@@ -35,9 +28,6 @@
 }
 
 .form-group{
-    /*margin:0;
-    padding-bottom:18px;
-    padding-top:10px; */
     margin:0;
     width: 100%;
     padding-bottom:18px;
@@ -46,144 +36,161 @@
     padding-left: -10px;
 }
 
-/*.row{
-    margin:0;
-    padding:0px 10px;
-}*/
+/* VALIDACION DE DATOS*/
+    #validation{
+        color:red; 
+        margin:0; 
+        padding:0;
+        position: absolute;
+    }
 
-#validation{
-    color:red; 
-    margin:0; 
-    padding:0;
-    position: absolute;
-}
+    #verdadero{
+        color:green;
+        padding: 0;
+        padding: 0;
+        position: absolute;
+    }
 
-#verdadero{
-    color:green;
-    padding: 0;
-    padding: 0;
-    position: absolute;
-}
 
-/* BOTONES (GUARDAR CANCELAR + OTROS) VENTANAS MODALES */
-.btn_modal{
-    width:100%; 
-    height:40px; 
-    font-size:15px;
-    background-color:#4CAF50;
-    text-align: center;
-}
 
-/*GRUPO BOTONES DE LAS VENTANAS MODALES*/
-.btn_Modal{
-    margin-top: 30px;
-}
-
-/*APARIENCIA BOTON NUEVO (ARRIBA DE GRILLA PRINCIPAL)*/
-#btnNuevo{
-    padding:4px;
-    width: 100%;
-    background: #4CAF50; 
-}
+/* APARIENCIA BOTON NUEVO (ARRIBA DE GRILLA PRINCIPAL)*/
+    #btnNuevo{
+        padding:4px;
+        width: 100%;
+        background: #4CAF50; 
+    }
 
 /* VENTANAS MODALES*/
-    .container{
-        margin-bottom: 20px;
-        max-width: 300px;
-        max-height: 320px;
-        height: 320px;
-        width: 300px;
-    }
-    .cuadroSalidas{
-        margin-bottom: 20px;
-        width: 1000px;
-        height: 400px;
-    }
-    .asignaUnaTarj{
-        margin-bottom: 20px;
-        width: 100%;
-        height: 390;
-        /*max-width: 750px;
-        max-height: 400px;*/
-    }
-    .nrotarj {
-        margin-bottom: 20px;
-        width: 350px;
-        height: 100%;
-    }
+    /* BOTONES (GUARDAR CANCELAR + OTROS) VENTANAS MODALES */
+        .btn_modal{
+            width:100%; 
+            height:40px; 
+            font-size:15px;
+            background-color:#4CAF50;
+            text-align: center;
+        }
+    /* ventanas de confirmacion */
+        /* mensajes */
+        .mdlMnjsConf{
+            height: 30px;
+            width: 100%;
+            margin: 0;
+            padding: 0 20px;
+        }
+        /* pie botones */
+        .btnFormsMnjsComf{
+            margin-top: 30px;
+            width: 100%;
+            height: 40px;
+        }
+    /* CUADRO SALIDAS */
+        /*LIMITA EL MAXIMO Y MINIMO DE LA VENTANA MODAL*/
+        ._cuadroSalidas{
+            overflow-y: auto; 
+            overflow-x: auto;
+            max-width: 1100px;
+            max-height: 520px;
+            margin:auto;
+        }
+        /* CONFIGURANDO LA VENTANA MODAL */
+        .cuadroSalidas{
+            margin-bottom: 20px;
+            width: 1100px;
+            height: 460px;
+        }
+        .btnClassCuadroSalidas{
+            height: 40px;
+            width: 100%;
+            
+        }
+    /* ESTILOS TABLA TARJETA DE CONTROL DETALLE */
+        .tbTarjCtrlDet{
+            overflow-y: auto; 
+            overflow-x: auto;
+            /*height:100%;
+            width: 100%;*/
+            max-width: 500px;
+            max-height: 500px;
+            margin:auto;
+        }
+        ._tbTarjCtrlDet{
+            margin:0;
+            width: 100%;
+            height: 500px;
+            /*border: 2px solid yellow;*/
+        }
+        .btnTarjDetallePCtrl{
+            width:400px;
+            margin-top:15px;
+            height: 60px;
+            padding-top:20px;
+            margin:auto;
+            /*border: 2px solid red;*/
+            position: absolute;
+        }
+    /* CUADRO ASIGNAR TARJETA */
+            /*LIMITA EL MAXIMO Y MINIMO DE LA VENTANA MODAL*/
+            ._asignaUnaTarj{
+                overflow-y: auto; 
+                overflow-x: auto;
+                max-width: 800px;
+                max-height: 1000px;
+                margin:auto;
+            }
+            /* CONFIGURANDO LA VENTANA MODAL */
+            .asignaUnaTarj{
+                /*margin-bottom: 20px;*/
+                margin:0;
+                width: 800px;
+                height: 500px;
+                /*border: 2px solid green;*/
+                padding: 0;
+                bottom: 0;
+            }
+            .contenidoAsignarTarjeta{
+                height: 300px;
+                width:600px;
+                margin-bottom: 20px;
+            }
+            .btnModAsigT{
+                width:800px;
+                height: 40px;
+                margin:auto;
+                /*border: 2px solid red;*/
+                bottom: 10px;
+                margin-bottom: 0;
+                position: absolute;
+            }
 
-    .nrotarj .col-xl-12{
-        margin-top :40px;
-    }
-
-    .cont_modal{
-        overflow-y: auto; 
-        overflow-x: auto;
-        /*height:100%;
-        width: 100%;*/
-        max-width: 600px;
-        max-height: 470px;
-        margin:auto;
-    }
-    col-xl-12{
-        padding: 0;
-    }
-
-    #tablaSalidas{
-        max-width:6500px;
-    }
-
-    thead{
-        width: 100%;
-        border:none;
-    }
-
-    thead tr{
-        width: 6500px;
-        border:none;
-    }
-
-    table thead tr th{
-        /*text-align: center;
-       
-        margin:auto;
-        padding:5px 10px;
-        width:40px;
-        flex-grow: 1;*/
-        
-        border:none;
-    }
-
-    /*able tbody td tr td{
-        width: 100%;
-        border-color: red;
-        display:center;
-        justify-content: left;
-        text-align:center;
-    }*/
 
     
-    table tbody td{
-        text-align:center;
-        border:none;
-        margin:auto;
-        padding:10px 14px;
-        width:147px;
-    }
-
-    /*
-        table thead tr th tr{
-            text-align: center;
-            padding:10px 20px;
-            
-            width:auto;
-            height: auto;
+    /* CUADRO DE SALIDAS - TODAS LAS VUELTAS */
+        #tablaSalidas{
+            max-width:6500px;
         }
 
-        table{
-            border-collapse: collapse;
+        thead{
+            width: 100%;
+            border:none;
         }
-    */
+
+        thead tr{
+            width: 6500px;
+            border:none;
+        }
+
+        table thead tr th{
+            border:none;
+        }
+        
+        table tbody td{
+            text-align:center;
+            border:none;
+            margin:auto;
+            padding:10px 14px;
+            width:147px;
+        }
+
 /*ESTILOS TABLAS*/
     #btnTable{
         background-color: #4CAF50;
@@ -192,141 +199,119 @@
         margin-top:20px;
     }
 
-/* ESTILOS TABLA TARJETA DE CONTROL DETALLE */
-.tbTarjCtrlDet{
-    overflow-y: auto; 
-    overflow-x: auto;
-    /*height:100%;
-    width: 100%;*/
-    max-width: 500px;
-    max-height: 430px;
-    margin:auto;
-}
-._tbTarjCtrlDet{
-    margin-bottom: 20px;
-    width: 100%;
-    height: 100%;
-}
-
-/* ESTILO TEXTBOX-NRO DE TARJETAS ASIGNADAS
-    #inputNroTarj{
-        height: 80px;
-        font-size: 70px;
-        margin-bottom:10px;
-        width: 100%;
-    }*/
 
 /* RESPONSIVE */
     /*ipad PRO*/
     @media(max-width:1100px){ 
-        .asignaUnaTarj{max-height: 350px;
-                   max-width: 670px;}
+       
     }
 
     /* ipad*/
     @media(max-width:600px){ 
-        .asignaUnaTarj{
-            max-height: 350px;
-            max-width: 420px;
-        }
-        
-        .form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            /*background: yellow;*/
-            padding: 0 8px;
-            margin: 0;
-        }
+       
     }
     
     /* iphone 6 plus*/
     @media(max-width:480px){ 
-        .asignaUnaTarj{
-            /*max-height: 350px;
-            max-width: 370px;*/
-            margin-bottom: 20px;
-            padding:0;
-            margin:0;       
-            width: 100%;
-            height: 100%;
-        }
+        /* ESTILOS TABLA TARJETA DE CONTROL DETALLE */
+            ._tbTarjCtrlDet{
+                margin:0;
+                width: 380px;
+                height: 400px;
+            }
+            .btnTarjDetallePCtrl{
+                width:380px;
+                margin-top:15px;
+                height: 60px;
+                padding-top:20px;
+                margin:auto;
+                position: absolute;
+            }
+        /* ESTILOS TABLA ASIGNAR TARJETA DE CONTROL */
+            .form-control{
+                margin-bottom:15px;
+            }
+            .asignaUnaTarj{
+                overflow: auto;
+                height: 580px;
+                width: 350px;
+            }
+            .contenidoAsignarTarjetaIndividual{
+                height: 280px;
+                width: 350px;
+                margin-bottom: 40px;
+            }
+            .contenidoAsignarTarjetaMulti{
+                height: 330px;
+                width: 350px;
+                margin-bottom: 40px;
+            }
 
-        .cont_modal{
-            overflow-y: auto; 
-            overflow-x: auto;
-            /*height:100%;
-            width: 100%;*/
-            max-width: 370px;
-            max-height: 500px;
-            margin:auto;
-        }
-        .nrotarj{
-            margin-bottom: 20px;
-            padding:10px 20px;
-            margin:0;       
-            width: 100%;
-            height: 100%;
-        }
-        
-        /*GRUPO BOTONES DE LAS VENTANAS MODALES*/
-        .btn_Modal{
-            margin-top: 30px;
-            width: 360px;
-        }
-        .tablaUnaSolaTarj{
-            width: 330px;
-            height: 220px;
-            margin:auto;
-        }
-        .form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            /*background: yellow;*/
-            padding: 0 8px;
-            margin: 0;
-        }
+            .btnModAsigT{
+                width: 360px;
+                position: relative;
+            }
     }
 
     /* iphone 6 */
     @media(max-width:380px){ 
-        .asignaUnaTarj{max-height: 260px;max-width: 340px;}
-        
-        .form-control{
-            width: 100%;
-            
-        }
-        .col-xs-12{
-            /*background: red;
-            padding: 0;*/
-            padding: 0 8px;
-            margin: 0;
-        }
+        /* ESTILOS TABLA TARJETA DE CONTROL DETALLE */
+            ._tbTarjCtrlDet{
+                margin:0;
+                width: 340px;
+                height: 400px;
+                /*border: 2px solid yellow;*/
+            }
+            .btnTarjDetallePCtrl{
+                width:340px;
+                margin-top:15px;
+                height: 60px;
+                padding-top:20px;
+                margin:auto;
+                /*border: 2px solid red;*/
+                position: absolute;
+            }
+
     }
 
     /* iphone 5 */
     @media(max-width:320px){
-        .asignaUnaTarj{max-height: 200px;max-width: 280px;}
-        .form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            /*background: blue;*/
-            padding: 0 8px;
-            margin: 0;
-        }
+        /* ESTILOS TABLA TARJETA DE CONTROL DETALLE */
+            ._tbTarjCtrlDet{
+                margin:0;
+                width: 290px;
+                height: 400px;
+                /*border: 2px solid yellow;*/
+            }
+            .btnTarjDetallePCtrl{
+                width:290px;
+                margin-top:15px;
+                height: 60px;
+                padding-top:20px;
+                margin:auto;
+                /*border: 2px solid red;*/
+                position: absolute;
+            }
+  
     }
 
     /* iphone 4 */
     @media(max-height:480px){
-        .asignaUnaTarj{max-height: 160px;max-width: 280px;}
-        .form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            /*background: blue;*/
-            padding: 0 8px;
-            margin: 0;
-        }
+        /* ESTILOS TABLA TARJETA DE CONTROL DETALLE */
+            ._tbTarjCtrlDet{
+                margin:0;
+                width: 290px;
+                height: 300px;
+                /*border: 2px solid yellow;*/
+            }
+            .btnTarjDetallePCtrl{
+                width:290px;
+                margin-top:15px;
+                height: 60px;
+                padding-top:10px;
+                margin:auto;
+                /*border: 2px solid red;*/
+                position: absolute;
+            }
+       
     }

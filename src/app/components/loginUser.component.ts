@@ -3,6 +3,9 @@ import {UserSystemService} from '../service/usuarioSistema.service';
 import { AppComponent } from '../app.component';
 import { Router} from '@angular/router';
 //import {AuthGuard} from '../components/auth.guard';
+import {DatosCompartidosService} from '../service/dataComunicationApp.service';
+
+
 
 
 @Component({
@@ -23,16 +26,20 @@ export class loginUserComponent implements OnInit{
     private inicioSesion:number;
     private mnjeSesionCorrect:string;
     private mnjeSesionError:string;
-
+    private EmId:number;
     
 
     ngOnInit(){
         this.procNuevoUser();
         this.logout();
         /*console.log(localStorage.getItem('DATOSUSER'));*/
+        
     }
 
-    constructor(private userservice: UserSystemService, private router: Router,private appcomp:AppComponent){
+    constructor(private userservice: UserSystemService, 
+                public DatosAppGlobal:DatosCompartidosService,
+                
+                private router: Router,private appcomp:AppComponent){
    
         this.mnjeSesionCorrect='';
         this.mnjeSesionError='';
@@ -40,7 +47,11 @@ export class loginUserComponent implements OnInit{
         this.LoginUser={Usuario:"",Password:""};
         this.user={UsUserName:"",UsPassword:""};
     }
+       
 
+        addDataGlobalFunction(data:number):void{
+            this.DatosAppGlobal.compartirDatosGlobal(data);
+        }
     // CALLING PROCEDURES 
         procNuevoUser(){
             let nuevoUser:any;
@@ -65,6 +76,7 @@ export class loginUserComponent implements OnInit{
                 data => {   
                             console.log(data);
                             validUser=data;     
+                            this.EmId=data.EmId;
                             if(validUser.length!=0){
                                 this.userValid=validUser;
 
@@ -74,6 +86,7 @@ export class loginUserComponent implements OnInit{
 
                                 this.router.navigate(['/regempper']);
                                 this.appcomp.ocNavBar=true;
+                                
                             }else{
                                 this.userValid=validUser;
                                 this.mnjeSesionError="Error en el usuario o contraseña";

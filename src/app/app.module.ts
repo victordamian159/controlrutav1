@@ -48,6 +48,7 @@ import {reportBuses} from './components/reportBus.component';
 
 /* VAR AND FUNCTION GLOBALES */
 import {GlobalVars} from './variables';
+import {classDataUsuario} from './DataUsuario'
 //import {classDataUsuario} from './DataUsuario';
 
 
@@ -67,6 +68,9 @@ import {EmpSubEmpService} from './service/empSubemp.service';
 import {TeleMovilService} from './service/telefono.service';
 import {UserSystemService} from './service/usuarioSistema.service';
 import {distribTiempoService} from './service/distribTiempo.service';
+import {ConfiguraService} from './service/configura.service';
+import {DatosCompartidosService} from './service/dataComunicationApp.service';
+
 
     //SERVICE MANTENIMIENTO
         import {RegDiarioService} from './service/registrodiario.service';
@@ -168,9 +172,12 @@ import { BaseRequestOptions } from '@angular/http';*/
       EmpSubEmpService,
       PersService,
       distribTiempoService,
+      ConfiguraService,
       TeleMovilService,
       UserSystemService,
       GlobalVars,  /* CLASS GLOBAL :s */
+      classDataUsuario,
+      DatosCompartidosService,
       //classDataUsuario,
       servAlertNotifService,
       servIncidenciaService,

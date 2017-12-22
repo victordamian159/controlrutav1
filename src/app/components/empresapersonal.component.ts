@@ -7,6 +7,8 @@ import {PersService} from '../service/personal.service';
 import {UserSystemService} from '../service/usuarioSistema.service';
 import {GlobalVars} from 'app/variables'
 
+
+
 @Component({
     selector: 'app-empresapersonal',
     templateUrl	: '../views/empresapersonal.component.html',
@@ -67,22 +69,24 @@ export class EmpPerComponent implements OnInit{
         private nombre:string; /* PARA MOSTRAR EN EL FORM NUEVO USERSYSTEM(PARA SABER A Q PERSONA SE LE CREA) */
 
     ngOnInit(){
-        /*this.emid=1;
-        this.userid=1;
-        this.nombre="x";*/
+
         //this.getallempPerByEmIdSuEmId(1,1);
         //console.log(this.selectPersona);
         this.getallsuembyemid(this.emid);
         this.getAllPersonas();  /*TODAS LAS PERSONAS AGREGADAS AL SISTEMA(EMPRESA) */                    
         this.procGetAllUserSystembyEmId(this.emid);
         
-        console.log(this.ClassGlobal.GetEmId());
-        console.log(this.ClassGlobal.GetUsId());
+        //console.log(this.ClassGlobal.GetEmId());
+        //console.log(this.ClassGlobal.GetUsId());
     }
 
     /* CONSTRUCTOR */
-    constructor(private empPerservice : EmpPerService,  private empSubempservice : EmpSubEmpService, 
-                private persService : PersService, private userService: UserSystemService, 
+    constructor(private empPerservice : EmpPerService,  
+                private empSubempservice : EmpSubEmpService, 
+                private persService : PersService, 
+                private userService: UserSystemService, 
+                
+                
                 public ClassGlobal:GlobalVars){
 
         this.emid=this.ClassGlobal.GetEmId();
@@ -96,7 +100,7 @@ export class EmpPerComponent implements OnInit{
         this.selectPersona=false;
     }
 
-
+    
     /* PROCEDURES */
         /* PROCEDURE STORAGE TABLE USER SYSTEM - TABLA USUARIO*/
                 /* CONSULTA TODAS LAS PERSONAS(USUARIOS) AGREGADAS AL SISTEMA */

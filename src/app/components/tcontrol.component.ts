@@ -9,9 +9,12 @@ import {RutaService} from '../service/ruta.service';
 import {PuntoControlService} from '../service/pcontrol.service'; 
 import {ProgramacionService} from '../service/prog.service';
 import {distribTiempoService} from '../service/distribTiempo.service';
-import {RegDiarioService} from '../service/registrodiario.service'
+import {RegDiarioService} from '../service/registrodiario.service';
+import {DatosCompartidosService} from '../service/dataComunicationApp.service';
+import {ConfiguraService} from '../service/configura.service';
 
-import {GlobalVars} from 'app/variables'
+import {GlobalVars} from 'app/variables';
+import {classDataUsuario} from 'app/DataUsuario';
 import {cCeroFechaForEditar,slash_posFecha,fechaActual2,ajustaHora,
         hora,_hora,_cCeroFecha,cCeroHora,guion_posFecha, corrigiendoHora,
         corrigiendoHoraString,fecha,_fecha1,fechaActual1,horaValida,
@@ -44,6 +47,9 @@ export class TcontrolComponent implements OnInit{
         private displayCuadroSalidas:boolean;
         private displayNoPuedeCrearMismaTarjeta:boolean;
         private displayTarjetaControlDetalle:boolean;
+        private displayMsjEsperaGuardarTarjeta:boolean;
+        private displayPasarSgteVuelta:boolean;
+        private displayMnjNoPuedeCrearMulTarjEnPenultimaVuelta:boolean;
 
     /* OTRAS VARIABLES */
         private val:string;     //VALOR PARA ASIGNAR TARJETA (ASIGNADO O AUSENTE)
@@ -51,13 +57,17 @@ export class TcontrolComponent implements OnInit{
         private actRadioButton:boolean=true;
         private nroTarjetas:number; 
         private MultiReten:string; /* TIEMPO INTERMEDIO (ASIGNAR MULTITARJETA) */
-        private mensaje : string; /*MENSAJE EN PANTALLA PARA CONFIRMAR*/
+        
         private titulo : string; /*TITULO PANTALLAS */
         private tVueltaBus : string; /* TIEMPO RECORRIDO BUS */
         private timevueltadescrip:string; 
         private timevuelta:number; // SABER SI TIENE O NO UN TIEMPOSALIDA
+
+        private mensaje : string; /*MENSAJE EN PANTALLA PARA CONFIRMAR*/
         private msjestadoplaca:string;
         private mnjNroTarjetaValido:string;
+        private msjEsperaGuardando:string;
+        private mensajesigvuelta:string;
 
         private arrNTarjCabecera : any[] = []; /* ARRAY NUEVAS TARJETAS DE CONTROL (MULTITARJETAS) */
         private arrNTarjDetalle : any[] = []; /* ARRAY NUEVAS TARJETAS DE CONTROL DETALLE (MULTITARJETAS) */
@@ -71,14 +81,14 @@ export class TcontrolComponent implements OnInit{
         PrId:0,
         nroPlaca:0
     }; 
-    placas:any[]=[]; //LISTA COMPLETA DE placas
-    _placas:any[]=[]; //LISTA SEPARADA POR FECHA, RESULTADO DE BUSQUEDA POR FECHA
+    private placas:any[]=[]; //LISTA COMPLETA DE placas
+    private _placas:any[]=[]; //LISTA SEPARADA POR FECHA, RESULTADO DE BUSQUEDA POR FECHA
     
-    _prId:number;
+    private _prId:number;
     private PrId:number;
-    _prDeId:number;
-    _ruId:number;
-    _pcId:number;
+    private _prDeId:number;
+    private _ruId:number;
+    private _pcId:number;
 
     //CAMPOS PARA LA CABECERA Y DETALLE 
     private _TaCoId : number;
@@ -109,46 +119,28 @@ export class TcontrolComponent implements OnInit{
         TaCoAsignado:this.TaCoAsignado
     }
     private _tarjeta:any; 
-    private _allTarjetas:any[]=[]; //TODAS LAS TARJETAS PARA LA GRILLA
-    private allTarjControl:any[]=[]; //BORRAR, CONSULTA PROVICIONAL PARA GRILLA CABECERA
-    private _allTarjControl:any[]=[]; // REEEMPLAZAR, PARA MANDAR AL FORMULARIO
-    private _allTarjDetalle:any[]=[]; //DETALLE TARJETA
+    
     
     private puntoControl:{ EmId:0, PuCoClase:0, PuCoId:0, PuCoTiempoBus:"", RuDescripcion:"", RuId:0 };
     private puntosControl:any[]=[]; //PUNTOS DE CONTROL EN LA BD
     private _puntosControl:any[]=[]; //PARA TABLA PUNTOS
     private puntosControlDet :any[]=[];
-    //rivate _puntosControlDet:any[]=[]; //NO ESTA EN USO
 
      //idPunto:number = 0; //PUCOID 
      //tcontrol:any;  //RECUPERA EL OBJ Q SE GUARDA EN LA BD, CABECERA PARA SACAR LA TACOID PARA USARLO PA GUARDAR EN EL DETALLE
 //OBJETO DETALLE
-    _TaCoDeId : number;
+    private _TaCoDeId : number;
     //_UsFechaReg:string;
     //_TaCoId : number;
-    _PuCoDeId:number;
-    _TaCoDeFecha:string;
-    _TaCoDeHora:string;
-    _TaCoDeLatitud:number;
-    _TaCoDeLongitud:number;
-    _TaCoDeTiempo:string;
-    _TaCoDeDescripcion:string;
+    private _PuCoDeId:number;
+    private _TaCoDeFecha:string;
+    private _TaCoDeHora:string;
+    private _TaCoDeLatitud:number;
+    private _TaCoDeLongitud:number;
+    private _TaCoDeTiempo:string;
+    private _TaCoDeDescripcion:string;
+    private _tarjetaDetalle:any;    //PARA NUEVO DETALLE
     //_UsId:number;
-
-    tarjetaDetalle:any={ 
-        TaCoDeId:this._TaCoDeId,
-        UsFechaReg:this._UsFechaReg,
-        TaCoId: this._TaCoId,
-        PuCoDeId:this._PuCoDeId,
-        TaCoDeFecha:this._TaCoDeFecha,
-        TaCoDeHora:this._TaCoDeHora,
-        TaCoDeLatitud:this._TaCoDeLatitud,
-        TaCoDeLongitud:this._TaCoDeLongitud,
-        TaCoDeTiempo:this._TaCoDeTiempo,
-        TaCoDeDescripcion:this._TaCoDeDescripcion
-    }
-    _tarjetaDetalle:any;    //PARA NUEVO DETALLE
-    _tarjDetalleArray:any[]=[]; //PARA MANDARLO A LA BD
     
     //PROGRAMACION
         private programacion:any[]=[];
@@ -188,46 +180,89 @@ export class TcontrolComponent implements OnInit{
         private campFormAsigUnaTarjeta: FormGroup;
         private nroMultiTarjetas:number;
         private ReDiId:number;
-        
+        private TaCoMultiple:number;
+        private PrDescripcion:string;
+        private CoId:number;
+
     //variables boolean, activar inputs de los formularios
         //una sola tarjeta
         private actInputTHora:boolean;
         private actInputReten:boolean;
         private actInputHoraSalida:boolean;
         private actInputBtnGuardar:boolean;
+
         //multitarjeta
-        
         private actMInputPrimerReten:boolean;
         private actMInputRepeatReten:boolean;
         private actMInputHoraEslavon:boolean;
 
     //VARIABLES OBJETO
         private TarjetaBus_Anterior:any
+        private objSelectedRowTableIndividual:any;
+        private objSelectedRowTableMultiple:any;
+    
+    //objetos globales
+        private objConfigSystem:any;
 
     /* VARIABLES GLOBALES*/
         private emID : number;
         private UsId:number;
+        
     
     //ARRAYS
+        private arrProgramaciones:any[];
         private arrValTarjeta:any[];
         private arrTpHoraS:any[];
         private arrCuadroSalidas:any[];
         private arrCuadro:any[]=[];
+        private arrCuadroBusqueda:any[]=[];
         private headerTabCuadroNumber:any[]=[];
         private headerTabCuadroHoras:any[]=[];
         private arrTarjetasAsignadas:any[]=[];
+        private arrTipoTarjeta:any[]=[];
+        //private _tarjDetalleArray:any[]=[]; //PARA MANDARLO A LA BD
+        private _allTarjetas:any[]=[]; //TODAS LAS TARJETAS PARA LA GRILLA
+        private allTarjControl:any[]=[]; //BORRAR, CONSULTA PROVICIONAL PARA GRILLA CABECERA
+        private _allTarjControl:any[]=[]; // REEEMPLAZAR, PARA MANDAR AL FORMULARIO
+        private _allTarjDetalle:any[]=[]; //DETALLE TARJETA
 
+    
+
+    ngOnInit(){
+        this.getallplacasbusbyemsuem(this.emID,0);
+        this.getallprogramacionbyem(this.emID,0); //PROGRAMACION X EMP Y POR AÑO(ACLARAR ESTO)
+        this.getAllRutaByEm(this.emID);
+        this.getAllRegistroDiario(this.emID);
+        //this.getallregistrovueltasdiariasbyemprfe(this.emID,0,slash_posFecha(fechaActual2()));
+        
+        this.procConsultarConfiguracionSistemaXPeriodo();
+       
+        //console.log(this.tarjeta._TaCoFecha);  console.log(editf1(fechaActual1()));  console.log(cCeroFechaForEditar(fechaActual2()));
+        //this.deleteRegistroReten(23); no en uso //this.deleteRegistroDiarioDet(312);
+    }
+    
     constructor(    
-                    public  ClassGlobal : GlobalVars, private tcontrolservice : TControlService,  private placaService : PlacasService, 
-                    private rutaService : RutaService, private pcontrolService : PuntoControlService, private progService : ProgramacionService,
-                    private disTiemservice : distribTiempoService, private regdiarioService:RegDiarioService, private regRetenService:RegRetenService,
-                    private router: Router, private fb : FormBuilder
-                )
+        public  ClassGlobal : GlobalVars, 
+        private tcontrolservice : TControlService,  
+        private placaService : PlacasService, 
+        private rutaService : RutaService, 
+        private pcontrolService : PuntoControlService, 
+        private progService : ProgramacionService,
+        private disTiemservice : distribTiempoService, 
+        private regdiarioService:RegDiarioService, 
+        private regRetenService:RegRetenService,
+        private router: Router, 
+        private fb : FormBuilder, 
+        public ClassDataUsuario:classDataUsuario,
+        public DatosGlobalService:DatosCompartidosService,
+        private configService : ConfiguraService
+    )
     {
         this.selValTarjeta={nomb:"", val:""};
         this.selTpHoraS={nomb:"", val:""};
         this.arrValTarjeta=[{nomb:"ASIGNAR", val:'01'},{nomb:"AUSENTE", val:'02'},{nomb:"CASTIGADO", val:'03'}];
         this.arrTpHoraS=[{nomb:"MANUAL", val:'01'},{nomb:"AUTOMATICO", val:'02'}];
+        this.arrTipoTarjeta=[{nomb:'INDIVIDUAL', id:0},{nomb:'MULTIPLE',id:1}];
         this.emID=this.ClassGlobal.GetEmId();
         this.UsId=this.ClassGlobal.GetUsId();
         this.tpHoraS='x';
@@ -236,59 +271,77 @@ export class TcontrolComponent implements OnInit{
         this.arrNTarjCabecera=[]; /*INICIANDO ARRAY A VACIO DE NUEVAS TARJETAS */
         this.TiSaObj={SuEmId:0, TiSaId:0, TiSaNombre:"", TiSaValor:""}
         this.arrCuadroSalidas=[];
+        this.arrProgramaciones=[];
+        this.arrCuadroBusqueda=[];
         this.estadoPlaca=-1;
         this.modoTarjeta=-1; //tarjeta modo asignado(tarjeta anterior)
         this.val='x';
         this.validarTiempo="";
         this.mnjNroTarjetaValido="";
+        //this.TaCoMultiple=0; //tipo tarjeta individual(0)
+
         //DISPLAY
-            this.displayAsignarTarjeta = false;
-            this.displayEditarTarjeta = false;
-            this.displayConfirmarEliminar = false;
-            this.displayErrorDatosProgxFecha = false;
-            this.displayNoProgEnFecha = false;
-            this.displayErrorNoHayPCModalNuevo = false;
-            this.displayHayPCModalNuevo = false;
-            this.displayNoTarjetasAsignadas = false;
-            this.displayNroTarjetas = false;
-            this.displayAsigMultiTarj = false;
-            this.displayMensajeNoRegDiario =false;
-            this.displayCuadroSalidas=false;
-            this.displayNoPuedeCrearMismaTarjeta=false;
-            this.displayTarjetaControlDetalle=false;
+        this.displayAsignarTarjeta = false;
+        this.displayEditarTarjeta = false;
+        this.displayConfirmarEliminar = false;
+        this.displayErrorDatosProgxFecha = false;
+        this.displayNoProgEnFecha = false;
+        this.displayErrorNoHayPCModalNuevo = false;
+        this.displayHayPCModalNuevo = false;
+        this.displayNoTarjetasAsignadas = false;
+        this.displayNroTarjetas = false;
+        this.displayAsigMultiTarj = false;
+        this.displayMensajeNoRegDiario =false;
+        this.displayCuadroSalidas=false;
+        this.displayNoPuedeCrearMismaTarjeta=false;
+        this.displayTarjetaControlDetalle=false;
+        this.displayMsjEsperaGuardarTarjeta=false;
+        this.displayPasarSgteVuelta=false;
+        this.displayMnjNoPuedeCrearMulTarjEnPenultimaVuelta=false;
 
         //activar input form
-            // for single tarj
-            this.actInputTHora=true;
-            this.actInputReten=true;
-            this.actInputHoraSalida=true;
-            
-            // for multi tarj
-            this.actMInputPrimerReten=true;
-            this.actMInputRepeatReten=true;
-            this.actMInputHoraEslavon=true;
+        // for single tarj
+        this.actInputTHora=true;
+        this.actInputReten=true;
+        this.actInputHoraSalida=true;
+
+        // for multi tarj
+        this.actMInputPrimerReten=true;
+        this.actMInputRepeatReten=true;
+        this.actMInputHoraEslavon=true;
 
         //campos asignar una sola tarjeta
-            this.campFormAsigUnaTarjeta=fb.group({ 
-                tReten:['', Validators.required], 
-                tHoraEslavon:['', Validators.required] 
-            })
-    }
+        this.campFormAsigUnaTarjeta=fb.group({ 
+            tReten:['', Validators.required], 
+            tHoraEslavon:['', Validators.required] 
+        })
 
-    ngOnInit(){
-        this.getallplacasbusbyemsuem(this.emID,0);
-        this.getallprogramacionbyem(this.emID,0); //PROGRAMACION X EMP Y POR AÑO(ACLARAR ESTO)
-        this.getAllRutaByEm(this.emID);
-        this.getAllRegistroDiario(this.emID);
-        this.getallregistrovueltasdiariasbyemprfe(this.emID,0,slash_posFecha(fechaActual2()));
-        //this.deleteRegistroReten(23); no en uso
-        //this.deleteRegistroDiarioDet(312);
+        
     }
-    
 
 /* PROCEDURES */ 
     /* GETTERS */
-        
+         //consulta por periodos
+         procConsultarConfiguracionSistemaXPeriodo(){
+
+            let añoActual=new Date().getFullYear().toString(), EmId=this.emID;
+            //console.log(añoActual); console.log(EmId);
+            this.configService.getAllConfiguraByEmPeriodo(EmId , añoActual).subscribe(
+            data=>{
+                    //console.log(data); 
+                    if(data.length!=0){
+                      this.objConfigSystem=data[0];
+                      this.CoId=this.objConfigSystem.CoId;
+                    }else{
+                        alert('error, no se pudo descargar la configuracion del sistema');
+                    }
+                    
+                  },
+            error=>{alert('error al iniciar el periodo: '+error);},
+            ()=>{}
+            );
+        }
+
         //tarjetas de control por fecha  GRILLA PRINCIPAL
         _getalltarjetacontrolbybuidfecha(buId:number, TaCoFecha:string){
             let arrTarjetasCreadas:any[]=[];
@@ -324,29 +377,60 @@ export class TcontrolComponent implements OnInit{
             this.tcontrolservice.getallregistrovueltasdiariasbyemprfe(emid,prid,fecha).subscribe(
                 data => {
                             arrCuadro=data;
-                            console.log(arrCuadro);
+                            //console.log(arrCuadro);
                             if(arrCuadro.length!=0 && arrCuadro.length>0){
-                                console.log(this.ReDiDeId);
+                                //console.log(this.ReDiDeId);
                                 this.ReDiDeNroVuelta=arrCuadro[arrCuadro.length-1].ReDiDeNroVuelta;
                                 this.ReDiDeId=arrCuadro[arrCuadro.length-1].ReDiDeId;
                                 this.ReDiId=arrCuadro[arrCuadro.length-1].ReDiId;
-                                console.log(this.ReDiDeNroVuelta);
-                                console.log(this.ReDiDeId);
-                                console.log(this.ReDiId);
                                 this.arrCuadro=arrCuadro;
+                                this.arrCuadroBusqueda=arrCuadro; //para la busqueda y validacion de reten
+                            }else{
+                                console.log('Error la descarga del cuadro de salidas, vuelva a intentarlo');
                             }
                         },
-                error=> {},
+                error=> {alert('Error en el cuadro de salidas, vuelva a intentarlo');},
                 ()   => {}
             );
         }
         
+        actualizargetallregistrovueltasdiariasbyemprfe(emid:number, prid:number, fecha:string){
+            let arrCuadro:any[]=[];
+            let index:number;
+            this.tcontrolservice.getallregistrovueltasdiariasbyemprfe(emid,prid,fecha).subscribe(
+                data => {
+                            arrCuadro=data;
+                            //console.log(arrCuadro);
+                            if(arrCuadro.length!=0 && arrCuadro.length>0){
+                                //console.log(this.ReDiDeId);
+                                this.ReDiDeNroVuelta=arrCuadro[arrCuadro.length-1].ReDiDeNroVuelta;
+                                this.ReDiDeId=arrCuadro[arrCuadro.length-1].ReDiDeId;
+                                this.ReDiId=arrCuadro[arrCuadro.length-1].ReDiId;
+                                this.arrCuadro=arrCuadro;
+                                this.ReReTiempo=null;
+                                this.arrCuadroBusqueda=arrCuadro; //para la busqueda y validacion de reten
+                                this.concatenarRegDiarioProgxFecha(this.mgprogDetalle(this.progDetalle), this.extraRegistroDiario(this.arrCuadro));
+                               
+                                this.msjEsperaGuardando='';
+                                this.displayMsjEsperaGuardarTarjeta=false;
 
+                                //voliendo a seleccionar el row datatable individual tarject
+                                index=this.buscarObjetoTablaIndividual(this.arrprogxfecha, this.objSelectedRowTableIndividual);
+                                this.selectedPlacaONE=this.arrprogxfecha[index];
+                            }else{
+                                
+                            }
+                        },
+                error=> {alert('Error en el cuadro de salidas, vuelva a intentarlo');},
+                ()   => {}
+            );
+        }
+        
         getAllRegistroDiarioDetalle(ReDiId:number){
             let arrRegDet:any[]=[];
             this.regdiarioService.getAllregistrodiarioDetalleByPrId(ReDiId).subscribe(
                 data => { arrRegDet=data; 
-                          console.log(arrRegDet);
+                          //console.log(arrRegDet);
                           //console.log(this.buscarRegDiarioDetalleActual(arrRegDet));
                           if(this.buscarRegDiarioDetalleActual(arrRegDet).ReDiDeNroVuelta!=-1){
                             this.mRegistroDiarioDetalle(this.buscarRegDiarioDetalleActual(arrRegDet));
@@ -361,7 +445,8 @@ export class TcontrolComponent implements OnInit{
         getAllRegDiarioDetalle(ReDiId:number){
             let arrRegDet:any[]=[];
             this.regdiarioService.getAllregistrodiarioDetalleByPrId(ReDiId).subscribe(
-                data => { arrRegDet=data; console.log(arrRegDet);
+                data => { arrRegDet=data; 
+                            //console.log(arrRegDet);
                             if(arrRegDet.length!=0){
                                 this.actualizarVariables(arrRegDet);
                             }else{
@@ -418,7 +503,7 @@ export class TcontrolComponent implements OnInit{
                 );
             }
 
-        /* CONSULTAR TODAS LAS RUTAS EXISTENTES */
+        // CONSULTAR TODAS LAS RUTAS EXISTENTES 
             getAllRutaByEm(emId: number){
                 this.rutaService.getAllRutaByEm(emId).subscribe(
                     data => { this.rutas = data;},
@@ -427,7 +512,7 @@ export class TcontrolComponent implements OnInit{
                 );
             }
 
-        /* CONSULTAR TODOS LOS PUNTOS DE CONTROL EXISTENTES */
+        // CONSULTAR TODOS LOS PUNTOS DE CONTROL EXISTENTES 
             getAllPControlBy(emId: number, ruId:number){
                 this.pcontrolService.getAllPuntoControlByEmRu(emId, ruId).subscribe(
                     data => {
@@ -468,7 +553,7 @@ export class TcontrolComponent implements OnInit{
                     data => {
                                 this.programacion=data; arrProg=data;
                                 this.getallregistrovueltasdiariasbyemprfe(this.emID,arrProg[0].prId,slash_posFecha(fechaActual2()));
-                                this.mcobprogramacion();
+                                this.mcobprogramacion(arrProg);
                             },
                     error=>{console.log(error); alert('Error al Iniciar la lista de programaciones validas');} ,
                     () => {}
@@ -483,18 +568,7 @@ export class TcontrolComponent implements OnInit{
                                 if(this.progDetalle.length>0 ){
                                     //this.mgCuadroSalidas(this.ReDiTotalVuelta, this.progDetalle.length);
                                     this.concatenarRegDiarioProgxFecha(this.mgprogDetalle(this.progDetalle), this.extraRegistroDiario(this.arrCuadro));
-                                    if(nroTarjetas==1){
-                                        this.displayAsignarTarjeta=true; 
-                                        this.displayNroTarjetas=false;
-                                        this.nuevaAsignaTarjeta();/* INICIANDO NUEVO OBJETO CABECERA - DETALLE */
-                                        
-                                    }else if(nroTarjetas>1){
-                                        this.titulo="Asignando Multi-Tarjeta :  "+this.nroTarjetas;
-                                        this.displayNroTarjetas=false; 
-                                        this.displayAsigMultiTarj=true; // ABRIENDO MODAL MULTITARJETA 
-                                        this.nuevaAsignaTarjeta(); // CREANDO MULTIPLES TARJETAS VACIAS SEGUN NROTARJETAS - PROCEDURE CABECERA 
-                                       
-                                    }
+                                    this.nuevaAsignaTarjeta();
                                 }else if(this.progDetalle.length==0 ){
                                     this.mensaje="No hay programacion en la fecha indicada";
                                     this.displayNoProgEnFecha = true;
@@ -606,6 +680,19 @@ export class TcontrolComponent implements OnInit{
                 );
             }
 
+    //BORRAR, usado para borrar todas las tarjetas de control que hay creadas
+            borrarProcDeleteTarjetaControl(TaCoId:number){
+                /**/
+                this.tcontrolservice.deleteTarjetaControl(TaCoId).subscribe(
+                realizar =>{
+                                //this.getalltarjetasbyemidpucoid(this.emID,this._pcId);
+                                //this.getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2()));
+                                //this._getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2()));
+                            },
+                err => {console.log(err);alert('no s epudo borrar');}
+                );
+            }
+
         /* NO ASIGNADO VAL=0 , ASIGNADO VAL=1 */ /* AUSENTE VAL=2 */
         /* PROCEDURE ACTUALIZAR PROGRAMACIONDETALLE */
             updateProgDetalle(progUpdate : Object[]){
@@ -619,15 +706,29 @@ export class TcontrolComponent implements OnInit{
         /*UNA SOLA TARJETA*/
             //procAsigTarjCtrl(_tarjeta:any, progUpdate:any){
             procAsigTarjCtrl(_tarjeta:any){
-                console.log(_tarjeta);
+                let sigVuelta:number;
                 /* PROCEDURE ASIGNAR TARJETA (UNA SOLA) */
                 this.tcontrolservice.asignarTarjetaControl(_tarjeta).subscribe(
-                    data => { /*this.updateProgDetalle(progUpdate); PROCEDURE UPDATE PROGDETALLE */   
-                                //this.getalltarjetasbyemidpucoid(this.emID,this._PuCoId); 
-                                this._getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2()));
+                    data => {   
+                                console.log(data);
+                                //this.getallregistrovueltasdiariasbyemprfe(this.emID,this._prId,slash_posFecha(fechaActual2()));
+                                if(data==true){
+                                    sigVuelta= this.buscarUltimaPlacaProgr(this.objSelectedRowTableIndividual, this.arrprogxfecha);
+                                    console.log(sigVuelta);
+                                    //si fuera la ultima vuelta
+                                    if(sigVuelta==1){
+                                        this.mensajesigvuelta='Termino la vuelta, pasando a la siguiente';
+                                        this.displayPasarSgteVuelta=true;                                        
+                                    }
+                                    this.actualizargetallregistrovueltasdiariasbyemprfe(this.emID,this._prId,slash_posFecha(fechaActual2()));
+                                }                               
                             }, 
                     err  => {this.errorMessage=err}
                 );
+            }
+            aceptarPasarSgteVuelta(){
+                this.mensajesigvuelta='';
+                this.displayPasarSgteVuelta=false;
             }
         /*VARIAS TARJETAS*/
             procAsigMultiTarjetas(tarjetaInicial:any,reten1:Date, reten2:Date){
@@ -697,10 +798,11 @@ export class TcontrolComponent implements OnInit{
             }
 
         //COMBO PROGRAMACION CABECERA (CARGA ARRAY PARA MOSTRAR OPCIONES EN EL COMBOBOX)
-            mcobprogramacion(){
+            mcobprogramacion(arrProgramacion=[]){
                 this._programacion=[];
-                for(let prog of this.programacion){
-                    this._programacion.push({
+                let arrProg=[];
+                for(let prog of arrProgramacion){
+                    arrProg.push({
                         EmConsorcio:prog.EmConsorcio,
                         PrAleatorio:prog.PrAleatorio,
                         PrCantidadBuses:prog.PrCantidadBuses,
@@ -709,12 +811,14 @@ export class TcontrolComponent implements OnInit{
                         PrFechaInicio:_fecha1(prog.PrFechaInicio),
                         PrTipo:prog.PrTipo,
                         dias:prog.dias,
-                        prDescripcion:prog.prDescripcion.substr(0,4) +" de "+_fecha1(prog.PrFechaInicio)+" a  "+_fecha1(prog.PrFechaFin) ,
-                        prId:prog.prId
+                        //PrDescripcion:prog.prDescripcion.substr(0,4) +" de "+_fecha1(prog.PrFechaInicio)+" a  "+_fecha1(prog.PrFechaFin) ,
+                        PrDescripcion:_fecha1(prog.PrFechaInicio)+" a  "+_fecha1(prog.PrFechaFin) ,
+                        PrId:prog.prId
                     });
                 }
+                this.arrProgramaciones=arrProg;
             }
-        
+            
         //cuadro de registro diario
             extraRegistroDiario(arrregdiario=[]){
                 let arrreg:any[]=[];
@@ -771,8 +875,6 @@ export class TcontrolComponent implements OnInit{
                         _arrProg[k]._PrDeAsignadoTarjeta="NO";
                     }
                 }
-
-                //this.arrprogxfecha=_arrProg.slice(0);
                 return _arrProg;
             }
 
@@ -797,7 +899,7 @@ export class TcontrolComponent implements OnInit{
         //MOSTRANDO RESULTADO EN LA GRILLA CABECERA
             mgTarjetasControl(arrTarjetasControl=[]){
                 this._allTarjControl = [];
-                console.log(arrTarjetasControl);
+                //console.log(arrTarjetasControl);
                 let j:number=0, k:number=0, cen:number=0, _arrTarjetasControl:any[]=[];
 
                 //TARJETAS EXISTENTES
@@ -871,7 +973,7 @@ export class TcontrolComponent implements OnInit{
                     _arrTarjetasControl[i].NomPuntosControl=_arrTarjetasControl[i].PuCoDescripcion+' / '+_arrTarjetasControl[i].PuCoTiempoBus,
                     _arrTarjetasControl[i].NomTaCoNroVuelta=(_arrTarjetasControl[i].TaCoNroVuelta).toString()+'v';
                 }
-                console.log(_arrTarjetasControl);
+                //console.log(_arrTarjetasControl);
                 this._allTarjControl=_arrTarjetasControl;
             }
         //MOSTRANDO RESULTADO EN LA GRILLA CABECERA
@@ -972,20 +1074,38 @@ export class TcontrolComponent implements OnInit{
             this.displayMensajeNoRegDiario=false;
             this.router.navigate(['/regdiario']);
         }
+
+
     // FUNCIONES BUSQUEDA
-        //buscar tarjetas asignadas , castigada o ausentes
+       
         //buscarEstadoTarjeta
+        buscarHoraSalidaAnterior(placa:string){
+            let objSalidaAnterior:any;
+            objSalidaAnterior=this.funcBuscarHoraSalidaAnterior(this.arrCuadroBusqueda, this.ReDiDeNroVuelta,placa);
+            console.log(objSalidaAnterior);
+
+        }
+
+        funcBuscarHoraSalidaAnterior(arrCuadro=[], ReDiDeNroVuelta:number,Placa:string):any{
+            //console.log(arrCuadro); console.log(ReDiDeNroVuelta); console.log(Placa);
+            let i:number=0, cen:number=0;
+            while(i<arrCuadro.length && cen==0){
+                if(arrCuadro[i].ReDiDeNroVuelta==ReDiDeNroVuelta && arrCuadro[i].BuPlaca==Placa ){
+                    cen=1;
+                }else{
+                    cen=0;
+                    i++;
+                }
+            }
+            console.log('i: '+i); //console.log(arrCuadro[i-1]);
+            return arrCuadro[i-1]
+        }
 
         buscarRegDiarioActual(arrReg=[]){
             let ReDiId:any;
             let i:number=0, cen:boolean=false;
-            
-            //console.log(_fecha1(arrReg[1].ReDiFeha));  
-            //console.log(fechaActual2());
-            
+            //console.log(_fecha1(arrReg[1].ReDiFeha));   console.log(fechaActual2());  
             while(i<arrReg.length && cen==false){
-                //console.log('i: '+i);
-                //console.log(_fecha1(arrReg[i].ReDiFeha)+' --- '+fechaActual2());
                 if(_fecha1(arrReg[i].ReDiFeha)===fechaActual2()){
                     cen=true;
                 }else if(_fecha1(arrReg[i].ReDiFeha)!=fechaActual2()){
@@ -1033,13 +1153,22 @@ export class TcontrolComponent implements OnInit{
 
             // SELECCIONAR PLACA DE SORTEO (LISTA DE PLACAS DE SORTEO) 
                 onRowPlaca(event){    
-                    let TarjetaBus_Anterior:any;  this._prDeId = event.data.PrDeId;
-                    this._BuId=event.data.BuId;  this._TaCoNroVuelta=event.data.PrDeCountVuelta;  
+                    let TarjetaBus_Anterior:any;  
+                    let BuPlaca:string=event.data.BuPlaca;
+                    this.objSelectedRowTableIndividual=event.data;
+                    this._prDeId = event.data.PrDeId;
+                    this._BuId=event.data.BuId;                    
+                    this._TaCoNroVuelta=event.data.PrDeCountVuelta;  
                     this.PrDeAsignadoTarjeta=event.data.PrDeAsignadoTarjeta; 
-                    this.estadoPlaca=event.data.TaCoAsignado;   this.TaCoHoraSalida=event.data.TaCoHoraSalida;
+                    this.estadoPlaca=event.data.TaCoAsignado;   
+                    this.TaCoHoraSalida=event.data.TaCoHoraSalida;
                     this.HoraLlegadaTarjActual=event.data.HoraLlegada;
+                    console.log(this.ReDiDeId);
                     //console.log(event.data.TaCoHoraSalida); console.log(this.estadoPlaca);
 
+                    this.buscarHoraSalidaAnterior(BuPlaca);
+                    console.log('en onrowplaca: '+this._BuId);
+                    
                     if(this.ReDiDeNroVuelta>1){
 
                         this.TarjetaBus_Anterior=this.estadoTarjetaAnterior(this.extraRegistroDiario(this.arrCuadro), this.ReDiDeNroVuelta, this._BuId);
@@ -1100,7 +1229,7 @@ export class TcontrolComponent implements OnInit{
 
     /* FUNCIONES DE COMBOBOX */
             /* FUNCION ASOCIADA A COMBO DE RUTAS */
-            rutaId(event:Event){
+            funcCboRutaId(event:Event){
                 //console.log(this._ruId);
                 this.getAllPControlBy(this.emID,this._ruId);
                 this._getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2()));
@@ -1117,28 +1246,79 @@ export class TcontrolComponent implements OnInit{
                 
             }*/
 
+            funcCboTipoTarjeta(){
+                //multiple
+                if(this.TaCoMultiple==1){
+                    this.nroTarjetas=this.ReDiTotalVuelta-this.ReDiDeNroVuelta+1;
+                     //input horas para multiples tarjeta
+                     this.actMInputPrimerReten=true;
+                     this.actMInputRepeatReten=true;
+                     this.actMInputHoraEslavon=true;
+                //individual
+                }else if(this.TaCoMultiple==0){
+                    this.nroTarjetas=1;
+                    //input horas para una sola tarjeta
+                    this.actInputTHora=true;
+                    this.actInputReten=true;
+                    this.actInputHoraSalida=true;
+                }
+                
+                this.mensaje="";  
+                this.estadoPlaca=-1;
+                this.mnjNroTarjetaValido="";
+                
+                this.getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2())); //grilla principal :s
+                this.getallprogramacionbydate(this._prId,guion_posFecha(editf1(fechaActual1())), this.nroTarjetas); // tabla programacion
+            }
+
+            //buscar el nombre de la programacion en funcionamiento
+            mostrarNombreProgramacion(PrId:number, arrProgramas=[]):string{
+                console.log(PrId); console.log(arrProgramas);
+                let i:number=0, cen:number=0;
+                while(i<arrProgramas.length && cen==0){
+                    if(arrProgramas[i].PrId!=PrId){
+                        i++; cen=0;
+                    }else if(arrProgramas[i].PrId==PrId){
+                        cen=1;
+                    }
+                }
+                if(cen==1){
+                    return arrProgramas[i].PrDescripcion;
+                }else if(cen==0){
+                    return '-1';
+                }
+            }
+
             /*SELECCIONAR PUNTOS DE CONTROL DEL COMBOBOX,  FORMULARIOS DE ASIGNAR TARJETA */
-            puntosControlId(event:Event){
-                let PuCoId = this.puntoControl.PuCoId; let ruID = this.puntoControl.RuId;
-                this.tVueltaBus=this.puntoControl.PuCoTiempoBus;   this.selectedPlacaONE=[];  this.selectedPlacaMULTI=[];
-                //console.log('this.tVueltaBus: '+this.tVueltaBus);
-
+            funcCboPuntosControlId(event:Event){
+                
+                this.getallplacasbusbyemsuem(this.emID,0); //inciando las placas de la programacion
+                //variables
+                let PuCoId = this.puntoControl.PuCoId; 
+                let ruID = this.puntoControl.RuId;
+                this.tVueltaBus=this.puntoControl.PuCoTiempoBus;   //tiempo total vuelta a la ruta
+                
+                this.selectedPlacaONE=[]; this.selectedPlacaMULTI=[]; // borrando row selccionadas de las tablas
+              
                 /* ID ULTIMA PROGRAMACION  - esto tiene que cambiar por la variable global*/
-                this._prId=this._programacion[this._programacion.length-1].prId; 
-                this.PrId=this._programacion[this._programacion.length-1].prId;
+                //quitar esta parte, sustituirlo por algo mas comodo
+                this._prId=this.arrProgramaciones[this.arrProgramaciones.length-1].PrId; 
+                this.PrId=this.arrProgramaciones[this.arrProgramaciones.length-1].PrId;
+                
+                //this.PrDescripcion=this.mostrarNombreProgramacion(this.PrId, this.arrProgramaciones);
+                this.PrDescripcion=editf1(fechaActual1());
 
-                this.tarjeta._prId=this._prId;
                 //cuadro para la visuacion de todas las salidas
                 this.getallregistrovueltasdiariasbyemprfe(this.emID,this._prId,slash_posFecha(fechaActual2()));
+               
                 //buscando redediid 
-                console.log(this.ReDiDeNroVuelta);
                 if(this.ReDiDeNroVuelta!=1){
-                    console.log('siguiente vuelta: '+this.ReDiId);
                     this.getAllRegDiarioDetalle(this.ReDiId);
-                    console.log(this.ReDiDeNroVuelta);
-                    console.log(this.ReDiDeId);
                 }
-                this._RuId = ruID;  this._PuCoId = PuCoId;  this.tarjeta._TaCoFecha=editf1(fechaActual1());
+
+                this._RuId = ruID;  
+                this._PuCoId = PuCoId;  
+                //this.tarjeta._TaCoFecha=editf1(fechaActual1());
                 this.getallpuntocontroldetallebypuco(PuCoId); //CONSULTANDO TODOS LOS PUNTOS DE CONTROL(DETALLE) USARLOS PARA INICIAR LA TAREJTADETALLE
             }
 
@@ -1167,6 +1347,7 @@ export class TcontrolComponent implements OnInit{
         // UNA SOLA TARJETA
             /* SOLA UNA TARJETA, AQUI SE GUARDA TANTO CABECERA COMO DETALLE Y SE EDITA  LA   TABLA PROGRAMACION DETALLE EL CAMPO ASIGNADO*/
             guardarTarjeta( tiempoSalidaValid:any,  tiempoRetenValid:any ){
+        
                 // ASIGNAR VAL=01  ;   CASTIGADO VAL=03  AUSENTE VAL=02 
                 let  PrDeAsignadoTarjeta:number, TaCoFinish:number=0, HoraSalidaRecEslavon:string, TaCoHoraSalida:string; 
                 //console.log(this.campFormAsigUnaTarjeta.value.tReten);  console.log(tiempoSalidaValid);  console.log(tiempoRetenValid); console.log(this.estadoPlaca);  console.log(this.val);  console.log(this.ReDiDeNroVuelta);
@@ -1225,7 +1406,7 @@ export class TcontrolComponent implements OnInit{
             //guardarObjeto una tarjeta
             guardarObjetoTarjeta(TaCoHoraSalida:string, TaCoFinish:number){
                 let _tarjeta:any, tarjEncontrado:number , reten:any;   console.log(TaCoHoraSalida); 
-            
+                
                 _tarjeta={
                     TaCoId : this._TaCoId,
                     PuCoId : this._PuCoId,
@@ -1243,18 +1424,20 @@ export class TcontrolComponent implements OnInit{
                     TaCoTipoHoraSalida:Number('01'), //manual o automatico
                     ReDiDeId:this.ReDiDeId,
                     TaCoFinish:TaCoFinish,
-
+                    CoId:this.CoId,
                     TaCoCountMultiple: 1,
-                    TaCoMultiple: 0,
+                    TaCoMultiple: this.TaCoMultiple,
                     TaCoCodEnvioMovil: 0,
-                }; console.log(_tarjeta);
+                }; 
                 
+                console.log(_tarjeta);
+            
                 tarjEncontrado=this.buscarTarjetaAsignada(_tarjeta); console.log(tarjEncontrado); //buscar si esta asignado o no
-
 
                 //PUEDE CREAR LA TARJETA existe uno que no esta terminado o la tarjeta no se a creado
                 if(tarjEncontrado==1 || tarjEncontrado==-1 || tarjEncontrado==0){
-
+                    this.msjEsperaGuardando='Guardando tarjeta, espere un momento';
+                    this.displayMsjEsperaGuardarTarjeta=true;
                     //asignado
                     if(this.val=='01'){
     
@@ -1301,7 +1484,9 @@ export class TcontrolComponent implements OnInit{
                 }
                 this.validarTiempo="";
                 this.val='x';
-                this.displayAsignarTarjeta = false;
+
+                //this.displayAsignarTarjeta = false;
+                
             }
 
             //limpiando campos al guardar tarjeta
@@ -1326,6 +1511,7 @@ export class TcontrolComponent implements OnInit{
                     console.log(this.HoraSalidaRecEslavon);
                     console.log(this.MultiReten);
                 */
+                    console.log(this.ReDiDeId);
                 let estadoTarjetaAnterior=this.modoTarjeta, estadoActualTarjeta=this.estadoPlaca, estadoNuevaTarjeta=this.val, 
                     ReDiDeNroVuelta=this.ReDiDeNroVuelta, objTarjeta:any, TaCoFinish=1;
                 //objeto
@@ -1346,9 +1532,9 @@ export class TcontrolComponent implements OnInit{
                     TaCoTipoHoraSalida:Number('01'), //manual o automatico
                     ReDiDeId:this.ReDiDeId,
                     TaCoFinish:TaCoFinish,
-                    
+                    CoId:this.CoId,
                     TaCoCountMultiple: 0,
-                    TaCoMultiple:1,
+                    TaCoMultiple:this.TaCoMultiple,
                     TaCoCodEnvioMovil: 0,
                 }
 
@@ -1357,17 +1543,21 @@ export class TcontrolComponent implements OnInit{
 
                     //asignado 
                     if(estadoActualTarjeta==1){
-                        //validacion         
+                        //creando nueva tarjeta como asignado         
+                        
                         if(estadoNuevaTarjeta=='01'){
-                            if(MulRetenValid==true && PrimerRetenValid==false && tmpEslavonValid==false){
+                            if(MulRetenValid==true && PrimerRetenValid==true && tmpEslavonValid==false){
+    
                                 objTarjeta.TaCoFinish=0;
                                 objTarjeta.ReDiDeId++;
-                                objTarjeta.TaCoHoraSalida=operSHoras(this.ReReTiempo,this.HoraLlegadaTarjAnterior);
+                                //console.log(objTarjeta.ReDiDeId);
+                                objTarjeta.TaCoHoraSalida=operSHoras(this.ReReTiempo,this.HoraLlegadaTarjActual);
+                                //console.log(objTarjeta.TaCoHoraSalida);
                                 this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas-1, this.ReReTiempo, this.MultiReten);
                             }else if(MulRetenValid==false && PrimerRetenValid==false && tmpEslavonValid==false){
                                 //this.mnjNroValido="Esta hora no es valida";
                             }
-
+                        //creando neuva tarjeta como ausente o castigado
                         }else if(estadoNuevaTarjeta=='02' || estadoNuevaTarjeta=='03'){
                             if(MulRetenValid==false && PrimerRetenValid==false && tmpEslavonValid==false){
                                 objTarjeta.ReDiDeId++;
@@ -1426,7 +1616,7 @@ export class TcontrolComponent implements OnInit{
 
                 //si fuera despues de la primera
                 }else if(ReDiDeNroVuelta>1 && ReDiDeNroVuelta!=0){
-                    //estado antererio: asignado
+                    //estado anterior: asignado
                     if(estadoTarjetaAnterior==0){
                         //estado placa selecionada: asignado 
                         if(estadoActualTarjeta==1){
@@ -1509,10 +1699,10 @@ export class TcontrolComponent implements OnInit{
                                 }
                             }
                         }
-                    //castigado o ausente
+                    //estado anterior: castigado o ausente
                     }else if(estadoTarjetaAnterior==1){
                         
-                        //asignado 
+                        //estado actual: asignado 
                         if(estadoActualTarjeta==1){
                                 
                             // nueva tarjeta: asignado
@@ -1542,7 +1732,7 @@ export class TcontrolComponent implements OnInit{
                                 }
                             }
                                 
-                        //ausente o castigado
+                        //estado actual: ausente o castigado
                         }else if(estadoActualTarjeta==2 || estadoActualTarjeta==3){
                             //nueva tarj= asignado
                             if(estadoNuevaTarjeta=='01'){
@@ -1569,20 +1759,22 @@ export class TcontrolComponent implements OnInit{
                                     //mensaje de error en la validacion
                                 }
                             }   
-                        //estado actual de placa: no asignado
+                        //estado actual: no asignado
                         }else if(estadoActualTarjeta==0){
-                            
+
+                            //nueva tarjeta : asignado
                             if(estadoNuevaTarjeta=='01'){
                                 //validacion
-                                if(MulRetenValid==true && PrimerRetenValid==true && tmpEslavonValid==false){
+                                if(MulRetenValid==true && PrimerRetenValid==false && tmpEslavonValid==true){
                                     objTarjeta.TaCoFinish=0;
-                                    objTarjeta.TaCoHoraSalida=operSHoras(this.ReReTiempo,this.HoraLlegadaTarjAnterior);
-                                    this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas, this.ReReTiempo, this.MultiReten);
+                                    //objTarjeta.TaCoHoraSalida=operSHoras(this.ReReTiempo,this.HoraLlegadaTarjAnterior);
+                                    objTarjeta.TaCoHoraSalida=this.HoraSalidaRecEslavon;
+                                    this.guardarMultiTarjeta(objTarjeta, this.nroTarjetas, '00:00:00', this.MultiReten);
                                 //no valido
                                 }else{
                                     //mensaje de error en la validacion
                                 }
-
+                            //nueva tarjeta : ausente o castigado
                             }else if(estadoNuevaTarjeta=='02' || estadoNuevaTarjeta=='03'){
                                 //validacion
                                 if(MulRetenValid==false && PrimerRetenValid==false && tmpEslavonValid==false){
@@ -1603,166 +1795,51 @@ export class TcontrolComponent implements OnInit{
             guardarMultiTarjeta(objTarjetaInicial:any, nroTarjetasCrear:number, PrimerReten:string, MultiReten:string){
                 objTarjetaInicial.TaCoCountMultiple=nroTarjetasCrear;
                 objTarjetaInicial.TaCoHoraSalida=hora(objTarjetaInicial.TaCoHoraSalida);
+                if(objTarjetaInicial.TaCoAsignado==2 || objTarjetaInicial.TaCoAsignado==3){
+                    objTarjetaInicial.TaCoFinish=1;
+                }else if(objTarjetaInicial.TaCoAsignado==1){
+                    objTarjetaInicial.TaCoFinish=0;
+                }
                 
-                
-                console.log(objTarjetaInicial.TaCoHoraSalida);
+                //console.log(objTarjetaInicial.TaCoHoraSalida);
                 console.log(objTarjetaInicial);
                 console.log(nroTarjetasCrear);
                 console.log(hora(PrimerReten));
                 console.log(hora(MultiReten));
-                this.procAsigMultiTarjetas(objTarjetaInicial,hora(PrimerReten),hora(MultiReten));
+
+                if(this.verificarUltimaVuelta(this.ReDiDeNroVuelta, this.ReDiTotalVuelta)==false){
+                    this.procAsigMultiTarjetas(objTarjetaInicial,hora(PrimerReten),hora(MultiReten));
+                }else if(this.verificarUltimaVuelta(this.ReDiDeNroVuelta, this.ReDiTotalVuelta)==true){
+                    this.mensajeModal="No puede crear una tarjeta multiple en la penultima vuelta ";
+                    this.displayMnjNoPuedeCrearMulTarjEnPenultimaVuelta=true;
+                }
             }
             
-                //-> GUARDAR MULTIPLES TARJETAS en la base de datos
-                guardarObjetoMultiTarjetas(valorNuevaTarjeta:string, TaCoHoraSalida:string, PuCoTiempoBus:string , TaCoFinish:number, multiReten:string, nroTarjetas:number, estadoTarjetaAnterior:number ){
-                    let _tarjeta:any, arrHSalida=[], arrObj = []; 
-
-                    console.log(valorNuevaTarjeta); console.log(TaCoHoraSalida);  console.log(PuCoTiempoBus); 
-                    console.log(TaCoFinish);  console.log(multiReten);  console.log(nroTarjetas);
-
-                    //arrHSalida=this.calHorasSalida( TaCoHoraSalida, PuCoTiempoBus, multiReten, nroTarjetas).slice(0); //horaInicio, tiempo vuelta total, salto reten, nro total tarjetas
-
-                    
-                    for(let i=0; i< this.nroTarjetas; i++){
-                        arrObj.push({
-                            TaCoId:_tarjeta.TaCoId,
-                            UsFechaReg:_tarjeta.UsFechaReg,
-                            RuId:_tarjeta.RuId,
-                            TaCoAsignado :_tarjeta.TaCoAsignado,
-                            BuId:_tarjeta.BuId,
-                            PuCoId:_tarjeta.PuCoId,
-                            TaCoHoraSalida:hora(arrHSalida[i]),    
-                            UsId:_tarjeta.UsId,  
-                            ReDiDeId:_tarjeta.ReDiDeId+i,  
-                            PrId:_tarjeta.PrId,
-                            TaCoFecha:_tarjeta.TaCoFecha,
-                            TiSaId:_tarjeta.TiSaId,          
-                            TaCoCuota:_tarjeta.TaCoCuota,       
-                            TaCoNroVuelta:_tarjeta.TaCoNroVuelta+i,
-                            TaCoTipoHoraSalida:_tarjeta.TaCoTipoHoraSalida,
-                            TaCoMultiple:_tarjeta.TaCoMultiple,
-                            TaCoFinish:TaCoFinish
-                        });
-                    }
-
-                    //asignar nueva tarjeta
-                    if(valorNuevaTarjeta=='01'){
-                    
-                        //primera vuelta
-                        if(this.ReDiDeNroVuelta==1){
-                            //no tiene primer reten(primera horabasesalida), crear un mismo reten apartir de la tarjeta dos para adelante 
-
-                        //otras vueltas
-                        }else if(this.ReDiDeNroVuelta>1 && this.ReDiDeNroVuelta!=0){
-                            //separar primer reten de los demas retenes
-                            //asignado estado anterior tarjeta
-                            if(estadoTarjetaAnterior==0){
-                                //tiene primer reten
-                            
-                            //ausente o castigado estado anterior tarjeta
-                            }else if(estadoTarjetaAnterior==1){
-                                //no tiene primer reten(primera horabasesalida),
-
-                            }
-                        }
-                    
-                    //ausente o castigado
-                    }else if(valorNuevaTarjeta=='02' || valorNuevaTarjeta=='03'){  
-                        //no tiene retenes
-                        //procedimiento para guardar las tarjetas 
-                    }
-
-                    console.log('separador --------------------------------->');
-                    console.log(_tarjeta);  console.log(arrObj); console.log(arrHSalida);
-
-                    /*
-                    
-                            for(let i=0; i<this.nroTarjetas; i++){
-                            this.tcontrolservice.asignarTarjetaControl(arrObj[i]).subscribe(
-                                data => {
-                                            if(i=this.nroTarjetas-1){
-                                                this.getalltarjetasbyemidpucoid(this.emID,this._PuCoId);
-                                                this._pcId=this._PuCoId;
-                                            }
-                                        }, 
-                                err => {this.errorMessage=err}
-                            );
-                        }
-                        this.displayAsigMultiTarj=false; 
-                        
-                            reten={
-                                ReDiDeId:this.ReDiDeId,
-                                ReReId:this.ReReId,
-                                PrDeId:this._prDeId,
-                                ReReTiempo:hora(this.ReReTiempo),
-                                UsId:this.UsId,
-                                UsFechaReg:new Date()
-                            }
-                            console.log(reten);
-
-                            this.regRetenService.saveregistroReten(reten).subscribe(
-                                data => { _tarjeta.ReDiDeId=data.ReDiDeId; this.procAsigTarjCtrl(_tarjeta);  },
-                                error=>{alert('No se pudo crear la tarjeta, Error');console.log(error);}
-                            );
-                        
-                    */
-                }
-
-                calculoHoraSalida(ReReTiempo:string, TiempoVuelta:string, HoraSalida:string):string{
-                    console.log(ReReTiempo); console.log(TiempoVuelta); console.log(HoraSalida);
-                    let hora=operSHoras(ReReTiempo, operSHoras(TiempoVuelta, HoraSalida )), _hora=hora.split(':'); let hora2:string;
-                    //console.log(hora); console.log(_hora);
-                    if(Number(_hora[0])>23 || Number(_hora[1])>59 || Number(_hora[2])>59){
-                        hora2=extFuncCorrecHora(hora);
-                        return hora2;
-                    }else{
-                        return hora;
-                    }
-                    //console.log(hora2);
-                }
-
-                //* CALCULANDO HORAS DE SALIDA, PARA MULTITARJETAS, ESTA FUNCION DEVUELVE UN ARRAY  
-                calHorasSalida(hInicio:string ,tvuelta:string ,hIntermedio:string, nroTarjetas:number) {
-                    /* VARIABLES, ARRAYS DE TIEMPOS*/
-                    let arrH:any[]=[], tTotEntreTarj:any[]=[];  let _arrTInicio:any=[], arrTInicio = hInicio.split(":");
-                    let _arrTRecorrido:any=[],arrTRecorrido = tvuelta.split(":"); let _arrTInter:any=[], arrTInter = hIntermedio.split(":");
-
-                    /* PASANDO A NRO LAS HS-MN-SS DE LA HORA SALIDA */
-                    for(let i=0; i<arrTInicio.length; i++){  _arrTInicio[i]=Number(arrTInicio[i]);}
-                    
-                    /* PASANDO A NRO LAS HS-MN-SS TIEMPO RECORRIDO DEL BUS */
-                    for(let i=0; i<arrTRecorrido.length; i++){ _arrTRecorrido[i]=Number(arrTRecorrido[i]);}
-
-                    /* PASANDO A NRO LAS HS-MN-SS TIEMPO INTERMEDIO ENTRE TARJETAS */
-                    for(let i=0; i<arrTInter.length; i++){ _arrTInter[i]=Number(arrTInter[i]);}
-
-                    /* INICIANDO ARRAY DE HORAS CON ARRAYS VACIOS PARA Q EXISTAN */
-                    for(let i=0; i<nroTarjetas ; i++){arrH[i]=[0,0,0];}
-            
-                    /* SUMANDO TIEMPO RECORRIDO MAS TIEMPO INTERMEDIO  HORA(0) MINUTO(1) SEGUNDOS(2)*/
-                    tTotEntreTarj[0]=_arrTRecorrido[0] + _arrTInter[0]; tTotEntreTarj[1]=_arrTRecorrido[1] + _arrTInter[1]; tTotEntreTarj[2]=_arrTRecorrido[2] + _arrTInter[2];
-            
-                    arrH[0]=_arrTInicio; /* INICIANDO ARRAY TARJETAS CON LA 1ERA HORA SALIDA */
-
-                    let j=0, i=1; 
-                    /* CALCULANDO LAS HORAS DE SALIDA DE LAS TARJETAS*/
-                    while(i<nroTarjetas){
-                        while(j<3){ 
-                            arrH[i][j]=arrH[i-1][j]+tTotEntreTarj[j]; 
-                            j++; }
-                        j=0; i++;
-                    }
-
-                    /* CORRIGIENDO LOS HOUR MIN SEG */
-                    arrH=ajustaHora(arrH,nroTarjetas);
-
-                    /* COMPLETANDO CEROS */
-                    i=0;
-                    while(i<nroTarjetas){ arrH[i]=arrH[i].join(":"); arrH[i]=cCeroHora(arrH[i]);  i++; }
-                    return arrH;
-                }
-            
+            //aceptar, no puede crear tarjeta en la penultima vuelta
+            aceptarNoPuedeCrearMultiTarjeta(){
+                this.mensajeModal='';
+                this.displayMnjNoPuedeCrearMulTarjEnPenultimaVuelta=false;
+            }
     /* FUNCIONES VARIADAS */
+            //recuperando indice fila seleccionada datatable individual tarjeta
+            buscarObjetoTablaIndividual(arrprog=[], objSel:any):number{
+                let i:number=0,cen:number=0, index:number;
+                while(i<arrprog.length && cen==0){
+                    //console.log('BuPlaca: '+arrprog[i].BuPlaca+' ----- '+'ReDiDeNroVuelta: '+ arrprog[i].ReDiDeNroVuelta);
+                    if(arrprog[i].BuId==objSel.BuId){
+                        cen=1;
+                    }else if(arrprog[i].BuId!=objSel.BuId){
+                        i++; cen=0;
+                    }
+                }
+
+                if(cen==1){
+                    index=i;
+                }else if(cen==0){
+                    index=-1;
+                }
+                return index;
+            }
             //buscando la placa en las tarjetas asignadas
             buscarTarjetaAsignada(objTarjeta:any):number{
                 let resultado:number, arrTarjetas:any[]=[], cen=0, i=0, finish:number; 
@@ -1839,58 +1916,6 @@ export class TcontrolComponent implements OnInit{
                 return result;
             }
 
-            /* FUNCION ESCOGER VENTANA DE SOLO UNA TARJETA O VENTANA VARIAS TARJETAS A LA VEZ */
-            funcNroTarjetas(){
-                this.mensaje="";  this.estadoPlaca=-1; //console.log(this.ReDiDeNroVuelta); console.log(this.ReDiTotalVuelta);
-                this.mnjNroTarjetaValido="";
-
-                //validando nro de tarjetas a crear CONDICION MAXIMO Y MINIMO NROTARJETAS ASIGNAR PERMITIDOS
-                if( (this.nroTarjetas==1) && ( ((this.nroTarjetas+this.ReDiDeNroVuelta)<this.ReDiTotalVuelta+1) || ((this.nroTarjetas+this.ReDiDeNroVuelta)==this.ReDiTotalVuelta+1)) ){
-                    
-                    this.getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2()));
-                    this.getallprogramacionbydate(this._prId,guion_posFecha(this.tarjeta._TaCoFecha) , this.nroTarjetas);
-
-                    //input horas para una sola tarjeta
-                    this.actInputTHora=true;
-                    this.actInputReten=true;
-                    this.actInputHoraSalida=true;
-
-                }else if( (this.nroTarjetas>1) && ( ((this.nroTarjetas+this.ReDiDeNroVuelta)<this.ReDiTotalVuelta+1) || ((this.nroTarjetas+this.ReDiDeNroVuelta)==this.ReDiTotalVuelta+1)) ){
-                    
-                    this.getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2()));
-                    this.getallprogramacionbydate(this._prId,guion_posFecha(this.tarjeta._TaCoFecha) , this.nroTarjetas);
-
-                    //input horas para multiples tarjeta
-                    this.actMInputPrimerReten=true;
-                    this.actMInputRepeatReten=true;
-                    this.actMInputHoraEslavon=true;
-                    
-                }else{
-                    this.mnjNroTarjetaValido="El N° ingresado no es valido";
-                }
-              
-            } 
-
-            
-            /* BOTON ATRAS (REGRESA AL MODAL NRO DE TARJETAS A ASIGNAR), MODAL ASIGNAR MULTITARJETA NROTARJ QUEDA IGUAL */
-            btnAtrasFormGuardarTarjetas(){
-                //console.log(this.nroTarjetas);        
-                if(this.nroTarjetas==1){
-                    this.displayAsignarTarjeta=false;
-                    this.displayNroTarjetas=true;
-                    this.nroTarjetas=1; //VOLVIENDO A 1 TARJ
-                    this.tarjeta._TaCoFecha="";
-                }else if(this.nroTarjetas>1){
-                    this.displayAsigMultiTarj=false;
-                    this.displayNroTarjetas=true;
-                    this.nroTarjetas=1;
-                    this.tarjeta._TaCoFecha="";
-                }
-                /* BORRANDO OBJETOS Y VARIABLES CREADOS*/
-                this.val="x";
-                this.borrarObjetos();
-                //this.tarjeta._TaCoFecha=editf1(fechaActual1()); //INGR FECHA ACT
-            }
 
             /* BORRANDO NUEVOS OBJETOS CREADOS */
             borrarObjetos(){
@@ -1966,7 +1991,7 @@ export class TcontrolComponent implements OnInit{
                 }else if(arrMatCuadro[i].TaCoAsignado=='3'){
                     arrMatCuadro[i].EstadoAsignado='Castigado';
                 }else if(arrMatCuadro[i].TaCoAsignado==null){
-                    arrMatCuadro[i].EstadoAsignado='No Asig.';
+                    arrMatCuadro[i].EstadoAsignado='No_Asig.';
                     arrMatCuadro[i].RetenTiempo='__:__:__';
                     arrMatCuadro[i].TiempoVuelta='__:__:__';
                     arrMatCuadro[i].HoraLlegada='__:__:__';
@@ -1981,13 +2006,13 @@ export class TcontrolComponent implements OnInit{
             }
 
             //dividiendo array en una matriz
-            _matSalidas=this.matrizCuadroDiario(arrMatCuadro, arrProgFecha.length);  console.log(_matSalidas);
+            _matSalidas=this.matrizCuadroDiario(arrMatCuadro, arrProgFecha.length);  //console.log(_matSalidas);
            
                         
             //ENCABEZADO NUMERICO
             for(let i=0; i<ReDiTotalVuelta; i++){ arrEncNumber.push(i+1);}
             //ENCABEZADO STRING
-            for(let i=0; i<ReDiTotalVuelta;i++){ arrEncHoras.push(['N°Placa', 'Estado T.',  'H.Reten', 'H.Salida', 'H.Vuelta' ,'H.Llegada']);  }
+            for(let i=0; i<ReDiTotalVuelta;i++){ arrEncHoras.push(['N°Placa', 'Etd_Tarj.',  'H.Reten', 'H.Salida', 'H.Vuelta' ,'H.Llegada']);  }
 
             this.headerTabCuadroNumber=arrEncNumber; this.headerTabCuadroHoras=arrEncHoras;
             _arrCuadroSalidas=this.mgCuadroSalidas(this.ReDiTotalVuelta,arrProgFecha.length);
@@ -1995,7 +2020,7 @@ export class TcontrolComponent implements OnInit{
             //_arrCuadroSalidas[0]=matSalidas;
             for(let i=0; i<_matSalidas.length; i++){  _arrCuadroSalidas[i]=_matSalidas[i]; }
 
-            console.log(_arrCuadroSalidas);
+            //console.log(_arrCuadroSalidas);
             this.arrCuadroSalidas=_arrCuadroSalidas;
         }
        
@@ -2095,7 +2120,7 @@ export class TcontrolComponent implements OnInit{
                 BuId:_BuId,
                 Placa:Placa
             }
-            console.log(resultado);
+            //console.log(resultado);
             return resultado;
         }
 
@@ -2160,10 +2185,12 @@ export class TcontrolComponent implements OnInit{
         
 
         /* VENTANA ELEGIR ENTRE ASIGNAR UNA O VARIAS TARJETAS A LA VEZ*/
-        nroAsigTarjetas(){
-            this.nroTarjetas=1; 
-            this.displayNroTarjetas=true;
+        formAsignarTarjetas(){
+            //this.nroTarjetas=1; 
+            this.displayAsignarTarjeta=true;
             this.getallplacasbusbyemsuem(this.emID,0);
+
+            //BORRANDO VARIABLES
             this.puntoControl=null;
             this._prId=null;
         }
@@ -2176,19 +2203,23 @@ export class TcontrolComponent implements OnInit{
 
         /*SE CANCELA NRO TARJETA IGUAL A UNO*/
         cancelarMultiTarjeta(){
-            this.displayAsigMultiTarj = false;
-            this.nroTarjetas=1;/*NRO TARJ POR DEFECTO */
-            /* BORRANDO OBJETOS Y VARIABLES CREADOS*/
+            this.displayAsignarTarjeta = false;
+            this._getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2()));
+            // BORRANDO OBJETOS Y VARIABLES CREADOS
             this.borrarObjetos();
+            this.val='x';
+            this.TaCoMultiple=null;
+            //this.estadoPlaca=0; this.nroTarjetas=1;
+            this.estadoPlaca=-1;
         }
 
         /*SE CANCELA NRO TARJETA IGUAL A UNO*/
         cancelarTarjeta(){
             this.displayAsignarTarjeta = false;
-            this.nroTarjetas=1;/*NRO TARJ POR DEFECTO */
-            /* BORRANDO OBJETO Y VARIABLES*/
+            this._getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2()));
             this.borrarObjetos();
             this.val='x';
+            this.TaCoMultiple=null;
             //this.estadoPlaca=0;
             this.estadoPlaca=-1;
         }
@@ -2253,13 +2284,13 @@ export class TcontrolComponent implements OnInit{
                 if(ReDiDeNroVuelta==1  && estadoTarjetaAnterior==2){
                     //estado actual tarjeta = asignado
                     if(estadoTarjetaActual==1){
-                        //asignado
+                        //asignado (creando tarjeta)
                         if(estadoTarjetaApertura=='01'){
                             this.actMInputPrimerReten=false; 
                             this.actMInputRepeatReten=false; 
                             this.actMInputHoraEslavon=true;
 
-                        //ausente o castigado
+                        //ausente o castigado (creando tarjeta)
                         }else if(estadoTarjetaApertura=='02' || estadoTarjetaApertura=='03'){
                             this.actMInputPrimerReten=true; 
                             this.actMInputRepeatReten=true; 
@@ -2388,11 +2419,57 @@ export class TcontrolComponent implements OnInit{
                         }
                     }
 
-                    
                 }
 
             }
             
         }
-}
 
+        //buscar si es la ultima placa de la programacion del dia
+        buscarUltimaPlacaProgr(objSelec:any, arrProgAct=[]):number{
+            console.log(objSelec);
+            console.log(arrProgAct);
+            let i:number=0, cen:number=0, result:number, ultIndice=arrProgAct.length-1;
+
+            if(arrProgAct[ultIndice].BuId==objSelec.BuId){
+                result=1;
+            }else if(arrProgAct[ultIndice].BuId!=objSelec.BuId){
+                result=-1;
+            }
+
+            return result;
+        }
+
+
+        //BORRAR ESTA FUNCION
+        borrarTodasTarjetas(){
+            //console.log(this._allTarjControl);
+            let arr=this._allTarjControl;
+            let long=this._allTarjControl.length;
+
+            for(let i=0;i<long;i++){
+                this.borrarProcDeleteTarjetaControl(arr[i].TaCoId);
+            }
+        }
+
+        //validar si la tarjeta selecionada es una tarjeta multiple
+        verificarTipoTarjeta(objRowSelect:any){
+            //si la tarjeta seleccionada es individual, se puede continuar creando tarjetas individuales 
+            //si es multiple, ya no se puede crear tarjeta multiple
+            
+        }
+
+        //verificar si se encuentra en la ultima vuelta
+        verificarUltimaVuelta(ReDiDeNroVuelta:number, ReDiTotalVuelta:number):boolean{
+            //si se encuentra en la ultima vuelta, no se 
+            //puede seguir seando tarjetas multiple, solo individual
+            let result:boolean;
+            console.log('diferencia: '+(ReDiTotalVuelta-ReDiDeNroVuelta));
+            if(ReDiTotalVuelta-ReDiDeNroVuelta>=2){
+                result=false;
+            }else if(ReDiTotalVuelta-ReDiDeNroVuelta==0 || ReDiTotalVuelta-ReDiDeNroVuelta==1 ){
+                result=true;
+            }
+            return result;
+        }
+}

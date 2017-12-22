@@ -297,6 +297,9 @@ DESPLAZANDO AL FORMNULARIO*/
         footer{
             font-size: 10px;
         }
+        #loginSmartphone{
+            display: initial;
+        }
     }
     
     /* ipad*/

@@ -362,7 +362,7 @@
        //console.log(arrH);
         return arrH;
     }
-
+    
     /* DIVIDIENDO STRING HORA A ARRAY */
     export function extFuncArrHora(tiempo:string){
         let arrH=tiempo.split(":"); let arrRes:any[]=[];

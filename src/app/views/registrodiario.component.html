@@ -25,9 +25,12 @@
                         <p-dataTable [value]="_allTarjControl" [rows]="5" [paginator]="true"  [globalFilter]="filtroGlobal" 
                             [responsive]="false" emptyMessage="Lista Vacia" scrollable="true" scrollWidth="100%" selectionMode="single" 
                             [(selection)]="selectedTarjCab" (onRowSelect)="onRowSelectCabecera($event)">
+                            scrollable="true" scrollHeight="360px" scrollWidth="100%"
                         -->
-                        <p-dataTable [value]="arrRegDiarioByEmId" [globalFilter]="filtroGlobal" scrollable="true"
-                                    emptyMessage="Lista Vacia" scrollHeight="360px" scrollWidth="100%" selectionMode="single" 
+                        <p-dataTable [value]="arrRegDiarioByEmId" [globalFilter]="filtroGlobal" 
+                                    
+                                    [rows]="7" [paginator]="true"
+                                    emptyMessage="Lista Vacia"  selectionMode="single" 
                                 [(selection)]="selectedTarjCab" (onRowSelect)="onRowSelectRegDiario($event)">
 
                             <!--campos de la datatable-->
@@ -37,10 +40,10 @@
                                     <button type="button" pButton id="btnTable" (click)="btnTabDelReDi(row.ReDiId)" icon="fa-trash" > </button>
                                 </template>
                             </p-column>
-                            <p-column field="Nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>
-                            <p-column field="ReDiFeha" header="Fecha"  [style]="{'width':'8em','text-align':'center'}"></p-column>
-                            <p-column field="ReDiHoraInicioDiario" header="Hora Inicio"  [style]="{'width':'8em','text-align':'center'}"></p-column>
-                            <p-column field="ReDiTotalVuelta" header="Vueltas"  [style]="{'width':'8em','text-align':'center'}"></p-column>
+                            <p-column field="Nro" header="N°"  [style]="{'width':'4em','text-align':'center','height':'2.8em'}"></p-column>
+                            <p-column field="ReDiFeha" header="Fecha"  [style]="{'width':'8em','text-align':'center','height':'2.8em'}"></p-column>
+                            <p-column field="ReDiHoraInicioDiario" header="Hora Inicio"  [style]="{'width':'8em','text-align':'center','height':'2.8em'}"></p-column>
+                            <p-column field="ReDiTotalVuelta" header="Vueltas"  [style]="{'width':'8em','text-align':'center','height':'2.8em'}"></p-column>
                         </p-dataTable>
                     </div>
                 </div>
