@@ -1,7 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {GlobalVars} from 'app/variables'
 import {editf1,fechaActual1,fechaActual2, _fecha1, _hora, fecha, hora,guion_slash_inver} from 'app/funciones';
-import {RegDiarioService} from '../service/registrodiario.service'
+import {RegDiarioService} from '../service/registrodiario.service';
+
+/*import {ISubscription} from 'rxjs/Subscription';
+import {ConfiguraService} from '../service/configura.service';*/
 
 @Component({
     selector: 'app-rgdcontrol',
@@ -11,6 +14,7 @@ import {RegDiarioService} from '../service/registrodiario.service'
 })
 
 export class RegistroDiarioComponent implements OnInit{
+      
         //variables
             //display modal
                 private displayNuevoRegistroDiario:boolean;
@@ -22,13 +26,14 @@ export class RegistroDiarioComponent implements OnInit{
                 private emid:number;
                 private userid:number;
                 private ReDiId:number;
+                
             //string 
                 private ReDiHoraInicioDiario:string;
                 private fechRegDir:string;
                 private mensajevalidacion:string;
                 private mensaje:string;
             //any(objeto)
-                
+                private objConfig:any;
         //arrays
             private arrRegDiarioByEmId:any[];
             private arrRegDiarioDetalleByEmId:any[];
@@ -38,7 +43,9 @@ export class RegistroDiarioComponent implements OnInit{
             this.getAllRegistroDiarionByemId(this.emid);
         }
         //constructor
-        constructor(private registrodiarioservice:RegDiarioService, public ClassGlobal:GlobalVars){
+        constructor(private registrodiarioservice:RegDiarioService, 
+                    public ClassGlobal:GlobalVars){
+
             this.emid=this.ClassGlobal.GetEmId();
             this.userid=this.ClassGlobal.GetUsId();
             this.arrRegDiarioByEmId=[];
@@ -48,7 +55,7 @@ export class RegistroDiarioComponent implements OnInit{
             this.displayConfDelRegDiario=false;
             this.displayErrorMismaFecha=false;
             this.displayRegDiarioDetalle=false;
-
+           
             this.nTolVueltas=null;
             this.ReDiHoraInicioDiario=null;
             this.arrEtdRegDiario=[{id:'01',nomb:'POR REALIZAR'},{id:'02',nomb:'ACTUAL'},{id:'03',nomb:'COMPLETADO'}];
@@ -57,10 +64,10 @@ export class RegistroDiarioComponent implements OnInit{
         //btn nuevo registro diario ---- form principal
             funcBtnNuevoRegistroDiario(){
                 this.displayNuevoRegistroDiario=true;
-                this.newRegistroDiario();
-                
+                this.newRegistroDiario();  
             }
         //procedures
+            
             //GET
                 getAllRegistroDiarionByemId(emId:number){
                     let arrRegDiario:any[]=[];

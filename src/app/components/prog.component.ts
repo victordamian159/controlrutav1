@@ -173,23 +173,28 @@ export class ProgComponent implements OnInit{
     }
         
     funcCalendarioNumerico(refFecha1:string, refFecha2:string){
-        let diaHoy = new Date(); let arrCalendar:any[]=[]; let i:number=1; 
-        let f1=refFecha1.split('-'); let f2=refFecha2.split('-'); let nf1, nf2;
-        nf1=_fnroDias(f1); nf2=_fnroDias(f2); let nroDias:number=nf2 - nf1; 
+        let diaHoy = new Date(); 
+        let arrCalendar:any[]=[]; 
+        let i:number=1; 
 
-    
+        let f1=refFecha1.split('-'); 
+        let f2=refFecha2.split('-'); 
+        let nf1, nf2;
+        
+        nf1=_fnroDias(f1); nf2=_fnroDias(f2); 
+        
+
+        let nroDias:number=nf2 - nf1; 
         let initfecha = fecha(refFecha1);
 
        
         let arrDaysSemana:any[]=[];
         arrCalendar[0]=fecha(refFecha1).getTime();
-
         while(i<nroDias){ 
             arrCalendar[i]=new Date(arrCalendar[0]+(i*(24*60*60*1000)));  
             i++; 
         }
         arrCalendar[0]=new Date(arrCalendar[0]);
-        console.log(arrCalendar);
         return arrCalendar;
     }
             
@@ -1068,7 +1073,7 @@ export class ProgComponent implements OnInit{
         fi = this.formatoCal(event.data.PrFechaInicio);  ff = this.formatoCal(event.data.PrFechaFin);
         
         this.getAllPlacasBusByEmSuEm(this.emid,0);
-        this.calendarioProg(fi,ff,PrDiasIncluidosNumber);
+        //this.calendarioProg(fi,ff,PrDiasIncluidosNumber);
         
 
         //LIMPIANDO VARIABLES   this.columnas : COLUMNAS    this._columnas : ITEMS COLUMNAS DATATABLE
@@ -1079,6 +1084,7 @@ export class ProgComponent implements OnInit{
             data => {
                         this.progBDDetalle = data; 
                         if(this.progBDDetalle.length!=0){
+
                             this.extraerHoraBase(this.progBDDetalle, this.PrCantidadBuses);
 
                             this.calendarioProgramacion(this.progBDDetalle,this.PrCantidadBuses, this.dias);
@@ -1202,18 +1208,53 @@ export class ProgComponent implements OnInit{
 
     //obtener calendario - recuperar calendario de la programacion detalle que me devuelve del servicio
     calendarioProgramacion(arrProgramacion=[],PrCantidadBuses, NroDias:number){
-        let i:number=0, nrod:number=arrProgramacion.length/PrCantidadBuses; let arrCalendario:any[]=[];
-        console.log(nrod);
-        console.log(arrProgramacion);
+        let i:number=0,nrod:number; 
+        nrod=arrProgramacion.length/PrCantidadBuses; 
+        let arrCalendarioBase:any[]=[];
+        let arrcalendarioNumerico:any[]=[];
+        let arrcalendarioString:any[]=[];
+        let _arrcalendarioString:any[]=[];
+        //console.log(nrod);
+        /*console.log(arrProgramacion);
         console.log(PrCantidadBuses);
-        console.log(NroDias);
-        while(i<nrod){
-            arrCalendario.push(_fecha1(arrProgramacion[i*PrCantidadBuses].PrDeFecha));
-            i++;
+        console.log(NroDias);*/
+
+        for(let i=0; i<nrod; i++){
+            arrCalendarioBase.push(new Date(arrProgramacion[i*PrCantidadBuses].PrDeFecha));
         }
 
-        console.log(arrCalendario.length);
-        console.log(arrCalendario);
+        for(let i=0; i<arrCalendarioBase.length; i++){
+            arrcalendarioNumerico.push(arrCalendarioBase[i].getDate());
+        }
+
+        for(let i=0; i<arrCalendarioBase.length; i++){
+            _arrcalendarioString.push(arrCalendarioBase[i].getDay());
+        }
+        for(let i=0; i<_arrcalendarioString.length;i++){
+            if(_arrcalendarioString[i]==0){
+                arrcalendarioString.push('Do');
+            }else if(_arrcalendarioString[i]==1){
+                arrcalendarioString.push('Lu');
+            }else if(_arrcalendarioString[i]==2){
+                arrcalendarioString.push('Ma');
+            }else if(_arrcalendarioString[i]==3){
+                arrcalendarioString.push('Mr');
+            }else if(_arrcalendarioString[i]==4){
+                arrcalendarioString.push('Ju');
+            }else if(_arrcalendarioString[i]==5){
+                arrcalendarioString.push('Vi');
+            }else if(_arrcalendarioString[i]==6){
+                arrcalendarioString.push('Sa');
+            }
+        }
+
+        /*console.log(arrCalendarioBase);
+        console.log(arrcalendarioNumerico);
+        console.log(_arrcalendarioString);
+        console.log(arrcalendarioString);*/
+
+        this.calNumb=arrcalendarioNumerico;
+        this.calString=arrcalendarioString;
     }
 
 

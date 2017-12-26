@@ -151,7 +151,7 @@
         
     </p-dialog>
 
-    <!--MODAL ASIGNAR SOLO UNA TARJETA DE CONTROL-->
+    <!--MODAL ASIGNAR TARJETA DE CONTROL-->
     <p-dialog [resizable]="false" [(visible)]="displayAsignarTarjeta" [draggable]="false" modal="modal" width="100%" height="100%" [closable]= false>
         <!--CONTENIDO-->
         <p-header>Asignar Tarjetas -- Vuelta: {{ReDiDeNroVuelta}} de {{ReDiTotalVuelta}}</p-header>
@@ -246,6 +246,7 @@
                                 <p-column field="EstadoAsignado" header="Estado" [style]="{'width':'6em','text-align':'center','height':'2.5em'}" ></p-column>                      
                             </p-dataTable>                                               
                         </div>                        
+                        
                         <!--botones-->              
                         <div class="btnModAsigT row">
                             
@@ -333,18 +334,15 @@
                                 <p-column field="BuPlaca" header="Placa" [style]="{'width':'6em','text-align':'center','height':'2.5em'}" ></p-column>
                                 <p-column field="EstadoAsignado" header="Estado" [style]="{'width':'6em','text-align':'center','height':'2.5em'}" ></p-column>                        
                             </p-dataTable>
-                            <!--{{!(val!='x' && (estadoPlaca==0 || estadoPlaca==1 || estadoPlaca==2 || estadoPlaca==3 ))}}
-                            {{val!='x'}}
-                            {{estadoPlaca==0}}
-                            {{estadoPlaca}}-->
-                        </div>                                                
+                        </div>     
+                        {{estadoPlaca}}{{val}}                                           
                         <!--botones-->              
                         <div class="btnModAsigT row">
-                                
+                                <!-- !(val!='x' && (estadoPlaca==0 || estadoPlaca==1 || estadoPlaca==2 || estadoPlaca==3 ))-->
                             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                 <button class="btn_modal" type="text" pButton icon="fa-save" 
                                 (click)="guardarMultiTarjetas(PrimerReten.valid,  tmpEslavon.valid, MulReten.valid); MulReten.reset(); ValTarjMulti.reset();" 
-                                [disabled]=" !(val!='x' && (estadoPlaca==0 || estadoPlaca==1 || estadoPlaca==2 || estadoPlaca==3 ))" label="Guardar"></button>
+                                [disabled]="(!(val!='x') || !(estadoPlaca==0))" label="Guardar"></button>
                             </div>
                             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                 <button class="btn_modal" type="text" pButton icon="fa-close" 

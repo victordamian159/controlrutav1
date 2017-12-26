@@ -9,24 +9,16 @@ declare var google: any;
 })
 
 export class consulVistaEnLineaComponent implements OnInit{
- 
+    private options: any;
+    private overlays: any[];
+    private dialogVisible: boolean;
+    private markerTitle: string;
+    private selectedPosition: any;
+    private infoWindow: any;
+    private draggable: boolean;
+    private msgs: Message[] = [];
+    private placas:any[]=[];
     
-    options: any;
-    
-    overlays: any[];
-    
-    dialogVisible: boolean;
-    
-    markerTitle: string;
-    
-    selectedPosition: any;
-    
-    infoWindow: any;
-    
-    draggable: boolean;
-    
-    msgs: Message[] = [];
-    placas:any[]=[];
     ngOnInit() {
         this.options = {
             center: {lat: 36.890257, lng: 30.707417},
