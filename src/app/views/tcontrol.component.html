@@ -154,14 +154,14 @@
     <!--MODAL ASIGNAR TARJETA DE CONTROL-->
     <p-dialog [resizable]="false" [(visible)]="displayAsignarTarjeta" [draggable]="false" modal="modal" width="100%" height="100%" [closable]= false>
         <!--CONTENIDO-->
-        <p-header>Asignar Tarjetas -- Vuelta: {{ReDiDeNroVuelta}} de {{ReDiTotalVuelta}}</p-header>
+        <label>Asignar Tarj -- Vuelta: {{ReDiDeNroVuelta}} de {{ReDiTotalVuelta}} -- {{PrDescripcion}}</label>
 
             <div class="_asignaUnaTarj">
                 <div class="asignaUnaTarj">
                     <!---PUNTOS DE CONTROL - TIPO TARJETA-->
                     <div class="form-group row">
                         <!--PUNTOS DE CONTROL-->
-                        <div class="form-group  col-xl-4 col-md-4 col-sm-12 col-xs-12">
+                        <div class="col-xl-4 col-md-6 col-sm-12 col-xs-12">
                             <label>Puntos de Control:</label>
                             <select class="form-control" [(ngModel)]="puntoControl" 
                                 (change)="funcCboPuntosControlId($event)" required #cboPtosControl="ngModel">
@@ -176,8 +176,9 @@
                                 Error, revise los datos ingresados
                             </div>
                         </div>
+
                         <!--TIPO TARJETA-->
-                        <div class="form-group  col-xl-4 col-md-4 col-sm-12 col-xs-12">
+                        <div class="col-xl-4 col-md-6 col-sm-12 col-xs-12">
                             <label>Tipo Tarjeta:</label>
                             <select class="form-control" [(ngModel)]="TaCoMultiple" 
                                     (change)="funcCboTipoTarjeta()" required #cboTipoTarjeta="ngModel">
@@ -190,53 +191,62 @@
                                 Obligatorio!!!
                             </div>               
                         </div>   
+
+                        <!--QADRO DE SALIDAS-->
+                        <div class="col-xl-4 col-md-12 col-sm-12 col-xs-12">                           
+                            <button class="btnCuadroSalidas" type="text" (click)="abrirCuadroSalidas();"
+                            pButton icon="fa-file-o" label="Cuadro de Salidas"></button>                          
+                        </div>
                     </div>
 
                     <!--TARJETA INDIVIDUAL-->
-                    <div class="form-group row" *ngIf='TaCoMultiple==0 '>
+                    <div *ngIf='TaCoMultiple==0 '>
                         <!--COMBOS + INPUTS-->
-                        <div class="contenidoAsignarTarjetaIndividual form-group col-xl-4 col-md-5 col-sm-12 col-xs-12">
-                                <label>Programacion: {{PrDescripcion}}</label>   
-                                <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroTableIndividual/>
-                                    
-                            <!--ESTADO TARJETA: {{msjestadoplaca}}-->         
-                                <label>Estado Tarjeta:</label>
-                                <select class="form-control" [(ngModel)]="val" (change)="funEstTarjApertura();" required #ValTarj="ngModel">
-                                    <option *ngFor="let valtj of arrValTarjeta" [ngValue]="valtj.val" [selected]="valtj.val===selValTarjeta.val ">
-                                        {{valtj.nomb}}
-                                    </option>
-                                </select>
-                                <span *ngIf="!ValTarj.valid && ValTarj.touched" >
-                                    <div id="validation" [hidden]="!ValTarj.errors.required"> Obligatorio </div>
-                                </span>                                                                         
+                        <div class="contenidoAsignarTarjetaIndividual ">
+                            <div class="form-group row">
+                                <div class="col-xl-4 col-md-6 col-sm-6 col-xs-12">
+                                    <label>Placa:</label>   
+                                    <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroTableIndividual/>
+                                </div>    
+                                        
+                                <!--ESTADO TARJETA: {{msjestadoplaca}}-->        
+                                <div class="col-xl-4 col-md-6 col-sm-6 col-xs-12">
+                                    <label>Estado Tarjeta:</label>
+                                    <select class="form-control" [(ngModel)]="val" (change)="funEstTarjApertura();" required #ValTarj="ngModel">
+                                        <option *ngFor="let valtj of arrValTarjeta" [ngValue]="valtj.val" [selected]="valtj.val===selValTarjeta.val ">
+                                            {{valtj.nomb}}
+                                        </option>
+                                    </select>
+                                    <span *ngIf="!ValTarj.valid && ValTarj.touched" >
+                                        <div id="validation" [hidden]="!ValTarj.errors.required"> Obligatorio </div>
+                                    </span>    
+                                </div>    
 
-                            <!--TIEMPO RETEN(HH:MM:SS):  ReReTiempo  tarjeta._TaCoHoraSalida-->
-                                <div  [hidden]="actInputReten">
-                                    <label >Rente(HH:MM:SS):</label>
-                                    <input class="form-control" type="text" #tmpReten="ngModel" required
+                                <!--TIEMPO RETEN(HH:MM:SS):  ReReTiempo  tarjeta._TaCoHoraSalida-->
+                                <div class="col-xl-4 col-md-6 col-sm-12 col-xs-12">
+                                    <div  [hidden]="actInputReten">
+                                        <label >Rente(HH:MM:SS):</label>
+                                        <input class="form-control" type="text" #tmpReten="ngModel" required
+                                                pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})" 
+                                                length=8 step="1" [(ngModel)]="ReReTiempo"/>
+                                        <div id="validation" *ngIf="validarTiempo.length!=0">
+                                            {{validarTiempo}}
+                                        </div>
+                                    </div>   
+
+                                    <!--TIEMPO ESLAVON, RECUPERA LA CADENA DE ASIGNACION DE TARJETAS-->
+                                    <div  [hidden]="actInputHoraSalida">
+                                        <label >Hora Salida(HH:MM:SS):</label>
+                                        <input class="form-control" type="text" #tmpSalida="ngModel" required
                                             pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})" 
-                                            length=8 step="1" [(ngModel)]="ReReTiempo"/>
-                                    <div id="validation" *ngIf="validarTiempo.length!=0">
-                                        {{validarTiempo}}
-                                    </div>
-                                </div>   
-
-                            <!--TIEMPO ESLAVON, RECUPERA LA CADENA DE ASIGNACION DE TARJETAS-->
-                                <div  [hidden]="actInputHoraSalida">
-                                    <label >Hora Salida(HH:MM:SS):</label>
-                                    <input class="form-control" type="text" #tmpSalida="ngModel" required
-                                        pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})" 
-                                        length=8 step="1" [(ngModel)]="HoraSalidaRecEslavon" />
-                                    <div id="validation" *ngIf="validarTiempo.length!=0">
-                                        {{validarTiempo}}
-                                    </div>
-                                </div>                             
-                        </div>                        
-                        <!--TABLA-->                      
-                        <div class=" form-group col-xl-8 col-md-7 col-sm-12 col-xs-12">             
-                                                                
-                            <!--BUSQUEDA-->
-                                            
+                                            length=8 step="1" [(ngModel)]="HoraSalidaRecEslavon" />
+                                        <div id="validation" *ngIf="validarTiempo.length!=0">
+                                            {{validarTiempo}}
+                                        </div>
+                                    </div>     
+                                </div>
+                            </div>           
+                                                
                             <p-dataTable [value]="arrprogxfecha" dataKey="BuPlaca"
                                         [rows]="5" [paginator]="true" [globalFilter]="filtroTableIndividual"
                                         selectionMode="single" (onRowSelect)="onRowPlaca($event)" 
@@ -244,88 +254,92 @@
                                 <p-column field="nro" header="N°"  [style]="{'width':'2em','text-align':'center','height':'2.5em'}" ></p-column>                   
                                 <p-column field="BuPlaca" header="Placa" [style]="{'width':'6em','text-align':'center','height':'2.5em'}" ></p-column>
                                 <p-column field="EstadoAsignado" header="Estado" [style]="{'width':'6em','text-align':'center','height':'2.5em'}" ></p-column>                      
-                            </p-dataTable>                                               
-                        </div>                        
-                        
+                            </p-dataTable> 
+                        </div>    
                         <!--botones-->              
-                        <div class="btnModAsigT row">
-                            
-                            <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
-                                <button class="btn_modal" type="text" pButton icon="fa-save" 
+                        <div class="btnModAsigT row justify-content-end">                           
+                            <div class="col-xl-3 col-md-4 col-sm-12 col-xs-12">
+                                <button class="btn_modal ajusteBtnModal" type="text" pButton icon="fa-save" 
                                 (click)="guardarTarjeta(tmpSalida.valid, tmpReten.valid);" 
                                 [disabled]="(  (!(val!='x') || !(estadoPlaca==0))  )" label="Guardar"></button>
                                 
                             </div>
-                            
-                            <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
-                                <button class="btn_modal" type="text" pButton icon="fa-close" 
+                            <div class="col-xl-3 col-md-4 col-sm-12 col-xs-12">
+                                <button class="btn_modal ajusteBtnModal" type="text" pButton icon="fa-close" 
                                 (click)="cancelarTarjeta(); cboPtosControl.reset(); cboTipoTarjeta.reset();" label="Cerrar"></button>
                             </div>
-            
-                            <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
-                                <button class="btn_modal" type="text" (click)="abrirCuadroSalidas();"
-                                pButton icon="fa-file-o" label="Cuadro de Salidas"></button>
-                            </div>
+                            <!--
+                                <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
+                                    <button class="btn_modal" type="text" (click)="abrirCuadroSalidas();"
+                                    pButton icon="fa-file-o" label="Cuadro de Salidas"></button>
+                                </div>
+                            -->
                         </div>                        
                     </div>
 
                     <!--TARJETA MULTIPLE-->
-                    <div class="form-group row" *ngIf='TaCoMultiple==1' >                            
+                    <div *ngIf='TaCoMultiple==1' >                            
                         <!--COMBOS + INPUTS-->
-                        <div class="contenidoAsignarTarjetaMulti form-group col-xl-4 col-md-5 col-sm-12 col-xs-12">
+                        <div class="contenidoAsignarTarjetaMulti">
+                            <div class="form-group row">
+                                <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                                    <label>Placa: </label>   
+                                    <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroTableMultiple/>
+                                </div>
 
-                            <label>Programacion: {{PrDescripcion}}</label>   
-                            <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroTableMultiple/>
-
-                            <!--Estado de la Tarjeta    ASIGNAR O AUSENTE-->                        
-                            <label>Estado Tarjetas:</label>
-                            <select class="form-control" [(ngModel)]="val" (change)="funEstTarjApertura();" required #ValTarjMulti="ngModel">
-                                <option *ngFor="let valtj of arrValTarjeta" [ngValue]="valtj.val" [selected]="valtj.val===selValTarjeta.val ">
-                                    {{valtj.nomb}}
-                                </option>
-                            </select>
-                            <span *ngIf="!ValTarjMulti.valid && ValTarjMulti.touched" >
-                                <div id="validation" [hidden]="!ValTarjMulti.errors.required"> Obligatorio </div>
-                            </span>
-    
-                            <!--1er reten-->
-                            <div [hidden]="actMInputPrimerReten">
-                                <label >1er Reten(HH:MM:SS):</label>
-                                <input class="form-control" type="text"[(ngModel)]="ReReTiempo"  step="1" 
-                                required #PrimerReten="ngModel" />
-                                <span *ngIf="!PrimerReten.valid && (PrimerReten.touched || PrimerReten.dirty)"  >  
-                                    <div id="validation" [hidden]="!PrimerReten.errors.required"> 
-                                        obligatorio 
+                                <!--Estado de la Tarjeta    ASIGNAR O AUSENTE-->        
+                                <div class="col-xl-3 col-md-3 col-sm-12 col-xs-12">                 
+                                    <label>Estado Tarjetas:</label>
+                                    <select class="form-control" [(ngModel)]="val" (change)="funEstTarjApertura();" required #ValTarjMulti="ngModel">
+                                        <option *ngFor="let valtj of arrValTarjeta" [ngValue]="valtj.val" [selected]="valtj.val===selValTarjeta.val ">
+                                            {{valtj.nomb}}
+                                        </option>
+                                    </select>
+                                    <span *ngIf="!ValTarjMulti.valid && ValTarjMulti.touched" >
+                                        <div id="validation" [hidden]="!ValTarjMulti.errors.required"> Obligatorio </div>
+                                    </span>
+                                </div>
+                                
+                                <div class="col-xl-3 col-md-3 col-sm-12 col-xs-12">
+                                    
+        
+                                    <!--1er reten-->
+                                    <div [hidden]="actMInputPrimerReten">
+                                        <label >1er R.(HH:MM:SS):</label>
+                                        <input class="form-control" type="text"[(ngModel)]="ReReTiempo"  step="1" 
+                                        required #PrimerReten="ngModel" />
+                                        <span *ngIf="!PrimerReten.valid && (PrimerReten.touched || PrimerReten.dirty)"  >  
+                                            <div id="validation" [hidden]="!PrimerReten.errors.required"> 
+                                                obligatorio 
+                                            </div>
+                                        </span>   
                                     </div>
-                                </span>   
+        
+                                    <!--TIEMPO ESLAVON, RECUPERA LA CADENA DE ASIGNACION DE TARJETAS-->
+                                    <div  [hidden]="actMInputHoraEslavon">
+                                        <label >H. Sal.(HH:MM:SS):</label>
+                                        <input class="form-control" type="text" #tmpEslavon="ngModel" required
+                                            pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})" 
+                                            length=8 step="1" [(ngModel)]="HoraSalidaRecEslavon" />
+                                        <div id="validation" *ngIf="validarTiempo.length!=0">
+                                            {{validarTiempo}}
+                                        </div>
+                                    </div>   
+                                </div>          
+                                    <!--TIEMPO INTERMEDIOS (RETEN)-->           
+                                <div class="col-xl-3 col-md-3 col-sm-12 col-xs-12">                
+                                    <div [hidden]="actMInputRepeatReten">
+                                        <label >Retenes(HH:MM:SS):</label>
+                                        <input class="form-control" type="text" [(ngModel)]="MultiReten"
+                                        pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})"  
+                                        #MulReten="ngModel" required/>
+                                        
+                                        <div id="validation" [hidden]="!MulReten.touched || MulReten.valid ">
+                                            Error en los datos (HH:MM:SS)
+                                        </div>
+                                    </div>       
+                                </div>
                             </div>
-
-                            <!--TIEMPO ESLAVON, RECUPERA LA CADENA DE ASIGNACION DE TARJETAS-->
-                            <div  [hidden]="actMInputHoraEslavon">
-                                <label >H. Salida(HH:MM:SS):</label>
-                                <input class="form-control" type="text" #tmpEslavon="ngModel" required
-                                    pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})" 
-                                    length=8 step="1" [(ngModel)]="HoraSalidaRecEslavon" />
-                                <div id="validation" *ngIf="validarTiempo.length!=0">
-                                    {{validarTiempo}}
-                                </div>
-                            </div>   
-                                                 
-                            <!--TIEMPO INTERMEDIOS (RETEN)-->                           
-                            <div [hidden]="actMInputRepeatReten">
-                                <label >Retenes(HH:MM:SS):</label>
-                                <input class="form-control" type="text" [(ngModel)]="MultiReten"
-                                pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})"  
-                                #MulReten="ngModel" required/>
-                                
-                                <div id="validation" [hidden]="!MulReten.touched || MulReten.valid ">
-                                    Error en los datos (HH:MM:SS)
-                                </div>
-                            </div>                        
-                                
-                        </div>
-                        <!--TABLA-->
-                        <div class=" form-group col-xl-8 col-md-7 col-sm-12 col-xs-12">
                             <p-dataTable [value]="arrprogxfecha"  dataKey="BuPlaca"
                                             selectionMode="single" [globalFilter]="filtroTableMultiple"
                                         (onRowSelect)="onRowPlaca($event)" emptyMessage="Lista Vacia" 
@@ -334,30 +348,33 @@
                                 <p-column field="BuPlaca" header="Placa" [style]="{'width':'6em','text-align':'center','height':'2.5em'}" ></p-column>
                                 <p-column field="EstadoAsignado" header="Estado" [style]="{'width':'6em','text-align':'center','height':'2.5em'}" ></p-column>                        
                             </p-dataTable>
-                        </div>     
-                        {{estadoPlaca}}{{val}}                                           
+                        </div>
+
                         <!--botones-->              
-                        <div class="btnModAsigT row">
+                        <div class="btnModAsigT row justify-content-end">
                                 <!-- !(val!='x' && (estadoPlaca==0 || estadoPlaca==1 || estadoPlaca==2 || estadoPlaca==3 ))-->
-                            <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
+                            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
                                 <button class="btn_modal" type="text" pButton icon="fa-save" 
                                 (click)="guardarMultiTarjetas(PrimerReten.valid,  tmpEslavon.valid, MulReten.valid); MulReten.reset(); ValTarjMulti.reset();" 
                                 [disabled]="(!(val!='x') || !(estadoPlaca==0))" label="Guardar"></button>
                             </div>
-                            <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
+                            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
                                 <button class="btn_modal" type="text" pButton icon="fa-close" 
                                 (click)="cancelarMultiTarjeta(); ValTarjMulti.reset(); cboPtosControl.reset(); cboTipoTarjeta.reset();" label="Cerrar"></button>
                             </div>
-                            <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
-                                <button class="btn_modal" type="text" (click)="abrirCuadroSalidas();"
-                                pButton icon="fa-file-o" label="Cuadro de Salidas"></button>
-                            </div>
+                            <!--
+                                <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
+                                    <button class="btn_modal" type="text" (click)="abrirCuadroSalidas();"
+                                    pButton icon="fa-file-o" label="Cuadro de Salidas"></button>
+                                </div>
+                            -->
                         </div>
                     </div>
 
+                    <!--BOTON CERRAR(AL INICIO DEL FORMULARIO)-->
                     <div class="form-group row" *ngIf='TaCoMultiple!=1 && TaCoMultiple!=0'>
                          <!--botones-->              
-                         <div class="btnModAsigT row">
+                         <div class="btnCloseOnly row justify-content-end">
                                 <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
                                     <button class="btn_modal" type="text" pButton icon="fa-close" 
                                     (click)="cancelarTarjeta(); cboPtosControl.reset(); cboTipoTarjeta.reset();" label="Cerrar"></button>

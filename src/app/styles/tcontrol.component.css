@@ -19,7 +19,7 @@
     margin:0;
 }
 
-.form-control{
+/*.form-control{
     height: 38px;
     margin:0;
     padding: 0;
@@ -34,7 +34,7 @@
     padding-top:10px; 
     padding-right: -10px;
     padding-left: -10px;
-}
+}*/
 
 /* VALIDACION DE DATOS*/
     #validation{
@@ -42,6 +42,7 @@
         margin:0; 
         padding:0;
         position: absolute;
+        font-size: 14px;
     }
 
     #verdadero{
@@ -49,6 +50,7 @@
         padding: 0;
         padding: 0;
         position: absolute;
+        font-size: 14px;
     }
 
 
@@ -61,14 +63,7 @@
     }
 
 /* VENTANAS MODALES*/
-    /* BOTONES (GUARDAR CANCELAR + OTROS) VENTANAS MODALES */
-        .btn_modal{
-            width:100%; 
-            height:40px; 
-            font-size:15px;
-            background-color:#4CAF50;
-            text-align: center;
-        }
+    
     /* ventanas de confirmacion */
         /* mensajes */
         .mdlMnjsConf{
@@ -135,34 +130,66 @@
                 overflow-x: auto;
                 max-width: 800px;
                 max-height: 1000px;
-                margin:auto;
+                /*margin:auto;*/
             }
             /* CONFIGURANDO LA VENTANA MODAL */
             .asignaUnaTarj{
-                /*margin-bottom: 20px;*/
-                margin:0;
-                width: 800px;
-                height: 500px;
+               
+                margin:0px 15px;
+                width: 650px;
+                height: 520px;
                 /*border: 2px solid green;*/
-                padding: 0;
-                bottom: 0;
+                /*padding: 0;
+                bottom: 0;*/
             }
-            .contenidoAsignarTarjeta{
-                height: 300px;
-                width:600px;
-                margin-bottom: 20px;
+            .contenidoAsignarTarjetaIndividual{
+                height: 350px;
+                width:100%;
+                margin-bottom: 40px;
+            }
+            .contenidoAsignarTarjetaMulti{
+                height: 350px;
+                width:100%;
+                margin-bottom: 40px;
+            }
+            .btnCloseOnly{
+                /*border: 2px solid green;*/
+                width:100%;
+                margin:auto;
+                margin-top: 370px;
+                padding: 0;
+                bottom: 0px;
             }
             .btnModAsigT{
-                width:800px;
+                width:100%;
                 height: 40px;
                 margin:auto;
-                /*border: 2px solid red;*/
                 bottom: 10px;
-                margin-bottom: 0;
-                position: absolute;
+                padding: 0;
+                
+                /*margin-bottom: 0; position: absolute;float: right; */
             }
-
-
+            
+        /* BOTONES (GUARDAR CANCELAR + OTROS) VENTANAS MODALES */
+            .btn_modal{
+                width:100%; 
+                height:40px; 
+                font-size:15px;
+                background-color:#4CAF50;
+                text-align: center;
+                padding: 0;
+                margin:0;
+            }
+            .btnCuadroSalidas{
+                width:100%; 
+                height:40px; 
+                font-size:15px;
+                background-color:#00796B;
+                text-align: center;
+                padding: 0;
+                margin:auto;
+                margin-top: 30px;
+            }
     
     /* CUADRO DE SALIDAS - TODAS LAS VUELTAS */
         #tablaSalidas{
