@@ -147,14 +147,14 @@
             </div>
            
             <!--BOTONES-->
-            <div class="btn_Modal row">
-                <div class="col-xl-4 col-md-4 col-sm-6 col-sx-12">
+            <div class="btn_Modal row row justify-content-end">
+                <div class="col-xl-3 col-md-4 col-sm-6 col-sx-12">
                     <button class="btn_modal" type="text" pButton icon="fa-check" 
                     (click)="guardarProgCabecera();" 
                     label="Continuar" 
                     [disabled]=" !(bAct>0 && bAct!=0) || !tprog.valid || !fprog.valid || !fde.valid || !fha.valid || !descrip.valid || !(dtSelectDias.length>4 && dtSelectDias.length<8)"></button>
                 </div>
-                <div class="col-xl-4 col-md-4 col-sm-6 col-sx-12">
+                <div class="col-xl-3 col-md-4 col-sm-6 col-sx-12">
                     <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelNewProgramacion(); tprog.reset(); fprog.reset(); fde.reset(); fha.reset(); descrip.reset();" label="Cancelar"></button>
                 </div>
             </div>
@@ -202,71 +202,80 @@
     <!--3RA VENTANA, HORA BASE DE SALIDA-->
         <p-dialog [resizable]="false" [(visible)]="displayHoraBase" modal="modal" width="100%" responsive="true" [closable]="false" >
             <p-header>Hora Base de Salidas</p-header>
-            <div class="row">
-                    <div class="cont_modal">
-                        <div class="formHoraBase">
-                            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                <div class="row">
-                                    <!--HORAS-->
-                                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                        <label id="PlacaSelectHB" [hidden]="nroMiniBus==nroTotalMinibuses">Placa {{placaEditarCelda}}</label>
-                                        <br>
-                                        <label id="PlacaSelectHB" [hidden]="nroMiniBus==nroTotalMinibuses">Agregados --> {{nroMiniBus+1}} de {{nroTotalMinibuses}}</label>
-                                        <label [hidden]="nroMiniBus!=nroTotalMinibuses">Programacion Terminada</label>
-                                    </div>
-                                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" [(ngModel)]="horaBase" #hBase="ngModel" required pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})" [hidden]="nroMiniBus==nroTotalMinibuses" >
-                                        </div>
-                                        <div id="validation" [hidden]="!hBase.touched || hBase.valid ">
-                                            Error en los datos
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                        <button class="btn_modal" type="text" pButton icon="fa-check" 
-                                        (click)="AgregarHBase();" 
-                                        [hidden]="nroMiniBus==nroTotalMinibuses"
-                                        label="Agregar" [disabled]="!hBase.valid "></button>
-                                        
-                                    </div>
-                                    
+            
+                <div class="_windMolHSal">
+                    <div class="windMolHSal">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="row">
 
-                                    <!--DATA TABLE HORA BASE DE SALIDAS-->
-                                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                        <div class="table">
-                                            <p-dataTable [value]="ordenSorteo" [editable]="true"
-                                                        (onEditComplete)="onEditCompleteHB($event)"
-                                                        (onEditCancel)="onEditCancelHB($event)"
-                                                        (onEditInit)="onEditInitHB($event)"
-                                                        scrollable="true" scrollHeight="210px" scrollWidth="100%" 
-                                                        emptyMessage="Lista vacia"> 
-                                                <p-column field="nro" header="N°"  [style]="{'width':'3em','text-align':'center'}"></p-column>
-                                                <p-column field="nroPlaca" header="Placa"  [style]="{'width':'6em','text-align':'center'}"></p-column>
-                                                <p-column field="HoraBase" header="Hora Base" [editable]="true" [style]="{'width':'6em','text-align':'center'}" ></p-column>
-                                            </p-dataTable>
+                                <!--titulo-->
+                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div id="PlacaSelectHB" [hidden]="nroMiniBus==nroTotalMinibuses" >
+                                        <label   >Placa {{placaEditarCelda}} --  H. Base --> {{nroMiniBus+1}} de {{nroTotalMinibuses}}</label>
+                                    </div>
+                                    <label [hidden]="nroMiniBus!=nroTotalMinibuses">Programacion Terminada</label>
+                                </div>
+
+                                <!--cuerpo-->
+                                <div class="contModHSalidas">
+                                    <!--HORAS input-->
+                                    <div class="form-group row">
+                                        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">                  
+                                            <label>Hora Base:</label>                  
+                                            <input type="text" class="form-control" [(ngModel)]="horaBase" 
+                                            #hBase="ngModel" required 
+                                            pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})" 
+                                            [hidden]="nroMiniBus==nroTotalMinibuses" >
+                                            <div id="validation" [hidden]="!hBase.touched || hBase.valid ">
+                                                    Error en los datos
+                                                </div>
+                                        </div>
+
+                                        <!--boton agregar hora-->
+                                        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                                            <button class="btnAsignarHSalBase" type="text" pButton icon="fa-check" 
+                                            (click)="AgregarHBase();" 
+                                            [hidden]="nroMiniBus==nroTotalMinibuses"
+                                            label="Agregar" [disabled]="!hBase.valid "></button>                                    
                                         </div>
                                     </div>
-                                    
-                                    <!--CANCELAR-->
-                                    <div class="col-xl-12 col-md-12 col-sm-12 col-sx-12">
+                                    <!--DATA TABLE HORA BASE DE SALIDAS-->
+                               
+                                    <p-dataTable [value]="ordenSorteo" [editable]="true"
+                                                (onEditComplete)="onEditCompleteHB($event)"
+                                                (onEditCancel)="onEditCancelHB($event)"
+                                                (onEditInit)="onEditInitHB($event)"
+                                                scrollable="true" scrollHeight="250px" scrollWidth="100%" 
+                                                emptyMessage="Lista vacia"> 
+                                        <p-column field="nro" header="N°"  [style]="{'width':'3em','text-align':'center'}"></p-column>
+                                        <p-column field="nroPlaca" header="Placa"  [style]="{'width':'6em','text-align':'center'}"></p-column>
+                                        <p-column field="HoraBase" header="Hora Base" [editable]="true" [style]="{'width':'6em','text-align':'center'}" ></p-column>
+                                    </p-dataTable>
+                                     
+                                </div>
+
+                                <!--pie del formulario-->
+                                <div class="btnModalHSalidas row justify-content-end">
+                                    <div class="col-xl-4 col-md-4 col-sm-12 col-sx-12 ">
+                                        <!--CANCELAR-->
                                         <button class="btn_modal" type="text" pButton icon="fa-close" 
                                         (click)="cancelarProgBaseTercerModal(); hBase.reset();" 
                                         [hidden]="nroMiniBus==nroTotalMinibuses"
-                                        label="Cancelar Programacion"></button>
-                                    </div>
-                                    <!--GENERAR PROGRAMACION-->
-                                    <div class="col-xl-12 col-md-12 col-sm-12 col-sx-12">
+                                        label="Cancelar"></button>
+
+                                        <!--GENERAR PROGRAMACION-->
                                         <button class="btn_modal" type="text" pButton icon="fa-save" 
                                         (click)="generarProgramacionDetalle(); hBase.reset();" 
                                         [hidden]="nroMiniBus!=nroTotalMinibuses"
-                                        label="Generar Programacion"></button>
-                                    </div>
-                                   
+                                        label="Generar"></button>
+                                    </div>      
                                 </div>
+
                             </div>
                         </div>
-                    </div>  
-                </div> 
+                    </div>
+                </div>  
+          
 
         </p-dialog>
 

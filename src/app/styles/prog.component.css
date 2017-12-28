@@ -19,7 +19,7 @@
     margin:0;
 }
 
-/*.win_modal{}*/
+/*.win_modal{}
 
 .form-control{
     height: 38px;
@@ -27,13 +27,8 @@
     padding: 0;
     margin-bottom:10px;
     width: 100%;
-}
+}*/
 
-.form-group{
-    margin:0;
-    padding-bottom:18px;
-    padding-top:10px; 
-}
 
 
 #validation{
@@ -51,6 +46,8 @@
     font-size:15px;
     background-color:#4CAF50;
     text-align: center;
+    padding: 0;
+    margin:0;
 }
 
 /*GRUPO BOTONES DE LAS VENTANAS MODALES*/
@@ -98,10 +95,52 @@ col-xl-12{
     padding: 0;
 }
 
-#PlacaSelectHB{
-    font-size: 25px;
-    color:green;
-}
+/* estilos formulario (nueva programacion) ingresar horas de salida */
+    /* estilo ventana */
+        ._windMolHSal{
+            overflow-y: auto; 
+            overflow-x: auto;
+            max-width: 800px;
+            max-height: 1000px;
+            margin:auto;
+        }
+        /* CONFIGURANDO LA VENTANA MODAL */
+        .windMolHSal{
+            margin:0px 15px;
+            width: 420px;
+            height: 480px;
+            /*border: 2px solid green;*/
+        }
+        .btnAsignarHSalBase{
+            width:100%; 
+            height:40px; 
+            font-size:15px;
+            background-color:#00796B;
+            text-align: center;
+            padding: 0;
+            margin:auto;
+            margin-top: 30px;
+        }
+    /* encabezado */
+        /*titulo*/  
+        #PlacaSelectHB{
+            font-size: 15px;
+            color:rgb(3, 94, 3);
+        }
+    /* input + boton + tabla */
+        .contModHSalidas{
+            height: 360px;
+            width:100%;
+            margin-bottom: 40px;
+        }
+    /* pie */
+        .btnModalHSalidas{
+            width:100%;
+            height: 40px;
+            margin:auto;
+            bottom: 10px;
+            padding: 0;
+        }
 
 /* ESTILOS DATATABLE + TABLEHTML */
 
