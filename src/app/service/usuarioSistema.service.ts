@@ -15,34 +15,34 @@ export class UserSystemService{
             getAllUserSystembyEmId(EmId:number){
                 return this.http
                     .get(this.baseUrl1+'getallusuariobyem?emId='+EmId)
-                    .map((r: Response) => {r.json(); console.log(r.json());} )
+                    .map((r: Response) => r.json() )
                     .catch(this.handleError);
             }
 
             getUserSystembyUsId(UsId : number){
                 return this.http
                     .get(this.baseUrl1+ UsId)
-                    .map((r: Response) => {r.json(); console.log(r.json());})
+                    .map((r: Response) => r.json())
                     .catch(this.handleError);
             }
         
             newUserSystem(){
                 return this.http
                 .get(this.baseUrl1+'new')
-                .map((r: Response) =>{r.json(); console.log(r.json());} )
+                .map((r: Response) =>{r.json();} )
                 .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
             }
 
      
             saveUserSystem(objUser:Object){
                 return this.http.post(this.baseUrl1+ "save/", objUser) // ...using post request
-                    .map((r:Response) => {r.json(); console.log(r.json());}) // ...and calling .json() on the response to return data
+                    .map((r:Response) => {r.json();}) // ...and calling .json() on the response to return data
                     .catch((error:any) => Observable.throw(error.json().error || 'Server error')); 
             }
 
             deleteUserSystem(UsId:number){
                 return this.http.delete(this.baseUrl1+UsId) // ...using post request
-                    .map((r:Response) => {r.json(); console.log(r.json());}) // ...and calling .json() on the response to return data
+                    .map((r:Response) => {r.json();}) // ...and calling .json() on the response to return data
                     .catch((error:any) => Observable.throw(error.json().error || 'Server error')); //...errors if any
             }
 
@@ -50,7 +50,7 @@ export class UserSystemService{
             /*autenticacion(objLogin:Object):any{
                 return this.http.post(this.baseUrl1+"authenticate/",objLogin)
                     .map(
-                            (r:Response) => { r.json(); console.log(r.json());}
+                            (r:Response) => { r.json();}
                         ) 
                     .catch((error:any) => Observable.throw(error.json().error || 'Server error')); 
             }*/

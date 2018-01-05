@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Message} from 'primeng/primeng';
 import {EmpSubEmpService} from '../service/empSubemp.service';
+import {ConfiguraService} from '../service/configura.service';
 import {hora,_hora} from 'app/funciones';
 import {GlobalVars} from 'app/variables'
 
@@ -21,6 +22,14 @@ export class EmpSubEmpComponent implements OnInit{
             private EmTipo:number;
             private _EmId:number; /* USADO EN OBJ PARA ENVIAR A LA BD */
             private selectRow:boolean; /* USADO PARA SABER SI SE SELECCIONO UNA FILA O NO DE LA TABLA EMPRESA(NO SUBEMPRESA) */
+            private CoNroMaxVueltas:number;
+            private CoMembreReporte:string;
+            private CoId:number;
+            private CoCountMovilTaCo:number;
+            private CoCountMovilTaCoDe:number;
+            private CoLogo:string;
+            private CoPeriodo:number;
+            private periodo:boolean;
 
         /* CABECERA */
             private mpresa:any;
@@ -53,14 +62,20 @@ export class EmpSubEmpComponent implements OnInit{
             private displayEditConfEmpresa:boolean;
             private displayRegEmpresa:boolean;
             private displayElimEmp:boolean;
+            private displayNuevaConfigXPeriodo:boolean;
+            private displayElimConfig:boolean;
+            private displayEditConfig:boolean;
+            private displayEditarConfigXPeriodo:boolean;
 
+        //arrays
+            private arrConfig:any;
     ngOnInit(){
-        /*this.EmId=0;
-        this.userid=1;*/
         this.getempresas();
-        
+        this.procGetAllConfiguraByEmIdPeriodo(this.EmId, new Date().getFullYear().toString());
     }
-    constructor(private empSubempservice : EmpSubEmpService,public ClassGlobal:GlobalVars){
+    constructor(private empSubempservice : EmpSubEmpService,
+                private configservice:ConfiguraService,
+                public ClassGlobal:GlobalVars){
         this.EmId=this.ClassGlobal.GetEmId();
         this.userid=this.ClassGlobal.GetUsId();
         /* INICIANDO VAR DISPLAY */
@@ -71,8 +86,11 @@ export class EmpSubEmpComponent implements OnInit{
             this.displayEditConfEmpresa=false;
             this.displayRegEmpresa=false;
             this.displayElimEmp=false;
+            this.displayNuevaConfigXPeriodo=false;
         this.arrTiposEmp=[{tipId:"00",nomTipo:"CONSORCIO"},{tipId:"01",nomTipo:"INDIVIDUAL"}]
         this.selectRow=false; /*false: no se selecciono ninguna fila, true: si se selecciono una fila */
+        this.arrConfig=[];
+        this.periodo=false;
     }
 
     /* PROCEDURE */
@@ -158,10 +176,77 @@ export class EmpSubEmpComponent implements OnInit{
                     err => {console.log(err);}
                 );
             }
-    
+
+    // procedimientos tabla configura
+            procGetAllConfiguraByEmIdPeriodo(EmId:number,Anio:string){
+                this.configservice.getAllConfiguraByEmPeriodo(EmId, Anio).subscribe(
+                    data=>{
+                        console.log(data);
+                        if(data.length!=0){
+                            this.mgConfiguraByAnio(data);
+                            this.periodo=true;
+                        }else if(data.length==0){
+                            this.periodo=false;
+                        }
+                        
+                    },
+                    error=>{
+                        alert('Error, no hay configuraciones en el presente año');
+                    },
+                    ()=>{
+
+                    }
+                );
+            }
+            //guardar configuracion para el periodo(año)
+            procSaveConfiguracion(objConfigura:any){
+                this.configservice.saveConfigura(objConfigura).subscribe(
+                    data=>{
+                        //console.log(data);
+                        if(data.CoId!=0&&data.CoId>0){
+                            alert('Se guardo correctamente');
+                            this.displayNuevaConfigXPeriodo=false;
+                            this.displayEditarConfigXPeriodo=false;
+                            this.procGetAllConfiguraByEmIdPeriodo(this.EmId, new Date().getFullYear().toString());
+                        }else{
+                            alert('Hubo un problema en el servidor, vuelva a intentarlo');
+                        }
+                    },  
+                    error=>{
+                        alert('Error en el servidor, vuelva a intentarlo');
+                    },
+                    ()=>{}
+                );
+            }
     /* TABLAS + FORMULARIOS */
         /* CARGANDO PARA GRILLAS */
-            /* MOSTRAR TODAS LAS EMPRESAS */
+            //mostrar configuracion 
+                //configuracion por año
+                mgConfiguraByAnio(arrConfigs=[]){
+                    console.log(arrConfigs);
+                    let _arrConfigs:any[]=[];
+                    for(let config of arrConfigs){
+                        _arrConfigs.push({         
+                            Nro:0,             
+                            CoCountMovilTaCo:config.CoCountMovilTaCo,
+                            CoCountMovilTaCoDe:config.CoCountMovilTaCoDe,
+                            CoId:config.CoId,
+                            CoLogo:config.CoLogo,
+                            CoMembreReporte:config.CoMembreReporte,
+                            CoNroMaxVueltas:config.CoNroMaxVueltas,
+                            CoPeriodo:config.CoPeriodo,
+                            EmId:config.EmId,
+                            UsFechaReg:config.UsFechaReg,
+                            UsId:config.UsId,
+                        });
+                    }
+                    for(let i=0; i<_arrConfigs.length; i++){
+                        _arrConfigs[i].Nro=i+1;
+                    }
+                    this.arrConfig=_arrConfigs;
+                }
+
+            // MOSTRAR TODAS LAS EMPRESAS
                 mgempresa(empr:any[]){
                     this.empresas=[];
                     for(let emp of empr){
@@ -254,6 +339,9 @@ export class EmpSubEmpComponent implements OnInit{
             onRowSelectSubEmp(event){
                 console.log(event.data.SuEmId);
             }
+            onRowSelectConfig(event){
+                console.log(event.data);
+            }
         /* BOTONES DE FILAS */
             /* FUNCIONES ASOCIADAS A BTN DE FILAS */                             
                 /* EDITAR */
@@ -269,7 +357,11 @@ export class EmpSubEmpComponent implements OnInit{
                         this.confMensaje="¿Esta seguro de editar el registro?";
                         this.displayEditSubEmp=true;
                     }
-
+                    editarConfig(CoId:number){
+                        this.CoId=CoId;
+                        this.confMensaje="¿Esta seguro de editar el registro?";
+                        this.displayEditConfig=true;
+                    }
                 /* ELIMINAR */
                     eliminarEmpresa(emid:number){
                         this.EmId=emid;
@@ -280,6 +372,11 @@ export class EmpSubEmpComponent implements OnInit{
                         this.suemid=suemid;
                         this.confMensaje="¿Esta seguro de eliminar el registro?";
                         this.displayElimSubEmp=true;
+                    }
+                    eliminarConfig(CoId:number){
+                        this.CoId=CoId;
+                        this.confMensaje="¿Esta seguro de eliminar el registro?";
+                        this.displayElimConfig=true;
                     }
             /* CONFIRMAR */
                 /* EMPRESA */
@@ -341,6 +438,63 @@ export class EmpSubEmpComponent implements OnInit{
                             this.confMensaje="";
                             this.displayElimSubEmp=false;
                         }
+                //configura 
+                    //confirmar editar
+                        acpEditConfig(){
+                            this.displayEditConfig=false;
+                            this.confMensaje="";
+        
+                            this.configservice.getConfiguraById(this.CoId).subscribe(
+                                data=>{
+                                    this.displayEditarConfigXPeriodo=true;
+                                    this.CoCountMovilTaCo=data.CoCountMovilTaCo;
+                                    this.CoCountMovilTaCoDe=data.CoCountMovilTaCoDe;
+                                    this.CoId=data.CoId;
+                                    this.CoLogo=data.CoLogo;
+                                    this.CoMembreReporte=data.CoMembreReporte;
+                                    this.CoNroMaxVueltas=data.CoNroMaxVueltas;
+                                    this.CoPeriodo=data.CoPeriodo;
+                                    this._EmId=data.EmId;
+                                    //UsFechaReg
+                                    //UsId
+                                },
+                                error=>{
+                                    alert('Error, no se pudo encontrar');
+                                },
+                                ()=>{}
+                            );
+                        }
+
+                        cancEditConfig(){
+                            this.CoId=null;
+                            this.confMensaje="";
+                            this.displayEditConfig=false;
+                        }
+
+                    // confirmar eliminar
+                        acpElimConfig(){
+                            this.displayElimConfig=false;
+                            this.confMensaje="";
+                            /* PROCEDURE */
+                            console.log(this.CoId);
+                            this.configservice.deleteConfigura(this.CoId).subscribe(
+                                data=>{
+                                    console.log(data);
+                                },
+                                error=>{
+                                    'Error, no se puede eliminar la configuracion'
+                                },
+                                ()=>{}
+                            );
+                            
+                        }
+
+                        cancElimConfig(){
+                            this.CoId=null;
+                            this.confMensaje="";
+                            this.displayElimConfig=false;
+                        }
+
     /* BTN NUEVA EMPRESA SUBEMPRESAS */
         /* EMPRESA */
             /* BTN NUEVA EMPRESA - ABRIR VENTANA */
@@ -394,7 +548,7 @@ export class EmpSubEmpComponent implements OnInit{
                         UsFechaReg:new Date(),
                         UsId:this.userid
                     }
-                    this.guardarSubEmp(this._subempresa);
+                    this.guardarSubEmp(this._subempresa);    
                 }
 
             /* CANCELAR Y BORRAR - NUEVA SUBEMPRESA */
@@ -402,7 +556,62 @@ export class EmpSubEmpComponent implements OnInit{
                     this._subempresa="";
                     this.displayNuevaSubEmp=false;
                 }
+            //btn nuevo configuracion por periodo
+            guardarConfigPeriodo(){
+                let objConfigura:any;
+                if(this.CoId==0){
+                    objConfigura={
+                        EmId: this.EmId,
+                        UsFechaReg: new Date(),
+                        CoId: this.CoId,
+                        CoCountMovilTaCo: 0,
+                        CoCountMovilTaCoDe: 0,
+                        UsId: this.userid,
+                        CoPeriodo: new Date().getFullYear(),
+                        CoNroMaxVueltas: this.CoNroMaxVueltas,
+                        CoLogo: '',
+                        CoMembreReporte: this.CoMembreReporte
+                    }
+                }else if(this.CoId!=0){
+                    objConfigura={
+                        EmId: this._EmId,
+                        UsFechaReg: new Date(),
+                        CoId: this.CoId,
+                        CoCountMovilTaCo:this.CoCountMovilTaCo,
+                        CoCountMovilTaCoDe:this.CoCountMovilTaCoDe,
+                        UsId: this.userid,
+                        CoPeriodo: this.CoPeriodo,
+                        CoNroMaxVueltas:this.CoNroMaxVueltas,
+                        CoLogo:this.CoLogo,
+                        CoMembreReporte: this.CoMembreReporte
+                    }
+                }
+                
+                console.log(objConfigura);
+                this.procSaveConfiguracion(objConfigura);
+            }
+            
+            cancelConfigPeriodo(){
+                this.displayNuevaConfigXPeriodo=false;
+            }
+            cancelConfigPeriodoEditar(){
+                this.displayEditarConfigXPeriodo=false;
+            }
+    // FUNCIONES  btn nueva configuracion por periodo
+    nuevaConfiguracionPeriodo(){
+        this.displayNuevaConfigXPeriodo=true;
+        this.configservice.newConfigura().subscribe(
+            data=>{
+                this.CoNroMaxVueltas=data.CoNroMaxVueltas;
+                this.CoMembreReporte=data.CoMembreReporte;
+                this.CoId=data.CoId;
+            },
+            error=>{
+                alert('Error al crear la nueva configuracion');
+            },
+            ()=>{
 
-    /* FUNCIONES */
-        
+            }
+        );
+    }
 }

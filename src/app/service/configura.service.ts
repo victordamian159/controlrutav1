@@ -18,6 +18,34 @@ export class ConfiguraService{
             .catch(this.handleError); 
     }
 
+    //mantenimiento
+        /* CONSULTA BUSPERSONA POR ID */
+            getConfiguraById(CoId : number){
+                return this.http    
+                    .get(this.baseUrl+CoId)
+                    .map( (r:Response) => r.json() )
+                        .catch( (error:any) => Observable.throw( error.json().error || 'Error en el servidor' ));
+            }
+        /* NUEVO BUSPERSONA */
+            newConfigura(){
+                return this.http    
+                    .get(this.baseUrl + 'new')
+                    .map( (r:Response) => r.json() )
+                    .catch( (error:any) => Observable.throw( error.json().error || 'Error en el servidor' )); 
+            }
+        /* GUARDAR  BUSPERSONA*/
+            saveConfigura(objConfig : Object){
+                return this.http.post(this.baseUrl + 'save/',objConfig)
+                                .map( (r:Response) => r.json() )
+                                .catch( (error:any) => Observable.throw(error.json().error || 'Error en el servidor' ));
+            }
+        /* ELIMINAR BUSPERSONA*/
+            deleteConfigura(CoId:number){
+                return this.http.delete(this.baseUrl+CoId)
+                                    .map( (r:Response) => r.json() )
+                                    .catch( (error:any) => Observable.throw(error.json().error || 'Error en el servidor' ))
+            }
+
     handleError (error: any) {
         let errorMsg = error.message;
         return Observable.throw(errorMsg);

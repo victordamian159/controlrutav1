@@ -40,6 +40,7 @@ export class ProgComponent implements OnInit{
         }
 
     /* VARIABLES */
+        private indexPlacaTabHSal:number;
         private nroTotalMinibuses:number;
         private nroMiniBus:number;
         private horaBase:string;
@@ -1125,9 +1126,15 @@ export class ProgComponent implements OnInit{
             
         }else if(horaValida(hBSal)==true){
             //this.nroMiniBus=this.nroMiniBus+1;
-            let indice=this.buscarPrimerHMS(this.ordenSorteo);
-            this.placaEditarCelda=this.ordenSorteo[indice].nroPlaca;
-            this.nroMiniBus=this.conteoHBAgregadas(this.ordenSorteo);
+            if(this.nroMiniBus < this.nroTotalMinibuses){
+                let indice=this.buscarPrimerHMS(this.ordenSorteo);
+                this.placaEditarCelda=this.ordenSorteo[indice].nroPlaca;
+                this.nroMiniBus=this.conteoHBAgregadas(this.ordenSorteo);
+            }else if(this.nroMiniBus == this.nroTotalMinibuses){
+                //console.log(this.nroMiniBus); console.log(this.nroTotalMinibuses);
+                this.placaEditarCelda=this.ordenSorteo[this.indexPlacaTabHSal].nroPlaca;
+                //console.log(this.ordenSorteo);
+            }
         }
     }
 
@@ -1140,6 +1147,7 @@ export class ProgComponent implements OnInit{
     
     onEditInitHB(event){
         this.placaEditarCelda=event.data.nroPlaca;
+        this.indexPlacaTabHSal=event.data.nro-1;
     }
 
     formatoCal(fi:string) : string{
@@ -1813,13 +1821,4 @@ export class ProgComponent implements OnInit{
         _fechaProg=this.cCeroFecha(_fechaProg);
         return  _fechaProg;
     }
-
-
 }
-
- /*var num = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25];
-        var indice = Math.floor(Math.random()*num.length);
-        var number = num[indice];
-        num.splice(indice, 1);
-        console.log(num);*/
-        //console.log(this.arrayPlacas);

@@ -39,8 +39,8 @@ export class EmpPerComponent implements OnInit{
         private personalArr=[]; /* ARRAY DE TODAS LAS PERSONAS AGREGADAS AL SISTEMA */
         private arrEmpPer:any[]=[]; /* ARRAY PERSONAS POR SUBEMPRESAS(DATATABLE PRINCIPAL) */
         private arrAllUser:any[]=[]; /* TODOS LOS USER CREADOS POR EMID */
-        private selectedRow:any[]; /* filas seleccionadas en la TABLA DE FORM MODAL NUEVO BUSPERSONA */
-        
+        private selectedRowTabEmpPer:any[]; /* filas seleccionadas en la TABLA DE FORM MODAL NUEVO BUSPERSONA */
+        private selectedRowTabAllUserSystem:any[];
    
     /* VARIABLES*/
         private mensaje:string;
@@ -55,6 +55,7 @@ export class EmpPerComponent implements OnInit{
         private UsId:number; /* IDUSUARIO FORM USUARIO */
         private selectPersona:boolean;
         private selectRowPersona:any;
+        private username:boolean;
 
     /* OTRAS VARIABLES*/
         private errorMessage:string='';
@@ -67,33 +68,27 @@ export class EmpPerComponent implements OnInit{
         private __suemid:number;
         private suemid:number; /* VARIABLE ASOCIADA A COMBO SUBEMPS (FORM PRINCIPAL)*/
         private nombre:string; /* PARA MOSTRAR EN EL FORM NUEVO USERSYSTEM(PARA SABER A Q PERSONA SE LE CREA) */
+        private _PeDNI:string;
 
     ngOnInit(){
-
-        //this.getallempPerByEmIdSuEmId(1,1);
-        //console.log(this.selectPersona);
         this.getallsuembyemid(this.emid);
         this.getAllPersonas();  /*TODAS LAS PERSONAS AGREGADAS AL SISTEMA(EMPRESA) */                    
         this.procGetAllUserSystembyEmId(this.emid);
-        
-        //console.log(this.ClassGlobal.GetEmId());
-        //console.log(this.ClassGlobal.GetUsId());
     }
 
     /* CONSTRUCTOR */
     constructor(private empPerservice : EmpPerService,  
                 private empSubempservice : EmpSubEmpService, 
                 private persService : PersService, 
-                private userService: UserSystemService, 
-                
-                
+                private userService: UserSystemService,                 
                 public ClassGlobal:GlobalVars){
-
         this.emid=this.ClassGlobal.GetEmId();
         this.userid=this.ClassGlobal.GetUsId();
         this.nombre="x";    
         this.suemid=0;
         this.EmPeId=-1;
+        this.username=false;
+        this._PeDNI='-1';
         this.arrTipoEmpPer=[{id:'01',perTEmpPer:'GERENTE'},{id:'02',perTEmpPer:'ADMINISTRADOR'},
                             {id:'03',perTEmpPer:'COBRADOR'},{id:'04',perTEmpPer:'ASOCIADOS'},
                             {id:'05',perTEmpPer:'CHOFER'},{id:'06',perTEmpPer:'CONTROLADOR'}];
@@ -150,7 +145,7 @@ export class EmpPerComponent implements OnInit{
                 nuevoPersona(){
                     this.newpeid=0;
                     this.persService.newPersona().subscribe(
-                        data=>{this._persona=data; console.log(this._persona);}
+                        data=>{this._persona=data;}
                     );
                 }
             /* PROCEDURE GUARDAR */
@@ -200,8 +195,20 @@ export class EmpPerComponent implements OnInit{
             /* PROCEDURE GUARDAR */
                 guardarEmpPer(empper:Object){
                     this.empPerservice.saveEmpresaPersona(empper).subscribe(
-                        realizar => {this.getallempPerByEmIdSuEmId(this.emid,this.__suemid); this.suemid=this.__suemid;},
-                        err  => {this.errorMessage=err;}
+                        data => {
+                            if(data.EmPeId>0){
+                                this.getallempPerByEmIdSuEmId(this.emid,this.__suemid); 
+                                this.suemid=this.__suemid;
+                                this._PeDNI='-1';
+                                this.selectRowPersona=null;
+                            }else{
+                                alert('Error al agregar la persona a una empresa');
+                            }                            
+                        },
+                        err  => {
+                            this.errorMessage=err;
+                            alert('Error de conexion');
+                        }
                     );
                 }
             /* PROCEDURE ELIMINAR */
@@ -222,13 +229,13 @@ export class EmpPerComponent implements OnInit{
     /* OTRAS FUNCIONES */
         /* FUNCION ASOCIADA AL BTNNUEVO PARA ABRIR EL FORMULARIO NUEVA ASIGNACION EMPRESAPERSONA */
             vincularPersona(){
-                console.log("vincular");
+                //console.log("vincular");
                 this.displayNuevaEmpPersona=true;
             }
 
         /* FUNCION ASOCIA A COMBO SUBEMPRESAS (MODAL AGREGAR NUEVA EMPRESAPERSONA) */ 
             SuEmId(){
-                console.log(this._suemid); 
+                //console.log(this._suemid); 
                 this.__suemid=this._suemid;
             }
 
@@ -240,7 +247,7 @@ export class EmpPerComponent implements OnInit{
 
         /* FUNCION ASOCIADA A COMBO TIPO EMPPERSONA (TRABAJO DE PERSONA EN LA EMPRESA )*/
             idTipEmpPer(){
-                console.log(this.idTiEmpPer);
+                //console.log(this.idTiEmpPer);
             }
 
         /* FUNCION ASOCIADA A COMBO TIPO EMPPERSONA(TRABAJO DE PERSONA EN LA EMPRESA )  */
@@ -307,7 +314,7 @@ export class EmpPerComponent implements OnInit{
                     /* PROCEDURE GUARDAREMPPER - RECARGAR GRILLA EMPPERSONA */
                     /*console.log(this.empPer);*/
                     this.selectPersona=false;
-                    console.log(this.__suemid);
+                    //console.log(this.__suemid);
                     this.guardarEmpPer(this.empPer);
                 }
 
@@ -327,18 +334,29 @@ export class EmpPerComponent implements OnInit{
             }
             /* GUARDAR NUEVA EMPRESAPERSONA */
             guardarNuevaPersona(){
-                this.displayNuevaEmpPersona=true;  /* ABRIR */
-                this.displayAgregaPersona=false; /* CERRAR */
-        
+                this.displayNuevaEmpPersona=true; this.displayAgregaPersona=false; let persona:any;
+
                 /* PROCEDURE GUARDARPER - RECARGAR GRILLA BUSCA PERSONA */
-                this._persona={
-                    PeId:this.newpeid,
-                    PeNombres:this.persona.nombres,
-                    PeApellidos:this.persona.apellidos,
-                    PeDNI:this.persona.dni,
-                    PeCelular:this.persona.nrocel
+                persona={
+                    PeId: this.newpeid,
+                    UsFechaReg: new Date(),
+                    UsId: this.userid,
+                    PeNombres: this.persona.nombres,
+                    PeApellidos: this.persona.apellidos,
+                    PeDNI: this.persona.dni,
+                    PeFecNac: new Date(),
+                    PeDireccion: null,
+                    PeTipoLicencia: null,
+                    PeCelular: this.persona.nrocel,
+                    PeTelefonoFijo: null,
+                    PeEmail: null,
+                    getPeFechaIng: new Date(),
+                    PeFechaSal: new Date(),
+                    PeSexo: null,
+                    PeEstadoCivil: null
                 }
-                this.guardarPersona(this._persona);
+       
+                this.guardarPersona(persona);
                 this.persona={};
             }
             /* CANCELAR NUEVA EMPRESAPERSONA */
@@ -354,26 +372,34 @@ export class EmpPerComponent implements OnInit{
 
             /* TABLE EMPRESAPERSONA (FORM PRINCIPAL) */
             onRowSelectPerEmp(event){       
-                this.EmPeId=event.data.Id;
+                this.EmPeId=event.data.Id; let userSystemTab:any;
                 let apellidos = event.data.PeApellidos, nombres = event.data.PeNombres, dni=event.data.PeDNI;
                 this.userSystem.nomUser=this.nickUser(apellidos,nombres,dni);
                 this.nombre=nombres; /* ETIQUETA EN EL FORM USERSYSTEM . PARA SABER A QUIEN SE CREA EL USUAIRO DEL SISTEMA */
+        
+                userSystemTab=this.usuariosCreados(this.selectedRowTabEmpPer, this.arrAllUser);
+                if(userSystemTab!=-1){
+                    this.selectedRowTabAllUserSystem=userSystemTab; this.username=true;
+                }else if(userSystemTab==-1){
+                    this.username=false; this.selectedRowTabAllUserSystem=null;
+                }       
             }
-            
+
+            onRowSelectAllUserSystem(event){ 
+
+            }
             nickUser(ape:string, nom:string, dni:string) :string{
                 let nickName:string;
                 nickName=(ape.substr(0,3)) + (nom.substr(0,3)) + (dni.substr(0,3));
                 return nickName;
             }
 
-            /* TABLE PERSONA (FORM NUEVO EMPRESAPERSONA) */
+            /* TABLE PERSONA (FORM NUEVO EMPRESAPERSONA modal) */
             onRowSelPers(event){
-                //console.log(event.data.PeId); 
-                //console.log(this.selectPersona);
-                this.selectPersona=true;
-                this.PeId=event.data.PeId;
+                let PeDNI:string, _PeDNI:string; this.selectPersona=true; this.PeId=event.data.PeId;  PeDNI=event.data.PeDNI;
+                this._PeDNI=this.buscarEmPeId(PeDNI, this.arrEmpPer);             
             }
-    
+            
     /* BOTONES DE LAS TABLAS (CADA FILA) */
         /* TABLA EMPRESA_PERSONA(FORM PRINCIPAL) */
             /* EDITAR */
@@ -430,7 +456,7 @@ export class EmpPerComponent implements OnInit{
                 this.procGetUserSystembyUsId(userid);
             }
             eliminarUserSystem(userid:number){
-                this.selectedRow=[];
+                this.selectedRowTabEmpPer=[];
                 this.nombre="x";
                 this.procDeleteUserSystem(userid);
             }
@@ -438,9 +464,10 @@ export class EmpPerComponent implements OnInit{
     /* MOSTRAR CARGAR DATOS A COMBO + TABLAS  */ 
         /* TABLA ALL USER SYSTEM */
             mgUserSystem(arrUsers=[]){
-                this.arrAllUser=[];
+                let arrAllUser:any=[];
+
                 for(let user of arrUsers){
-                    this.arrAllUser.push({
+                    arrAllUser.push({
                         Nro:0,
                         EmId:user.EmId,
                         PeApellidos:user.PeApellidos,
@@ -450,10 +477,10 @@ export class EmpPerComponent implements OnInit{
                         UsUserName:user.UsUserName,
                     });
                 }   
-                for(let i=0; i<this.arrAllUser.length; i++){
-                    this.arrAllUser[i].Nro=i+1;
+                for(let i=0; i<arrAllUser.length; i++){
+                    arrAllUser[i].Nro=i+1;
                 }
-                /*console.log(this.arrAllUser);*/
+                this.arrAllUser=arrAllUser;
             }
 
         /* TABLA EMPPER GRILLA PRINCIPAL */
@@ -528,7 +555,46 @@ export class EmpPerComponent implements OnInit{
             mModalEditUserSystem(user:any){
                 console.log(user);
             }
-        
+        //buscar y seleccionar en la tabla de usuarios del sistema
+            usuariosCreados(objTabPersona:any, arrAllUsers=[]):any{
+                let objResult:any, i:number=0, cen:number=0;
+                    //console.log(objTabPersona); console.log(arrAllUsers);
+
+                    while(i<arrAllUsers.length && cen==0){
+                        if(arrAllUsers[i].PeApellidos==objTabPersona.PeApellidos 
+                            && arrAllUsers[i].PeNombres==objTabPersona.PeNombres){
+                                cen=1;
+                        }else if(arrAllUsers[i].PeApellidos!=objTabPersona.PeApellidos 
+                            && arrAllUsers[i].PeNombres!=objTabPersona.PeNombres){
+                                cen=0; i++;
+                        }
+                    }                
+
+                    if(cen==1){
+                        objResult=arrAllUsers[i];
+                    }else if(cen==0){
+                        objResult=-1;
+                    }
+                return objResult;
+            }
+        //buscar si persona esta agregada a una empresa
+            buscarEmPeId(PeDNI:string, arrEmpPer=[]):string{
+                let _PeDNI:string, i:number=0, cen:number=0;
+                //console.log(PeDNI); console.log(arrEmpPer);
+                while(i<arrEmpPer.length && cen==0){
+                    if(arrEmpPer[i].PeDNI!=PeDNI){
+                        i++; cen=0
+                    }else if(arrEmpPer[i].PeDNI==PeDNI){
+                        cen=1;
+                    }
+                }
+                if(cen==1){
+                    _PeDNI=PeDNI;
+                }else if(cen==0){
+                    _PeDNI='-1';
+                }
+                return _PeDNI;
+            }
 }
 
 

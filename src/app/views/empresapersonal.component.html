@@ -27,7 +27,9 @@
         <!--TABLA EMPRESAPERSONA-->
         <div class="row">
             <div class="table table-responsive">
-                <p-dataTable [value]="arrEmpPer" [globalFilter]="filtroGlobal" scrollable="true" [(selection)]="selectedRow" emptyMessage="No Hay Registros" scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectPerEmp($event)">
+                <p-dataTable [value]="arrEmpPer" [globalFilter]="filtroGlobal" scrollable="true" scrollHeight="260px"
+                            [(selection)]="selectedRowTabEmpPer" emptyMessage="No Hay Registros" scrollWidth="100%" 
+                            selectionMode="single" (onRowSelect)="onRowSelectPerEmp($event)">
                     <p-column styleClass="col-button" [style]="{'width':'3em'}">
                         <template let-col  let-emp="rowData"  pTemplate="body">
                                 <button type="button" pButton id="btnTable"  (click)=  "editarEmpPer(emp.Id)" icon="fa-pencil-square-o" > </button>
@@ -47,22 +49,26 @@
     <!--TABLA USUARIO DEL SISTEMA-->
         <!--TITULO-->
         <div id="titulo">Usuario de la Aplicacion</div>
+
         <div class="row">
             <!--BUSQUEDA-->
-            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
                 <input class="form-control" placeholder="Buscar..." type="text" #filtroGlobal3/>
             </div>
 
             <!--BOTON NUEVO-->
-            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
-                <button class="form-control" id="btnNuevo" pButton icon="fa-user-plus" [disabled]="nombre=='x'" (click)="nuevoUserSystem();" label="Nuevo Usuario"></button>
+            <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
+                <button class="form-control" id="btnNuevo" pButton icon="fa-user-plus" 
+                        [disabled]="nombre=='x' || !(username==false)" (click)="nuevoUserSystem();" label="Nuevo Usuario"></button>
             </div>
         </div>
 
         <!--TABLA USUARIO DEL SISTEMA-->
         <div class="row">
             <div class="table table-responsive">
-                <p-dataTable [value]="arrAllUser" [globalFilter]="filtroGlobal3" scrollable="true" emptyMessage="No Hay Registros" scrollWidth="100%" >
+                <p-dataTable [value]="arrAllUser" [globalFilter]="filtroGlobal3" scrollable="true" scrollHeight="260px"
+                             emptyMessage="No Hay Registros" scrollWidth="100%" (onRowSelect)="onRowSelectAllUserSystem($event)"
+                             [(selection)]="selectedRowTabAllUserSystem">
                     <p-column styleClass="col-button" [style]="{'width':'3em'}">
                         <template let-col  let-usersystem="rowData"  pTemplate="body">
                                 <!--<button pButton class="btn" (click)="editarUserSystem(usersystem.UsId)" [disabled]="EmPeId==-1" icon="fa-pencil-square-o" > </button>-->
@@ -128,7 +134,10 @@
                         <!--PERSONASTABLA-->
                         <div class="row">
                             <div class="table table-responsive">                               
-                                <p-dataTable [value]="personalArr" [globalFilter]="filtroGlobal2" (onRowSelect)="onRowSelPers($event)" [(selection)]="selectRowPersona" emptyMessage="Lista vacia" scrollable="true" scrollWidth="100%" selectionMode="single" >                            
+                                <p-dataTable [value]="personalArr" [globalFilter]="filtroGlobal2" 
+                                            (onRowSelect)="onRowSelPers($event)" [(selection)]="selectRowPersona" 
+                                            emptyMessage="Lista vacia" scrollable="true" scrollWidth="100%" 
+                                            selectionMode="single" >                            
                                     <p-column styleClass="col-button" [style]="{'width':'4em'}">
                                         <template let-col let-per="rowData" pTemplate="body">                                                           
                                             <button id="btnTable"  pButton (click)="eliminarPersona(per.PeId)" icon="fa-trash"> </button>
@@ -148,67 +157,70 @@
             </div>
         </div>
         
-        <div class="btn_Modal row">
-            <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
-                <button class="btn_modal" (click)="guardarEmpPersona(); subempid.reset(); tipocargoempper.reset();" [disabled]="!this.selectPersona || !subempid.valid || !tipocargoempper.valid" pButton icon="fa-save" label="Guardar"></button>
+        <div class="btn_Modal">
+            <div class="row justify-content-end">
+                <div class="col-xl-2 col-md-3 col-sm-6 col-sx-12">
+                    <button class="btn_modal" 
+                    (click)="guardarEmpPersona(); subempid.reset(); tipocargoempper.reset();" 
+                    [disabled]="!this.selectPersona || !subempid.valid || !tipocargoempper.valid || !(_PeDNI==(-1))" pButton 
+                    icon="fa-save" label="Guardar"></button>
+                </div>
+                <div class="col-xl-2 col-md-3 col-sm-6 col-sx-12">
+                    <button class="btn_modal" 
+                    (click)="cancelarEmpPersona(); subempid.reset(); tipocargoempper.reset();" 
+                    pButton icon="fa-close" label="Cancelar"></button>
+                </div>
             </div>
-            <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
-                <button class="btn_modal" (click)="cancelarEmpPersona(); subempid.reset(); tipocargoempper.reset();" pButton icon="fa-close" label="Cancelar"></button>
-            </div>
-            <!--<div class="col-xl-4 col-md-4 col-sm-4 col-sx-12">
-                <button class="btn_modal" (click)="nuevaPersona()" pButton icon="fa-user-plus" label="Agregar Persona"></button>
-            </div>-->
         </div>
     </p-dialog>
 
     <!--NUEVA PERSONA (CAMPOS NECESARIOS)-->
     <p-dialog header="Añadiendo Persona" [(visible)]="displayAgregaPersona" [resizable]="false" modal="modal"width="100%" height="100%" responsive="true" [closable]="false">
         
-        <div class="row">
-            <div class="cont_modal">
-                <div class="container">
+        <div class="contFormNuevaPer">
+            <div class="bodyFormNuevaPer">
+                <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="row">
-                            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                                <div class="form-group">
-                                    <label>Nombres:</label>
-                                    <input type="text" class="form-control" maxlength="40" [(ngModel)]="persona.nombres" #nompersona="ngModel" required/>
-                                    <div id="validation" [hidden]="!nompersona.touched || nompersona.valid">Error en los datos</div>
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                                <div class="form-group">
-                                    <label>Apellidos:</label>
-                                    <input type="text" class="form-control" maxlength="60" [(ngModel)]="persona.apellidos" #apepersona="ngModel" required/>
-                                    <div id="validation" [hidden]="!apepersona.touched || apepersona.valid">Error en los datos</div>
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                                <div class="form-group">
-                                    <label>DNI:</label>
-                                    <input type="text" class="form-control" maxlength="8" [(ngModel)]="persona.dni" #dnipersona="ngModel" required/>
-                                    <div id="validation" [hidden]="!dnipersona.touched || dnipersona.valid">Error en los datos</div>
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                                <div class="form-group">
-                                    <label>Nro Celular:</label>
-                                    <input type="text" class="form-control" maxlength="10" [(ngModel)]="persona.nrocel" #nrocelpersona="ngModel" required/>
-                                    <div id="validation" [hidden]="!nrocelpersona.touched || nrocelpersona.valid">Error en los datos</div>
-                                </div>
-                            </div>
-                        </div>
+                        
+                            <label>Nombres:</label>
+                            <input type="text" class="form-control" maxlength="40" [(ngModel)]="persona.nombres" #nompersona="ngModel" required/>
+                            <div id="validation" [hidden]="!nompersona.touched || nompersona.valid">Error en los datos</div>
+                    
+                    </div>
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        
+                            <label>Apellidos:</label>
+                            <input type="text" class="form-control" maxlength="60" [(ngModel)]="persona.apellidos" #apepersona="ngModel" required/>
+                            <div id="validation" [hidden]="!apepersona.touched || apepersona.valid">Error en los datos</div>
+                        
+                    </div>
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        
+                            <label>DNI:</label>
+                            <input type="text" class="form-control" maxlength="8" [(ngModel)]="persona.dni" #dnipersona="ngModel" required/>
+                            <div id="validation" [hidden]="!dnipersona.touched || dnipersona.valid">Error en los datos</div>
+                        
+                    </div>
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        
+                            <label>Nro Celular:</label>
+                            <input type="text" class="form-control" maxlength="10" [(ngModel)]="persona.nrocel" #nrocelpersona="ngModel" required/>
+                            <div id="validation" [hidden]="!nrocelpersona.touched || nrocelpersona.valid">Error en los datos</div>
+                        
                     </div>
                 </div>
             </div>
-        </div>
+       
 
-        <div class="btn_Modal row">
-            <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
-                <button class="btn_modal" [disabled]="!nompersona.valid || !apepersona.valid || !dnipersona.valid || !nrocelpersona.valid" (click)="guardarNuevaPersona(); nompersona.reset();  apepersona.reset();  dnipersona.reset();  nrocelpersona.reset(); " pButton icon="fa-save" label="Guardar"></button>
-            </div>
-            <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
-                <button class="btn_modal" (click)="cancelarNuevaPersona(); nompersona.reset();  apepersona.reset();  dnipersona.reset();  nrocelpersona.reset();" pButton icon="fa-close" label="Cancelar"></button>
+            <div class="pieFormNuevaPer ">
+                <div class="row justify-content-end">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
+                        <button class="btn_modal" [disabled]="!nompersona.valid || !apepersona.valid || !dnipersona.valid || !nrocelpersona.valid" (click)="guardarNuevaPersona(); nompersona.reset();  apepersona.reset();  dnipersona.reset();  nrocelpersona.reset(); " pButton icon="fa-save" label="Guardar"></button>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
+                        <button class="btn_modal" (click)="cancelarNuevaPersona(); nompersona.reset();  apepersona.reset();  dnipersona.reset();  nrocelpersona.reset();" pButton icon="fa-close" label="Cancelar"></button>
+                    </div>
+                </div>
             </div>
         </div>
     </p-dialog>
@@ -216,44 +228,36 @@
     <!--CREANDO UN USUARIO PARA INGRESAR AL SISTEMA-->
     <p-dialog  [(visible)]="displayUserSystem" [resizable]="false" modal="modal" width="100%" height="100%" responsive="true" [closable]="false">
         <p-header>Para: {{nombre}} </p-header>
-        <div class="row">
-            <div class="cont_modal">
-                <div class="container">
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="row">
-                            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                                <div class="form-group">
-                                    <label>Usuario:</label>
-                                    <input type="text" class="form-control" maxlength="25" [(ngModel)]="userSystem.nomUser" required #nickuser="ngModel" />
-                                    <span *ngIf="!nickuser.valid && nickuser.touched" id="validation" style="display: inline-block; font-size: 80%;" >
-                                        <div [hidden]="!nickuser.errors.required"> Obligatorio </div>
-                                        <div [hidden]="!nickuser.errors.maxlength"> Maximo 25 Caracteres </div>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                                <div class="form-group">
-                                    <label>Contraseña:</label>
-                                    <input type="text" class="form-control" minlength="10" maxlength="25" [(ngModel)]="userSystem.password" required #password="ngModel" />
-                                    <span *ngIf="!password.valid && password.touched" id="validation" style="display: inline-block; font-size: 80%;" >
-                                        <div [hidden]="!password.errors.required"> Obligatorio </div>
-                                        <div [hidden]="!password.errors.minlength"> Minimo 10 Caracteres </div>
-                                        <div [hidden]="!password.errors.maxlength"> Maximo 25 Caracteres </div>
-                                    </span> 
-                                </div>
-                            </div>
-                        </div>
+        <div class="contFormNuevoUser">
+            <div class="bodyFormNuevoUser">     
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">  
+                    <label>Usuario:</label>
+                    <input type="text" class="form-control" maxlength="25" [(ngModel)]="userSystem.nomUser" required #nickuser="ngModel" />
+                    <span *ngIf="!nickuser.valid && nickuser.touched" id="validation" style="display: inline-block; font-size: 80%;" >
+                        <div [hidden]="!nickuser.errors.required"> Obligatorio </div>
+                        <div [hidden]="!nickuser.errors.maxlength"> Maximo 25 Caracteres </div>
+                    </span>
+                </div>
+                <br>
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">    
+                    <label>Contraseña:</label>
+                    <input type="text" class="form-control" minlength="10" maxlength="25" [(ngModel)]="userSystem.password" required #password="ngModel" />
+                    <span *ngIf="!password.valid && password.touched" id="validation" style="display: inline-block; font-size: 80%;" >
+                        <div [hidden]="!password.errors.required"> Obligatorio </div>
+                        <div [hidden]="!password.errors.minlength"> Minimo 10 Caracteres </div>
+                        <div [hidden]="!password.errors.maxlength"> Maximo 25 Caracteres </div>
+                    </span> 
+                </div>                   
+            </div>
+            <div class="pieFormNuevoUser ">
+                <div class="row">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
+                        <button class="btn_modal" [disabled]="!nickuser.valid || !password.valid" (click)="guardarNewUserSystem(); nickuser.reset(); password.reset();" pButton icon="fa-save" label="Guardar"></button>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
+                        <button class="btn_modal" (click)="cancelarNewUserSystem(); nickuser.reset(); password.reset();" pButton icon="fa-close" label="Cancelar"></button>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="btn_Modal row">
-            <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
-                <button class="btn_modal" [disabled]="!nickuser.valid || !password.valid" (click)="guardarNewUserSystem(); nickuser.reset(); password.reset();" pButton icon="fa-save" label="Guardar"></button>
-            </div>
-            <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
-                <button class="btn_modal" (click)="cancelarNewUserSystem(); nickuser.reset(); password.reset();" pButton icon="fa-close" label="Cancelar"></button>
             </div>
         </div>
     </p-dialog>

@@ -31,6 +31,13 @@ export class TControlService{
 	constructor(private http: Http){}
 	
 //GETTERS
+	//consulta en un dia sin programacion
+	getalltarjetacontrolbyemredide(emId:number, reDiDe:number){
+		return this.http        
+            .get(this.baseUrl+"getalltarjetacontrolbyemredide?emId="+emId+"&reDiDe="+reDiDe)
+            .map((r:Response) => r.json())
+            .catch(this.handleError);
+	}
 	//CONSULTA PROGRAMACION CABECERA (SE MUESTRA EN GRILLA PROGRAMACION)
     getAllProgramacionByEm( emId: number, anio: number){
         return this.http        

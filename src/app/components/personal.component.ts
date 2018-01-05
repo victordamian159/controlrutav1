@@ -234,7 +234,7 @@ export class PersComponent implements OnInit{
     /*EDITAR PERSONAL*/
         /* FUNCION ASOCIADA A BOTON FILA DATATABLE */
         editarPersonal(perid : number){
-            this.mensaje="Editar Registro";
+            this.mensaje="¿Desea editar el registro?";
             this.peid=perid;
             this.displayConfEditar=true;
         }

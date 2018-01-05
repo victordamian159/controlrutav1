@@ -80,7 +80,7 @@ export class RegistroDiarioComponent implements OnInit{
                     let arrReg:any[]=[];
                     this.registrodiarioservice.getAllregistrodiarioDetalleByPrId(reDiId).subscribe(
                         data=>{ 
-                                arrReg=data; //console.log(arrReg); 
+                                arrReg=data; console.log(arrReg); 
                                 if(arrReg.length!=0){
                                     this.mgAllRegDiarioDetalle(arrReg);
                                     this.displayRegDiarioDetalle=true;
@@ -111,14 +111,14 @@ export class RegistroDiarioComponent implements OnInit{
                 saveRegistroDiario(objRegDiario:Object){
                     this.registrodiarioservice.saveregistrodiario(objRegDiario).subscribe(
                         data=>{ this.getAllRegistroDiarionByemId(this.emid); console.log("guardado =D");},
-                        err =>{console.log(err);}
+                        err =>{alert('No se pudo crear el registro diario'); console.log(err);}
                     );
                 }
             //DELETE
                 delRegistroDiario(ReDiId:number){
                     this.registrodiarioservice.deleteregistrodiarioByid(ReDiId).subscribe(
                         realizar => {this.getAllRegistroDiarionByemId(this.emid)},
-                        err =>{console.log(err);}
+                        err =>{alert('No se pudo borrar el registro diario');}
                     );
                 }
             //NEW
@@ -185,6 +185,7 @@ export class RegistroDiarioComponent implements OnInit{
                     
                 //CABECERA FORM PRINCIPAL REGISTRO CABECERA
                     mgAllRegistroDiario(arrRegDiario=[]){
+                        console.log(arrRegDiario);
                         let arrRegDiarioByEmId=[];
                         
                         for(let arrReg of arrRegDiario){
@@ -199,6 +200,7 @@ export class RegistroDiarioComponent implements OnInit{
                         for(let i=0; i<arrRegDiarioByEmId.length; i++){
                             arrRegDiarioByEmId[i].Nro=i+1;
                         }
+                        console.log();
                         this.arrRegDiarioByEmId=arrRegDiarioByEmId.slice(0);
                     }
         //func btn datatable
@@ -250,8 +252,7 @@ export class RegistroDiarioComponent implements OnInit{
                         this.nTolVueltas=1;
                     }
 
-                    //console.log(objSaveRegDiario);  console.log(this.arrRegDiarioByEmId);  console.log(guion_slash_inver(this.fechRegDir));
-                    //console.log(this.buscarFechaIgual(this.arrRegDiarioByEmId,guion_slash_inver(this.fechRegDir)));
+                    console.log(objSaveRegDiario);  
                     
                     if(this.buscarFechaIgual(this.arrRegDiarioByEmId,guion_slash_inver(this.fechRegDir))==0){
                         this.displayNuevoRegistroDiario=false;
