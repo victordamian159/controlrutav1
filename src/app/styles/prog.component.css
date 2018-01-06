@@ -95,6 +95,11 @@ col-xl-12{
     padding: 0;
 }
 
+/*estilos form hora base*/
+.contFormHoraBase{height:500px; width: 400px;}
+.bodyFormHoraBase{height: 450px; width: 100%;}
+.pieFormHoraBase{height: 40px; width: 100%;}
+
 /* estilos formulario (nueva programacion) ingresar horas de salida */
     /* estilo ventana */
         ._windMolHSal{

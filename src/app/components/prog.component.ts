@@ -4,7 +4,7 @@ import {ProgramacionService} from '../service/prog.service'
 import {PlacasService} from '../service/placas.service'
 import {GlobalVars} from 'app/variables'
 import {hora,formatFechInArr,_fnroDias,fecha,arrABI,arrANBI,_hora, tipoAnio,_fecha1,_fecha2,slash_posFecha,horaValida,
-        formatFech,addDays,_addDays,editf1,fechaActual1, cambianBuIdxNroPlaca} from 'app/funciones';
+        formatFech,addDays,operSHoras,_addDays,editf1,fechaActual1, cambianBuIdxNroPlaca} from 'app/funciones';
 
 
 declare var jsPDF: any; //PARA PASAR HTML A PDF 
@@ -44,6 +44,7 @@ export class ProgComponent implements OnInit{
         private nroTotalMinibuses:number;
         private nroMiniBus:number;
         private horaBase:string;
+        private horaIncremento:string;
         private emid:number;
         private userid:number;
         private PrId:number;
@@ -821,26 +822,39 @@ export class ProgComponent implements OnInit{
             return result;
     }
 
-    AgregarHBase(){
-        if(this.nroMiniBus<this.nroTotalMinibuses){         
-            let indicePorInicio=this.buscarPrimerHMS(this.ordenSorteo);
-            this.ordenSorteo[indicePorInicio].HoraBase=this.horaBase;
-            this.nroMiniBus=this.conteoHBAgregadas(this.ordenSorteo);
-            let indexNextPos=this.buscarSigtePosicion(this.ordenSorteo);
-          
+    AgregarHBase(hBaseValid:boolean, hIncrementoValid:boolean){
+        if(hBaseValid==true && hIncrementoValid==true){    
+            if(this.nroMiniBus<this.nroTotalMinibuses){         
+                let indicePorInicio=this.buscarPrimerHMS(this.ordenSorteo);
+                //console.log('indicePorInicio: '+indicePorInicio);
+                //cargando hora base a la tabla 
+                if(indicePorInicio>0){
+                    let horaBaseSgte=operSHoras(this.horaBase,this.horaIncremento); this.horaBase=horaBaseSgte;
+                    console.log(horaBaseSgte);
+                }else if(indicePorInicio==0){
 
-            if(indexNextPos-indicePorInicio==1){
-                if(this.nroTotalMinibuses==indexNextPos){
-                    this.placaEditarCelda=this.ordenSorteo[indicePorInicio].nroPlaca;
-                }else{
-                    this.placaEditarCelda=this.ordenSorteo[indexNextPos].nroPlaca;
                 }
-            }else if(indexNextPos-indicePorInicio>1){
-                this.placaEditarCelda=this.ordenSorteo[indicePorInicio].nroPlaca;  
-            }
+
+                this.ordenSorteo[indicePorInicio].HoraBase=this.horaBase;
+                this.nroMiniBus=this.conteoHBAgregadas(this.ordenSorteo);
+                let indexNextPos=this.buscarSigtePosicion(this.ordenSorteo);
             
-        }else if(this.nroMiniBus==this.nroTotalMinibuses){
-            console.log("programacion terminada");
+
+                if(indexNextPos-indicePorInicio==1){
+                    if(this.nroTotalMinibuses==indexNextPos){
+                        this.placaEditarCelda=this.ordenSorteo[indicePorInicio].nroPlaca;
+                    }else{
+                        this.placaEditarCelda=this.ordenSorteo[indexNextPos].nroPlaca;
+                    }
+                }else if(indexNextPos-indicePorInicio>1){
+                    this.placaEditarCelda=this.ordenSorteo[indicePorInicio].nroPlaca;  
+                }
+                
+            }else if(this.nroMiniBus==this.nroTotalMinibuses){
+                console.log("programacion terminada");
+            }
+        }else{
+            alert('Verifique Hora Salida e Incremento');
         }
     }
 
@@ -1730,6 +1744,12 @@ export class ProgComponent implements OnInit{
         return arrplacasprog;
     }
 
+
+    calcularHoraSalidaSgte(){
+        //console.log(hBaseValid); console.log(hIncrementoValid);
+        
+        
+    }
 /* CARGAR GLOBAL */ 
     //CONVERTIR STRING A DATE PARA FECHA   ----   FORMULARIO A BD 
     fecha(fecha: string) : Date{
