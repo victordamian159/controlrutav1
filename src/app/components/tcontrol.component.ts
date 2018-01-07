@@ -1359,12 +1359,33 @@ export class TcontrolComponent implements OnInit{
             funcCboTipoTarjeta(){
                 //multiple
                 if(this.TaCoMultiple==1){
-                    this.nroTarjetas=this.ReDiTotalVuelta-this.ReDiDeNroVuelta+1;
-                    this.procNewRegistroReten();
-                     //input horas para multiples tarjeta
-                     this.actMInputPrimerReten=true;
-                     this.actMInputRepeatReten=true;
-                     this.actMInputHoraEslavon=true;
+
+                    //no permitir que se cree tarjetas desde la primera vuelta
+                    if(this.ReDiDeNroVuelta==1 && (this.ReDiTotalVuelta-this.ReDiDeNroVuelta<2 )){
+                        alert('no se puede crear tarjeta multiple desde la primera vuelta');
+                        this.TaCoMultiple=-1;
+                    }else {
+                        this.nroTarjetas=this.ReDiTotalVuelta-this.ReDiDeNroVuelta+1;
+                        this.procNewRegistroReten();
+                        //input horas para multiples tarjeta
+                        this.actMInputPrimerReten=true; this.actMInputRepeatReten=true;  this.actMInputHoraEslavon=true;
+                        this.mensaje="";    this.estadoPlaca=-1;  this.mnjNroTarjetaValido="";
+                        
+                        this.tcontrolservice.getallregistrovueltasdiariasbyemprfe(this.emID,this._prId,cCeroFechaForEditar(fechaActual2()))
+                        .subscribe(
+                            data=>{
+                                console.log(data);
+                                this.getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2())); //grilla principal :s
+                                this.getallprogramacionbydate(this._prId,guion_posFecha(editf1(fechaActual1())), this.nroTarjetas); // tabla programacion
+                            },
+                            erro=>{
+                                alert('error al verificar si existe tarjetas individuales');
+                            }
+                        );
+
+                        
+                    }
+                    
                 //individual
                 }else if(this.TaCoMultiple==0){
                     this.nroTarjetas=1;
@@ -1373,14 +1394,13 @@ export class TcontrolComponent implements OnInit{
                     this.actInputTHora=true;
                     this.actInputReten=true;
                     this.actInputHoraSalida=true;
+                    this.mensaje="";  
+                    this.estadoPlaca=-1;
+                    this.mnjNroTarjetaValido="";
+                    
+                    this.getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2())); //grilla principal :s
+                    this.getallprogramacionbydate(this._prId,guion_posFecha(editf1(fechaActual1())), this.nroTarjetas); // tabla programacion
                 }
-                
-                this.mensaje="";  
-                this.estadoPlaca=-1;
-                this.mnjNroTarjetaValido="";
-                
-                this.getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2())); //grilla principal :s
-                this.getallprogramacionbydate(this._prId,guion_posFecha(editf1(fechaActual1())), this.nroTarjetas); // tabla programacion
             }
 
             //buscar el nombre de la programacion en funcionamiento
