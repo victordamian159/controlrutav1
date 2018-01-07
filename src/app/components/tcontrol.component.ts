@@ -193,7 +193,7 @@ export class TcontrolComponent implements OnInit{
         private SuEmId:number;
         private HoraSalidaAnteriorDP:string;
         private HoraSalidaPlacaActualPreviewDP:string;
-        private fechaApertura:string;
+        private fechaAsigTarjs:string;
 
     //variables boolean, activar inputs de los formularios
         //una sola tarjeta
@@ -246,7 +246,7 @@ export class TcontrolComponent implements OnInit{
         this.getallprogramacionbyem(this.emID,0); //PROGRAMACION X EMP Y POR AÑO(ACLARAR ESTO)
         this.getAllRutaByEm(this.emID);
         this.getAllRegistroDiario(this.emID);
-        //this.getallregistrovueltasdiariasbyemprfe(this.emID,0,slash_posFecha(fechaActual2()));
+        this.getallregistrovueltasdiariasbyemprfeDL(this.emID,0,slash_posFecha(fechaActual2()));
         
         this.procConsultarConfiguracionSistemaXPeriodo();
        
@@ -339,11 +339,11 @@ export class TcontrolComponent implements OnInit{
         this.SuEmId=null;
 
         this._PuCoId=0; this._prId=0; this.PrId=0; this.TaCoMultiple=-1;
-        this.fechaApertura=editf1(fechaActual1());
+        this.fechaAsigTarjs='';
     }
 
-    funcFechaApertura(){
-        console.log(this.fechaApertura);
+    funcInputDateFpFechaApertura(){
+        //alert(this.fechaAsigTarjs);
     }
 
 /* PROCEDURES */ 
@@ -1362,8 +1362,10 @@ export class TcontrolComponent implements OnInit{
 
                     //no permitir que se cree tarjetas desde la primera vuelta
                     if(this.ReDiDeNroVuelta==1 && (this.ReDiTotalVuelta-this.ReDiDeNroVuelta<2 )){
-                        alert('no se puede crear tarjeta multiple desde la primera vuelta');
+                        alert('No se puede crear tarjeta multiple desde la primera vuelta');
                         this.TaCoMultiple=-1;
+                        this._PuCoId=0;
+                        this.puntoControl=null;
                     }else {
                         this.nroTarjetas=this.ReDiTotalVuelta-this.ReDiDeNroVuelta+1;
                         this.procNewRegistroReten();
@@ -1371,12 +1373,22 @@ export class TcontrolComponent implements OnInit{
                         this.actMInputPrimerReten=true; this.actMInputRepeatReten=true;  this.actMInputHoraEslavon=true;
                         this.mensaje="";    this.estadoPlaca=-1;  this.mnjNroTarjetaValido="";
                         
-                        this.tcontrolservice.getallregistrovueltasdiariasbyemprfe(this.emID,this._prId,cCeroFechaForEditar(fechaActual2()))
+                        this.tcontrolservice.getallregistrovueltasdiariasbyemprfe(this.emID,this._prId,slash_posFecha(fechaActual2()))
                         .subscribe(
                             data=>{
                                 console.log(data);
-                                this.getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2())); //grilla principal :s
-                                this.getallprogramacionbydate(this._prId,guion_posFecha(editf1(fechaActual1())), this.nroTarjetas); // tabla programacion
+                                let arrVuelta=this.extraerArrByVuelta(data,this.ReDiDeNroVuelta);
+                                let nroTarjCreadas=this.conteoTarjetasAsigByVuelta(arrVuelta);
+
+                                if(nroTarjCreadas==0){
+                                    this.getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2())); //grilla principal :s
+                                    this.getallprogramacionbydate(this._prId,guion_posFecha(editf1(fechaActual1())), this.nroTarjetas); // tabla programacion
+                                }else if(nroTarjCreadas!=0){
+                                    this.TaCoMultiple=-1;
+                                    this._PuCoId=0;
+                                    this.puntoControl=null;
+                                    alert('No se puede crear tarjeta multiple, existen tarjetas individuales');
+                                }
                             },
                             erro=>{
                                 alert('error al verificar si existe tarjetas individuales');
@@ -1401,6 +1413,46 @@ export class TcontrolComponent implements OnInit{
                     this.getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2())); //grilla principal :s
                     this.getallprogramacionbydate(this._prId,guion_posFecha(editf1(fechaActual1())), this.nroTarjetas); // tabla programacion
                 }
+            }
+
+            conteoTarjetasAsigByVuelta(arrVuelta=[]):number{
+                let longArr=arrVuelta.length, i:number=0, cen=0, j:number=0, resultado:boolean;
+                while(i<longArr){
+                    if(arrVuelta[i].TaCoAsignado=='1' || arrVuelta[i].TaCoAsignado=='2' || arrVuelta[i].TaCoAsignado=='3'){
+                        j++;
+                    }else{
+
+                    }
+                    i++;
+                }
+                //console.log(j);
+                return j;
+            }
+            //extraer solo el array de  todas las placas que esten presentes en la una vuelta dada
+            extraerArrByVuelta(arrCuadroSalidas=[], ReDiDeNroVuelta:number){
+                let i:number=0, cen:number=0, arrPlacasByVuelta=[];
+                //buscando primer indice 
+                while(i<arrCuadroSalidas.length && cen==0){
+                    if(arrCuadroSalidas[i].ReDiDeNroVuelta != ReDiDeNroVuelta){
+                        i++; cen=0;
+                    }else if(arrCuadroSalidas[i].ReDiDeNroVuelta == ReDiDeNroVuelta){
+                        cen=1;
+                    }
+                }
+
+                cen=0;
+
+                while(i<arrCuadroSalidas.length && cen==0){
+                    if(arrCuadroSalidas[i].ReDiDeNroVuelta == ReDiDeNroVuelta){
+                        
+                        arrPlacasByVuelta.push(arrCuadroSalidas[i]);
+                        i++; cen=0;
+                    }else if(arrCuadroSalidas[i].ReDiDeNroVuelta != ReDiDeNroVuelta){
+                        cen=1;
+                    }
+                }
+
+                return arrPlacasByVuelta;
             }
 
             //buscar el nombre de la programacion en funcionamiento
@@ -2670,6 +2722,27 @@ export class TcontrolComponent implements OnInit{
         }
 
 //asignar tarjetas para dia libre
+        //consultas
+        //cuadro de salidas, consulta para sacar el cuadro grande de todas las salidas del dia
+        getallregistrovueltasdiariasbyemprfeDL(emid:number, prid:number, fecha:string){
+            let arrCuadro:any[]=[];
+            this.tcontrolservice.getallregistrovueltasdiariasbyemprfe(emid,prid,fecha).subscribe(
+                data => {
+                            arrCuadro=data;
+                            console.log(arrCuadro);
+                            /*
+                                if(arrCuadro.length!=0 && arrCuadro.length>0){
+                                    this.arrCuadro=arrCuadro;
+                                    this.arrCuadroBusqueda=arrCuadro; //para la busqueda y validacion de reten
+                                }else{
+                                    console.log('Error la descarga del cuadro de salidas, vuelva a intentarlo');
+                                }
+                            */
+                        },
+                error=> {alert('Error en el cuadro de salidas, vuelva a intentarlo');},
+                ()   => {}
+            );
+        }
         //FUNCION AGREGAR UNA PLACA A LA PROGRAMACION LIBRE(SERA LA BASE DE TODO EL DIA)
         agregarPlaca(){
             console.log(this.selectedPlacaAddSinProg);
