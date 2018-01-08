@@ -27,15 +27,25 @@
                     <!--btn asignar tarjeta con programacion y sin programacion-->
                     <div class="col-xl-2 col-md-3 col-sm-12 col-xs-12">
                         <!--NUEVO REGISTRO style="float:left"  CON PROGRAMACION -->
-                        <button class="form-control" id="btnNuevo" type="button"  pButton icon="fa-file-text-o" 
-                        [disabled]="_ruId==0" (click)="formAsignarTarjetas()" label="Asignar con prog" [hidden]=false ></button>                
+                        <button 
+                        class="form-control" id="btnNuevo"
+                         type="button"  pButton icon="fa-file-text-o" 
+                        [disabled]="_ruId==0" 
+                        (click)="formAsignarTarjetas()" 
+                        label="Asignar con prog" [hidden]=false 
+                        ></button>                
                     </div>
-                    <!--
+                    
                     <div class="col-xl-2 col-md-3 col-sm-12 col-xs-12">            
-                        <button class="form-control" id="btnNuevo" type="button"  pButton icon="fa-file-text-o" 
-                        [disabled]="_ruId==0" (click)="formAsignarTarjetasSinProg()" label="Asignar sin prog" [hidden]=true ></button>
+                        <button 
+                            class="form-control" id="btnNuevo" type="button"  
+                            pButton icon="fa-file-text-o" 
+                            [disabled]="_ruId==0" 
+                            (click)="formAsignarTarjetasSinProg()" 
+                            label="Asignar sin prog" [hidden]=false 
+                        ></button>
                     </div>
-                    -->
+                    
                     <div class="col-xl-2 col-md-3 col-sm-12 col-xs-12">
                         <input  class="form-control" [(ngModel)]="fechaAsigTarjs" type="date" (ngModelChange)='funcInputDateFpFechaApertura();'>
                     </div>

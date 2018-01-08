@@ -21,6 +21,9 @@ export class RegistroDiarioComponent implements OnInit{
                 private displayConfDelRegDiario:boolean;
                 private displayErrorMismaFecha:boolean;
                 private displayRegDiarioDetalle:boolean;
+                private displayProcesoGuardando:boolean;
+                private displayErrorGuardar:boolean;
+
             //number
                 private nTolVueltas:number;
                 private emid:number;
@@ -55,6 +58,8 @@ export class RegistroDiarioComponent implements OnInit{
             this.displayConfDelRegDiario=false;
             this.displayErrorMismaFecha=false;
             this.displayRegDiarioDetalle=false;
+            this.displayProcesoGuardando=false;
+            this.displayErrorGuardar=false;
            
             this.nTolVueltas=null;
             this.ReDiHoraInicioDiario=null;
@@ -110,9 +115,28 @@ export class RegistroDiarioComponent implements OnInit{
             //SAVE
                 saveRegistroDiario(objRegDiario:Object){
                     this.registrodiarioservice.saveregistrodiario(objRegDiario).subscribe(
-                        data=>{ this.getAllRegistroDiarionByemId(this.emid); console.log("guardado =D");},
-                        err =>{alert('No se pudo crear el registro diario'); console.log(err);}
+                        data=>{ 
+                            console.log(data);
+                            this.mensaje="";
+                            this.displayProcesoGuardando=false;
+                            
+                            if(data.ReDiId!=0 && data.ReDiId>0){
+                                //alert("guardado =D");
+                                this.getAllRegistroDiarionByemId(this.emid);
+                            }else{
+                                this.mensaje="Error en el registro diario";
+                                this.displayErrorGuardar=true;
+                            }                            
+                        },
+                        err =>{
+                            alert('No se pudo crear el registro diario'); 
+                            console.log(err);
+                        }
                     );
+                }
+                aceptarErrorGuardar(){
+                    this.mensaje='';
+                    this.displayErrorGuardar=false;
                 }
             //DELETE
                 delRegistroDiario(ReDiId:number){
@@ -215,7 +239,7 @@ export class RegistroDiarioComponent implements OnInit{
                         btnTabDelReDi(ReDiId:number){
                             this.ReDiId=ReDiId;
                             this.displayConfDelRegDiario=true;
-                            this.mensajevalidacion="Esta seguro de eliminar el registro?";
+                            this.mensajevalidacion="¿Esta seguro de eliminar el registro diario?";
                             console.log(ReDiId);
                         }
                         okDelRegDiario(){
@@ -255,10 +279,12 @@ export class RegistroDiarioComponent implements OnInit{
                     console.log(objSaveRegDiario);  
                     
                     if(this.buscarFechaIgual(this.arrRegDiarioByEmId,guion_slash_inver(this.fechRegDir))==0){
+                        this.mensaje="guardando registro diario...";
+                        this.displayProcesoGuardando=true;
                         this.displayNuevoRegistroDiario=false;
                         this.saveRegistroDiario(objSaveRegDiario);
                     }else if(this.buscarFechaIgual(this.arrRegDiarioByEmId,guion_slash_inver(this.fechRegDir))==1){
-                        this.mensaje="No puede crear dos registros con la misma fecha actual";
+                        this.mensaje="No puede crear dos registros con la misma fecha";
                         this.displayErrorMismaFecha=true;
                     }
 
@@ -285,4 +311,5 @@ export class RegistroDiarioComponent implements OnInit{
                     }
                     return cen;
                 }
+
 }

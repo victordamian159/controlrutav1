@@ -122,6 +122,23 @@
         return _fecha
     }
 
+     /* CAMBIANDO EL '-' POR '/' */
+     export function guionBySlash(f : string) :string{
+        let fecha:string, _fecha:string, resultado, i=0;
+        resultado = f.split('-');
+            while(i<resultado.length){
+                resultado[i]=resultado[i].trim(); //BORRANDO ESPACIOS EN BLANCO
+                if(resultado[i].length%2!=0){
+                    resultado[i]="0"+resultado[i];
+                }
+                i++;
+            }
+            //CONCATENANDO
+            _fecha=resultado[0]+"/"+resultado[1]+"/"+resultado[2];
+        
+        return _fecha
+    }
+
 
     //  (yyyy-mm-dd)  CONVERTIR STRING A DATE PARA FECHA   ----   FORMULARIO A BD   2017/03/31  2017-03-31
     export function fecha(fecha: string) : Date{

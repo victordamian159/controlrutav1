@@ -19,7 +19,7 @@ import {GlobalVars} from 'app/variables';
 import {cCeroFechaForEditar,slash_posFecha,fechaActual2,ajustaHora,
         hora,_hora,_cCeroFecha,cCeroHora,guion_posFecha, corrigiendoHora,
         corrigiendoHoraString,fecha,_fecha1,fechaActual1,horaValida,
-        editf1,horaAct,operSHoras,extFuncCorrecHora} from 'app/funciones';
+        editf1,horaAct,operSHoras,extFuncCorrecHora,guionBySlash,guion_slash_inver} from 'app/funciones';
 
 
 @Component({
@@ -194,6 +194,9 @@ export class TcontrolComponent implements OnInit{
         private HoraSalidaAnteriorDP:string;
         private HoraSalidaPlacaActualPreviewDP:string;
         private fechaAsigTarjs:string;
+        private fechaAsTarjUno:string;
+        private fechaAsTarjDos:string;
+        private fechaAsTarjTres:string;
 
     //variables boolean, activar inputs de los formularios
         //una sola tarjeta
@@ -243,14 +246,12 @@ export class TcontrolComponent implements OnInit{
 
     ngOnInit(){
         this.getallplacasbusbyemsuem(this.emID,0);
-        this.getallprogramacionbyem(this.emID,0); //PROGRAMACION X EMP Y POR AÑO(ACLARAR ESTO)
+        //this.getallprogramacionbyem(this.emID,0); //PROGRAMACION X EMP Y POR AÑO(ACLARAR ESTO)
         this.getAllRutaByEm(this.emID);
-        this.getAllRegistroDiario(this.emID);
-        this.getallregistrovueltasdiariasbyemprfeDL(this.emID,0,slash_posFecha(fechaActual2()));
+        //this.getAllRegistroDiario(this.emID);
         
         this.procConsultarConfiguracionSistemaXPeriodo();
-       
-        //console.log(this.tarjeta._TaCoFecha);  console.log(editf1(fechaActual1()));  console.log(cCeroFechaForEditar(fechaActual2()));
+     
         //this.deleteRegistroReten(23); no en uso //this.deleteRegistroDiarioDet(312);
     }
     
@@ -343,7 +344,21 @@ export class TcontrolComponent implements OnInit{
     }
 
     funcInputDateFpFechaApertura(){
-        //alert(this.fechaAsigTarjs);
+        /*console.log(this.fechaAsigTarjs);
+        console.log(fechaActual2());
+        console.log(guion_slash_inver(this.fechaAsigTarjs));*/
+
+        this.getallprogramacionbyem(this.emID,0); 
+        this.fechaAsTarjUno=guion_posFecha(this.fechaAsigTarjs);
+        this.fechaAsTarjDos=guionBySlash(this.fechaAsigTarjs);
+        this.fechaAsTarjTres=guion_slash_inver(this.fechaAsigTarjs);
+        this.getAllRegistroDiario(this.emID);
+        this._ruId=0;
+        this.TaCoMultiple=-1;
+        this._allTarjControl=[];
+        /*console.log(guion_posFecha(this.fechaAsigTarjs));
+        console.log(guion_posFecha(this.fechaAsigTarjs));
+        console.log(guionBySlash(this.fechaAsigTarjs));*/
     }
 
 /* PROCEDURES */ 
@@ -534,16 +549,18 @@ export class TcontrolComponent implements OnInit{
             let arrCuadro:any[]=[];
             this.tcontrolservice.getallregistrovueltasdiariasbyemprfe(emid,prid,fecha).subscribe(
                 data => {
-                            arrCuadro=data;
-                            //console.log(arrCuadro);
-                            if(arrCuadro.length!=0 && arrCuadro.length>0){
-                                this.arrCuadro=arrCuadro;
-                                this.arrCuadroBusqueda=arrCuadro; //para la busqueda y validacion de reten
-                            }else{
-                                console.log('Error la descarga del cuadro de salidas, vuelva a intentarlo');
-                            }
-                        },
-                error=> {alert('Error en el cuadro de salidas, vuelva a intentarlo');},
+                    arrCuadro=data;
+                    //console.log(arrCuadro);
+                    if(arrCuadro.length!=0 && arrCuadro.length>0){
+                        this.arrCuadro=arrCuadro;
+                        this.arrCuadroBusqueda=arrCuadro; //para la busqueda y validacion de reten
+                    }else{
+                        console.log('Error la descarga del cuadro de salidas, vuelva a intentarlo');
+                    }
+                },
+                error=> {
+                    //alert('Error en el cuadro de salidas, vuelva a intentarlo');
+                },
                 ()   => {}
             );
         }
@@ -730,7 +747,9 @@ export class TcontrolComponent implements OnInit{
                 this.tcontrolservice.getAllProgramacionByEm(emId, anio).subscribe(
                     data => {
                                 this.programacion=data; arrProg=data;
-                                this.getallregistrovueltasdiariasbyemprfe(this.emID,arrProg[0].prId,slash_posFecha(fechaActual2()));
+                                console.log(arrProg);
+                                //funcion que busque la programacion que este activa
+                                this.getallregistrovueltasdiariasbyemprfe(this.emID,arrProg[arrProg.length-1].prId,this.fechaAsTarjDos);
                                 this.mcobprogramacion(arrProg);
                             },
                     error=>{console.log(error); alert('Error al Iniciar la lista de programaciones validas');} ,
@@ -851,8 +870,8 @@ export class TcontrolComponent implements OnInit{
                 this.tcontrolservice.deleteTarjetaControl(TaCoId).subscribe(
                 realizar =>{
                                 //this.getalltarjetasbyemidpucoid(this.emID,this._pcId);
-                                //this.getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2()));
-                                this._getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2()));
+                                //this.getalltarjetacontrolbybuidfecha(0,this.fechaAsTarjUno);
+                                this._getalltarjetacontrolbybuidfecha(0,this.fechaAsTarjUno);
                             },
                 err => {console.log(err);}
                 );
@@ -877,7 +896,7 @@ export class TcontrolComponent implements OnInit{
                     data => {   
                                 if(data==true){
                                     sigVuelta= this.buscarUltimaPlacaProgr(this.objSelectedRowTableIndividual, this.arrprogxfecha);                              
-                                    this.actualizargetallregistrovueltasdiariasbyemprfeINDIVIDUAL(this.emID,this._prId,slash_posFecha(fechaActual2()), sigVuelta);
+                                    this.actualizargetallregistrovueltasdiariasbyemprfeINDIVIDUAL(this.emID,this._prId,this.fechaAsTarjDos, sigVuelta);
                                 }                               
                             }, 
                     err  => {this.errorMessage=err}
@@ -895,7 +914,7 @@ export class TcontrolComponent implements OnInit{
                     data=>  {
                                 //console.log(data);
                                 if(data==true){                                    
-                                    this.actualizargetallregistrovueltasdiariasbyemprfeMULTIPLE(this.emID,this._prId,slash_posFecha(fechaActual2()));
+                                    this.actualizargetallregistrovueltasdiariasbyemprfeMULTIPLE(this.emID,this._prId,this.fechaAsTarjDos);
                                 }else if(data==false){
                                     alert('no se pudo crear las tarjetas :c');
                                 }
@@ -1167,7 +1186,7 @@ export class TcontrolComponent implements OnInit{
                 this.ReDiId=this.buscarRegDiarioActual(arrReg).ReDiId;
 
                 ReDiTotalVuelta=this.buscarRegDiarioActual(arrReg).ReDiTotalVuelta;
-                //console.log(ReDiId); console.log(ReDiTotalVuelta); console.log(fechaActual2());
+                //console.log(ReDiId); console.log(ReDiTotalVuelta); 
 
                 if(ReDiId!=-1 && ReDiTotalVuelta!=-1){
                     this.ReDiTotalVuelta=ReDiTotalVuelta;
@@ -1223,11 +1242,15 @@ export class TcontrolComponent implements OnInit{
         buscarRegDiarioActual(arrReg=[]){
             let ReDiId:any;
             let i:number=0, cen:boolean=false;
-            //console.log(_fecha1(arrReg[1].ReDiFeha));   console.log(fechaActual2());  
+            //console.log(_fecha1(arrReg[1].ReDiFeha));  
+            //console.log('buscando fechas');
             while(i<arrReg.length && cen==false){
-                if(_fecha1(arrReg[i].ReDiFeha)===fechaActual2()){
+
+                //console.log(_fecha1(arrReg[i].ReDiFeha));
+                //console.log(this.fechaAsTarjTres);
+                if(_fecha1(arrReg[i].ReDiFeha)===this.fechaAsTarjTres){
                     cen=true;
-                }else if(_fecha1(arrReg[i].ReDiFeha)!=fechaActual2()){
+                }else if(_fecha1(arrReg[i].ReDiFeha)!=this.fechaAsTarjTres){
                     i++; cen=false;
                 }
             }
@@ -1353,7 +1376,7 @@ export class TcontrolComponent implements OnInit{
             funcCboRutaId(event:Event){
                 //console.log(this._ruId);
                 this.getAllPControlBy(this.emID,this._ruId);
-                this._getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2()));
+                this._getalltarjetacontrolbybuidfecha(0,this.fechaAsTarjUno);
             }
 
             funcCboTipoTarjeta(){
@@ -1373,7 +1396,7 @@ export class TcontrolComponent implements OnInit{
                         this.actMInputPrimerReten=true; this.actMInputRepeatReten=true;  this.actMInputHoraEslavon=true;
                         this.mensaje="";    this.estadoPlaca=-1;  this.mnjNroTarjetaValido="";
                         
-                        this.tcontrolservice.getallregistrovueltasdiariasbyemprfe(this.emID,this._prId,slash_posFecha(fechaActual2()))
+                        this.tcontrolservice.getallregistrovueltasdiariasbyemprfe(this.emID,this._prId,this.fechaAsTarjDos)
                         .subscribe(
                             data=>{
                                 console.log(data);
@@ -1381,8 +1404,8 @@ export class TcontrolComponent implements OnInit{
                                 let nroTarjCreadas=this.conteoTarjetasAsigByVuelta(arrVuelta);
 
                                 if(nroTarjCreadas==0){
-                                    this.getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2())); //grilla principal :s
-                                    this.getallprogramacionbydate(this._prId,guion_posFecha(editf1(fechaActual1())), this.nroTarjetas); // tabla programacion
+                                    this.getalltarjetacontrolbybuidfecha(0,this.fechaAsTarjUno); //grilla principal :s
+                                    this.getallprogramacionbydate(this._prId,this.fechaAsTarjUno, this.nroTarjetas); // tabla programacion
                                 }else if(nroTarjCreadas!=0){
                                     this.TaCoMultiple=-1;
                                     this._PuCoId=0;
@@ -1410,8 +1433,8 @@ export class TcontrolComponent implements OnInit{
                     this.estadoPlaca=-1;
                     this.mnjNroTarjetaValido="";
                     
-                    this.getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2())); //grilla principal :s
-                    this.getallprogramacionbydate(this._prId,guion_posFecha(editf1(fechaActual1())), this.nroTarjetas); // tabla programacion
+                    this.getalltarjetacontrolbybuidfecha(0,this.fechaAsTarjUno); //grilla principal :s
+                    this.getallprogramacionbydate(this._prId,this.fechaAsTarjUno, this.nroTarjetas); // tabla programacion
                 }
             }
 
@@ -1486,10 +1509,10 @@ export class TcontrolComponent implements OnInit{
                 this._prId=this.arrProgramaciones[this.arrProgramaciones.length-1].PrId; this.PrId=this.arrProgramaciones[this.arrProgramaciones.length-1].PrId;
                 
                 //this.PrDescripcion=this.mostrarNombreProgramacion(this.PrId, this.arrProgramaciones);
-                this.PrDescripcion=editf1(fechaActual1());
+                this.PrDescripcion=this.fechaAsTarjUno;
 
                 //cuadro para la visuacion de todas las salidas
-                this.getallregistrovueltasdiariasbyemprfe(this.emID,this._prId,slash_posFecha(fechaActual2()));
+                this.getallregistrovueltasdiariasbyemprfe(this.emID,this._prId,this.fechaAsTarjDos);
                
                 //buscando redediid 
                 if(this.ReDiDeNroVuelta!=1){
@@ -1498,7 +1521,6 @@ export class TcontrolComponent implements OnInit{
 
                 this._RuId = ruID;  
                 this._PuCoId = PuCoId;  
-                //this.tarjeta._TaCoFecha=editf1(fechaActual1());
                 this.getallpuntocontroldetallebypuco(PuCoId); //CONSULTANDO TODOS LOS PUNTOS DE CONTROL(DETALLE) USARLOS PARA INICIAR LA TAREJTADETALLE
             }
 
@@ -1593,7 +1615,7 @@ export class TcontrolComponent implements OnInit{
                     PuCoId : this._PuCoId,
                     RuId : Number(this._ruId),
                     BuId :this._BuId,
-                    TaCoFecha :new Date(),
+                    TaCoFecha :fecha(this.fechaAsigTarjs),
                     TaCoHoraSalida :hora(TaCoHoraSalida),
                     TaCoCuota :0,
                     UsId :this.UsId,
@@ -1701,7 +1723,7 @@ export class TcontrolComponent implements OnInit{
                     PuCoId : this._PuCoId,
                     RuId : this._RuId,
                     BuId :this._BuId,
-                    TaCoFecha :new Date(),
+                    TaCoFecha :fecha(this.fechaAsigTarjs),
                     TaCoHoraSalida :hora(this.TaCoHoraSalida),
                     TaCoCuota :0,
                     UsId :this.UsId,
@@ -2405,7 +2427,7 @@ export class TcontrolComponent implements OnInit{
         /*SE CANCELA NRO TARJETA IGUAL A UNO*/
         cancelarMultiTarjeta(){
             this.displayAsignarTarjeta = false;
-            this._getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2()));
+            this._getalltarjetacontrolbybuidfecha(0,this.fechaAsTarjUno);
             // BORRANDO OBJETOS Y VARIABLES CREADOS
             this.borrarObjetos();
             this.val='x';
@@ -2417,7 +2439,7 @@ export class TcontrolComponent implements OnInit{
         /*SE CANCELA NRO TARJETA IGUAL A UNO*/
         cancelarTarjeta(){
             this.displayAsignarTarjeta = false;
-            this._getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2()));
+            this._getalltarjetacontrolbybuidfecha(0,this.fechaAsTarjUno);
             this.borrarObjetos();
             this.val='x';
             this.TaCoMultiple=null;
@@ -3217,10 +3239,7 @@ export class TcontrolComponent implements OnInit{
 
         funcCboPuntosControlIdDiaLibre(event:Event){
             let PuCoId = this.puntoControl.PuCoId, ruID = this.puntoControl.RuId;
-            this.tVueltaBus=this.puntoControl.PuCoTiempoBus; this.PrDescripcion=editf1(fechaActual1());
-
-            //cuadro para la visuacion de todas las salidas
-            //this.getallregistrovueltasdiariasbyemprfe(this.emID,this._prId,slash_posFecha(fechaActual2()));
+            this.tVueltaBus=this.puntoControl.PuCoTiempoBus; this.PrDescripcion=this.fechaAsTarjUno;
             
             //buscando redediid 
             if(this.ReDiDeNroVuelta!=1){
@@ -3255,7 +3274,7 @@ export class TcontrolComponent implements OnInit{
             this.estadoPlaca=-1;
             this.mnjNroTarjetaValido="";
             
-            this.getalltarjetacontrolbybuidfecha(0,cCeroFechaForEditar(fechaActual2())); //grilla principal :s
+            this.getalltarjetacontrolbybuidfecha(0,this.fechaAsTarjUno); //grilla principal :s
     
         }
 

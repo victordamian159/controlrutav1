@@ -95,10 +95,15 @@ col-xl-12{
     padding: 0;
 }
 
+/*estilos modal editar nombre programacion*/
+    .contFormEditNombProg{height:170px; width: 300px; overflow: hidden; margin: 0; padding: 0;}
+    .bodyFormEditNombProg{height: 130px; width: 100%;}
+    .pieFormEditNombProg{height: 40px; width: 100%;}
+
 /*estilos form hora base*/
-.contFormHoraBase{height:500px; width: 400px;}
-.bodyFormHoraBase{height: 450px; width: 100%;}
-.pieFormHoraBase{height: 40px; width: 100%;}
+    .contFormHoraBase{height:500px; width: 400px;}
+    .bodyFormHoraBase{height: 450px; width: 100%;}
+    .pieFormHoraBase{height: 40px; width: 100%;}
 
 /* estilos formulario (nueva programacion) ingresar horas de salida */
     /* estilo ventana */

@@ -5,14 +5,19 @@
             <!--BUSQUEDA + BTNNUEVO + COMBO RUTA + COMBO PCONTROL-->
             <div class="row">
                 <!--BUSQUEDA-->
-                <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
+                <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
                     <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
                 </div>
 
                 <!--NUEVO REGISTRO style="float:left"-->
-                <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
-                    <button class="form-control" id="btnNuevo" type="button" 
-                    pButton icon="fa-file-text-o" [disabled]="_ruId==0" (click)="funcBtnNuevoRegistroDiario()" label="Nuevo Dia" ></button>
+                <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                    <button class="form-control" 
+                        id="btnNuevo" type="button" 
+                        pButton icon="fa-file-text-o" 
+                        [disabled]="_ruId==0" 
+                        (click)="funcBtnNuevoRegistroDiario()" 
+                        label="Nuevo Registro Diario" 
+                    ></button>
                 </div>
             </div>
 
@@ -99,12 +104,14 @@
 
             <!--BOTONES-->
             <div class="btn_Modal row">
-                <div class="col-xl-12 col-md-12 col-sm-12 col-sx-12">
+                <div class="col-xl-6 col-md-6 col-sm-12 col-sx-12">
                     <button class="btn_modal" type="text" pButton icon="fa-check" 
                     (click)="guardarRegistroDiario(); fechRegDiario.reset(); ntolvul.reset(); tmpvul.reset();" 
                     label="Guardar Registro" [disabled]="!fechRegDiario.valid || !ntolvul.valid || !tmpvul.valid"></button>
+                    <br>
                 </div>
-                <div class="col-xl-12 col-md-12 col-sm-12 col-sx-12">
+                
+                <div class="col-xl-6 col-md-6 col-sm-12 col-sx-12">
                     <button class="btn_modal" type="text" pButton icon="fa-close" 
                     (click)="cancelGuardarRegistroDiario(); fechRegDiario.reset(); ntolvul.reset(); tmpvul.reset();" 
                     label="Cancelar"></button>
@@ -133,10 +140,12 @@
                 </div>
             </div>
             <!--botones-->
-            <div class="btn_Modal row">
-                <div class="col-xl-3 col-md-4 col-sm-6 col-sx-12">
-                    <button class="btn_modal" type="text" pButton icon="fa-check" 
-                    (click)="cerrarTabRegDiarioDetalle();" label="Cerrar"></button>
+            <div class="btn_Modal">
+                <div class="row justify-content-end">
+                    <div class="col-xl-3 col-md-4 col-sm-6 col-sx-12">
+                        <button class="btn_modal" type="text" pButton icon="fa-check" 
+                        (click)="cerrarTabRegDiarioDetalle();" label="Cerrar"></button>
+                    </div>
                 </div>
             </div>
         </p-dialog>
@@ -162,4 +171,17 @@
                         <button class="btn_modal"  pButton (click)="aceptarErrorMismoRegFecha()" label="Aceptar"></button>
                     </div>
                 </div>
+        </p-dialog>
+
+        <p-dialog [(visible)]="displayErrorGuardar" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
+            <p>{{mensaje}}</p>
+            <div class="btn_Modal row">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xm-12">
+                    <button class="btn_modal"  pButton (click)="aceptarErrorGuardar()" label="Aceptar"></button>
+                </div>
+            </div>
+        </p-dialog>
+
+        <p-dialog [(visible)]="displayProcesoGuardando" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
+            <p>{{mensaje}}</p>
         </p-dialog>
