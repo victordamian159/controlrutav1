@@ -509,6 +509,7 @@
                                         Error, revise los datos ingresados
                                     </div>
                             </div>
+
                             <!--TIPO TARJETA-->
                             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                 <label>Tipo Tarjeta:</label>
@@ -523,16 +524,23 @@
                                     Obligatorio!!!
                                 </div>               
                             </div>   
+
                             <!--cuadro de salidas-->
                             <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">                   
                                     <!--QADRO DE SALIDAS-->
-                                <button class="btnCuadroSalidas" type="text" (click)="abrirCuadroSalidas();"
-                                        pButton icon="fa-file-o" label="Cuadro de Salidas" [hidden]="true"
+                                <button 
+                                    class="btnCuadroSalidas" type="text" 
+                                    (click)="abrirCuadroSalidas();"
+                                        pButton icon="fa-file-o" 
+                                        label="Cuadro de Salidas" [hidden]="true"
                                         ></button>                          
                                 
                                 <!--AGREGAR BUS-->
-                                <button class="btnCuadroSalidas" type="text" (click)="iniciarPrimeraVuelta();"
-                                pButton icon="fa-file-o" label="Agregar Placa" [hidden]="false"
+                                <button 
+                                        class="btnCuadroSalidas" type="text" 
+                                        (click)="iniciarPrimeraVuelta();"
+                                        pButton icon="fa-file-o" label="Agregar Placa" 
+                                        [hidden]="false"
                                 ></button>         
                             </div>
                         </div>
