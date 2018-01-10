@@ -191,6 +191,7 @@ export class TcontrolComponent implements OnInit{
         private PrDescripcion:string;
         private CoId:number;
         private SuEmId:number;
+        private SuEmIdDL:number;
         private HoraSalidaAnteriorDP:string;
         private HoraSalidaPlacaActualPreviewDP:string;
         private fechaAsigTarjs:string;
@@ -254,8 +255,8 @@ export class TcontrolComponent implements OnInit{
         //this.getAllRegistroDiario(this.emID);
         
         this.procConsultarConfiguracionSistemaXPeriodo();
-     
-        //this.deleteRegistroReten(23); no en uso //this.deleteRegistroDiarioDet(312);
+        
+ 
     }
     
     constructor(    
@@ -347,10 +348,6 @@ export class TcontrolComponent implements OnInit{
     }
 
     funcInputDateFpFechaApertura(){
-        /*console.log(this.fechaAsigTarjs);
-        console.log(fechaActual2());
-        console.log(guion_slash_inver(this.fechaAsigTarjs));*/
-
         this.getallprogramacionbyem(this.emID,0); 
         this.fechaAsTarjUno=guion_posFecha(this.fechaAsigTarjs);
         this.fechaAsTarjDos=guionBySlash(this.fechaAsigTarjs);
@@ -359,9 +356,8 @@ export class TcontrolComponent implements OnInit{
         this._ruId=0;
         this.TaCoMultiple=-1;
         this._allTarjControl=[];
-        /*console.log(guion_posFecha(this.fechaAsigTarjs));
-        console.log(guion_posFecha(this.fechaAsigTarjs));
-        console.log(guionBySlash(this.fechaAsigTarjs));*/
+
+        this.getallregistrovueltasdiariasbyemprfeDL(this.emID,0,this.fechaAsTarjDos);
     }
 
 /* dia con programacion */
@@ -425,9 +421,7 @@ export class TcontrolComponent implements OnInit{
                 );
             }
 
-            onRowAgregarPlacaBus(event){
-                console.log(event.data);
-            }
+            
 
             mgBus(arrBuses=[]){
                 //console.log(arrBuses);
@@ -1221,11 +1215,13 @@ export class TcontrolComponent implements OnInit{
     // FUNCIONES BUSQUEDA
        
         //buscarEstadoTarjeta, BUSCANDO VALOR DE TARJETA ANTERIOR A LA TARJETA SELECIONADA(TABLA INDIVIDUAL)
+        //objeto anterior al seleccionado
         buscarHoraSalidaAnterior(placa:string){
             let objSalidaAnterior:any;
             objSalidaAnterior=this.funcBuscarHoraSalidaAnterior(this.arrCuadroBusqueda, this.ReDiDeNroVuelta,placa);
+            /*console.log('objeto anterior al seleccionado');
             console.log(objSalidaAnterior);
-            
+            console.log('-------->');*/
             this.HoraSalidaAnteriorDP=_hora(objSalidaAnterior.TaCoHoraSalida);
         }
 
@@ -1299,7 +1295,10 @@ export class TcontrolComponent implements OnInit{
                 }
 
             // SELECCIONAR PLACA DE SORTEO (LISTA DE PLACAS DE SORTEO) 
-                onRowPlaca(event){    
+                onRowPlaca(event){   
+                    let objSelect=event.data;
+                    this.rowValidSelected(objSelect, this.arrprogxfecha);
+
                     let TarjetaBus_Anterior:any;  
                     let BuPlaca:string=event.data.BuPlaca;
                     this.objSelectedRowTableIndividual=event.data;
@@ -1620,22 +1619,28 @@ export class TcontrolComponent implements OnInit{
                     PuCoId : this._PuCoId,
                     RuId : Number(this._ruId),
                     BuId :this._BuId,
+                    
                     TaCoFecha :fecha(this.fechaAsigTarjs),
                     TaCoHoraSalida :hora(TaCoHoraSalida),
                     TaCoCuota :0,
                     UsId :this.UsId,
+                    
                     UsFechaReg :new Date(),
                     TaCoNroVuelta : this.ReDiDeNroVuelta,
                     PrId : Number(this.PrId),
                     TiSaId:this.TiSaObj.TiSaId,
+                    
                     TaCoAsignado :Number(this.val),
                     TaCoTipoHoraSalida:Number('01'), //manual o automatico
                     ReDiDeId:this.ReDiDeId,
                     TaCoFinish:TaCoFinish,
+                    
                     CoId:this.CoId,
                     TaCoCountMultiple: 1,
                     TaCoMultiple: this.TaCoMultiple,
                     TaCoCodEnvioMovil: 0,
+
+                    TaCoTiempoReten:0
                 }; 
                 
                 //console.log(_tarjeta);
@@ -1659,7 +1664,7 @@ export class TcontrolComponent implements OnInit{
                             //anterior es asignado
                             }else if(this.TarjetaBus_Anterior.TaCoAsignado=='1'){
 
-                                reten={
+                                /*reten={
                                     ReDiDeId:this.ReDiDeId,
                                     ReReId:this.ReReId,
                                     PrDeId:this._prDeId,
@@ -1670,10 +1675,15 @@ export class TcontrolComponent implements OnInit{
                                 //console.log(reten);
 
                                 this.regRetenService.saveregistroReten(reten).subscribe(
-                                    data => { _tarjeta.ReDiDeId=data.ReDiDeId; this.procAsigTarjCtrl(_tarjeta);  },
+                                    data => { 
+                                        _tarjeta.ReDiDeId=data.ReDiDeId; 
+                                        this.procAsigTarjCtrl(_tarjeta);  
+                                    },
                                     error=>{alert('No se pudo crear la tarjeta, Error R');console.log(error);}
-                                );
+                                );*/
 
+                                _tarjeta.TaCoTiempoReten=hora(this.ReReTiempo);
+                                this.procAsigTarjCtrl(_tarjeta); 
                                 //this.regRetenService.unsubcribe();
                             }
 
@@ -1744,6 +1754,8 @@ export class TcontrolComponent implements OnInit{
                     TaCoCountMultiple: 0,
                     TaCoMultiple:this.TaCoMultiple,
                     TaCoCodEnvioMovil: 0,
+
+                    TaCoTiempoReten:0
                 }
 
                 // primera vuelta
@@ -2003,18 +2015,13 @@ export class TcontrolComponent implements OnInit{
             guardarMultiTarjeta(objTarjetaInicial:any, nroTarjetasCrear:number, PrimerReten:string, MultiReten:string){
                 objTarjetaInicial.TaCoCountMultiple=nroTarjetasCrear;
                 objTarjetaInicial.TaCoHoraSalida=hora(objTarjetaInicial.TaCoHoraSalida);
+
                 if(objTarjetaInicial.TaCoAsignado==2 || objTarjetaInicial.TaCoAsignado==3){
                     objTarjetaInicial.TaCoFinish=1;
                 }else if(objTarjetaInicial.TaCoAsignado==1){
                     objTarjetaInicial.TaCoFinish=0;
+                    objTarjetaInicial.TaCoTiempoReten=fecha(PrimerReten);
                 }
-                
-                //console.log(objTarjetaInicial.TaCoHoraSalida);
-                console.log(objTarjetaInicial);
-                console.log(nroTarjetasCrear);
-                console.log(hora(PrimerReten));
-                console.log(hora(MultiReten));
-                console.log('=====================');
 
                 if(this.verificarUltimaVuelta(this.ReDiDeNroVuelta, this.ReDiTotalVuelta)==false){
                     this.msjEsperaGuardando='Guardando tarjeta, espere un momento';
@@ -2031,6 +2038,7 @@ export class TcontrolComponent implements OnInit{
                 this.mensajeModal='';
                 this.displayMnjNoPuedeCrearMulTarjEnPenultimaVuelta=false;
             }
+
     /* FUNCIONES VARIADAS */
         //recuperando indice fila seleccionada datatable individual tarjeta
         buscarObjetoTablaIndividual(arrprog=[], objSel:any):number{
@@ -2140,7 +2148,16 @@ export class TcontrolComponent implements OnInit{
 
         //validar placa seleccionada
         rowValidSelected(rowSelected:any, arrProxFecha=[]){
+            console.log(rowSelected);
+            console.log(arrProxFecha);
+            let indexObj=rowSelected.nro-1;
+            console.log(indexObj);
+            //buscando si esta asignado la primera placa
+            /*if(indexObj=){
+
             
+            //buscando si antes del row hay placa como = no asignado
+            }*/
         }
 
     /* ORDENARLAS */
@@ -2776,7 +2793,7 @@ export class TcontrolComponent implements OnInit{
         }
 
         //FUNCION Add PLACA para dia LIBRE(SERA LA BASE DE TODO EL DIA primera vuelta)
-        agregarPlaca(){
+        btnAgregarPlacaDL(){
             console.log(this.selectedPlacaAddSinProg);
             let BuId=this.selectedPlacaAddSinProg.BuId, 
                 BuPlaca=this.selectedPlacaAddSinProg.BuPlaca;
@@ -2802,6 +2819,7 @@ export class TcontrolComponent implements OnInit{
                 //PuCoTiempoBus:_hora(arrCuadro[i].PuCoTiempoBus)
             }
 
+            objAddPlaca.nro=this.arrprogDiaLibre.length+1;
             this.arrprogDiaLibre.push(objAddPlaca);
             this.displayAgregarPlacaSinProg=false;
         }
@@ -2885,7 +2903,7 @@ export class TcontrolComponent implements OnInit{
                 let _tarjeta:any, tarjEncontrado:number , reten:any;   //console.log(TaCoHoraSalida); 
                 
                 _tarjeta={
-                    TaCoId : this._TaCoId,
+                    TaCoId : 0,
                     PuCoId : this._PuCoId,
                     RuId : Number(this._ruId),
                     BuId :this._BuId,
@@ -2971,6 +2989,10 @@ export class TcontrolComponent implements OnInit{
         
         // multitarjeta para dia libre
             
+        onRowAgregarPlacaBus(event){
+            console.log(this.selectedPlacaAddSinProg);
+            console.log(this.arrprogDiaLibre);
+        }
 
         onRowPlacaDiaLibre(event){
             console.log(event.data);
@@ -3164,10 +3186,8 @@ export class TcontrolComponent implements OnInit{
 
         }
 
-        ftnActivarInputFormUnaTarjetaDiaLibre(
-                    ReDiDeNroVuelta:number, 
-                    estadoTarjetaAnterior:number, 
-                    estadoTarjetaApertura:string){
+        ftnActivarInputFormUnaTarjetaDiaLibre( ReDiDeNroVuelta:number, 
+                    estadoTarjetaAnterior:number, estadoTarjetaApertura:string){
 
             //console.log(ReDiDeNroVuelta);  
             //console.log(estadoTarjetaAnterior);  
@@ -3369,5 +3389,18 @@ export class TcontrolComponent implements OnInit{
 
             }
 
+        }
+
+        funcCboSuEmIdDL(){
+            this.getallbusbyemidsuemid(this.emID, this.SuEmIdDL);
+        }
+
+        validarAddPlacaTabProgDL(objSelect:any, arrProg=[]):boolean{
+            let result:boolean, i:number=0, cen:number=0;
+            while(i<arrProg.length && cen==0){
+                /*BuPlaca
+                BuId*/
+            }
+            return result;
         }
 }

@@ -1,63 +1,63 @@
-<div class="contenedor">
-    <div class="row">
-        <div>Vista de la Flota</div>
-    </div>
+<div class="contenedor">        
     <div class="row">
         <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
-            <div class="row">
-                <div class="col-xl-4 col-md-4 col-sm-4 col-xs-12">
-                    <input type="text" placeholder="Buscar..." class="form-control">
+            <div id="formPData">
+
+                <div class="row">
+                    <label>Vista en Linea</label>
                 </div>
-                <div class="col-xl-4 col-md-4 col-sm-4 col-xs-12">
-                    <button class="btn_mapa"  pButton label="Alerta" icon="fa-bomb" (click)="showmodalEditar()" ></button>        
+                <div class="row">
+                    <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                        <input type="text" placeholder="Buscar placa..." class="form-control">
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                        <input type="date" class="form-control" [(ngModel)]='fecha' (ngModelChange)='funcInputDtFecha();'>
+                    </div>
                 </div>
-                <div class="col-xl-4 col-md-4 col-sm-4 col-xs-12">
-                    <button class="btn_mapa"  pButton label="Notificacion" icon="fa-envelope-square" (click)="showmodalEditar()" ></button>  
-                </div> 
-            </div>
-            <div class="row">
-                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="row">
-                        <div class="table table-responsive">
-                            <p-dataTable [value]="placas" [globalFilter]="filtroGlobal" scrollable="true" scrollHeight="400px" scrollWidth="100%"
-                                selectionMode="single" emptyMessage="Lista vacia" (onRowSelect)="onRowSelect($event)">
-                                <!--<p-column styleClass="col-button" [style]="{'width':'3em'}">
-                                    <template let-col let-Ruta="rowData" pTemplate="body" >
-                                        <button id="btnTable" pButton (click)="eliminarRutaMaestro(Ruta.RuId)" icon="fa-search" class="btn"></button>					
-                                    </template> 
-                                </p-column>-->
-                                <p-column field="Nro" header="N°" [style]="{'width':'2em','text-align':'center'}"></p-column>
-                                <p-column field="Placa" header="Placa" [style]="{'width':'6em','text-align':'center'}" ></p-column>
-                                <p-column field="Chofer" header="Chofer" [style]="{'width':'8em'}" ></p-column>
-                                <p-column field="Cobrador" header="Cobrador" [style]="{'width':'8em'}" ></p-column>
-                            </p-dataTable>
+                <br>
+                <p-dataTable [value]="placas" 
+                    [globalFilter]="filtroGlobal" 
+                    scrollable="true" 
+                    scrollHeight="350px" 
+                    scrollWidth="100%"
+                    selectionMode="single" 
+                    emptyMessage="Lista vacia" 
+                    (onRowSelect)="onRowSelect($event)">
+                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                        <template let-col let-Ruta="rowData" pTemplate="body" >
+                            <button id="btnTable" pButton (click)="centrar(gmap.getMap())" icon="fa-search" class="btn"></button>					
+                        </template> 
+                    </p-column>
+                    <p-column field="nro" header="N°" [style]="{'width':'2em','text-align':'center'}"></p-column>
+                    <p-column field="BuPlaca" header="Placa" [style]="{'width':'6em','text-align':'center'}" ></p-column>
+                    <p-column field="EstadoAsignado" header="Estado" [style]="{'width':'8em'}" ></p-column>
+                    <!--<p-column field="Cobrador" header="Cobrador" [style]="{'width':'8em'}" ></p-column>-->
+                </p-dataTable>
+                <br>
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12" >
+                        <div class="row justify-content-around">
+                                <!--<div class="col-xl-4 col-md-4 col-sm-4 col-xs-12">
+                                    <button class="btn_mapa"  pButton label="Refrescar" icon="fa-refresh" (click)="nuevaRutaDetalle()"></button>
+                                </div>-->
+                                <div class="col-xl-4 col-md-4 col-sm-4 col-xs-12">
+                                    <button class="btn_mapa"  pButton label="Iniciar" icon="fa-play" (click)="showmodalEditar()" ></button>        
+                                </div>
+                                <div class="col-xl-4 col-md-4 col-sm-4 col-xs-12">
+                                    <button class="btn_mapa"  pButton label="Detener" icon="fa-stop" (click)="showmodalEditar()" ></button>  
+                                </div>     
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12" >
-                    <div class="row">
-                            <div class="col-xl-4 col-md-4 col-sm-4 col-xs-12">
-                                <button class="btn_mapa"  pButton label="Refrescar" icon="fa-refresh" (click)="nuevaRutaDetalle()"></button>
-                            </div>
-                            <div class="col-xl-4 col-md-4 col-sm-4 col-xs-12">
-                                <button class="btn_mapa"  pButton label="Iniciar" icon="fa-play" (click)="showmodalEditar()" ></button>        
-                            </div>
-                            <div class="col-xl-4 col-md-4 col-sm-4 col-xs-12">
-                                <button class="btn_mapa"  pButton label="Detener" icon="fa-stop" (click)="showmodalEditar()" ></button>  
-                            </div>     
-                    </div>
-                </div>
-            </div>
         </div>
-   
+    
         <!--MAPA-->
         <div class="col-xl-8 col-md-8 col-sms-6 col-xs-12">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="row">
-                        <div id="mapa">                     
+                        <div id="formPMapa">                     
                             <p-growl [value]="msgs"></p-growl>
                             <p-gmap 
                                 #gmap
@@ -65,7 +65,7 @@
                                 [overlays]="overlays"
                                 [style]="{'width':'100%','height':'100%'}" 
                                 (onMapClick)="handleMapClick($event)"
-                                (onOverlayClick)="handleOverClick($event)"
+                                (onOverlayClick)="handleOverlayClick($event)"                            
                                 (onOverlayDragEnd)="handleDragEnd($event)">
                             </p-gmap>   
                         </div>
@@ -76,3 +76,50 @@
         </div>
     </div>
 </div>
+
+<!--moda click sobre el marcador de la placa-->
+<p-dialog [resizable]="false"[(visible)]="displayAlertNotifXPlaca" [draggable]="false" modal="modal"
+             width="100%" height="100%" [closable]=false>
+
+    <p-header><label>Placa: XK3-322</label></p-header>
+    <div class="contFormModAlertNotf">
+        <!--tipo mensaje-->
+        <div class="row">
+            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                <label>Tipo Mensaje</label>
+                <select class="form-control">
+                    <option>Alerta</option>
+                    <option>Notificacion</option>
+                </select>
+            </div>
+        </div>
+        <br>
+
+        <!--mensaje-->
+        <div class="row">
+            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <label for="comment">Mensaje:</label>
+                    <textarea class="form-control" rows="6" [(ngModel)]="mensajeToPlaca" maxlength='250' id="comment"></textarea>
+                </div>
+                
+            </div>
+        </div>
+
+        <!--cerrar + enviar-->
+        <div class="row justify-content-end">
+           
+            <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12 ">
+                    <button class="btn_mapa"  pButton label="Enviar"
+                     icon="fa-envelope-square" (click)="displayAlertNotifXPlaca=false" 
+                     ></button>
+            </div>
+            <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12 ">
+                    <button class="btn_mapa"  pButton label="Cerrar"
+                     icon="fa-close" (click)="displayAlertNotifXPlaca=false" 
+                     ></button>
+            </div>
+        </div>        
+    </div>
+
+</p-dialog>  
