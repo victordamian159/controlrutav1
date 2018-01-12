@@ -375,7 +375,7 @@ export class TcontrolComponent implements OnInit{
                                 data=>{
                                     arrprog=data;
                                     if(arrprog.length>0 ){
-                                        alert('Hay programacion =D');
+                                        alert('Programacion Encontrada');
                                         this.actiInputBtnAsignaTarjeta=1;
                                     }else if(arrprog.length==0 ){
                                         this.mensaje="No hay programacion en la fecha indicada";
