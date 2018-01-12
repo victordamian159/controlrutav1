@@ -10,8 +10,7 @@
 //private baseUrl2: string = 'http://localhost:8089/bus/rest/puntocontroldetalle/';
 
 //SERVIDOR
-//export var server:string="http://controlbus.us-east-1.elasticbeanstalk.com/rest/";
-export var server:string="http://localhost:8089/bus/rest/";
+export var server:string="http://controlbus.us-east-1.elasticbeanstalk.com/rest/";
 
 //TABLAS
 export var url_configura=server+"configura/";
