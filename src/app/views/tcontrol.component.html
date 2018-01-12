@@ -24,7 +24,7 @@
                         <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
                     </div>
 
-                    <!--btn asignar tarjeta con programacion y sin programacion-->
+                    <!--btn con programacion-->
                     <div class="col-xl-2 col-md-3 col-sm-12 col-xs-12">
                         <!--NUEVO REGISTRO style="float:left"  CON PROGRAMACION -->
                         <button 
@@ -32,20 +32,36 @@
                          type="button"  pButton icon="fa-file-text-o" 
                         [disabled]="_ruId==0" 
                         (click)="formAsignarTarjetas()" 
-                        label="Asignar con prog" [hidden]=false 
+                        label="Asignar Tarjeta" 
+                        [hidden]='!(actiInputBtnAsignaTarjeta==1)'  
                         ></button>                
-                    </div>
+                   
                     
-                    <div class="col-xl-2 col-md-3 col-sm-12 col-xs-12">            
+                    <!--btn sin programacion-->
+                    
                         <button 
                             class="form-control" id="btnNuevo" type="button"  
                             pButton icon="fa-file-text-o" 
                             [disabled]="_ruId==0" 
                             (click)="formAsignarTarjetasSinProg()" 
-                            label="Asignar sin prog" [hidden]=false 
+                            label="Asignar Tarjeta" 
+                            [hidden]='!(actiInputBtnAsignaTarjeta==0)'  
+                        ></button>
+                    
+                    
+                    <!--btn al inicio del formulario-->
+                    
+                        <button 
+                            class="form-control" id="btnNuevo" type="button"  
+                            pButton icon="fa-file-text-o" 
+                            [disabled]="_ruId==0" 
+                            (click)="formAsignarTarjetasSinProg()" 
+                            label="Asignar Tarjeta" 
+                            [hidden]='!(actiInputBtnAsignaTarjeta==-1)' 
                         ></button>
                     </div>
-                    
+
+                    <!--fecha para asignar tarjeta-->
                     <div class="col-xl-2 col-md-3 col-sm-12 col-xs-12">
                         <input  class="form-control" [(ngModel)]="fechaAsigTarjs" type="date" (ngModelChange)='funcInputDateFpFechaApertura();'>
                     </div>
@@ -180,6 +196,7 @@
             <div class="row">
                 <div class="_asignaUnaTarj">
                     <div class="asignaUnaTarj">
+
                         <!---PUNTOS DE CONTROL - TIPO TARJETA-->
                         <div class="form-group row">
                             <!--PUNTOS DE CONTROL-->
@@ -526,19 +543,23 @@
 
                             <!--cuadro de salidas-->
                             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">                   
-                                    <!--QADRO DE SALIDAS-->
+                                <!--QADRO DE SALIDAS-->
                                 <button 
                                     class="btnCuadroSalidas" type="text" 
                                     (click)="abrirCuadroSalidasDL();"
                                         pButton icon="fa-file-o" 
-                                        label="Cuadro de Salidas" [hidden]="!actBtnCuadroSalidasDL"
+                                        label="Cuadro de Salidas" 
+                                        [disabled]="TaCoMultiple==-1"
+                                        [hidden]="!actBtnCuadroSalidasDL"
                                         ></button>                          
         
                                 <!--AGREGAR BUS-->
                                 <button 
                                         class="btnCuadroSalidas" type="text" 
                                         (click)="iniciarPrimeraVuelta();"
-                                        pButton icon="fa-file-o" label="Agregar Placa" 
+                                        pButton icon="fa-file-o" 
+                                        label="Agregar Placa" 
+                                        [disabled]="TaCoMultiple==-1"
                                         [hidden]="!actBtnAddPlacaDL"
                                 ></button>         
                             </div>
@@ -605,8 +626,7 @@
                                         </div>
                                     </div>     
                                 </div>
-                            </div>
-                            <br>
+                            </div>                           
                             <p-dataTable [value]="arrprogDiaLibre" dataKey="BuPlaca"
                                         [rows]="5" [paginator]="true" [globalFilter]="filtroTableIndividual"
                                         selectionMode="single" (onRowSelect)="onRowPlacaDiaLibre($event)" 
@@ -716,7 +736,8 @@
                                     (click)="cancelarMultiTarjetaDL(); ValTarjMulti.reset(); cboPtosControl.reset(); cboTipoTarjeta.reset();" label="Cerrar"></button>
                                 </div>
                         </div>
-                    </div>
+                    </div> 
+                    
                 <div class="form-group row" *ngIf='TaCoMultiple==-1 || TaCoMultiple==null'>
                     <!--botones-->              
                     <div class="btnCloseOnly row justify-content-end">
