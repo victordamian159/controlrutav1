@@ -55,7 +55,6 @@
                             class="form-control" id="btnNuevo" type="button"  
                             pButton icon="fa-file-text-o" 
                             [disabled]="_ruId==0" 
-                            (click)="formAsignarTarjetasSinProg()" 
                             label="Asignar Tarjeta" 
                             [hidden]='!(actiInputBtnAsignaTarjeta==-1)' 
                         ></button>
@@ -75,7 +74,7 @@
                             <p-dataTable [value]="_allTarjControl" [globalFilter]="filtroGlobal" 
                                         emptyMessage="Lista Vacia" 
                                         selectionMode="single" dataKey="BuPlaca"
-                                        [rows]="7" [paginator]="true"
+                                        [rows]="8" [paginator]="true"
                                         [(selection)]="selectedTarjCab" (onRowSelect)="onRowSelectCabecera($event)">
 
                                 <!--campos de la datatable-->
@@ -192,7 +191,7 @@
         <p-dialog [resizable]="false" [(visible)]="displayAsignarTarjeta" [draggable]="false" 
             modal="modal" width="100%" height="100%" [closable]= false>
             <!--CONTENIDO-->
-            <p-header>Asignar Tarjeta {{ReDiDeNroVuelta}}v de {{ReDiTotalVuelta}}v - {{PrDescripcion}}</p-header>
+            <p-header>Asignar Tarjeta {{ReDiDeNroVuelta}}v de {{ReDiTotalVuelta}}v - {{fechaAsTarjUno}}</p-header>
             <div class="row">
                 <div class="_asignaUnaTarj">
                     <div class="asignaUnaTarj">
@@ -202,12 +201,16 @@
                             <!--PUNTOS DE CONTROL-->
                             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                 <label>Puntos de Control:</label>
-                                <select class="form-control" [(ngModel)]="puntoControl" 
-                                    (change)="funcCboPuntosControlId($event)" required #cboPtosControl="ngModel">
+                                <select 
+                                    class="form-control" [(ngModel)]="puntoControl" 
+                                    (change)="funcCboPuntosControlId($event)" 
+                                    [disabled]='!(_PuCoId==0)'
+                                    required #cboPtosControl="ngModel">                    
                                     <option *ngFor="let punto of _puntosControl" [ngValue]="punto" selected="selected">
                                         {{punto.PuCoDescripcion}} / {{punto.PuCoTiempoBus}}
                                     </option>
                                 </select>  
+                              
                                 <!--validacion-->
                                     <div [hidden]="displayErrorNoHayPCModalNuevo" id="validation">{{mensaje}}</div>
                                     <div [hidden]="displayHayPCModalNuevo" id="verdadero">{{mensaje}}</div>
@@ -313,11 +316,11 @@
                                 </p-dataTable> 
                             </div>    
                             <!--botones-->              
-                            <div class="btnModAsigT row justify-content-end">                           
+                            <div class="btnModAsigT row justify-content-end">
                                 <div class="col-xl-3 col-md-4 col-sm-12 col-xs-12">
                                     <button class="btn_modal ajusteBtnModal" type="text" pButton icon="fa-save" 
                                     (click)="guardarTarjeta(tmpSalida.valid, tmpReten.valid);" 
-                                    [disabled]="(  (!(val!='x') || !(estadoPlaca==0))  )" label="Guardar"></button>
+                                    [disabled]="(  !(val!='x') || !(estadoPlaca==0) || placaValida==0)" label="Guardar"></button>
                                     
                                 </div>
                                 <div class="col-xl-3 col-md-4 col-sm-12 col-xs-12">
@@ -413,7 +416,7 @@
                                 <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
                                     <button class="btn_modal" type="text" pButton icon="fa-save" 
                                     (click)="guardarMultiTarjetas(PrimerReten.valid,  tmpEslavon.valid, MulReten.valid); MulReten.reset(); ValTarjMulti.reset();" 
-                                    [disabled]="(!(val!='x') || !(estadoPlaca==0))" label="Guardar"></button>
+                                    [disabled]="(!(val!='x') || !(estadoPlaca==0) || placaValida==0)" label="Guardar"></button>
                                 </div>
                                 <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
                                     <button class="btn_modal" type="text" pButton icon="fa-close" 
@@ -504,7 +507,7 @@
         <!--MODAL asignar TARJETA DE CONTROL DIA SIN PROGRAMACION  DIA LIBRE -->
         <p-dialog [resizable]="false" [(visible)]="displayAsignarTarjetaSinProg" [draggable]="false" 
                 modal="modal" width="100%" height="100%" [closable]= false>
-                <p-header>Asignar Tarjeta DL{{ReDiDeNroVuelta}}v de {{ReDiTotalVuelta}}v - {{PrDescripcion}}</p-header>
+                <p-header>Asignar Tarjeta DL{{ReDiDeNroVuelta}}v de {{ReDiTotalVuelta}}v - {{fechaAsTarjUno}}</p-header>
     
                 <!---PUNTOS DE CONTROL - TIPO TARJETA cuadro de salidas-->
                     <div class=" agTrjEncabezado">
@@ -513,11 +516,14 @@
                             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                 <label>Puntos de Control:</label>
                                 <select class="form-control" [(ngModel)]="puntoControl" 
-                                    (change)="funcCboPuntosControlIdDiaLibre($event)" required #cboPtosControl="ngModel">
+                                    (change)="funcCboPuntosControlIdDiaLibre($event)" 
+                                    [disabled]='!(_PuCoId==0)'
+                                    required #cboPtosControl="ngModel">
                                     <option *ngFor="let punto of _puntosControl" [ngValue]="punto" selected="selected">
                                         {{punto.PuCoDescripcion}} / {{punto.PuCoTiempoBus}}
                                     </option>
                                 </select>  
+                                {{puntoControl}}
                                 <!--validacion-->
                                     <div [hidden]="displayErrorNoHayPCModalNuevo" id="validation">{{mensaje}}</div>
                                     <div [hidden]="displayHayPCModalNuevo" id="verdadero">{{mensaje}}</div>
@@ -529,8 +535,11 @@
                             <!--TIPO TARJETA-->
                             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                 <label>Tipo Tarjeta:</label>
-                                <select class="form-control" [(ngModel)]="TaCoMultiple" 
-                                        (change)="funcCboTipoTarjetaDiaLibre()" required #cboTipoTarjeta="ngModel">
+                                <select class="form-control" 
+                                        [(ngModel)]="TaCoMultiple" 
+                                        (change)="funcCboTipoTarjetaDiaLibre()" 
+                                        [disabled]='_PuCoId==0'
+                                        required #cboTipoTarjeta="ngModel">
                                     <option *ngFor="let tipoTarjeta of arrTipoTarjeta" [ngValue]="tipoTarjeta.id">
                                         {{tipoTarjeta.nomb}}
                                     </option>
@@ -641,7 +650,7 @@
                         <div class="agTrjPie row justify-content-end">
                             <div class="col-xl-3 col-md-4 col-sm-12 col-xs-12">
                                 <button class="form-control" id="btnNuevo" type="btn_modal"  pButton icon="fa-save" 
-                                [disabled]='!estadoPlaca==0'
+                                [disabled]="(  !(val!='x') || !(estadoPlaca==0) || placaValida==0)"
                                 (click)="guardarTarjetaDiaLibre(horaInitDL.valid, tmpRetenDL.valid, tmpSalidaDL.valid)" label="Asignar" ></button>
                             </div>
                             <div class="col-xl-3 col-md-4 col-sm-12 col-xs-12">

@@ -17,7 +17,13 @@
             <ul class="navbar-nav">
                 <!--MANTENIMIENTO-->
                 <li class="nav-item dropdown">
-                    <a  href="#" class="dropdown-toggle"  data-toggle="dropdown" role="button"  aria-haspopup="true" aria-expanded="false">Mantenimiento<span class="caret"></span></a>
+                    
+                    <a  href="#" class="dropdown-toggle"  data-toggle="dropdown" role="button" 
+                        aria-haspopup="true" aria-expanded="false">
+                            Mantenimiento
+                            <span icon="fa-briefcase" class="caret"></span>
+                    </a>
+
                     <ul class="dropdown-menu">
                         <li class="sub-nav-item "><a href="#" routerLink="/regempsubemp" routerLinkActive="active">La Empresa</a></li>
                         <li class="sub-nav-item "><a href="#" routerLink="/regpersonal" routerLinkActive="active">Personal</a></li>
@@ -31,7 +37,10 @@
 
                 <!--OPERACIONES-->
                 <li class="nav-item dropdown">
-                    <a  href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Operaciones <span class="caret"></span></a>
+                    <a  href="#" class="dropdown-toggle" data-toggle="dropdown" 
+                        role="button" aria-haspopup="true" aria-expanded="true">
+                            Operaciones <span class="caret"></span>
+                    </a>
 
                     <!--MENU-->
                     <ul class="dropdown-menu">
@@ -47,9 +56,8 @@
                         <li class="sub-nav-item ">
                             <a href="#" routerLink="/tcontrol" routerLinkActive="active">Tarjeta de Control</a>
                         </li>		
-                        
-                        <!--<li class="nav-item "><a href="#" routerLink="/regtime" routerLinkActive="active">Reg Tiempo</a></li>-->
                     </ul>
+
                 </li>
 
                 <!--REPORTES-->
@@ -71,7 +79,8 @@
                 <li class="nav-item dropdown">
                     <a  href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Consultas <span class="caret"></span> </a>
                     <ul class="dropdown-menu">
-                        <li class="sub-nav-item "><a href="#" routerLink="/consVistaEnLinea" routerLinkActive="active" >Vista En Linea</a></li>
+                        <li class="sub-nav-item "><a href="#" routerLink="/consVistaEnLinea" routerLinkActive="active" >Vista Tiempo Real</a></li>
+                        <li class="sub-nav-item "><a href="#" >Recorrido del Dia</a></li>
                         <li class="sub-nav-item "><a href="#" routerLink="/consAlertNotific" routerLinkActive="active" >Alertas-Notificacion</a></li>
                         <li class="sub-nav-item "><a href="#" routerLink="/consIncidencias" routerLinkActive="active" >Incidencias</a></li>
                     </ul>
@@ -90,7 +99,7 @@
             </ul>  
         </div>
 
-        <!---->
+        <!--modo escritorio-->
         <div id="user_Logout">
             <li id="nomUser">
                 <a>Usuario:{{nombre}}</a>
@@ -108,9 +117,9 @@
 
 <router-outlet></router-outlet>
 
-<footer >
+<footer *ngIf="!(ClassGlobal.localstorageItems()==true)">
     <ul>
         <p><br></p>
-        <p>Derechos Reservados - Aplicativo de Transporte Publico</p>
+        <p>Aplicativo de Transporte Publico</p>
     </ul>
 </footer>

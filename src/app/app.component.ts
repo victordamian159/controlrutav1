@@ -4,7 +4,7 @@ import {GlobalVars} from 'app/variables';
 
 /*import {DatosCompartidosService} from './service/dataComunicationApp.service';
 import {ConfiguraService} from './service/configura.service';*/
-
+declare var $:any
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -19,16 +19,12 @@ export class AppComponent implements OnInit {
   private nombre:string;
 
   ngOnInit(){
-    //console.log(this.dataUser);
-    
     this.iniciarVarGlobals(this.dataUser);
-    
   }
+  
   constructor(public ClassGlobal:GlobalVars){
       this.dataUser=this.ClassGlobal.GetDatosUsuario();
   }
-
-  
 
   iniciarVarGlobals(dataUser:any){
     if(dataUser!=null || dataUser!=undefined){
