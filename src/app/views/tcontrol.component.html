@@ -507,7 +507,7 @@
         <!--MODAL asignar TARJETA DE CONTROL DIA SIN PROGRAMACION  DIA LIBRE -->
         <p-dialog [resizable]="false" [(visible)]="displayAsignarTarjetaSinProg" [draggable]="false" 
                 modal="modal" width="100%" height="100%" [closable]= false>
-                <p-header>Asignar Tarjeta DL{{ReDiDeNroVuelta}}v de {{ReDiTotalVuelta}}v - {{fechaAsTarjUno}}</p-header>
+                <p-header>Asignar Tarjeta {{ReDiDeNroVuelta}}v de {{ReDiTotalVuelta}}v - {{fechaAsTarjUno}}</p-header>
     
                 <!---PUNTOS DE CONTROL - TIPO TARJETA cuadro de salidas-->
                     <div class=" agTrjEncabezado">
@@ -523,7 +523,7 @@
                                         {{punto.PuCoDescripcion}} / {{punto.PuCoTiempoBus}}
                                     </option>
                                 </select>  
-                                {{puntoControl}}
+                           
                                 <!--validacion-->
                                     <div [hidden]="displayErrorNoHayPCModalNuevo" id="validation">{{mensaje}}</div>
                                     <div [hidden]="displayHayPCModalNuevo" id="verdadero">{{mensaje}}</div>
