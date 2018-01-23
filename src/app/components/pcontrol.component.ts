@@ -1573,7 +1573,7 @@ export class PcontrolComponent implements OnInit{
         }
 
         if(this.nroPtosValidos!=nroSI){
-            this.mensaje="EL Nro de Listas de Puntos Activos no es valido, verifique y corrija ese problema";
+            this.mensaje="EL Nro de Listas de Puntos Activos no es valido, verifique";
             this.displayNroValidoListasPtsControl=true;
         }
         console.log(nroSI);

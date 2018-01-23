@@ -1,9 +1,10 @@
+<!--formulario principal-->
 <div class="contenedor">
     <!--EMPRESA-->
         <div id=titulo>La Empresa</div>
         <!--BTN NUEVA EMPRESA-->
         <div class="row">
-            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
                 <button type="button" pButton id="btnNuevo" icon="fa-file-text-o" (click)="nuevaEmpresa();" label="Nuevo Registro"></button>
             </div>
         </div>
@@ -31,7 +32,7 @@
 
         <!--BTN NUEVA SUBEMPRESA-->
         <div class="row">
-            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
                 <button type="button" pButton id="btnNuevo" icon="fa-file-text-o" (click)="nuevaSubEmpresa();" [disabled]="selectRow==false" label="Agregar Empresa"></button>
             </div>
         </div>
@@ -63,7 +64,7 @@
         <div id='titulo'>Configuracion</div>
         <!--input-->
         <div class="row">
-            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
                 <button type="button" pButton id="btnNuevo" icon="fa-file-text-o" 
                         (click)="nuevaConfiguracionPeriodo();" 
                         [disabled]="selectRow==false || periodo==true" label="Nuevo Periodo"></button>

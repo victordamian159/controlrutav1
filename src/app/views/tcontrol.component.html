@@ -18,7 +18,10 @@
                             <option *ngFor="let ruta of rutas" [value]="ruta.RuId">{{ruta.RuDescripcion}}</option>
                         </select> 
                     </div>
-
+                    <!--fecha para asignar tarjeta-->
+                    <div class="col-xl-2 col-md-3 col-sm-12 col-xs-12">
+                        <input  class="form-control" [(ngModel)]="fechaAsigTarjs" type="date" (ngModelChange)='funcInputDateFpFechaApertura();'>
+                    </div>
                     <!--BUSQUEDA-->
                     <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
                         <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
@@ -32,7 +35,7 @@
                          type="button"  pButton icon="fa-file-text-o" 
                         [disabled]="_ruId==0" 
                         (click)="formAsignarTarjetas()" 
-                        label="Asignar Tarjeta" 
+                        label="Tarjeta - CP" 
                         [hidden]='!(actiInputBtnAsignaTarjeta==1)'  
                         ></button>                
                    
@@ -44,7 +47,7 @@
                             pButton icon="fa-file-text-o" 
                             [disabled]="_ruId==0" 
                             (click)="formAsignarTarjetasSinProg()" 
-                            label="Asignar Tarjeta" 
+                            label="Tarjeta - SP" 
                             [hidden]='!(actiInputBtnAsignaTarjeta==0)'  
                         ></button>
                     
@@ -55,15 +58,12 @@
                             class="form-control" id="btnNuevo" type="button"  
                             pButton icon="fa-file-text-o" 
                             [disabled]="_ruId==0" 
-                            label="Asignar Tarjeta" 
+                            label="Tarjeta" 
                             [hidden]='!(actiInputBtnAsignaTarjeta==-1)' 
                         ></button>
                     </div>
 
-                    <!--fecha para asignar tarjeta-->
-                    <div class="col-xl-2 col-md-3 col-sm-12 col-xs-12">
-                        <input  class="form-control" [(ngModel)]="fechaAsigTarjs" type="date" (ngModelChange)='funcInputDateFpFechaApertura();'>
-                    </div>
+                    
                     
                 </div>
 
@@ -847,7 +847,7 @@
             <div class="mdlMnjsConf"> 
                 {{mensaje}}
             </div>
-            <div class=" btnFormsMnjsComf row ">
+            <div class=" btnFormsMnjsComf ">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                     <button class="btn_modal" type="text" pButton icon="fa-check" (click)="errorBusquedaProg()" label=" Aceptar"></button>
                 </div>

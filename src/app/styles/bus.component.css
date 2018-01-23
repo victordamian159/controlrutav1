@@ -1,30 +1,10 @@
-#titulo{
-    color: black;
-    margin-top:20px;
-    margin-bottom:10px;
-    text-decoration: none;
-    text-align: left;
-}
-/*col{
-    margin-top:10px;
-    margin-left:80px;
-    margin-right:80px;
-    margin-bottom:0px;
-}*/
-.contenedor{
-    margin-top:20px;
-    margin-left:30px;
-    margin-right:30px;
-    margin-bottom:60px;
-}
+#titulo{ color: black; margin-top:20px;  margin-bottom:10px;text-decoration: none; text-align: left;}
 
-#btn{
-    width: 100%;
-    padding: 10px 50px;
-    margin:0;
-}
+.contenedor{  margin-top:20px;  margin-left:30px;  margin-right:30px;  margin-bottom:60px; }
 
-/*.win_modal{}*/
+#btn{  width: 100%;  padding: 10px 50px;  margin:0; }
+
+/*.win_modal{}
 
 .form-control{
     height: 38px;
@@ -32,27 +12,14 @@
     padding: 0;
     margin-bottom:10px;
     width: 100%;
-}
-
-.form-group{
-    margin:0;
-    padding-bottom:18px;
-    padding-top:10px; 
-}
-
-/*row{
-    margin-top:10px;
-    margin-left:10px;
-    margin-right:10px;
-    margin-bottom:10px;
 }*/
 
-#validation{
-    color:red; 
-    margin:0; 
-    padding:0;
-    position: absolute;
+.form-group{
+    padding-bottom:10px;
 }
+
+
+#validation{ font-size: 14px; color:red; margin-top:0px; position: absolute;}
 
 
 /* BOTONES (GUARDAR CANCELAR + OTROS) VENTANAS MODALES */
@@ -103,6 +70,20 @@
         margin-top:20px;
     }
 
+/*estilos modal asignar smarthphone a bus (desktop)*/   
+    .contMAsigPhone{height: 450px; width: 320px;}
+    .bodyMAsigPhone{height: 400px; width: 99%;}
+    .pieMAsigPhone{margin-top:10px; height: 40px; width: 99%;}
+
+/*estilos modal asignar bus a persona (desktop)*/
+    .contMAsigBus{height: 420px; width: 800px;}
+    .bodyMAsigBus{height: 370px; width: 99%;}
+    .pieMAsigBus{margin-top:10px; height: 40px; width: 99%;}
+
+/*estilos modal confirmacion (desktop)*/
+    .contMConf{height: 100px; width: 330px;}
+    .bodyMConf{height: 50px; width: 99%;}
+    .pieMConf{height: 40px; width: 99%;}
 
 /* RESPONSIVE */
     /*ipad PRO*/

@@ -98,7 +98,10 @@
                                         <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
                                             <div class="form-group">
                                                 <label  class="control-label">Del:</label>
-                                                <input class="form-control" name="finicio"  type="date" [(ngModel)]="progMaestro.PrFechaInicio" required #fde="ngModel" />
+                                                <input class="form-control" name="finicio"  type="date" 
+                                                        [(ngModel)]="progMaestro.PrFechaInicio" 
+                                
+                                                        required #fde="ngModel" />
                                                 <span *ngIf="!fde.valid && fde.touched"  >   
                                                     <div id="validation" [hidden]="!fde.errors.required"> Obligatorio </div>
                                                 </span>

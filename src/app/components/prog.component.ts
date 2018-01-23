@@ -484,7 +484,9 @@ export class ProgComponent implements OnInit{
         let placas=this.extrayendoPlacasBus(this.placas,'nuevaprog');
 
         let validez=this.validandoFechas(fIni,fFin);
-        if(validez==1){
+        let validFechInit=this.validarProgFechaInicio(this.progMaestro.PrFechaInicio);
+
+        /*if(validez==1){
             this.tipoProgramacion(placas,placas.length,this.tipoProg );//FORMA SORTEO
             progCab = {
                 PrId : this.progMaestro.PrId, //number
@@ -509,7 +511,7 @@ export class ProgComponent implements OnInit{
             this.displayErrorFechIngrFormUno=true;
             this.mensaje="Error en las fechas ingresada, es menos de 9 dias o mayor a 62 dias entre las fechas ingresadas";
 
-        }
+        }*/
     }
 
     aceptarErrorFechasValidas(){
@@ -1744,12 +1746,29 @@ export class ProgComponent implements OnInit{
         return arrplacasprog;
     }
 
+    //validando fecha 
+    validarProgFechaInicio(PrFechaInicio:string):boolean{
+        let resultado:boolean, fechaAnt:string;
+        
+        this.programacionService.getAllProgramacionByEm(this.emid,this.anio).subscribe(
+            data=>{
+                if(data.length!=0){
+                    fechaAnt=_fecha1(data[data.length-1].PrFechaFin);
+                    console.log(fechaAnt);
+                }else if(data.length==0){
+                    alert('no hay fechas');
+                }
+            },
+            error=>{
 
-    calcularHoraSalidaSgte(){
-        //console.log(hBaseValid); console.log(hIncrementoValid);
-        
-        
+            },
+            ()=>{
+
+            }
+        );
+        return resultado;
     }
+
 /* CARGAR GLOBAL */ 
     //CONVERTIR STRING A DATE PARA FECHA   ----   FORMULARIO A BD 
     fecha(fecha: string) : Date{

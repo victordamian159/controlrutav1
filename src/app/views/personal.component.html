@@ -11,10 +11,12 @@
 
     <!--TABLA PRINCIPAL-->
     <div class="row">
-        
-            <div class="table table-responsive">
-                <p-dataTable [value]="personalArr"  [globalFilter]="filtroGlobal" scrollable="true" emptyMessage="No Hay Registros"
-                            scrollWidth="300" scrollHeight="350px" selectionMode="single" (onRowSelect)="onRowSelectPersonal($event)">
+            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+            
+                <p-dataTable [value]="personalArr"  [globalFilter]="filtroGlobal" 
+                    emptyMessage="No Hay Registros"
+                    [rows]="5"  [paginator]="true"
+                            selectionMode="single" (onRowSelect)="onRowSelectPersonal($event)">
 
                     <p-column styleClass="col-button" [style]="{'width':'3em'}">
                         <template let-col  let-Personal="rowData"  pTemplate="body">
@@ -30,8 +32,8 @@
                     <p-column field="PeTipoLicencia" header="Licencia" [style]="{'width':'6em'}"></p-column>
                     <p-column field="PeCelular" header="Celular" [style]="{'width':'6em','text-align':'center'}"></p-column>
                 </p-dataTable>
+           
             </div>
-       
     </div>
 </div>
 

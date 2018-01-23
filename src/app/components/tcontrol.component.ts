@@ -263,6 +263,8 @@ export class TcontrolComponent implements OnInit{
         //this.getallprogramacionbyem(this.emID,0); //PROGRAMACION X EMP Y POR AÑO(ACLARAR ESTO)
         this.getAllRutaByEm(this.emID);
         this.procConsultarConfiguracionSistemaXPeriodo();
+
+        //navigator.geolocation.getCurrentPosition(this.valid,this.error);
     }
     
     constructor(    
@@ -356,6 +358,17 @@ export class TcontrolComponent implements OnInit{
         this.actBtnAddPlacaDL=true;
 
         this.actiInputBtnAsignaTarjeta=-1;
+    }
+    //encontrar las coordenadas de la 
+    valid(position){
+        console.log(position);
+        let long=position.coords.longitude;
+        let lat =position.coords.latitude;
+        console.log(long);
+        console.log(lat);
+    }
+    error(error){
+        alert(error.code);
     }
 
     funcInputDateFpFechaApertura(){
@@ -526,11 +539,6 @@ export class TcontrolComponent implements OnInit{
                     arrTarjetasCreadas=data;
                     if(arrTarjetasCreadas.length!=0){
                         this.mgTarjetasControl(arrTarjetasCreadas);
-                        //buscar y recuperar en q puntos de control esta actualmente
-                        /*PuCoId=this.funcPuntoControlFijoXVuelta(arrTarjetasCreadas);
-                        if(PuCoId!=-1){
-                            this.puntoControl=PuCoId;
-                        }*/
                     }else if(arrTarjetasCreadas.length==0){
                         alert('No hay tarjetas creadas');
                         this._allTarjControl=[];
@@ -1105,11 +1113,11 @@ export class TcontrolComponent implements OnInit{
                 }
             }
 
-        //MOSTRANDO RESULTADO EN LA GRILLA CABECERA
+        //MOSTRANDO RESULTADO EN LA GRILLA PRINCIPAL
             mgTarjetasControl(arrTarjetasControl=[]){
                 this._allTarjControl = [];
                 //console.log(arrTarjetasControl);
-                let j:number=0, k:number=0, cen:number=0, _arrTarjetasControl:any[]=[];
+                let j:number=0, k:number=0, cen:number=0, _arrTarjetasControl:any[]=[], arrTarjCtrl:any[]=[];
 
                 //TARJETAS EXISTENTES
                 for(let TarjControl of arrTarjetasControl){
@@ -1171,10 +1179,48 @@ export class TcontrolComponent implements OnInit{
                     _arrTarjetasControl[i].NomPuntosControl=_arrTarjetasControl[i].PuCoDescripcion+' / '+_arrTarjetasControl[i].PuCoTiempoBus,
                     _arrTarjetasControl[i].NomTaCoNroVuelta=(_arrTarjetasControl[i].TaCoNroVuelta).toString()+'v';
                 }
-                //console.log(_arrTarjetasControl);
-                this._allTarjControl=_arrTarjetasControl;
+                
+                if(_arrTarjetasControl.length!=0 && _arrTarjetasControl.length>1){
+                    //ordenar las tarjetas por su id
+                    arrTarjCtrl=this.ordenarXTarj(_arrTarjetasControl).slice(0);
+                }
+                                
+                this._allTarjControl=arrTarjCtrl;
             }
-    
+
+            
+
+            ordenarXTarj(arrTarjetas=[]){
+                let result:any[]=[], index:any[]=[], arrAux:any[]=[], _arrAux:any[]=[];
+
+                    for(let i=0;  i<arrTarjetas.length; i++){
+                        index[i]=arrTarjetas[i].TaCoId;
+                    }
+
+                    //console.log(index.sort(function(a, b){return a-b}));
+                    arrAux=index.sort(function(a, b){return a-b});
+
+                    let i=0, j=0, cen=0;
+                    while(i<index.length){
+                        while(j<index.length && cen==0){
+                            if(arrAux[i]==arrTarjetas[j].TaCoId){
+                                _arrAux[i]=arrTarjetas[j]; cen=1;
+                            }else if(arrAux[i]!=arrTarjetas[j].TaCoId){
+                                j++; cen=0;
+                            }
+                        }
+                        cen=0;
+                        j=0;
+                        i++;
+                    }
+
+                    for(let i=0;i<_arrAux.length; i++){
+                        _arrAux[i].Nro=i+1;
+                    }
+                    
+                    result=_arrAux;
+                return result;
+            }
 
         /*MOSTRAR RESULTADO DETALLE EN GRILLA*/
             mgTarjetaDetalle(arrtarj=[]){
@@ -1239,7 +1285,7 @@ export class TcontrolComponent implements OnInit{
             }
             buscarDatosTarjetaXNroVuelta(arrCuadroXFecha=[], ReDiDeNroVuelta:number){
                 let arr=this.sacarArrCuadroPrincipalXNroVuelta(arrCuadroXFecha,ReDiDeNroVuelta);
-                console.log(arr);
+                //console.log(arr);
                 if(arr.length!=0){
                     this._PuCoId=arr[0].PuCoId
                     this.PrId=arr[0].PrId
@@ -2553,8 +2599,8 @@ export class TcontrolComponent implements OnInit{
             this.displayAsignarTarjeta=true;
             this.getallplacasbusbyemsuem(this.emID,0);
             
-            console.log(this._puntosControl);
-            console.log(this._PuCoId);
+            //console.log(this._puntosControl);
+            //console.log(this._PuCoId);
 
             if(this._PuCoId!=0){
                 indexArrPtoControl=this.buscarIndexPuntoControl(this._PuCoId, this._puntosControl);

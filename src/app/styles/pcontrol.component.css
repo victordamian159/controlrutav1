@@ -1,24 +1,4 @@
-
-.titulo{
-    color: black;
-    margin-top:20px;
-    margin-bottom:10px;
-    text-decoration: none;
-    text-align: left;
-}
-
-
-.contenedor{
-    margin-top:20px;
-    margin-left:40px;
-    margin-right:40px;
-    margin-bottom:60px;
-}
-
-.table{
-    margin-top:20px;
-}
-
+.contenedor{overflow:hidden; margin:0 10px;}
 
 /* ESTILOS BOTONES DEL MAPA*/
 #btn{
@@ -29,52 +9,14 @@
     text-align: center;
 }
 
-/*ESTILO DEL CONTENEDOR DE BOTONES DEL MAPA */
-#btnMap{
-    margin:0;
-    padding:0;
-    display: flex;
-    justify-content: center;
-    flex-grow: 5;
-    width: 100%;
-    /*width: 120px;
-    height: 45px;
-    font-size: 16px;
-    text-align: center;
-    list-style-type: none;*/
-}
 
 #btnTable{
     background-color: #4CAF50;
-        /*width: 50%;
-        float: left;
-        position: absolute;*/
-}
-
-#mapa{
-    /*
-    margin-top:20px;
-    margin-left:-10px;
-    margin-right:-10px;
-    margin-bottom:10px;
-    */
-    margin:0;
-    padding: 0;
 }
 
 /*APARIENCIA BOTON NUEVO (ARRIBA DE GRILLA PRINCIPAL)*/
-#btnNuevo{
-    padding:4px;
-    width: 100%;
-    background: #4CAF50; 
-}
+#btnNuevo{ padding: 4px; width: 100%; background: #4CAF50; }
 
-/*USADO EN LOS BOTONES DE LAS VENTANAS MODALES*/
-.container{
-    margin-bottom: 20px;
-    max-width: 750px;
-    max-height: 400px;
-}
 
 /*USADO EN LOS BOTONES DE LAS VENTANAS MODALES*/
 .btn_Modal{
@@ -92,47 +34,13 @@
 }
 
 
-/* APARIENCIA BOTONES MAPA*/
-.btn_mapa{
-    width:100%; 
-    height:40px; 
-    font-size:15px;
-    border:none;
-    background-color:#4CAF50;
-    text-align: center;
-}
+
 
 /* TEXTO VALIDACION BAJO EL INPUT */
-#validation{
-    color:red; 
-    margin:0; 
-    padding:0;
-    position: absolute;
-}
+#validation{ font-size: 14px; color:red; margin:0; padding:0; position: absolute;}
 
 /* MODIFICANDO ESTILO PARA LOS INPUTS Y SU VALIDACION */
-.form-group{
-    margin:0;
-    padding-bottom:18px;
-    padding-top:10px; 
-}
-
-row{
-    /*margin-top:10px;
-    margin-left:10px;
-    margin-right:10px;
-    margin-bottom:10px;*/
-    margin:0;
-    padding: 0;
-}
-.col{
-    /*margin-top:0px;
-    margin-left:80px;
-    margin-right:80px;
-    margin-bottom:0px;*/
-    margin:0;
-    padding:0;
-}
+.form-group{ margin-bottom:30px; }
 
 .cont_modal{
     overflow-y: auto; 
@@ -141,16 +49,13 @@ row{
     width: 100%;
 }
 
-.form-control{
-    /*width: 100%;
-    margin-bottom: 10px;*/
-    height: 38px;
-    margin:0;
-    padding: 0;
-    margin-bottom:10px;
-    width: 100%;
-}
+
 /* desktop */
+    /*form contenedor mapa (desktop)*/
+        #contMapa{height: 520px; width: 900px; }
+        #pieMapa{margin-top:10px;;height: 40px; width: 900px; }
+        .btn_mapa{ width:100%; height:40px; font-size:15px; background-color:#4CAF50;}
+
     /* form modal preview puntos de control */
         .contFmVistaPC{ height: 410px; width: 400px; }
         .bodyFmVistaPC{ height: 360px; width: 100%;}
@@ -165,14 +70,7 @@ row{
     /* iphone 6 plus*/
     @media(max-width:480px){ 
         .container{max-height: 520px;max-width: 330px;}
-        /*.form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            
-            padding: 0 8px;
-            margin: 0;
-        }*/
+ 
         .cont_modal{
             overflow-y: auto; 
             overflow-x: auto;
@@ -184,14 +82,7 @@ row{
     /* iphone 6 */
     @media(max-width:380px){ 
         .container{max-height: 450px;max-width: 330px;}
-        /*.form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            
-            padding: 0 8px;
-            margin: 0;
-        }*/
+      
         .cont_modal{
             overflow-y: auto; 
             overflow-x: auto;
@@ -203,14 +94,7 @@ row{
     /* iphone 5 */
     @media(max-width:320px){ 
         .container{max-height: 390px;max-width: 290px;}
-        /*.form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            
-            padding: 0 8px;
-            margin: 0;
-        }*/
+        
         .cont_modal{
             overflow-y: auto; 
             overflow-x: auto;
@@ -222,14 +106,7 @@ row{
     /* iphone 4 */
     @media(max-height:480px){
         .container{max-height: 370px;max-width: 280px;}
-        /*.form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-        
-            padding: 0 8px;
-            margin: 0;
-        }*/
+       
         .cont_modal{
             overflow-y: auto; 
             overflow-x: auto;

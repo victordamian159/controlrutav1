@@ -25,26 +25,24 @@
         </div>
         
         <!--TABLA EMPRESAPERSONA-->
-        <div class="row">
-            <div class="table table-responsive">
-                <p-dataTable [value]="arrEmpPer" [globalFilter]="filtroGlobal" scrollable="true" scrollHeight="260px"
-                            [(selection)]="selectedRowTabEmpPer" emptyMessage="No Hay Registros" scrollWidth="100%" 
-                            selectionMode="single" (onRowSelect)="onRowSelectPerEmp($event)">
-                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                        <template let-col  let-emp="rowData"  pTemplate="body">
-                                <button type="button" pButton id="btnTable"  (click)=  "editarEmpPer(emp.Id)" icon="fa-pencil-square-o" > </button>
-                                <button type="button" pButton id="btnTable" (click)=  "eliminarEmpPer(emp.Id)" icon="fa-trash" > </button>                  
-                        </template>
-                    </p-column>
-                    <p-column field="nro" header="N°" [style]="{'width':'4em','text-align':'center'}" ></p-column>
-                    <p-column field="PeNombres" header="Nombres" [style]="{'width':'10em'}"></p-column>
-                    <p-column field="PeApellidos" header="Apellidos" [style]="{'width':'10em'}" ></p-column>
-                    <p-column field="EmPeTipo" header="Cargo" [style]="{'width':'9em','text-align':'center'}"></p-column>
-                    <p-column field="PeDNI" header="Dni" [style]="{'width':'8em','text-align':'center'}" ></p-column>
-                </p-dataTable>
-            </div>
-        </div>
-
+        
+        <p-dataTable [value]="arrEmpPer" [globalFilter]="filtroGlobal" 
+                    [rows]="4" [paginator]="true"
+                    [(selection)]="selectedRowTabEmpPer" emptyMessage="No Hay Registros"
+                    selectionMode="single" (onRowSelect)="onRowSelectPerEmp($event)">
+            <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                <template let-col  let-emp="rowData"  pTemplate="body">
+                        <button type="button" pButton id="btnTable"  (click)=  "editarEmpPer(emp.Id)" icon="fa-pencil-square-o" > </button>
+                        <button type="button" pButton id="btnTable" (click)=  "eliminarEmpPer(emp.Id)" icon="fa-trash" > </button>                  
+                </template>
+            </p-column>
+            <p-column field="nro" header="N°" [style]="{'width':'4em','text-align':'center'}" ></p-column>
+            <p-column field="PeNombres" header="Nombres" [style]="{'width':'10em'}"></p-column>
+            <p-column field="PeApellidos" header="Apellidos" [style]="{'width':'10em'}" ></p-column>
+            <p-column field="EmPeTipo" header="Cargo" [style]="{'width':'9em','text-align':'center'}"></p-column>
+            <p-column field="PeDNI" header="Dni" [style]="{'width':'8em','text-align':'center'}" ></p-column>
+        </p-dataTable>
+        
 
     <!--TABLA USUARIO DEL SISTEMA-->
         <!--TITULO-->
@@ -64,24 +62,24 @@
         </div>
 
         <!--TABLA USUARIO DEL SISTEMA-->
-        <div class="row">
-            <div class="table table-responsive">
-                <p-dataTable [value]="arrAllUser" [globalFilter]="filtroGlobal3" scrollable="true" scrollHeight="260px"
-                             emptyMessage="No Hay Registros" scrollWidth="100%" (onRowSelect)="onRowSelectAllUserSystem($event)"
-                             [(selection)]="selectedRowTabAllUserSystem">
-                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                        <template let-col  let-usersystem="rowData"  pTemplate="body">
-                                <!--<button pButton class="btn" (click)="editarUserSystem(usersystem.UsId)" [disabled]="EmPeId==-1" icon="fa-pencil-square-o" > </button>-->
-                                <button pButton id="btnTable" (click)="eliminarUserSystem(usersystem.UsId)" icon="fa-trash" > </button>                  
-                        </template>
-                    </p-column>
-                    <p-column field="Nro" header="N°" [style]="{'width':'4em','text-align':'center'}" ></p-column>
-                    <p-column field="PeNombres" header="Nombres" [style]="{'width':'10em'}"></p-column>
-                    <p-column field="PeApellidos" header="Apellidos" [style]="{'width':'10em'}" ></p-column>
-                    <p-column field="UsUserName" header="Usuario" [style]="{'width':'8em','text-align':'center'}" ></p-column>
-                </p-dataTable>
-            </div>
-        </div>
+        
+        <p-dataTable [value]="arrAllUser" [globalFilter]="filtroGlobal3" 
+                    [rows]="4" [paginator]="true"
+                        emptyMessage="No Hay Registros" 
+                        (onRowSelect)="onRowSelectAllUserSystem($event)"
+                        [(selection)]="selectedRowTabAllUserSystem">
+            <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                <template let-col  let-usersystem="rowData"  pTemplate="body">
+                        <!--<button pButton class="btn" (click)="editarUserSystem(usersystem.UsId)" [disabled]="EmPeId==-1" icon="fa-pencil-square-o" > </button>-->
+                        <button pButton id="btnTable" (click)="eliminarUserSystem(usersystem.UsId)" icon="fa-trash" > </button>                  
+                </template>
+            </p-column>
+            <p-column field="Nro" header="N°" [style]="{'width':'4em','text-align':'center'}" ></p-column>
+            <p-column field="PeNombres" header="Nombres" [style]="{'width':'10em'}"></p-column>
+            <p-column field="PeApellidos" header="Apellidos" [style]="{'width':'10em'}" ></p-column>
+            <p-column field="UsUserName" header="Usuario" [style]="{'width':'8em','text-align':'center'}" ></p-column>
+        </p-dataTable>
+          
 </div>
 
 
@@ -89,9 +87,9 @@
     <!-- NUEVO REGISTRO EMPRESAPERSONA AGREGANDO (BUSCANDO) UN USUARIO PARA AGREGARLO A LA SUBEMPRESA CON UN CARGO-->
     <p-dialog header="Integrar a SubEmpresa" [(visible)]="displayNuevaEmpPersona" [resizable]="false" modal="modal" width="100%" height="100%" responsive="true" [closable]="false">
         <!-- COMBO SUEMPS - FILTRO - BTNNUEVAPERSONA - PERSONASTABLA-->
-        <div class="row">
-            <div class="cont_modal">
-                <div class="container">
+        <div class="contMAddEmpPer">
+            <div class="bodyMAddEmpPer">
+                <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                         <!--COMBO + FILTRO + BTNNUEVAPER-->
                         <div class="row">
@@ -132,43 +130,44 @@
                         </div>
                     
                         <!--PERSONASTABLA-->
-                        <div class="row">
-                            <div class="table table-responsive">                               
-                                <p-dataTable [value]="personalArr" [globalFilter]="filtroGlobal2" 
-                                            (onRowSelect)="onRowSelPers($event)" [(selection)]="selectRowPersona" 
-                                            emptyMessage="Lista vacia" scrollable="true" scrollWidth="100%" 
-                                            selectionMode="single" >                            
-                                    <p-column styleClass="col-button" [style]="{'width':'4em'}">
-                                        <template let-col let-per="rowData" pTemplate="body">                                                           
-                                            <button id="btnTable"  pButton (click)="eliminarPersona(per.PeId)" icon="fa-trash"> </button>
-                                        </template>
-                                    </p-column>
-                                    <p-column field="nro" header="N°" [style]="{'width':'4em','text-align':'center'}"></p-column>
-                                    <p-column field="PeNombres" header="Nombres"  [style]="{'width':'10em'}"></p-column>
-                                    <p-column field="PeApellidos" header="Apellidos" [style]="{'width':'10em'}"></p-column>
-                                    <p-column field="PeDNI"       header="DNI"  [style]="{'width':'8em','text-align':'center'}"></p-column>
-                                    <p-column field="PeTipoLicencia" header="Licencia"  [style]="{'width':'6em','text-align':'center'}"></p-column>
-                                </p-dataTable>                  
-                            </div>    
-                        </div>
+                       
+                                                     
+                            <p-dataTable [value]="personalArr" [globalFilter]="filtroGlobal2" 
+                                        (onRowSelect)="onRowSelPers($event)" [(selection)]="selectRowPersona" 
+                                        emptyMessage="Lista vacia" 
+                                        [rows]="7"  [paginator]="true"
+                                        selectionMode="single" >                            
+                                <p-column styleClass="col-button" [style]="{'width':'4em'}">
+                                    <template let-col let-per="rowData" pTemplate="body">                                                           
+                                        <button id="btnTable"  pButton (click)="eliminarPersona(per.PeId)" icon="fa-trash"> </button>
+                                    </template>
+                                </p-column>
+                                <p-column field="nro" header="N°" [style]="{'width':'4em','text-align':'center'}"></p-column>
+                                <p-column field="PeNombres" header="Nombres"  [style]="{'width':'10em'}"></p-column>
+                                <p-column field="PeApellidos" header="Apellidos" [style]="{'width':'10em'}"></p-column>
+                                <p-column field="PeDNI"       header="DNI"  [style]="{'width':'8em','text-align':'center'}"></p-column>
+                                <p-column field="PeTipoLicencia" header="Licencia"  [style]="{'width':'6em','text-align':'center'}"></p-column>
+                            </p-dataTable>                  
+                            
+                    
 
                     </div>
                 </div>
-            </div>
-        </div>
+            </div>        
         
-        <div class="btn_Modal">
-            <div class="row justify-content-end">
-                <div class="col-xl-2 col-md-3 col-sm-6 col-sx-12">
-                    <button class="btn_modal" 
-                    (click)="guardarEmpPersona(); subempid.reset(); tipocargoempper.reset();" 
-                    [disabled]="!this.selectPersona || !subempid.valid || !tipocargoempper.valid || !(_PeDNI==(-1))" pButton 
-                    icon="fa-save" label="Guardar"></button>
-                </div>
-                <div class="col-xl-2 col-md-3 col-sm-6 col-sx-12">
-                    <button class="btn_modal" 
-                    (click)="cancelarEmpPersona(); subempid.reset(); tipocargoempper.reset();" 
-                    pButton icon="fa-close" label="Cancelar"></button>
+            <div class="pieMAddEmpPer">
+                <div class="row justify-content-end">
+                    <div class="col-xl-2 col-md-3 col-sm-6 col-sx-12">
+                        <button class="btn_modal" 
+                        (click)="guardarEmpPersona(); subempid.reset(); tipocargoempper.reset();" 
+                        [disabled]="!this.selectPersona || !subempid.valid || !tipocargoempper.valid || !(_PeDNI==(-1))" pButton 
+                        icon="fa-save" label="Guardar"></button>
+                    </div>
+                    <div class="col-xl-2 col-md-3 col-sm-6 col-sx-12">
+                        <button class="btn_modal" 
+                        (click)="cancelarEmpPersona(); subempid.reset(); tipocargoempper.reset();" 
+                        pButton icon="fa-close" label="Cancelar"></button>
+                    </div>
                 </div>
             </div>
         </div>
