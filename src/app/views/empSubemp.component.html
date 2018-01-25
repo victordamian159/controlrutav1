@@ -1,17 +1,20 @@
 <!--formulario principal-->
 <div class="contenedor">
     <!--EMPRESA-->
-        <div id=titulo>La Empresa</div>
+        <label>La Empresa</label>
         <!--BTN NUEVA EMPRESA-->
         <div class="row">
             <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
-                <button type="button" pButton id="btnNuevo" icon="fa-file-text-o" (click)="nuevaEmpresa();" label="Nuevo Registro"></button>
+                <button type="button" pButton class="btn_modal" icon="fa-file-text-o" 
+                        (click)="nuevaEmpresa();" label="Nueva Empresa"></button>
             </div>
         </div>
-        <!--DATATABLE EMPRESA-->
+     
         <div class="row">
             <div class="table table-responsive">
-                <p-dataTable [value]="empresas" scrollable="true"  scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectEmpresa($event)" emptyMessage="No Hay Registros">
+                <p-dataTable [value]="empresas" scrollable="true"  scrollWidth="100%" 
+                            selectionMode="single" (onRowSelect)="onRowSelectEmpresa($event)" 
+                            emptyMessage="No Hay Registros">
                         <!--COLUMNAS-->
                         <p-column styleClass="col-button" [style]="{'width':'2em'}">
                             <template let-col let-Emp="rowData" pTemplate="body" >
@@ -19,21 +22,20 @@
                                 <button id="btnTable" type="button" pButton (click)="eliminarEmpresa(Emp.EmId)" icon="fa-trash" ></button>
                             </template>          
                         </p-column>
-                        <p-column field="Nro" header="N°" [style]="{'width':'1em','text-align':'center'}"></p-column>
+                        <p-column field="Nro" header="N°" [style]="{'width':'2em','text-align':'center'}"></p-column>
                         <p-column field="EmConsorcio" header="Nombre" [style]="{'width':'16em'}" ></p-column>
-                        <p-column field="Tipo" header="Tipo" [style]="{'width':'8em','text-align':'center'}" ></p-column>
+                        <p-column field="Tipo" header="Tipo" [style]="{'width':'12em','text-align':'center'}" ></p-column>
                 </p-dataTable>
             </div>
         </div>
 
     <!--SUBEMPRESA-->
 
-        <div id=titulo>Sub Empresa</div>
-
+        <label>Sub Empresa</label>
         <!--BTN NUEVA SUBEMPRESA-->
         <div class="row">
             <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
-                <button type="button" pButton id="btnNuevo" icon="fa-file-text-o" (click)="nuevaSubEmpresa();" [disabled]="selectRow==false" label="Agregar Empresa"></button>
+                <button type="button" pButton class="btn_modal" icon="fa-file-text-o" (click)="nuevaSubEmpresa();" [disabled]="selectRow==false" label="Agregar Empresa"></button>
             </div>
         </div>
 
@@ -61,11 +63,12 @@
         </div>
 
     <!--CONFIGURACION-->
-        <div id='titulo'>Configuracion</div>
+  
+        <label>Configuracion</label>
         <!--input-->
         <div class="row">
             <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
-                <button type="button" pButton id="btnNuevo" icon="fa-file-text-o" 
+                <button type="button" pButton class="btn_modal" icon="fa-file-text-o" 
                         (click)="nuevaConfiguracionPeriodo();" 
                         [disabled]="selectRow==false || periodo==true" label="Nuevo Periodo"></button>
             </div>
@@ -102,92 +105,92 @@
                         <div class="row">
                             <!--RAZON SOCIAL-->
                             <div class="col-xl-6 col-md-6 col-sm-12  col-xs-12">
-                                
+                                <div class="form-group">
                                     <label>Razon social:</label>
                                     <input type="text" class="form-control" [(ngModel)]="subempresa.SuEmRSocial" maxlength="49" #RSOC="ngModel" required />
                                     <div id="validation" [hidden]="!RSOC.touched || RSOC.valid">Error en los datos</div>
-                            
+                                </div>
                             </div>
                             
                             <!--NRO RUC-->
                             <div class="col-xl-6 col-md-6 col-sm-12  col-xs-12">
-                                
+                                <div class="form-group">
                                     <label>Nro. Ruc:</label>
                                     <input type="text" class="form-control" [(ngModel)]="subempresa.SuEmRuc" maxlength="11" #RUC="ngModel" required/>
                                     <div id="validation" [hidden]="!RUC.touched || RUC.valid">Error en los datos</div>
-                            
+                                </div>
                             </div>
                         
                             <!--TELEFONO-->
                             <div class="col-xl-6 col-md-6 col-sm-12  col-xs-12">
-                                
+                                <div class="form-group">               
                                     <label>Telefono:</label>
                                     <input type="text" class="form-control" [(ngModel)]="subempresa.SuEmTelefono" maxlength="12" #NTEL="ngModel" required/>
                                     <div id="validation" [hidden]="!NTEL.touched || NTEL.valid">Error en los datos</div>
-                            
+                                </div>
                             </div>
 
                             <!--DIRECCION-->
                             <div class="col-xl-6 col-md-6 col-sm-12  col-xs-12">
-                                
+                                <div class="form-group">
                                     <label>Direccion:</label>
                                     <input type="text" class="form-control" maxlength=30 [(ngModel)]="subempresa.SuEmDireccion" #DIREC="ngModel" required/>
                                     <div id="validation" [hidden]="!DIREC.touched || DIREC.valid">Error en los datos</div>
-                            
+                                </div>
                             </div>
                                           
                             <!--UBIGEO-->
                             <div class="col-xl-6 col-md-6 col-sm-12  col-xs-12">
-                            
+                                <div class="form-group">
                                     <label>Ubigeo:</label>
                                     <input type="text" class="form-control" pattern="[0-9][0-9][0-9][0-9][0-9][0-9]" maxlength=6 [(ngModel)]="subempresa.SuEmUbigeo"  #UBIGEO="ngModel" required/>
                                     <div id="validation" [hidden]="!UBIGEO.touched || UBIGEO.valid">Error en los datos</div>
-                            
+                                </div>
                             </div>
 
                             <!--EMAIL-->
                             <div class="col-xl-6 col-md-6 col-sm-12  col-xs-12">
-                            
+                                    <div class="form-group">                    
                                     <label>Email:</label>
                                     <input type="text"  class="form-control" [(ngModel)]="subempresa.SuEmEmail" maxlength="30" #EMAIL="ngModel" required/>
                                     <div id="validation" [hidden]="!EMAIL.touched || EMAIL.valid">Error en los datos</div>
-                            
+                                </div>
                             </div>
                        
                             <!--TIEMPO DE RECORRIDO-->
                             <div class="col-xl-6 col-md-6 col-sm-12  col-xs-12">
-                            
+                                <div class="form-group">
                                     <label>T. Recorrido(HH:MM:SS):</label>
                                     <input type="text" class="form-control" [(ngModel)]="subempresa.SuEmTiempoVuelta" maxlength="8" #TREC="ngModel"
                                     pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})" required/>
                                     <div id="validation" [hidden]="!TREC.touched || TREC.valid">
                                         Error en los datos
                                     </div>
-                            
+                                </div>
                             </div>
 
                             <!--ACTIVIDAD-->
                             <div class="col-xl-6 col-md-6 col-sm-12  col-xs-12">
-                                
+                                <div class="form-group">
                                     <label>Activo:</label>
                                     <!--<input type="text" class="form-control" [(ngModel)]="subempresa.SuEmActivo"/>-->
                                     <select class="form-control">
                                         <option>si</option>
                                         <option>no</option>
                                     </select>
-                            
+                                </div>    
                             </div>
                         </div>                               
                     </div>
                 
 
                     <!--BOTONES VENTANA-->
-                    <div class="pieFormNuevaSuEmp justify-content-end" >
-                        <div class="row">
-                            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="pieFormNuevaSuEmp " >
+                        <div class="row justify-content-end">
+                            <div class="col-xl-3 col-md-3 col-sm-12 col-xs-12">
                                 <button class="btn_modal" pButton icon="fa-save" label="Guardar" [disabled]="!DIREC.valid || !EMAIL.valid || !RSOC.valid || !RUC.valid || !NTEL.valid || !TREC.valid || !UBIGEO.valid" (click)="guardarSubEmpresa(); DIREC.reset(); EMAIL.reset(); RSOC.reset(); RUC.reset(); NTEL.reset(); TREC.reset(); UBIGEO.reset();" ></button>
                             </div>
-                            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">    
+                            <div class="col-xl-3 col-md-3 col-sm-12 col-xs-12">    
                                 <button class="btn_modal" pButton icon="fa-close" label="Cancelar" (click)="cancelSubEmpresa(); DIREC.reset(); EMAIL.reset(); RSOC.reset(); RUC.reset(); NTEL.reset(); TREC.reset(); UBIGEO.reset();"></button>
                             </div>
                         </div>
@@ -200,41 +203,50 @@
                 <!--CONTENIDO-->
                 <div class="contFormNuevaEmp">
                     <div class="bodyFormNuevaEmp">
+                        <div class="row">
+                            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Nombre:</label>
+                                    <input class="form-control" type="text" maxlength=30 [(ngModel)]="empresa.EmConsorcio" required #nombEmps="ngModel">
+                                    <span *ngIf="!nombEmps.valid && (nombEmps.touched || nombEmps.dirty)"  >  
+                                        <div id="validation" [hidden]="!nombEmps.errors.required"> Error, revise los datos </div>
+                                    </span> 
+                                </div>                    
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Tipo:</label>
+                                    <select class="form-control" required [(ngModel)]="EmTipo" required #tipoEmp="ngModel">
+                                        <option *ngFor="let tipo of arrTiposEmp" [value]="tipo.tipId">
+                                            {{tipo.nomTipo}}
+                                        </option>
+                                    </select> 
+                                    <div id="validation" [hidden]="!tipoEmp.touched || tipoEmp.valid "> Error, revise los datos</div>
+                                </div>
+                            </div>
+                        </div>
                         
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            
-                            <label>Nombre:</label>
-                            <input class="form-control" type="text" maxlength=30 [(ngModel)]="empresa.EmConsorcio" required #nombEmps="ngModel">
-                            <span *ngIf="!nombEmps.valid && (nombEmps.touched || nombEmps.dirty)"  >  
-                                <div id="validation" [hidden]="!nombEmps.errors.required"> Error, revise los datos </div>
-                            </span> 
-                            
-                        </div>
-                        <br>
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            
-                            <label>Tipo:</label>
-                            <select class="form-control" required [(ngModel)]="EmTipo" required #tipoEmp="ngModel">
-                                <option *ngFor="let tipo of arrTiposEmp" [value]="tipo.tipId">
-                                    {{tipo.nomTipo}}
-                                </option>
-                            </select> 
-                            <div id="validation" [hidden]="!tipoEmp.touched || tipoEmp.valid "> Error, revise los datos</div>
-                            
-                        </div>
-                
                     </div>
                     
                     <div class="pieFormNuevaEmp">
                         <div class="row">
-                            <div class="col-xl-6 col-md-6 col-sm-6 col-sm-6">
-                                <button class="btn_modal" pButton icon="fa-save" label="Guardar" [disabled]="!nombEmps.valid || !tipoEmp.valid"  (click)="guardarEmpresa(); nombEmps.reset(); tipoEmp.reset();" ></button>
+                            <div class="col-xl-6 col-md-6 col-sm-6 col-xs-6">
+                                <button class="btn_modal" pButton icon="fa-save" label="Guardar" 
+                                    [disabled]="!nombEmps.valid || !tipoEmp.valid"  
+                                    (click)="guardarEmpresa(); nombEmps.reset(); tipoEmp.reset();" 
+                                ></button>
                             </div>
-                            <div class="col-xl-6 col-md-6 col-sm-6 col-sm-6">    
-                                <button class="btn_modal" pButton icon="fa-close" label="Cancelar" (click)="cancelEmpresa(); nombEmps.reset(); tipoEmp.reset();"></button>
+
+                            <div class="col-xl-6 col-md-6 col-sm-6 col-xs-6">    
+                                <button class="btn_modal" pButton icon="fa-close" label="Cancelar" 
+                                        (click)="cancelEmpresa(); nombEmps.reset(); tipoEmp.reset();"
+                                ></button>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </p-dialog>
 
@@ -324,15 +336,15 @@
                 </div>
             </p-dialog>
 
-        <!--CONFIRMACION-->
+    <!--CONFIRMACION-->
             <!--BTNCOLUMNA EDITAR EMPRESA-->
             <p-dialog  [(visible)]="displayEditConfEmpresa" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]=false>
                 <p>{{confMensaje}}</p>
                 <div class="btn_Modal row">
-                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                         <button class="btn_modal" pButton icon="fa-check" (click)="acpEditEmpresa();" label="Aceptar"></button>
                     </div>
-                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                         <button class="btn_modal" pButton icon="fa-close" (click)="canEditEmpresa();" label="Cancelar"></button>
                     </div>
                 </div>
@@ -342,10 +354,10 @@
             <p-dialog [(visible)]="displayElimEmp" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]=false>
                 <p>{{confMensaje}}</p>
                 <div class="btn_Modal row">
-                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                         <button class="btn_modal" pButton icon="fa-check" (click)="aceptarEliminarEmp();" label="Aceptar"></button>
                     </div>
-                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                         <button class="btn_modal" pButton icon="fa-close" (click)="cancelEliminarEmp();" label="Cancelar"></button>
                     </div>
                 </div>
@@ -355,10 +367,10 @@
             <p-dialog  [(visible)]="displayEditSubEmp" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]=false>
                 <p>{{confMensaje}}</p>
                 <div class="btn_Modal row">
-                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                         <button class="btn_modal" pButton icon="fa-check" (click)="acpEditSubEmp();" label="Aceptar"></button>
                     </div>
-                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                         <button class="btn_modal" pButton icon="fa-close" (click)="cancEditSubEmp();" label="Cancelar"></button>
                     </div>
                 </div>
@@ -368,10 +380,10 @@
             <p-dialog [(visible)]="displayElimSubEmp" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]=false>
                 <p>{{confMensaje}}</p>
                 <div class="btn_Modal row">
-                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                         <button class="btn_modal" pButton icon="fa-check" (click)="acpElimSubEmp();" label="Aceptar"></button>
                     </div>
-                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                         <button class="btn_modal" pButton icon="fa-close" (click)="cancElimSubEmp();" label="Cancelar"></button>
                     </div>
                 </div>
@@ -381,10 +393,10 @@
             <p-dialog  [(visible)]="displayEditConfig" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]=false>
                 <p>{{confMensaje}}</p>
                 <div class="btn_Modal row">
-                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                         <button class="btn_modal" pButton icon="fa-check" (click)="acpEditConfig();" label="Aceptar"></button>
                     </div>
-                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                         <button class="btn_modal" pButton icon="fa-close" (click)="cancEditConfig();" label="Cancelar"></button>
                     </div>
                 </div>
@@ -394,10 +406,10 @@
             <p-dialog [(visible)]="displayElimConfig" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]=false>
                 <p>{{confMensaje}}</p>
                 <div class="btn_Modal row">
-                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                         <button class="btn_modal" pButton icon="fa-check" (click)="acpElimConfig();" label="Aceptar"></button>
                     </div>
-                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                         <button class="btn_modal" pButton icon="fa-close" (click)="cancElimConfig();" label="Cancelar"></button>
                     </div>
                 </div>

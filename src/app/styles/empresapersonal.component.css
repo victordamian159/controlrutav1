@@ -50,25 +50,6 @@
     background: #4CAF50; 
 }
 
-/*USADO EN LOS BOTONES DE LAS VENTANAS MODALES*/
-.container{
-    margin-bottom: 20px;
-     max-width: 900px;
-     max-height: 350px;
-}
-
-.cont_modal{
-    overflow-y: auto; 
-    overflow-x: auto;
-    height:100%;
-    width: 100%;
-    margin:auto;
-}
-
-col-xl-12{
-    padding: 0;
-}
-
 #btnTable{
     background-color: #4CAF50;
 }

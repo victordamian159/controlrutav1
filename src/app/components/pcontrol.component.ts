@@ -149,10 +149,6 @@ export class PcontrolComponent implements OnInit{
 
     _PuCoId:number; //almacena el PuCoId para poder usarlo en editar Y ELIMINAR
     _PuCoDeId:number    //PUCODEID PARA ELIMINAR REGISTRO
-    //displayEliminarRegistro:boolean=false;
-    //infoWindow: any;
-    // msgs: Message[] = [];
-
     //activar y desactivar funciones
     activeAddMarker = 0; // 0 : desactivado     1 : activado
     selectRowGrilla = 0; // 0 : desactivado     1 : activado
@@ -161,18 +157,19 @@ export class PcontrolComponent implements OnInit{
     dragPunto  =   0;    // 0: no arrastrar      1: arrastrar 
 
     //ACTIVANDO Y DESACTIVANDO BOTONES DEL MAPA
-    desGuardarPCD_BD:boolean;
-    desBorrarPCDet:boolean;
-    desDeshacerPCDet:boolean;
-    desEditarPCDetMarker:boolean;
-    desNuevosPuntos : boolean;
+    private desGuardarPCD_BD:boolean;
+    private desBorrarPCDet:boolean;
+    private desDeshacerPCDet:boolean;
+    private desEditarPCDetMarker:boolean;
+    private desNuevosPuntos : boolean;
+    private desBtnCancelar:boolean;
 
     /* OCULTANDO BOTONES */
-    ocGuardar:boolean;
-    ocBorrar:boolean;
-    ocCancelar:boolean;
-    ocEditar:boolean;
-    ocNuevo:boolean;
+    private ocGuardar:boolean;
+    private ocBorrar:boolean;
+    private ocCancelar:boolean;
+    private ocEditar:boolean;
+    private ocNuevo:boolean;
 
     tipoTarjeta={nomb:"", val:""};
 
@@ -207,26 +204,19 @@ export class PcontrolComponent implements OnInit{
         this.emID = this.emid;  /* ID EMPRESA */
         this._ruid =0; /* INICIANDO RUID PARA DESHABILITAR EL BOTON NUEVO PUNTO */
         this._PuCoId=0; /* USADO PARA ACTIVAR Y DESACTIVAR EL BOTON NUEVO PUNTO CONTROL*/
-        //DESACTIVANDO BOTONES (MAPA)
-         this.desGuardarPCD_BD=true;
-         this.desBorrarPCDet=true;
-         this.desDeshacerPCDet=true;
-         this.desEditarPCDetMarker=true;
-         this.desNuevosPuntos =true;
-
-        /* INICIAR HIDDEN BOTONES */
-         this.ocNuevo=false;
-         this.ocGuardar=true;
-         this.ocEditar=false;
-         this.ocCancelar=true;
-         this.ocBorrar=false;
+      
+         this.desGuardarPCD_BD=true; this.desBorrarPCDet=true;
+         this.desDeshacerPCDet=true; this.desEditarPCDetMarker=true;
+         this.desNuevosPuntos =true; this.desBtnCancelar=true;
+         this.ocNuevo=false; this.ocGuardar=false; this.ocEditar=true;
+         this.ocCancelar=false; this.ocBorrar=false;
 
          this.PuCoActivo=null;
 
          //ARRAYS
          this.objPuCoActivo={id:null,nomb:""};
          this.arrPuCoActivo=[{id:0,nomb:'NO'}, {id:1,nomb:'SI'}];
-         this.nroPtosValidos=2;
+         this.nroPtosValidos=2; // cambiar por var global configuracion
     }
 
     //iniciar 
@@ -268,34 +258,43 @@ export class PcontrolComponent implements OnInit{
                         this.pcontrolService.getAllPuntoControlDetalleByPuCo(PuCoId).subscribe(
                             data => {   ptsctrl=data;
                                         this.pCArrayDetalleBD=ptsctrl.slice(0);
-
+                                  
                                         /* DESACTIVANDO BOTONES */
-                                        if(this.pCArrayDetalleBD.length==0){
+                                        if(ptsctrl.length==0){
                                             //DESACTIVANDO O ACTIVANDO BOTONES
                                             this.desGuardarPCD_BD=true; 
                                             this.desBorrarPCDet=true; 
                                             this.desEditarPCDetMarker=true;
                                             this.desNuevosPuntos=false;
-                           
-                                        }else if(this.pCArrayDetalleBD.length!=0){
+                                            this.desBtnCancelar=true;
+
+                                            this.ocNuevo=false;
+                                            this.ocGuardar=false;
+                                            this.ocEditar=false;
+                                            this.ocCancelar=false;
+                                            this.ocBorrar=false;
+
+                                            this.mensaje = "No hay puntos de control, lista vacia"; 
+                                            this.displayNohayPuntos = true;
+                                            this.editando = 0; 
+                                        }else if(ptsctrl.length!=0){
+
                                             //DESACTIVANDO O ACTIVANDO BOTONES
                                             this.desGuardarPCD_BD=true; 
                                             this.desBorrarPCDet=true; 
                                             this.desEditarPCDetMarker=false;
                                             this.desNuevosPuntos=true;
-                                        }
+                                            this.desBtnCancelar=true;
 
-                                        //CARGANDO LA RUTA Y MARKERS
-                                        if(ptsctrl.length!=0){
+                                            this.ocNuevo=true;
+                                            this.ocGuardar=false;
+                                            this.ocEditar=false;
+                                            this.ocCancelar=false;
+                                            this.ocBorrar=false;
+
                                             this.cargarmarker(ptsctrl); //CARGAR LOS MARCADORES 
                                             this.mgMiniListaPC(ptsctrl);
-                                            //this.editando = 1; //se esta editando el array de puntos (existen puntos en la BD) 
-                                            
-                                        }else if(ptsctrl.length==0){
-                                            this.mensaje = "No hay puntos de control"; 
-                                            this.displayNohayPuntos = true;
-                                            this.editando = 0; //NUEVO REGISTRO, NO EXISTEN PUTNOS EN LA BD
-                                        }
+                                        }                            
                                     },
                             err => {this.errorMessage = err},
                             () => this.isLoading = false
@@ -312,8 +311,7 @@ export class PcontrolComponent implements OnInit{
                         .subscribe(
                                 data => { 
                                           this.pCArrayMaestroBD = data; 
-                                          console.log(this.pCArrayMaestroBD);
-                                          this.mgPuntoControlMaestro();
+                                          this.mgPuntoControlMaestro(this.pCArrayMaestroBD);
                                         },
                                 err  => { this.errorMessage = err}, 
                                 ()   =>   this.isLoading = false
@@ -427,21 +425,7 @@ export class PcontrolComponent implements OnInit{
 
              /* FUNCION ASOCIADA TABLA EDITAR PTSCTRL EN MODO DE LISTA*/ 
                 noGuardarEditTDet(){
-                    /* 
-                        BUSCAR LA POSICION DEL ELEMENTO EDITADO EN EL ARRAY MINILISTA PARA 
-                        QUE CUANDO HABRA DE NUEVO LA LISTA ESTE- NO SE BORRE 
-                        console.log(this.miniLista); console.log(this.pCArrayDetalleBD);
-                        this.procSavePuntoControlDetalle(this.pCArrayDetalleBD);
-                        this.displayEditDetPC=false;
-                        this.dragPunto=1;
-                        this.editando=0;
-                        console.log(this.RuId + "---"+this.PuCoId);*/
-                        /*this.reiniciarVariables(this.editando,this.dragPunto);
-                        RECARGANDO RUTA + PTOSCONTROL 
-                        this.procGetallrutadetallebyru(this.RuId)
-                        this.procGetallptsctrldetbyPuCo(this.PuCoId);
-                    */
-
+                   
                 }
 
             /* EDITAR CONTENIDO PCTRL */
@@ -680,20 +664,20 @@ export class PcontrolComponent implements OnInit{
             }
 
         /*CARGAR LOS MARCADORES SOBRE EL MAPA */
-            //cargarmarker(){
+       
             cargarmarker(pts=[]){
                 //CONDICIONAL PARA PODER EDITAR MARCADORES (DRAGGABLE=TRUE) ----- //REVISAR LA VARIABLE THIS.EDITANDO SI SE PUEDE INTEGRAR, 
                 //TAMBIEN AL AGREGAR MARCADORES ARRASTRABLES O NO EN ADDMARKER
 
                 //EDITANDO DESACTIVADO (NO SE PUEDE ARRASTRAR MARKER)
                 if(this.editando == 0){ 
-                    //for(let marker of this.pCArrayDetalleBD){
+                    
                     for(let marker of pts){
                         this.overlays.push(
                             new google.maps.Marker({
                                 position:{lat:marker.PuCoDeLatitud , lng:marker.PuCoDeLongitud},
                                 title:marker.PuCoDeDescripcion,
-                                //label:(this.pCArrayDetalleBD.indexOf(marker)+1).toString(), 
+                               
                                 label:(pts.indexOf(marker)+1).toString(), 
                                 draggable:false
                             }));
@@ -706,13 +690,13 @@ export class PcontrolComponent implements OnInit{
 
                 // EDITANDO ACTIVADO (SE PUEDE ARRASTRAR MARKER)
                 }else if(this.editando == 1){ 
-                    //for(let marker of this.pCArrayDetalleBD){
+                   
                     for(let marker of pts){
                         this.overlays.push(
                             new google.maps.Marker({
                                 position:{lat:marker.PuCoDeLatitud , lng:marker.PuCoDeLongitud},
                                 title:marker.PuCoDeDescripcion,
-                                //label:(this.pCArrayDetalleBD.indexOf(marker)+1).toString(),
+                              
                                 label:(pts.indexOf(marker)+1).toString(),
                                 draggable:true
                             })
@@ -830,8 +814,69 @@ export class PcontrolComponent implements OnInit{
                 this.mayorOrdenPuntos();//PARA EL CASO DE EDITAR UNA LISTA EXISTENTE
 
             /* SOLO CARGAR RUTA Y MARCADORES */
-                this.procGetallrutadetallebyru(RuId);
-                this.procGetallptsctrldetbyPuCo(PuCoId);
+               
+                let ptsRuta:any[]=[];
+                this.rutaService.getAllRutaDetalleByRu(RuId).subscribe(
+                    data => {
+                        ptsRuta=data; 
+                        this.cargarRuta(ptsRuta);
+                        //this.procGetallptsctrldetbyPuCo(PuCoId);
+
+                        let ptsctrl:any[]=[];
+                        this.pcontrolService.getAllPuntoControlDetalleByPuCo(PuCoId).subscribe(
+                            data => {   
+                                ptsctrl=data;
+                                console.log('desde onrow');                                                
+                                if(ptsctrl.length==0){
+                                    //DESACTIVANDO O ACTIVANDO BOTONES
+                                    this.desGuardarPCD_BD=true; 
+                                    this.desBorrarPCDet=true; 
+                                    this.desEditarPCDetMarker=true;
+                                    this.desNuevosPuntos=false;
+                                    this.desBtnCancelar=true;
+
+                                    this.ocNuevo=false;
+                                    this.ocGuardar=false;
+                                    this.ocEditar=false;
+                                    this.ocCancelar=false;
+                                    this.ocBorrar=false;
+
+                                    this.mensaje = "No hay puntos de control, lista vacia"; 
+                                    this.displayNohayPuntos = true;
+                                    this.editando = 0; 
+                                }else if(ptsctrl.length!=0){
+
+                                    //DESACTIVANDO O ACTIVANDO BOTONES
+                                    this.desGuardarPCD_BD=true; 
+                                    this.desBorrarPCDet=true; 
+                                    this.desEditarPCDetMarker=false;
+                                    this.desNuevosPuntos=true;
+                                    this.desBtnCancelar=true;
+
+                                    this.ocNuevo=true;
+                                    this.ocGuardar=false;
+                                    this.ocEditar=false;
+                                    this.ocCancelar=false;
+                                    this.ocBorrar=false;
+
+                                    this.cargarmarker(ptsctrl); //CARGAR LOS MARCADORES 
+                                    this.mgMiniListaPC(ptsctrl);
+                                }                            
+                            },
+                            err => {
+                                this.errorMessage = err
+                            },
+                            () => this.isLoading = false
+                        );
+
+                    },
+                    err => {
+                        this.errorMessage=err
+                        alert('error seleccionar ptos de control');
+                    },
+                    () => this.isLoading = false 
+                );
+                
            
             
     
@@ -918,7 +963,7 @@ export class PcontrolComponent implements OnInit{
         this.pcontrolService.deletePuntoControl(this._PuCoId).subscribe(
             realizar => {
                             this.getAllPuntoControlByEmRu(this.emID,this._ruid);
-                            this.mgPuntoControlMaestro();
+                            //this.mgPuntoControlMaestro();
                             this.displayElimRegCabecera=false;
                             this.mensaje ="";
                         }, 
@@ -975,9 +1020,6 @@ export class PcontrolComponent implements OnInit{
                 this.overlays[(j+1)*2-1+1].setMap(null);
             //RECARGNADO LA LISTA DE PUNTOS (MODO EDITAR)
             this.mgPuntosControlDetalle(this.pCArrayDetalleBD); //CARGANDO LA GRILLA PUNTOS DETALLE
-            
-            
-            //this.procGetallptsctrldetbyPuCo(this.PuCoId);
             this.displayElimRegDetalle=false;
     }
 
@@ -988,31 +1030,42 @@ export class PcontrolComponent implements OnInit{
     }
     //guardar nuevo Maestro puntos de control
     guardarPCMaestro(){      
-        this.pcMaestroBD={
-            PuCoId : this.pcMaestro.PuCoId,
-            PuCoDescripcion : this.descr, 
-            RuId : this.pcMaestro.RuId,
-            PuCoTiempoBus : hora(this.timeRec),
-            PuCoClase :  this.pcMaestro.PuCoClase,
-            PuCoActivo:this.PuCoActivo,
-            UsId : this.userId,
-            UsFechaReg : new Date()
+        let validPuCoActivo=this.validarCboPuCoActivo(this.PuCoActivo,this.pCMaestroMostrar,this.nroPtosValidos);
+
+        if(validPuCoActivo==true){
+
+            this.pcMaestroBD={
+                PuCoId : this.pcMaestro.PuCoId,
+                PuCoDescripcion : this.descr, 
+                RuId : this.pcMaestro.RuId,
+                PuCoTiempoBus : hora(this.timeRec),
+                PuCoClase :  this.pcMaestro.PuCoClase,
+                PuCoActivo:this.PuCoActivo,
+                UsId : this.userId,
+                UsFechaReg : new Date()
+            }
+
+        
+            if(this._PuCoId == 0){
+                this.pcMaestroBD.PuCoId=0;
+            }else if(this._PuCoId != 0){ 
+                this.pcMaestroBD.PuCoId=this._PuCoId;
+            }
+    
+            this.pcontrolService.savePuntoControl(this.pcMaestroBD).subscribe(
+                realizar => {
+                    this.getAllPuntoControlByEmRu(this.emID,this._ruid);
+                }, 
+                err => {
+                    this.errorMessage=err;
+                }
+            );
+            this.displayListaPuntos = false;
+        }else if(validPuCoActivo==false){
+            alert('Error, las listas activas ya estan completas');
         }
 
-        /* NUEVO REGISTRO*/
-        if(this._PuCoId == 0){
-            this.pcMaestroBD.PuCoId=0;
-        /* EDITANDO REGISTRO*/
-        }else if(this._PuCoId != 0){ 
-            this.pcMaestroBD.PuCoId=this._PuCoId;
-        }
-   
-        /* PROCEDURE GUARDAR CABECERA| */
-        this.pcontrolService.savePuntoControl(this.pcMaestroBD).subscribe(
-                        realizar => {this.getAllPuntoControlByEmRu(this.emID,this._ruid);/* CONSULTA PARA GRILLA PRINCIPAL */}, 
-                        err => {this.errorMessage=err}
-        );
-        this.displayListaPuntos = false;
+        
     }
 
     //cancelar la agregacion de un Maestro punto de control
@@ -1270,8 +1323,7 @@ export class PcontrolComponent implements OnInit{
         }
         
         this.actualizarOrdenPC(); /* ESTA POR GUSTO */
-        /*this.mgPuntosControlDetalle();
-        this.procGetallptsctrldetbyPuCo(this.PuCoId);*/
+
         this.mgPuntosControlDetalle(this.pCArrayDetalleBD);
         this.displayEditarPunto = false;
     }
@@ -1392,27 +1444,39 @@ export class PcontrolComponent implements OnInit{
     }
     
     cancelEditPtsDet(){
-        //DESACTIVANDO O ACTIVANDO BOTONES
-            this.desGuardarPCD_BD=true; 
-            this.desBorrarPCDet=true; 
-            this.desEditarPCDetMarker=false;
-            this.ocCancelar=true;
-            this.ocEditar=false;
-            this.ocGuardar=true;
+        this.pcontrolService.getAllPuntoControlDetalleByPuCo(this.PuCoId).subscribe(
+            data=>{
+                if(data.length!=0){
+                    this.desGuardarPCD_BD=true; this.desBorrarPCDet=true; 
+                    this.desEditarPCDetMarker=false; this.desNuevosPuntos=false;
 
-        /* DESACTIVANDO FUNCIONES */
-            this.activeAddMarker=0;  /* DESACTIVANDO LOS PTOS DE CONTROL */
+                    this.ocCancelar=true; this.ocEditar=false; this.ocGuardar=false;
+                     this.ocNuevo=false; this.ocBorrar=true;
 
-        /*limpiar el mapa para ponerle los nuevos marcadores*/
-            this.overlays = [];  
-            this.puntosRuta=[]; 
-            this.pCArrayDetalleBD=[]; 
-            this.coordenadas =[]; 
-            this.miniLista=[];
-            this.editando=0;
-            this.modoSaveActivo=false; /* PONIENDO EN MODO LECTURA */
-        this.procGetallrutadetallebyru(this.RuId);
-        this.procGetallptsctrldetbyPuCo(this.PuCoId);
+                }else if(data.length==0){
+                    this.desGuardarPCD_BD=true; this.desBorrarPCDet=true; 
+                    this.desEditarPCDetMarker=true; this.desNuevosPuntos=false;                
+                    this.ocCancelar=true; this.ocEditar=false; this.ocGuardar=true; 
+                    this.ocNuevo=false; this.ocBorrar=true;
+                }
+
+                this.activeAddMarker=0;  /* DESACTIVANDO LOS PTOS DE CONTROL */
+
+                /*limpiar el mapa para ponerle los nuevos marcadores*/
+                this.overlays = []; this.puntosRuta=[]; this.pCArrayDetalleBD=[]; this.coordenadas =[]; this.miniLista=[]; this.editando=0;
+
+                this.modoSaveActivo=false; /* PONIENDO EN MODO LECTURA */
+                this.procGetallrutadetallebyru(this.RuId); this.procGetallptsctrldetbyPuCo(this.PuCoId);
+            },
+            error=>{
+                alert('error al verificar puntos de control detalle, cancelar agregar');
+            },
+            ()=>{}
+        );
+            
+
+    
+            
     }
 
     /* MENSAJE SEGUN CASO EN GUARDAR PUNTOS */
@@ -1420,9 +1484,7 @@ export class PcontrolComponent implements OnInit{
         if(value==1){
             this.mensaje="Se Guardo los Puntos Correctamente";
             this.displayGuardarPuntosDetalle=true;
-            //this.reiniciarVariables();//REINICIANDO LA VARIABLES
-            //this.cargarRuta();
-            //this.cargarmarker();
+         
             this.editando=0;//0: NUEVA LISTA      1: EDITANDO LISTA(BD)
             this.dragPunto=0 //MARKER NO DRAGGABLE
             this.activeAddMarker = 0; //0: desactivado,   1: activado
@@ -1536,11 +1598,12 @@ export class PcontrolComponent implements OnInit{
     }
 
     // mostrar los puntos de control en la grilla (1era grilla)
-    mgPuntoControlMaestro(){
+    mgPuntoControlMaestro(arrPts=[]){
+        let _arrPts=[];
         this.pCMaestroMostrar=[]; let nroSI:number=0;
 
-        for(let puntoMaestro of this.pCArrayMaestroBD){
-            this.pCMaestroMostrar.push({
+        for(let puntoMaestro of arrPts){
+            _arrPts.push({
                 nro:0,
                 EmId:puntoMaestro.EmId,
                 PuCoDescripcion: puntoMaestro.PuCoDescripcion,
@@ -1549,35 +1612,37 @@ export class PcontrolComponent implements OnInit{
                 PuCoTiempoBus: _hora(puntoMaestro.PuCoTiempoBus),  
                 RuDescripcion:puntoMaestro.RuDescripcion, 
                 RuId: puntoMaestro.RuId,    
-                //PuCoActivo:Number(puntoMaestro.PuCoActivo)
-                PuCoActivo:1
+                PuCoActivo:Number(puntoMaestro.PuCoActivo),
+                nomPuCoClase:'',
+                nomPuCoActivo:''
             });
         }
 
-        for(let i=0; i<this.pCMaestroMostrar.length; i++){
-            this.pCMaestroMostrar[i].nro = i+1;
-            if(this.pCMaestroMostrar[i].PuCoClase=='01' ){
-                this.pCMaestroMostrar[i].PuCoClase = 'Hora Punta';
-            }else if(this.pCMaestroMostrar[i].PuCoClase=='02' ){
-                this.pCMaestroMostrar[i].PuCoClase = 'Dias Feriados';
-            }else if(this.pCMaestroMostrar[i].PuCoClase=='03' ){
-                this.pCMaestroMostrar[i].PuCoClase = 'Dias Normal';
+        for(let i=0; i<_arrPts.length; i++){
+            _arrPts[i].nro = i+1;
+            if(_arrPts[i].PuCoClase=='01' ){
+                _arrPts[i].nomPuCoClase = 'Hora Punta';
+            }else if(_arrPts[i].PuCoClase=='02' ){
+                _arrPts[i].nomPuCoClase = 'Dias Feriados';
+            }else if(_arrPts[i].PuCoClase=='03' ){
+                _arrPts[i].nomPuCoClase = 'Dias Normal';
             }
             
-            if(this.pCMaestroMostrar[i].PuCoActivo==1){
-                this.pCMaestroMostrar[i].PuCoActivo = 'SI';
+            if(_arrPts[i].PuCoActivo==1){
+                _arrPts[i].nomPuCoActivo = 'SI';
                 nroSI++;
-            }else if(this.pCMaestroMostrar[i].PuCoActivo==0){
-                this.pCMaestroMostrar[i].PuCoActivo = 'NO';
+            }else if(_arrPts[i].PuCoActivo==0){
+                _arrPts[i].nomPuCoActivo = 'NO';
             }
         }
 
         if(this.nroPtosValidos!=nroSI){
-            this.mensaje="EL Nro de Listas de Puntos Activos no es valido, verifique";
+            this.mensaje="El nro de listas activas no es valido("+this.nroPtosValidos+") para "+nroSI;
             this.displayNroValidoListasPtsControl=true;
         }
-        console.log(nroSI);
-        console.log(this.pCMaestroMostrar);
+
+        this.pCMaestroMostrar=_arrPts;
+   
     }// fin funcion
 
     aceptarNroValidoListasPts(){
@@ -1588,9 +1653,6 @@ export class PcontrolComponent implements OnInit{
     /* MOSTRAR ELEMENTOS EN LA GRILLAS */
     mgPuntosControlDetalle(ptsCtrl:any){
         this.pCDetalleMostrar=[];//array para mostrarlo en el datatable 
-        
-        //console.log(this.pCArrayDetalleBD);
-        //console.log(ptsCtrl);
 
         if(this.pCArrayDetalleBD.length==0 && ptsCtrl.length>0){
             
@@ -1614,7 +1676,6 @@ export class PcontrolComponent implements OnInit{
                 PuCoDeOrden: puntoDetalle.PuCoDeOrden 
             });
         }
-        //console.log("&&&&&&&");
     }
 
     //recuperar puntos de controldetalle por pucoID (por el ID) de esta forma no se necesita actualizar la pagina para ver el resultado
@@ -1649,26 +1710,33 @@ export class PcontrolComponent implements OnInit{
 
     //BOTON NUEVOS PUNTOS DE CONTROL (DETALLE)
     nuevosPuntos(){
-       
        this.mensaje="Ingrese los Nuevos Puntos Sobre El Mapa";
        this.displayNuevosPuntos=true;
-       console.log(this.overlays);
+       //habilitando btns, ocultando btns
+       
+       
     }
 
     aceptarNuevosPuntos(){
         /* CONFIGURANDO BOTON */
-        this.desNuevosPuntos = true;  
-        this.ocNuevo=true;
-        this.ocGuardar=false;
-        this.modoSaveActivo = true /* SE PREPARA UN REG PARA SER GUARDADO */
-        this.activeAddMarker = 1 ; //addmarker activado
-        /*this.edit_ando=0; //NUEVOS PUNTOS DE CONTROL
-        this.dragPunto=1; dfsdf*/
-        this.dragPunto=1;   
-        this.editando=0;
+        this.desGuardarPCD_BD=true;
+        this.desBorrarPCDet=true;
+        this.desEditarPCDetMarker=true;
+        this.desNuevosPuntos =true;
+        this.desBtnCancelar=true;
+
+   
+       this.ocNuevo=false;
+       this.ocGuardar=false;
+       this.ocEditar=true;
+       this.ocCancelar=false;
+       this.ocBorrar=false;
+    
+
+       
+        this.modoSaveActivo=true; this.activeAddMarker=1 ; this.dragPunto=1; this.editando=0;
         this.reiniciarVariables(this.editando,this.dragPunto); /* ESTA FUNCION PROBAR QUE RECIBA PARAMETROS */
-        this.mensaje="";
-        this.displayNuevosPuntos=false;
+        this.mensaje=""; this.displayNuevosPuntos=false;
     }
 
     cancelarNuevosPuntos(){
@@ -1717,51 +1785,60 @@ export class PcontrolComponent implements OnInit{
 
     //BOTON MODO EDITAR PUNTOSCONTROL ---> ACEPTAR EDITAR PUNTOS
     editarPuntosDetalleMapa(){
-        this.displayEditarCabecera=false;
-        this.mensaje="";
-        
-        /*this.modoSaveActivo=true; 
-        this.editando = 1;  //activando editar puntonControl
-        this.activeAddMarker = 1; //activando  el addmarker 
-        this.dragPunto = 1;     //DRAGGABLE TODOS PUNTOS Control
-        this.reiniciarVariables(this.editando,this.dragPunto);*/
-
-        //console.log(this.overlays);
+        /*
+            this.editando : activando editar puntonControl (1|0)
+            this.activeAddMarker : activando  el addmarker (1|0)
+            this.dragPunto : DRAGGABLE TODOS PUNTOS Control (1|0)
+        */
         console.log(this.pCArrayDetalleBD);
+        this.displayEditarCabecera=false; 
+        this.mensaje="";                            
+        this.modoSaveActivo=true; this.editando=1; this.activeAddMarker=1;  this.dragPunto=1; 
+        this.reiniciarVariables(this.editando,this.dragPunto);
         
-        if(this.pCArrayDetalleBD.length!=0){
-            /* HACIENDO COPIA DEL ARRAY (CASO CANCELAR TODO LO EDITADO) */
+        //this.procGetallrutadetallebyru(this.RuId); 
+        //this.procGetallptsctrldetbyPuCo(this.PuCoId);
 
-            this.modoSaveActivo=true; 
-            this.editando = 1;  //activando MODO editar puntonControl
-            this.activeAddMarker = 1; //activando  el addmarker 
-            this.dragPunto = 1;     //DRAGGABLE TODOS PUNTOS CONTROL
-            this.reiniciarVariables(this.editando,this.dragPunto);
-            this.procGetallrutadetallebyru(this.RuId);
-            this.procGetallptsctrldetbyPuCo(this.PuCoId);
-        }else if(this.pCArrayDetalleBD.length==0){
-            this.modoSaveActivo=true; 
-            //this.editando = 0;  //activando editar puntonControl
-            this.activeAddMarker = 1; //activando  el addmarker 
-            this.dragPunto = 1;     //DRAGGABLE TODOS PUNTOS CONTROL
-            this.reiniciarVariables(this.editando,this.dragPunto);
-        }
-        
-        /*RECARGAR LOS MARCADORES Y RUTA EN EL MAPA
-            this.procGetallrutadetallebyru(this.RuId);
-            this.procGetallptsctrldetbyPuCo(this.PuCoId);*/
+        let ptsRuta:any[]=[];
+        this.rutaService.getAllRutaDetalleByRu(this.RuId).subscribe(
+            data => {
+                ptsRuta=data; 
+                this.cargarRuta(ptsRuta);
 
-        //DESACTIVANDO Y ACTIVANDO BOTONES
-            this.desGuardarPCD_BD=false;
-            this.desBorrarPCDet=false;
-            this.desEditarPCDetMarker=true;
+                let ptsctrl:any[]=[];
+                this.pcontrolService.getAllPuntoControlDetalleByPuCo(this.PuCoId).subscribe(
+                    data => {   
+                        ptsctrl=data;           
+                        this.pCArrayDetalleBD=data;                                                        
+                        this.desGuardarPCD_BD=false; 
+                        this.desBorrarPCDet=false; 
+                        this.desEditarPCDetMarker=true;
+                        this.desNuevosPuntos=true;
+                        this.desBtnCancelar=true;
 
-        /* OCULTAR BOTONES */
-            this.ocEditar=true;
-            this.ocGuardar=false;
-            this.ocCancelar=false;
+                        this.ocNuevo=true;
+                        this.ocGuardar=false;
+                        this.ocEditar=true;
+                        this.ocCancelar=false;
+                        this.ocBorrar=false;
 
-        //EDITAR EL ARRAY DE PUNTOS QUE SON SUBIDOS A LA BD Y EL overlays //ACTIVAR DRAGGABLE DE MARKERS (REEMPLAZANDO EXISTENTES)
+                        this.cargarmarker(ptsctrl); //CARGAR LOS MARCADORES 
+                        this.mgMiniListaPC(ptsctrl);
+                                                    
+                    },
+                    err => {
+                        this.errorMessage = err
+                    },
+                    () => this.isLoading = false
+                );
+
+            },
+            err => {
+                this.errorMessage=err
+                alert('error seleccionar ptos de control');
+            },
+            () => this.isLoading = false 
+        );
     }
 
     //REINICIAR VARIABLES Y ARRAYS DE OBJETOS
@@ -1818,7 +1895,7 @@ export class PcontrolComponent implements OnInit{
 
             /* CREANDO NUEVA LISTA, SE MUEVEN PTS Y NO SE EDITA LISTA(TOTALMENTE NUEVA) */
             }else if(dragPunto==1 &&  editando==0){
-                /*this.overlays=[];*/ this.coordenadas=[]; this.pCArrayDetalleBD=[]; this.miniLista=[];
+                this.coordenadas=[]; this.pCArrayDetalleBD=[]; this.miniLista=[];
             }
         }
 
@@ -1860,12 +1937,36 @@ export class PcontrolComponent implements OnInit{
                 i++;
                 
             }
-        //console.log("j: "+j);
             
 
             tx="00:03:45";
             return tx ;
         }
+
+    //validar si nuevo registro es activo o inactivo
+    validarCboPuCoActivo(PuCoActivo:number, arrPts=[], nroValidos:number):boolean{
+        let result:boolean, nroSi:number=0;
+            //conteo 'si'
+            for(let i=0;i<arrPts.length;i++){
+                if(arrPts[i].nomPuCoActivo=="SI"){
+                    nroSi++;
+                }
+            }
+            //console.log(PuCoActivo);
+
+            if(PuCoActivo==1){
+                nroSi++;
+            }else if(PuCoActivo==0){
+
+            }
+
+            if(nroValidos==nroSi){
+                result=true;
+            }else if(nroValidos!=nroSi){
+                result=false;
+            }
+        return result;
+    }
 }
 var coords={
     x:0,

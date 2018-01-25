@@ -97,9 +97,10 @@ export class TControlService{
 	}
 
 	//tarjetas control por fecha y todos los buses
-	getalltarjetacontrolbybuidfecha(buId:number, taCoFecha:string){
+	getalltarjetacontrolbybuidfecha(emId:number, buId:number, taCoFecha:string){
 		return this.http
-			.get(this.baseUrl+"getalltarjetacontrolbybuidfecha?buId="+buId+"&taCoFecha="+taCoFecha)
+			//.get(this.baseUrl+"getalltarjetacontrolbybuidfecha?buId="+buId+"&taCoFecha="+taCoFecha)
+			.get(this.baseUrl+"getalltarjetacontrolbybuidfecha?emId="+emId+"&buId="+buId+"&taCoFecha="+taCoFecha)
 			.map((r: Response) => r.json() )   
 			.catch(this.handleError)
 	}

@@ -1,22 +1,23 @@
 <div class="contenedor">
-    <div id="titulo">Listado de Personas</div>
+    <label>Listado de Personas</label>
+
     <div class="row">
-        <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
+        <div class="col-xl-2 col-md-2 col-sm-6 col-xs-12">
             <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
         </div>
-        <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
-            <button class="form-control" id="btnNuevo" (click)="nuevoPersonal()" pButton icon="fa-file-text-o" label="Agregar Persona"></button>
+        <div class="col-xl-2 col-md-2 col-sm-6 col-xs-12">
+            <button class="btn_modal"  (click)="nuevoPersonal()" pButton icon="fa-file-text-o" label="Agregar Persona"></button>
         </div>
     </div>
 
     <!--TABLA PRINCIPAL-->
-    <div class="row">
-            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-            
+
+          
                 <p-dataTable [value]="personalArr"  [globalFilter]="filtroGlobal" 
-                    emptyMessage="No Hay Registros"
-                    [rows]="5"  [paginator]="true"
-                            selectionMode="single" (onRowSelect)="onRowSelectPersonal($event)">
+                            emptyMessage="No Hay Registros"
+                            [rows]="6"  [paginator]="true"
+                            selectionMode="single" 
+                            (onRowSelect)="onRowSelectPersonal($event)">
 
                     <p-column styleClass="col-button" [style]="{'width':'3em'}">
                         <template let-col  let-Personal="rowData"  pTemplate="body">
@@ -32,9 +33,8 @@
                     <p-column field="PeTipoLicencia" header="Licencia" [style]="{'width':'6em'}"></p-column>
                     <p-column field="PeCelular" header="Celular" [style]="{'width':'6em','text-align':'center'}"></p-column>
                 </p-dataTable>
-           
-            </div>
-    </div>
+         
+    
 </div>
 
 
@@ -47,41 +47,41 @@
             <div class="row">
 
                 <!--NOMBRE -->
-                <div class="col-xl-6 col-md-4 col-sm-6 col-xs-12">
-                    
+                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group">
                         <label class="control-label">Nombres:</label>
                         <input class="form-control"  type="text" maxlength="25" required #nombpers="ngModel" [(ngModel)]="personal.PeNombres"/>
                         <span *ngIf="!nombpers.valid && (nombpers.touched || nombpers.dirty)" >  
                             <div id="validation" [hidden]="!nombpers.errors.required"> obligatorio </div>
                         </span>
-                    
+                    </div>
                 </div>
 
                 <!--APELLIDO-->
-                <div class="col-xl-6 col-md-4 col-sm-6 col-xs-12">
-                    
+                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group">
                         <label>Apellidos:</label>
                         <input class="form-control" type="text" maxlength="25" required #apepers="ngModel" [(ngModel)]="personal.PeApellidos" />
                         <span *ngIf="!apepers.valid && (apepers.touched || apepers.dirty)" >  
                             <div id="validation" [hidden]="!apepers.errors.required"> obligatorio </div>
                         </span>
-                    
+                    </div>
                 </div>
 
                 <!--DNI-->
-                <div class="col-xl-6 col-md-4 col-sm-6 col-xs-12">
-                    
+                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group">
                         <label >Dni:</label>
                         <input class="form-control" type="text" maxlength="8" required #dniperso="ngModel" [(ngModel)]="personal.PeDni" />
                         <span *ngIf="!dniperso.valid && (dniperso.touched || dniperso.dirty)" >  
                             <div id="validation" [hidden]="!dniperso.errors.required"> obligatorio </div>
                         </span>
-                    
+                    </div>
                 </div>
           
                 <!--SEXO  COMBO-->
-                <div class="col-xl-6 col-md-4 col-sm-6 col-xs-12">
-                    
+                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group">
                         <label>Genero:</label>
                         <!--DROPDOWN-->
                         <select class="form-control" [(ngModel)]="PeSexo" (change)="funCboPeGeneroId($event)" required #cbosexo="ngModel" >
@@ -92,12 +92,12 @@
                         <div id="validation" [hidden]="!cbosexo.touched || cbosexo.valid ">
                             Error, revise los datos ingresados
                         </div>
-                    
+                    </div>
                 </div>
 
                 <!--ESTADO CIVIL COMBO  -->
-                <div class="col-xl-6 col-md-4 col-sm-6 col-xs-12">
-                    
+                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                    <div class="form-group">
                         <label>EstadoCivil:</label>
                         <!--DROPDOWN-->
                         <select class="form-control" required #estcivilper="ngModel" [(ngModel)]="PeEstCivil" (change)="funCbopeEstCivilId($event)">
@@ -108,81 +108,81 @@
                         <div id="validation" [hidden]="!estcivilper.touched || estcivilper.valid ">
                             Error, revise los datos ingresados
                         </div>
-                    
+                    </div>
                 </div>
 
             
                 <!--FECHA NACIMIENTO-->
-                <div class="col-xl-6 col-md-4 col-sm-6 col-xs-12">
-                    
+                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group">
                         <label>Fecha Nac.:</label>
                         <input class="form-control" type="date" [(ngModel)]="personal.PeFecNac" required #fnacpers="ngModel" />
                         <div id="validation" [hidden]="fnacpers.valid || !fnacpers.touched">
                                 Error, revise los datos ingresados
                         </div> 
-                    
+                    </div>
                 </div>
           
                 <!--DIRECCION-->
-                <div class="col-xl-6 col-md-4 col-sm-6 col-xs-12">
-                    
+                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group">
                         <label >Direccion:</label>
                         <input class="form-control" type="text" maxlength="50" required #direcperso="ngModel" [(ngModel)]="personal.PeDireccion" />
                         <span *ngIf="!direcperso.valid && (direcperso.touched || direcperso.dirty)" >  
                             <div id="validation" [hidden]="!direcperso.errors.required"> obligatorio </div>
                         </span>
-                    
+                    </div>
                 </div>
         
                 <!--LICENCIA-->
-                <div class="col-xl-6 col-md-4 col-sm-6 col-xs-12">
-                    
+                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group">
                         <label>Licencia:</label>
                         <!--<input class="form-control" type="text" maxlength="8" required #licenchoferperso="ngModel" [(ngModel)]="personal.PeTipoLicencia" />
                         <span *ngIf="!licenchoferperso.valid && (licenchoferperso.touched || licenchoferperso.dirty)" >  
                             <div id="validation" [hidden]="!licenchoferperso.errors.required"> obligatorio </div>
                         </span>-->
                         <input class="form-control" type="text" maxlength="8" [(ngModel)]="personal.PeTipoLicencia" />
-                    
+                    </div>
                 </div>
 
                 <!--NRO CELULAR-->
-                <div class="col-xl-6 col-md-4 col-sm-6 col-xs-12">
-                    
+                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group">
                         <label>Nro Movil:</label>
                         <input class="form-control" type="text" maxlength="10" required #nromovilperso="ngModel" [(ngModel)]="personal.PeNMovil" />
                         <span *ngIf="!nromovilperso.valid && (nromovilperso.touched || nromovilperso.dirty)" >  
                             <div id="validation" [hidden]="!nromovilperso.errors.required"> obligatorio </div>
                         </span>
-                
+                    </div>
                 </div>
          
                 <!--NRO FIJO-->
-                <div class="col-xl-6 col-md-4 col-sm-6 col-xs-12">
-                    
+                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group">
                         <label>Nro Fijo:</label>
                         <input class="form-control" type="text" maxlength="8" required #nrofijoperso="ngModel" [(ngModel)]="personal.PeNFijo" />
                         <span *ngIf="!nrofijoperso.valid && (nrofijoperso.touched || nrofijoperso.dirty)" >  
                             <div id="validation" [hidden]="!nrofijoperso.errors.required"> obligatorio </div>
                         </span>
-                    
+                    </div>
                 </div>
             
                 <!--CORREO ELECTRONICO-->
-                <div class="col-xl-6 col-md-4 col-sm-6 col-xs-12">
-                    
+                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group">
                         <label >Email:</label>
                         <!--<input class="form-control" type="text" maxlength="30" required #emailperso="ngModel" [(ngModel)]="personal.PeEmail" />
                         <span *ngIf="!emailperso.valid && (emailperso.touched || emailperso.dirty)" >  
                             <div id="validation" [hidden]="!emailperso.errors.required"> obligatorio </div>
                         </span>-->
                         <input class="form-control" type="text" maxlength="30" [(ngModel)]="personal.PeEmail" />
-                    
+                    </div>
                 </div>
                 
                 <!--FECHA INGRESO-->
-                <div class="col-xl-6 col-md-4 col-sm-6 col-xs-12">
-                    
+                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group">
                         <label>Fecha Ingreso:</label>
                         <input class="form-control" type="date" [(ngModel)]="personal.getPeFechaIng" required #fingresopers="ngModel" />
                         <!--<span *ngIf="!fingresopers.valid && (fingresopers.touched || fingresopers.dirty)"  >  
@@ -191,19 +191,19 @@
                         <div id="validation" [hidden]="fingresopers.valid || !fingresopers.touched">
                                 Error, revise los datos ingresados
                         </div>
-                
+                    </div>
                 </div>
            
                 <!--FECHA SALIDA-->
-                <div class="col-xl-6 col-md-4 col-sm-6 col-xs-12">
-                    
+                <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group">
                         <label>Fecha Salida:</label>
                         <!--<input class="form-control" type="date" [(ngModel)]="personal.PeFechaSal" required #fsalidapers="ngModel" />
                         <div id="validation" [hidden]="fsalidapers.valid || !fsalidapers.touched">
                                 Error, revise los datos ingresados
                         </div>-->
                         <input class="form-control" type="date" [(ngModel)]="personal.PeFechaSal" />
-                    
+                    </div>
                 </div>
             </div>
         </div>
@@ -211,10 +211,10 @@
         <!--BOTONES-->
         <div class="pieFormNPersona">
             <div class="row justify-content-end">
-                <div class="col-xl-3 col-md-3 col-sm-12 col-xs-12">
+                <div class="col-xl-2 col-md-3 col-sm-12 col-xs-12">
                     <button class="btn_modal" pButton icon="fa-save" label="Guardar" [disabled]="!nombpers.valid || !apepers.valid || !dniperso.valid || !cbosexo.valid || !estcivilper.valid || !fnacpers.valid || !direcperso.valid || !nromovilperso.valid || !nrofijoperso.valid || !fingresopers.valid" (click)="guardarPersonal();  nombpers.reset(); apepers.reset(); dniperso.reset(); cbosexo.reset(); estcivilper.reset(); fnacpers.reset(); direcperso.reset(); nromovilperso.reset(); nrofijoperso.reset(); fingresopers.reset();"></button>
                 </div>
-                <div class="col-xl-3 col-md-3 col-sm-12 col-xs-12">
+                <div class="col-xl-2 col-md-3 col-sm-12 col-xs-12">
                     <button class="btn_modal" pButton icon="fa-close" label="Cancelar" (click)="cancelarPersonal(); nombpers.reset(); apepers.reset(); dniperso.reset(); cbosexo.reset(); estcivilper.reset(); fnacpers.reset(); direcperso.reset(); nromovilperso.reset(); nrofijoperso.reset(); fingresopers.reset(); "></button>
                 </div>
             </div>

@@ -4,7 +4,7 @@ import {ProgramacionService} from '../service/prog.service'
 import {PlacasService} from '../service/placas.service'
 import {GlobalVars} from 'app/variables'
 import {hora,formatFechInArr,_fnroDias,fecha,arrABI,arrANBI,_hora, tipoAnio,_fecha1,_fecha2,slash_posFecha,horaValida,
-        formatFech,addDays,operSHoras,_addDays,editf1,fechaActual1, cambianBuIdxNroPlaca} from 'app/funciones';
+        formatFech,addDays,operSHoras,_addDays,editf1,fechaActual1,fechaMayor, cambianBuIdxNroPlaca} from 'app/funciones';
 
 
 declare var jsPDF: any; //PARA PASAR HTML A PDF 
@@ -484,34 +484,42 @@ export class ProgComponent implements OnInit{
         let placas=this.extrayendoPlacasBus(this.placas,'nuevaprog');
 
         let validez=this.validandoFechas(fIni,fFin);
-        let validFechInit=this.validarProgFechaInicio(this.progMaestro.PrFechaInicio);
+        let validFechInit=this.validarProgFechaInicio(this.progMaestro.PrFechaInicio, this.programacionMaestroArrayHTML);
+        console.log(validFechInit);
 
-        /*if(validez==1){
-            this.tipoProgramacion(placas,placas.length,this.tipoProg );//FORMA SORTEO
-            progCab = {
-                PrId : this.progMaestro.PrId, //number
-                EmId : this.emid, //number
-                PrCantidadBuses : this.bAct, //number
-                PrDescripcion : this.progMaestro.PrDescripcion, //string
-                PrFecha : new Date(), //string
-                PrFechaInicio : this.fecha(this.progMaestro.PrFechaInicio), //string
-                PrFechaFin : this.fecha(this.progMaestro.PrFechaFin), //string
-                PrTipo : Number(this.formaProg), //string escala pescadito
-                PrAleatorio : Number(this.tipoProg), //string manual automatico(aleatorio)
-                PrDiasIncluidos:this.diasIncluidos(this.dtSelectDias),
-                UsId : this.userid, //number
-                UsFechaReg : new Date() //string
+        if(validez==1){
+            
+            if(validFechInit==true){
+                this.tipoProgramacion(placas,placas.length,this.tipoProg );//FORMA SORTEO
+                progCab = {
+                    PrId : this.progMaestro.PrId, //number
+                    EmId : this.emid, //number
+                    PrCantidadBuses : this.bAct, //number
+                    PrDescripcion : this.progMaestro.PrDescripcion, //string
+                    PrFecha : new Date(), //string
+                    PrFechaInicio : this.fecha(this.progMaestro.PrFechaInicio), //string
+                    PrFechaFin : this.fecha(this.progMaestro.PrFechaFin), //string
+                    PrTipo : Number(this.formaProg), //string escala pescadito
+                    PrAleatorio : Number(this.tipoProg), //string manual automatico(aleatorio)
+                    PrDiasIncluidos:this.diasIncluidos(this.dtSelectDias),
+                    UsId : this.userid, //number
+                    UsFechaReg : new Date() //string
+                }
+                console.log(progCab);
+                this.procSaveProgramacion(progCab);
+                this.displayNuevaProgramacion=false; //cerrar 1era ventana
+                this.displayProgramacionBase=true; //abrir 2da ventana
+            }else if(validFechInit==false){
+                this.displayErrorFechIngrFormUno=true;
+                this.mensaje="la fecha de inicio no es valida ("+this.progMaestro.PrFechaInicio+")";
             }
-            console.log(progCab);
-            this.procSaveProgramacion(progCab);
-            this.displayNuevaProgramacion=false; //cerrar 1era ventana
-            this.displayProgramacionBase=true; //abrir 2da ventana
+           
        
         }else if(validez==0){
             this.displayErrorFechIngrFormUno=true;
-            this.mensaje="Error en las fechas ingresada, es menos de 9 dias o mayor a 62 dias entre las fechas ingresadas";
+            this.mensaje="Error en las fechas ingresada, es menos de 9 dias o mayor a 62 dias";
 
-        }*/
+        }
     }
 
     aceptarErrorFechasValidas(){
@@ -636,7 +644,7 @@ export class ProgComponent implements OnInit{
         val1 = this.fnroDias(_f1); val2 = this.fnroDias(_f2);
 
         let ndias = val2 - val1 + 1;
-        console.log(ndias);
+        console.log('ndias: '+ndias);
         //console.log(ndias);
         if(ndias>9  &&  ndias<=62){
             result = 1 ; //LAS FECHAS SON CORRECTAS
@@ -1747,25 +1755,20 @@ export class ProgComponent implements OnInit{
     }
 
     //validando fecha 
-    validarProgFechaInicio(PrFechaInicio:string):boolean{
+    validarProgFechaInicio(PrFechaInicio:string, arrProg=[]):boolean{
         let resultado:boolean, fechaAnt:string;
         
-        this.programacionService.getAllProgramacionByEm(this.emid,this.anio).subscribe(
-            data=>{
-                if(data.length!=0){
-                    fechaAnt=_fecha1(data[data.length-1].PrFechaFin);
-                    console.log(fechaAnt);
-                }else if(data.length==0){
-                    alert('no hay fechas');
-                }
-            },
-            error=>{
+      
+        if(arrProg.length!=0){
+            fechaAnt=arrProg[arrProg.length-1].PrFechaFin;
+            //console.log(fechaAnt); console.log(formatFech(fechaAnt));
 
-            },
-            ()=>{
-
-            }
-        );
+            let validFechaInit=fechaMayor(formatFech(fechaAnt),PrFechaInicio);
+            resultado=validFechaInit;
+        }else if(arrProg.length==0){
+            resultado=true;
+        }
+     
         return resultado;
     }
 

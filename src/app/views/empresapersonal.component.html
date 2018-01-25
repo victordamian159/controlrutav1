@@ -229,24 +229,30 @@
         <p-header>Para: {{nombre}} </p-header>
         <div class="contFormNuevoUser">
             <div class="bodyFormNuevoUser">     
-                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">  
-                    <label>Usuario:</label>
-                    <input type="text" class="form-control" maxlength="25" [(ngModel)]="userSystem.nomUser" required #nickuser="ngModel" />
-                    <span *ngIf="!nickuser.valid && nickuser.touched" id="validation" style="display: inline-block; font-size: 80%;" >
-                        <div [hidden]="!nickuser.errors.required"> Obligatorio </div>
-                        <div [hidden]="!nickuser.errors.maxlength"> Maximo 25 Caracteres </div>
-                    </span>
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">  
+                        <div class="form-group">
+                            <label>Usuario:</label>
+                            <input type="text" class="form-control" maxlength="25" [(ngModel)]="userSystem.nomUser" required #nickuser="ngModel" />
+                            <span *ngIf="!nickuser.valid && nickuser.touched" id="validation" style="display: inline-block; font-size: 80%;" >
+                                <div [hidden]="!nickuser.errors.required"> Obligatorio </div>
+                                <div [hidden]="!nickuser.errors.maxlength"> Maximo 25 Caracteres </div>
+                            </span>
+                        </div>
+                    </div>
+                
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">   
+                        <div class="form-group"> 
+                            <label>Contraseña:</label>
+                            <input type="text" class="form-control" minlength="10" maxlength="25" [(ngModel)]="userSystem.password" required #password="ngModel" />
+                            <span *ngIf="!password.valid && password.touched" id="validation" style="display: inline-block; font-size: 80%;" >
+                                <div [hidden]="!password.errors.required"> Obligatorio </div>
+                                <div [hidden]="!password.errors.minlength"> Minimo 10 Caracteres </div>
+                                <div [hidden]="!password.errors.maxlength"> Maximo 25 Caracteres </div>
+                            </span> 
+                        </div>
+                    </div>                   
                 </div>
-                <br>
-                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">    
-                    <label>Contraseña:</label>
-                    <input type="text" class="form-control" minlength="10" maxlength="25" [(ngModel)]="userSystem.password" required #password="ngModel" />
-                    <span *ngIf="!password.valid && password.touched" id="validation" style="display: inline-block; font-size: 80%;" >
-                        <div [hidden]="!password.errors.required"> Obligatorio </div>
-                        <div [hidden]="!password.errors.minlength"> Minimo 10 Caracteres </div>
-                        <div [hidden]="!password.errors.maxlength"> Maximo 25 Caracteres </div>
-                    </span> 
-                </div>                   
             </div>
             <div class="pieFormNuevoUser ">
                 <div class="row">

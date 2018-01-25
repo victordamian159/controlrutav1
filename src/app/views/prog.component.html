@@ -2,11 +2,13 @@
 <div class="contenedor">
     <div id="titulo">Tabla Programaciones</div>
     <div class="row">
-        <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+        <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
             <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
         </div>
-        <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
-           <button class="form-control" id="btnNuevo" icon="fa-file-text-o" (click)="NuevaProgCabecera()" pButton  label="Nueva Programacion"></button>
+        <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
+           <button class="form-control" id="btnNuevo" icon="fa-file-text-o" 
+           (click)="NuevaProgCabecera()" pButton  label="Nuevo"
+           ></button>
         </div>
     </div>
 
@@ -51,230 +53,227 @@
             <p-header> {{titleNuevoProgPrimerModal }} Programacion </p-header>
             
             <!--CUERPO-->
-            <div class="row">
-                <div class="cont_modal">
-                    <div class="container">
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <!--NOMBRE PARA RECONOCER A LA PROGRAMACION  -->
+            <div class="contFormMNPUno">
+                <div class="bodyFormMNPUno">                                           
+                    <div class="row">
+
+                        <!--DIAS DE SEMANA INCLUIDOS-->
+                        <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">    
+                            <label>Dias de la Semana</label>
+                            <p-dataTable [value]="diasSemana" [(selection)]="dtSelectDias">
+                                <p-column [style]="{'width':'2em'}" selectionMode="multiple"></p-column>
+                                <p-column [style]="{'width':'2em'}" field="nro" header="N°"></p-column>
+                                <p-column [style]="{'width':'4em'}" field="nomb" header="Dia"></p-column>
+                            </p-dataTable>     
+                            <label>Dias considerados: {{dtSelectDias.length}}</label>  
+                        </div>
+
+                        <div class="col-xl-8 col-md-8 col-sm-12 col-xs-12">
                             <div class="row">
-
-                                <!--DIAS DE SEMANA INCLUIDOS-->
-                                <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">    
-                                    <label>Dias de la Semana</label>
-                                    <p-dataTable [value]="diasSemana" [(selection)]="dtSelectDias">
-                                        <p-column [style]="{'width':'2em'}" selectionMode="multiple"></p-column>
-                                        <p-column [style]="{'width':'2em'}" field="nro" header="N°"></p-column>
-                                        <p-column [style]="{'width':'4em'}" field="nomb" header="Dia"></p-column>
-                                    </p-dataTable>     
-                                    <label>Dias considerados: {{dtSelectDias.length}}</label>  
-                                </div>
-
-                                <div class="col-xl-8 col-md-8 col-sm-12 col-xs-12">
-                                    <div class="row">
-                                        <!--NOMBRE PARA LA PROGRAMACION-->
-                                        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <label for="descripcion" class="control-label">Nombre de la Programacion:</label>
-                                                <input class="form-control" type="text" [(ngModel)]="progMaestro.PrDescripcion" #descrip="ngModel"  maxlength="30" required />
-                                            
-                                                <span *ngIf="!descrip.valid && descrip.touched" >
-                                                    <div id="validation" [hidden]="!descrip.errors.required"> Obligatorio </div>
-                                                </span>
-                                            </div>
-                                        </div>
+                                <!--NOMBRE PARA LA PROGRAMACION-->
+                                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label for="descripcion" class="control-label">Nombre de la Programacion:</label>
+                                        <input class="form-control" type="text" [(ngModel)]="progMaestro.PrDescripcion" #descrip="ngModel"  maxlength="30" required />
                                     
-                                        <!--CANTIDAD DE BUSES ACTIVOS E INACTIVOS-->
-                                        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <label >Buses:</label>
-                                                <div class="control-label">
-                                                    <label>{{resBusUnidades}}</label>
-                                                    <label [hidden]="bAct>0 && bAct!=0"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!--DESDE-->
-                                        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <label  class="control-label">Del:</label>
-                                                <input class="form-control" name="finicio"  type="date" 
-                                                        [(ngModel)]="progMaestro.PrFechaInicio" 
-                                
-                                                        required #fde="ngModel" />
-                                                <span *ngIf="!fde.valid && fde.touched"  >   
-                                                    <div id="validation" [hidden]="!fde.errors.required"> Obligatorio </div>
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <!--HASTA-->
-                                        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <label  class="control-label" >Hasta:</label>
-                                                <input class="form-control" name="ffinal"  type="date" [(ngModel)]="progMaestro.PrFechaFin"  required #fha="ngModel" />
-                                                <span *ngIf="!fha.valid && fha.touched"  >  
-                                                    <div id="validation" [hidden]="!fha.errors.required"> Obligatorio </div>
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <!--TIPO DE SORTEO MANUAL O AUTOMATICO-->
-                                        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                                        
-                                            <div class="form-group">
-                                                <label  class="control-label">Tipo Sorteo:</label>
-                                                <select class="form-control" [(ngModel)]="tipoProg" (change)="fcboTipoProg()" required #tprog="ngModel">
-                                                    <option *ngFor="let tipo of _tipoProg" [ngValue]="tipo.id">{{tipo.nTipo}}</option>
-                                                </select>
-                                                <div id="validation" [hidden]="!tprog.touched || tprog.valid ">
-                                                        Error, revise los datos ingresados
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!--FORMA DE PROGRAMACION POR TIEMPO Y CANTIDAD DE BUSES (Escala o Pescadito)-->
-                                        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <label  class="control-label" >Forma Programacion:</label>
-                                                <select class="form-control" [(ngModel)]="formaProg" (change)="formaProgramacion()" required #fprog="ngModel" >
-                                                    <option *ngFor="let forma of _formaProg" [ngValue]="forma.id">{{forma.nForma}}</option>
-                                                </select>
-                                                <div id="validation" [hidden]="!fprog.touched || fprog.valid ">
-                                                        Error, revise los datos ingresados
-                                                </div>
-                                            </div>
+                                        <span *ngIf="!descrip.valid && descrip.touched" >
+                                            <div id="validation" [hidden]="!descrip.errors.required"> Obligatorio </div>
+                                        </span>
+                                    </div>
+                                </div>
+                            
+                                <!--CANTIDAD DE BUSES ACTIVOS E INACTIVOS-->
+                                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label >Buses:</label>
+                                        <div class="control-label">
+                                            <label>{{resBusUnidades}}</label>
+                                            <label [hidden]="bAct>0 && bAct!=0"></label>
                                         </div>
                                     </div>
                                 </div>
+
+                                <!--DESDE-->
+                                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label  class="control-label">Del:</label>
+                                        <input class="form-control" name="finicio"  type="date" 
+                                                [(ngModel)]="progMaestro.PrFechaInicio" 
+                        
+                                                required #fde="ngModel" />
+                                        <span *ngIf="!fde.valid && fde.touched"  >   
+                                            <div id="validation" [hidden]="!fde.errors.required"> Obligatorio </div>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!--HASTA-->
+                                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label  class="control-label" >Hasta:</label>
+                                        <input class="form-control" name="ffinal"  type="date" [(ngModel)]="progMaestro.PrFechaFin"  required #fha="ngModel" />
+                                        <span *ngIf="!fha.valid && fha.touched"  >  
+                                            <div id="validation" [hidden]="!fha.errors.required"> Obligatorio </div>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!--TIPO DE SORTEO MANUAL O AUTOMATICO-->
+                                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
                                 
+                                    <div class="form-group">
+                                        <label  class="control-label">Tipo Sorteo:</label>
+                                        <select class="form-control" [(ngModel)]="tipoProg" (change)="fcboTipoProg()" required #tprog="ngModel">
+                                            <option *ngFor="let tipo of _tipoProg" [ngValue]="tipo.id">{{tipo.nTipo}}</option>
+                                        </select>
+                                        <div id="validation" [hidden]="!tprog.touched || tprog.valid ">
+                                                Error, revise los datos ingresados
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--FORMA DE PROGRAMACION POR TIEMPO Y CANTIDAD DE BUSES (Escala o Pescadito)-->
+                                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label  class="control-label" >Forma Programacion:</label>
+                                        <select class="form-control" [(ngModel)]="formaProg" (change)="formaProgramacion()" required #fprog="ngModel" >
+                                            <option *ngFor="let forma of _formaProg" [ngValue]="forma.id">{{forma.nForma}}</option>
+                                        </select>
+                                        <div id="validation" [hidden]="!fprog.touched || fprog.valid ">
+                                                Error, revise los datos ingresados
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        
+                    </div>                                           
+                </div>
+                       
+                <!--BOTONES-->
+                <div class="pieFormMNPUno">
+                    <div class="row justify-content-end">
+                        <div class="col-xl-3 col-md-3 col-sm-6 col-sx-12">
+                            <button class="btn_modal" type="text" pButton icon="fa-check" 
+                            (click)="guardarProgCabecera();" 
+                            label="Continuar" 
+                            [disabled]=" !(bAct>0 && bAct!=0) || !tprog.valid || !fprog.valid || !fde.valid || !fha.valid || !descrip.valid || !(dtSelectDias.length>4 && dtSelectDias.length<8)"></button>
+                        </div>
+                        <div class="col-xl-3 col-md-3 col-sm-6 col-sx-12">
+                            <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelNewProgramacion(); tprog.reset(); fprog.reset(); fde.reset(); fha.reset(); descrip.reset();" label="Cancelar"></button>
+                        </div>
                     </div>
-                </div>
-            </div>
-           
-            <!--BOTONES-->
-            <div class="btn_Modal row row justify-content-end">
-                <div class="col-xl-3 col-md-4 col-sm-6 col-sx-12">
-                    <button class="btn_modal" type="text" pButton icon="fa-check" 
-                    (click)="guardarProgCabecera();" 
-                    label="Continuar" 
-                    [disabled]=" !(bAct>0 && bAct!=0) || !tprog.valid || !fprog.valid || !fde.valid || !fha.valid || !descrip.valid || !(dtSelectDias.length>4 && dtSelectDias.length<8)"></button>
-                </div>
-                <div class="col-xl-3 col-md-4 col-sm-6 col-sx-12">
-                    <button class="btn_modal" type="text" pButton icon="fa-close" (click)="cancelNewProgramacion(); tprog.reset(); fprog.reset(); fde.reset(); fha.reset(); descrip.reset();" label="Cancelar"></button>
                 </div>
             </div>
         </p-dialog> 
     
     <!--2DA VENTANA modal del boton guardar (2DA VENTANA  TERMINAR GENERANDO LA PROGRAMACION) -->
         <p-dialog [resizable]="false" [(visible)]="displayProgramacionBase" modal="modal" width="100%" responsive="true" [closable]="false" >            
-            <div class="row">
-                <div class="cont_modal">
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="row">
-                            
-                            <div class="form-group">
-                                <label>Orden de Sorteo</label>
-                                <p-pickList [source]="arrayPlacas" [target]="ordenSorteo" sourceHeader="Placa" targetHeader="Orden" [responsive]="false" 
-                                            [sourceStyle]="{'height':'220px','width':'100px'}"  
-                                            [targetStyle]="{'height':'220px','width':'100px'}">
-                                    <template let-placa pTemplate="item">
-                                        <div class="ui-helper-clearfix">
-                                            <div style="display:inline-block; margin:5px 2px 2px 2px" >{{placa.nro}}</div>
-                                            <div style="font-size:16px; float:right; margin:5px 5px 0 0">{{placa.nroPlaca}}</div>
-                                        </div>
-                                    </template>
-                                </p-pickList>
-                            </div>
-                            
-                            
+            <div class="contFormMNPDos">
+                <div class="bodyFormMNPDos">             
+                    <div class="row justify-content-center">
+                        <label>Orden de Sorteo</label>
+                        <br>
+                        <p-pickList [source]="arrayPlacas" [target]="ordenSorteo" sourceHeader="Placa" targetHeader="Orden" [responsive]="false" 
+                                    [sourceStyle]="{'height':'220px','width':'100px'}"  
+                                    [targetStyle]="{'height':'220px','width':'100px'}">
+                            <template let-placa pTemplate="item">
+                                <div class="ui-helper-clearfix">
+                                    <div style="display:inline-block; margin:5px 2px 2px 2px" >{{placa.nro}}</div>
+                                    <div style="font-size:16px; float:right; margin:5px 5px 0 0">{{placa.nroPlaca}}</div>
+                                </div>
+                            </template>
+                        </p-pickList>                                                                                 
+                    </div>                   
+                </div>
+                             
+                <!--BOTONES DE LA VENTANA-->      
+                <div class="pieFormMNPDos">     
+                    <div class="row justify-content-end">
+                        <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">  
+                            <button class="btn_modal"  pButton icon="fa-check" (click)="programacionSegundoModal()" 
+                            label="Continuar"></button>
+                        </div>
+                        <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">
+                            <button class="btn_modal"  pButton icon="fa-close" (click)="cancelarProgBaseSegundoModal()" 
+                            [disabled]="disabledButtonForm()" label="Cancelar"></button>
                         </div>
                     </div>
-                </div>
-            </div>                 
-            <!--BOTONES DE LA VENTANA-->           
-            <div class="btn_Modal row">
-                <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">  
-                    <button class="btn_modal"  pButton icon="fa-check" (click)="programacionSegundoModal()" 
-                    label="Continuar"></button>
-                </div>
-                <div class="col-xl-6 col-md-6 col-sm-12 col-sm-12">
-                    <button class="btn_modal"  pButton icon="fa-close" (click)="cancelarProgBaseSegundoModal()" 
-                    [disabled]="disabledButtonForm()" label="Cancelar"></button>
                 </div>
             </div>
         </p-dialog> 
 
     <!--3RA VENTANA, HORA BASE DE SALIDA-->
         <p-dialog [resizable]="false" [(visible)]="displayHoraBase" modal="modal" width="100%" responsive="true" [closable]="false" >
-            <p-header>Hora Base de Salidas</p-header>
+            <p-header>Hora Placa ({{nroMiniBus+1}} de {{nroTotalMinibuses}}) : {{placaEditarCelda}}</p-header>
             <div class="contFormHoraBase">
-                <!--cuerpo-->
                 <div class="bodyFormHoraBase">
-                    <!--titulo datos placa actual-->
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <div id="PlacaSelectHB" [hidden]="nroMiniBus==nroTotalMinibuses" >
-                            <label   >Placa {{placaEditarCelda}} --  H. Base --> {{nroMiniBus+1}} de {{nroTotalMinibuses}}</label>
-                        </div>
+                   
+                        
+                        <!--
+                            <div id="PlacaSelectHB" [hidden]="nroMiniBus==nroTotalMinibuses" >
+                                <label>Placa ({{nroMiniBus+1}} de {{nroTotalMinibuses}}) : {{placaEditarCelda}}</label>
+                            </div>
+                        
                         <label [hidden]="nroMiniBus!=nroTotalMinibuses">Programacion Terminada</label>
-                    </div>
-
-                    <!--HORAS input-->
-                    
-                        <!--hora base de salida por cada placa-->
-                        <div class="row">
-                            <!--hora salida-->
-                            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">                  
+                         -->                 
+                        
+                    <!--hora base de salida por cada placa-->
+                    <div class="row">
+                        <!--hora salida-->
+                        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">      
+                            <div class="form-group">             
                                 <label>Hora Salida(HH:MM:SS):</label>                  
                                 <input type="text"
                                         class="form-control" 
                                         [(ngModel)]="horaBase" 
                                         #hBase="ngModel" required 
                                         pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})" 
-                                        [hidden]="nroMiniBus==nroTotalMinibuses" 
-                                >
+                                        >
 
                                 <div id="validation" [hidden]="!hBase.touched || hBase.valid ">
                                     Error en los datos
                                 </div>
                             </div>
+                        </div>
 
-                            <!--hora incremento-->
-                            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">                  
+                        <!--hora incremento-->
+                        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">   
+                            <div class="form-group">               
                                 <label>Incremento(HH:MM:SS):</label>                  
                                 <input type="text" 
                                         class="form-control" 
                                         [(ngModel)]="horaIncremento" 
                                         #hIncremento="ngModel" required 
                                         pattern="([0-1]{1}[0-9]{1}|20|21|22|23):([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})" 
-                                        [hidden]="nroMiniBus==nroTotalMinibuses" 
-                                >
-
+                                        >
+                            
                                 <div id="validation" [hidden]="!hIncremento.touched || hIncremento.valid ">
                                     Error en los datos
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!--boton agregar hora-->
-                        <div class="row">
-                            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                    <!--boton agregar hora-->
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                            
                                 <button class="btnAsignarHSalBase" type="text" pButton icon="fa-check" 
                                 (click)="AgregarHBase(hBase.valid, hIncremento.valid);" 
-                                [hidden]="nroMiniBus==nroTotalMinibuses"
-                                label="Agregar" [disabled]="!hBase.valid "></button>                                    
+                    
+                                label="Agregar" [disabled]="(!hBase.valid || !hIncremento.valid) || nroMiniBus==nroTotalMinibuses"></button>                                    
                             </div>
                         </div>
-                                                     
-                    <br>
+                    </div>
+                                                
                     <!--DATA TABLE HORA BASE DE SALIDAS-->                               
                     <p-dataTable [value]="ordenSorteo" [editable]="true"
                                 (onEditComplete)="onEditCompleteHB($event)"
                                 (onEditCancel)="onEditCancelHB($event)"
                                 (onEditInit)="onEditInitHB($event)"
-                                scrollable="true" scrollHeight="200px" 
+                                scrollable="true" scrollHeight="250px" 
                                 scrollWidth="100%" 
                                 emptyMessage="Lista vacia"> 
                         <p-column field="nro" header="N°"  [style]="{'width':'3em','text-align':'center'}"></p-column>
@@ -403,16 +402,16 @@
             
             <!--BOTONES DE LA VENTANA-->
             <div class="btn_Modal row justify-content-end">
-                <div class="col-xl-3 col-md-3 col-sm-4 col-xs-12" style="padding:5px 10px; margin:0px;">
+                <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12" style="padding:5px 10px; margin:0px;">
                     <button class="btn_modal"  icon="fa-download" pButton (click)="datosGenerarArchivo()" label="Bajar Archivo"></button>
                 </div>
-                <div class="col-xl-3 col-md-3 col-sm-4 col-xs-12" style=" padding:5px 10px; margin:0px; ">
+                <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12" style=" padding:5px 10px; margin:0px; ">
                     <button class="btn_modal"  icon="fa-close" pButton (click)="cerrarProg()"   label="Cerrar"></button>
                 </div>  
             </div>      
         </p-dialog>
 
-    <!--TITULO Y NOMBRE DEL ARCHIVO A DESCARGAR-->
+    <!--TITULO Y NOMBRE DEL ARCHIVO A DESCARGAR  (quitar este formulario)-->
         <p-dialog header="Datos del Archivo" [(visible)]="displayDatosPDF" modal="modal" width="100%" height="100%" responsive="true" [resizable]="false" [closable]="false">
             <!--CUERPO-->
             <div class="row">

@@ -91,19 +91,29 @@
     margin:auto;
     /*padding:0px;*/
 }
-col-xl-12{
-    padding: 0;
-}
 
-/*estilos modal editar nombre programacion*/
-    .contFormEditNombProg{height:170px; width: 300px; overflow: hidden; margin: 0; padding: 0;}
-    .bodyFormEditNombProg{height: 130px; width: 100%;}
-    .pieFormEditNombProg{height: 40px; width: 100%;}
+/*estilos escritorio*/
+    .form-group{margin-bottom: 20px;}
+    /*estilos modal editar nombre programacion*/
+        .contFormEditNombProg{height:170px; width: 300px; overflow: hidden; margin: 0; padding: 0;}
+        .bodyFormEditNombProg{height: 130px; width: 100%;}
+        .pieFormEditNombProg{height: 40px; width: 100%;}
 
-/*estilos form hora base*/
-    .contFormHoraBase{height:500px; width: 400px;}
-    .bodyFormHoraBase{height: 450px; width: 100%;}
-    .pieFormHoraBase{height: 40px; width: 100%;}
+    /*crear programacion*/
+        /*form 1*/
+        .contFormMNPUno{width: 700px; height: 400px;}
+        .bodyFormMNPUno{width: 100%; height: 360px;}
+        .pieFormMNPUno{width: 100%; height: 40px;}
+
+        /*form 2*/
+        .contFormMNPDos{width: 400px; height: 400px;}
+        .bodyFormMNPDos{width: 100%; height: 360px;}
+        .pieFormMNPDos{width: 100%; height: 40px;}
+
+        /*estilos form hora base (form modal 3)*/
+        .contFormHoraBase{height:500px; width: 400px;}
+        .bodyFormHoraBase{height: 450px; width: 100%;}
+        .pieFormHoraBase{height: 40px; width: 100%;}
 
 /* estilos formulario (nueva programacion) ingresar horas de salida */
     /* estilo ventana */
@@ -126,10 +136,10 @@ col-xl-12{
             height:40px; 
             font-size:15px;
             background-color:#00796B;
-            text-align: center;
+            /*text-align: center;
             padding: 0;
             margin:auto;
-            margin-top: 30px;
+            margin-top: 30px;*/
         }
     /* encabezado */
         /*titulo*/  
@@ -137,20 +147,20 @@ col-xl-12{
             font-size: 15px;
             color:rgb(3, 94, 3);
         }
-    /* input + boton + tabla */
+    /* input + boton + tabla 
         .contModHSalidas{
             height: 360px;
             width:100%;
             margin-bottom: 40px;
         }
-    /* pie */
+    
         .btnModalHSalidas{
             width:100%;
             height: 40px;
             margin:auto;
             bottom: 10px;
             padding: 0;
-        }
+        }*/
 
 /* ESTILOS DATATABLE + TABLEHTML */
 

@@ -88,7 +88,8 @@
     }
 
     /* AJUSTANDO FORMATO DE LA FECHA PARA PASARLO A UN FORMULARIO */
-        /* YYYY/MM/DD  ->  YYYY-MM-DD    DD/MM/YYYY  ->  DD-MM-YYYY */
+        
+    //* YYYY/MM/DD  ->  DD-MM-YYYY    DD/MM/YYYY  ->  YYYY-MM-DD  
             export function formatFech(f : string) : string{
                 let _f, r, aux;
                 _f = f.split("/");
@@ -251,7 +252,7 @@
         return _horaAct;
     }
 
-    //adaptar fecha
+    //adaptar fecha aa-aa-aaaa ->  aa/aa/aaaa
     export function guion_slash_inver(fecha:string):string{
         let _fecha=fecha.split('-'), result:string;
         result=_fecha[2]+'/'+_fecha[1]+'/'+_fecha[0];
@@ -584,6 +585,38 @@
         }//FIN WHILE BUSQUEDA
         
         return arrProtoProg;
+    }
+
+    //fecha mayor entre dos fechas (fechDos > fechUno)  aaaa-mm-dd
+    export function fechaMayor(fechUno:string, fechDos:string):boolean{
+        let result:boolean,f1=fechUno.split('-'), f2=fechDos.split('-');
+        let a1=Number(f1[0]),a2=Number(f2[0]), m1=Number(f1[1]),m2=Number(f2[1]), d1=Number(f1[2]),d2=Number(f2[2]);
+        
+        //console.log(a1+'-'+m1+'-'+d1); console.log(a2+'-'+m2+'-'+d2);
+        //años
+        if(a1<a2){
+            result=true;
+        }else if(a1==a2){
+            //meses
+            if(m1<m2){
+                result=true;
+            }else if(m1==m2){
+                //dias
+                if(d1<d2){
+                    result=true;
+                }else if(d1==d2){
+                    result=false;
+                }else if(d1>d2){
+                    result=false;
+                }
+            }else if(m1>m2){
+                result=false;
+            }
+        }else if(a1>a2){
+            result=false;
+        }
+        
+        return result;
     }
 
     // VARIABLES EXPORTADAS
