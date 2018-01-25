@@ -1119,7 +1119,7 @@ export class ProgComponent implements OnInit{
                         if(this.progBDDetalle.length!=0){
 
                             this.extraerHoraBase(this.progBDDetalle, this.PrCantidadBuses);
-
+                            console.log(this.arrHoraBaseSal);
                             this.calendarioProgramacion(this.progBDDetalle,this.PrCantidadBuses, this.dias);
                            
                             this.tablaProgramaciones(this.progBDDetalle, this.PrCantidadBuses, this.dias, this.extrayendoPlacasBus(this.placas,'tablavista'));
@@ -1234,10 +1234,17 @@ export class ProgComponent implements OnInit{
                 
                 // INSERTANDO EL NRO DE DE FILA EN LA TABLA 
                 for(i=0; i<this._detalle.length;i++){ (this._detalle[i]).splice(0,0,(i+1).toString());}
-                //console.log(this._detalle);    
-
-                this.calNumb.unshift(" "); this.calString.unshift(" ");  this.nroColumn=nroDias;
-                    this.displayProgramacion = true;
+                
+                let progrVista=this.insertHoraSalidaBaseVista(this.arrHoraBaseSal,this._detalle);
+              
+                this._detalle=progrVista
+                this.calNumb.unshift(" "); 
+                this.calString.unshift(" "); 
+                this.calNumb.unshift(" "); 
+                this.calString.unshift(" "); 
+                this.nroColumn=nroDias;
+                    
+                this.displayProgramacion = true;
                 
         }else if(progBDDetalle.length == nroBuses || progBDDetalle.length < nroBuses){
                 this.mensaje="Error al Generar la Programacion, Vuelva a Generarlo";
@@ -1398,6 +1405,8 @@ export class ProgComponent implements OnInit{
     
         this.nomArchivoPDF='programacion de '+this.PrFechaInicio+' al '+this.PrFechaFin;
         this.titArchivoPDF='CUADRO DE UBICACION DE SALIDAS DE LA ';
+        this.calNumb.shift(); 
+        this.calString.shift();
         this.descargarProgramacion(this.nomArchivoPDF, this.titArchivoPDF, this.calNumb,this.calString, this.PrCantidadBuses , nroDias, this.progBDDetalle, this.extrayendoPlacasBus(this.placas,'tablavista') );
         this.displayDatosPDF=false;
     }
@@ -1589,6 +1598,18 @@ export class ProgComponent implements OnInit{
         while(i<arrHSal.length){
             //_arrProg[i+1][1]=arrHSal[i].PrDeHoraBase;
             _arrProg[i+1].splice(1,0,arrHSal[i].PrDeHoraBase);
+            i++;
+        }
+       result=_arrProg;
+        return result;
+    }
+
+    insertHoraSalidaBaseVista(arrHSal=[], arrProg=[]){
+        let result; let i:number=0, j:number=0; let _arrProg=arrProg.slice(0);
+        //console.log(_arrProg);
+        while(i<arrHSal.length){
+            //_arrProg[i+1][1]=arrHSal[i].PrDeHoraBase;
+            _arrProg[i].splice(1,0,arrHSal[i].PrDeHoraBase);
             i++;
         }
        result=_arrProg;

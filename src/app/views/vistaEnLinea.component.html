@@ -25,9 +25,7 @@
                 </div>              
                 <p-dataTable [value]="placas" 
                     [globalFilter]="filtroGlobal" 
-                    scrollable="true" 
-                    scrollHeight="100%" 
-                    scrollWidth="100%"
+                    [rows]="9" [paginator]="true" 
                     selectionMode="single" 
                     emptyMessage="Lista vacia" 
                     (onRowSelect)="onRowSelect($event)">

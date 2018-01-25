@@ -35,7 +35,7 @@
                 <p-dataTable [value]="_gbus"   [globalFilter]="filtroGlobal" emptyMessage="No Hay Registros" 
                 [rows]="5"  [paginator]="true" selectionMode="single" (onRowSelect)="onRowSelectBus($event)"  >
                     
-                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                    <p-column styleClass="col-button" [style]="{'width':'2em'}">
                         <template let-col  let-objBus="rowData"  pTemplate="body">
                                 <button pButton id="btnTable" (click)= "editarBus(objBus.BuId)" icon="fa-pencil-square-o" > </button>                  
                                 <button pButton id="btnTable" (click)= "eliminarBus(objBus.BuId)" icon="fa-trash">  </button>
