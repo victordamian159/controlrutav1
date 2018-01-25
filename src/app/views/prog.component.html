@@ -1,12 +1,12 @@
 <!--PRINCIPAL TABLAS-->
 <div class="contenedor">
-    <div id="titulo">Tabla Programaciones</div>
+    <label>Tabla Programaciones</label>
     <div class="row">
         <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
             <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
         </div>
         <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
-           <button class="form-control" id="btnNuevo" icon="fa-file-text-o" 
+           <button class="form-control" class="btn_modal" icon="fa-file-text-o" 
            (click)="NuevaProgCabecera()" pButton  label="Nuevo"
            ></button>
         </div>
@@ -208,16 +208,7 @@
             <p-header>Hora Placa ({{nroMiniBus+1}} de {{nroTotalMinibuses}}) : {{placaEditarCelda}}</p-header>
             <div class="contFormHoraBase">
                 <div class="bodyFormHoraBase">
-                   
-                        
-                        <!--
-                            <div id="PlacaSelectHB" [hidden]="nroMiniBus==nroTotalMinibuses" >
-                                <label>Placa ({{nroMiniBus+1}} de {{nroTotalMinibuses}}) : {{placaEditarCelda}}</label>
-                            </div>
-                        
-                        <label [hidden]="nroMiniBus!=nroTotalMinibuses">Programacion Terminada</label>
-                         -->                 
-                        
+         
                     <!--hora base de salida por cada placa-->
                     <div class="row">
                         <!--hora salida-->
@@ -260,7 +251,7 @@
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="form-group">
                             
-                                <button class="btnAsignarHSalBase" type="text" pButton icon="fa-check" 
+                                <button class="btn_modal" type="text" pButton icon="fa-check" 
                                 (click)="AgregarHBase(hBase.valid, hIncremento.valid);" 
                     
                                 label="Agregar" [disabled]="(!hBase.valid || !hIncremento.valid) || nroMiniBus==nroTotalMinibuses"></button>                                    
@@ -345,8 +336,26 @@
                     <div id="programacion">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="row">
-                                
-                                <table *ngIf="nroColumn>=30" id="progTPlacas1">   
+                                <table *ngIf="60>nroColumn && nroColumn>=50" id="progTPlacas7">   
+                                    <thead><tr><th *ngFor="let diaNRO of calNumb;">{{diaNRO}}</th></tr></thead>
+                                    <thead><tr><th *ngFor="let diaNRO of calString;">{{diaNRO}}</th></tr></thead>
+                                    <tbody>
+                                        <tr *ngFor="let c of _detalle">
+                                            <td *ngFor="let placa of c">{{placa}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table *ngIf="50>nroColumn && nroColumn>=40" id="progTPlacas6">   
+                                    <thead><tr><th *ngFor="let diaNRO of calNumb;">{{diaNRO}}</th></tr></thead>
+                                    <thead><tr><th *ngFor="let diaNRO of calString;">{{diaNRO}}</th></tr></thead>
+                                    <tbody>
+                                        <tr *ngFor="let c of _detalle">
+                                            <td *ngFor="let placa of c">{{placa}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <table *ngIf="40>nroColumn && nroColumn>=30" id="progTPlacas1">   
                                     <thead><tr><th *ngFor="let diaNRO of calNumb;">{{diaNRO}}</th></tr></thead>
                                     <thead><tr><th *ngFor="let diaNRO of calString;">{{diaNRO}}</th></tr></thead>
                                     <tbody>
@@ -403,70 +412,12 @@
             <!--BOTONES DE LA VENTANA-->
             <div class="btn_Modal row justify-content-end">
                 <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12" style="padding:5px 10px; margin:0px;">
-                    <button class="btn_modal"  icon="fa-download" pButton (click)="datosGenerarArchivo()" label="Bajar Archivo"></button>
+                    <button class="btn_modal"  icon="fa-download" pButton (click)="generarArchivo()" label="Bajar Archivo"></button>
                 </div>
                 <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12" style=" padding:5px 10px; margin:0px; ">
                     <button class="btn_modal"  icon="fa-close" pButton (click)="cerrarProg()"   label="Cerrar"></button>
                 </div>  
             </div>      
-        </p-dialog>
-
-    <!--TITULO Y NOMBRE DEL ARCHIVO A DESCARGAR  (quitar este formulario)-->
-        <p-dialog header="Datos del Archivo" [(visible)]="displayDatosPDF" modal="modal" width="100%" height="100%" responsive="true" [resizable]="false" [closable]="false">
-            <!--CUERPO-->
-            <div class="row">
-                <div class="cont_modal">
-                    <div class="dataArchPDF">
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <!--NOMBRE PARA RECONOCER A LA PROGRAMACION  -->
-                            <div class="row">
-                                <!--TITULO DE LA PROGRAMACION-->
-                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="row">
-                                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <label>Titulo de la Programacion:</label>
-                                                <input class="form-control" type="text" [(ngModel)]="titArchivoPDF" #titArc="ngModel"  maxlength="55" required>
-                                            
-                                                <span *ngIf="!titArc.valid && titArc.touched" >
-                                                    <div id="validation" [hidden]="!titArc.errors.required"> Obligatorio </div>
-                                                </span>
-                                            </div>
-                                        </div>
-                                 
-                            
-                                        <!--NOMBRE DEL ARCHIVO PROGRAMACION-->
-                                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <label>Nombre del archivo:</label>
-                                                <input class="form-control" type="text" [(ngModel)]="nomArchivoPDF" #nomArc="ngModel" maxlength="30"  required>
-                                            
-                                                <span *ngIf="!nomArc.valid && nomArc.touched" >
-                                                    <div id="validation" [hidden]="!nomArc.errors.required"> Obligatorio </div>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!--BOTONES-->
-            <div class="btn_Modal row">
-                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                    <button class="btn_modal" type="text" pButton icon="fa-check" 
-                    (click)="generarArchivo(); nomArc.reset(); titArc.reset();" 
-                    label="Descargar" [disabled]="!nomArc.valid || !titArc.valid "></button>
-                </div>
-                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                    <button class="btn_modal" type="text" pButton icon="fa-close" 
-                    (click)="cancelarDatosGenerarArchivo(); nomArc.reset(); titArc.reset();" 
-                    label="Cancelar"></button>
-                </div>
-            </div>
         </p-dialog>
 
 

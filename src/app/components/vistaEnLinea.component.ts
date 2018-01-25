@@ -40,7 +40,7 @@ export class consulVistaEnLineaComponent implements OnInit{
     private map:any;
 
     ngOnInit() {
-        this.options = { center: {lat: 36.890257, lng: 30.707417}, zoom: 12 }; 
+        this.options = { center: {lat: -18.00175398229809, lng: -70.24808406829834}, zoom: 14 }; 
         //this.initOverlays(); this.infoWindow = new google.maps.InfoWindow();
         
     }

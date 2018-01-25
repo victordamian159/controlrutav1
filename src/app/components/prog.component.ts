@@ -40,6 +40,8 @@ export class ProgComponent implements OnInit{
         }
 
     /* VARIABLES */
+        private PrFechaInicio:string;
+        private PrFechaFin:string;
         private indexPlacaTabHSal:number;
         private nroTotalMinibuses:number;
         private nroMiniBus:number;
@@ -164,13 +166,13 @@ export class ProgComponent implements OnInit{
         this.nroMiniBus=0;
         this.nroTotalMinibuses=0;
         this.diasSemana=[
-            {id:0,nro:1, nomb:'Lunes'},
-            {id:1,nro:2, nomb:'Martes'},
-            {id:2,nro:3, nomb:'Miercoles'},
-            {id:3,nro:4, nomb:'Jueves'},
-            {id:4,nro:5, nomb:'Viernes'},
-            {id:5,nro:6, nomb:'Sabado'},
-            {id:6,nro:7, nomb:'Domingo'},
+            {id:0,nro:1, nomb:'Lunes',value:1},
+            {id:1,nro:2, nomb:'Martes',value:2},
+            {id:2,nro:3, nomb:'Miercoles',value:3},
+            {id:3,nro:4, nomb:'Jueves',value:4},
+            {id:4,nro:5, nomb:'Viernes',value:5},
+            {id:5,nro:6, nomb:'Sabado',value:6},
+            {id:6,nro:7, nomb:'Domingo',value:0},
         ];
     }
         
@@ -484,9 +486,9 @@ export class ProgComponent implements OnInit{
         let placas=this.extrayendoPlacasBus(this.placas,'nuevaprog');
 
         let validez=this.validandoFechas(fIni,fFin);
-        let validFechInit=this.validarProgFechaInicio(this.progMaestro.PrFechaInicio, this.programacionMaestroArrayHTML);
-        console.log(validFechInit);
-
+        let validFechInit=this.validarProgFechaInicio(this.progMaestro.PrFechaInicio, this.programacionMaestroArrayHTML, this.diasSemana);
+        //console.log(validFechInit);
+        
         if(validez==1){
             
             if(validFechInit==true){
@@ -507,19 +509,22 @@ export class ProgComponent implements OnInit{
                 }
                 console.log(progCab);
                 this.procSaveProgramacion(progCab);
+                
+
                 this.displayNuevaProgramacion=false; //cerrar 1era ventana
                 this.displayProgramacionBase=true; //abrir 2da ventana
             }else if(validFechInit==false){
                 this.displayErrorFechIngrFormUno=true;
                 this.mensaje="la fecha de inicio no es valida ("+this.progMaestro.PrFechaInicio+")";
             }
-           
-       
+        
+    
         }else if(validez==0){
             this.displayErrorFechIngrFormUno=true;
             this.mensaje="Error en las fechas ingresada, es menos de 9 dias o mayor a 62 dias";
 
         }
+        
     }
 
     aceptarErrorFechasValidas(){
@@ -1093,6 +1098,9 @@ export class ProgComponent implements OnInit{
 
         prId = event.data.prId;  this.PrCantidadBuses = event.data.PrCantidadBuses; 
         PrDiasIncluidosNumber=event.data.PrDiasIncluidosNumber; this.dias = event.data.dias; 
+        this.PrFechaInicio=formatFech(event.data.PrFechaInicio);
+        this.PrFechaFin=formatFech(event.data.PrFechaFin);
+
         this.modo='tablavista';
         
         fi = this.formatoCal(event.data.PrFechaInicio);  ff = this.formatoCal(event.data.PrFechaFin);
@@ -1386,10 +1394,10 @@ export class ProgComponent implements OnInit{
     
     generarArchivo(){
         let nroDias=this.calNumb.length-1; //DESCONTANDO PRIMER ESPACIO EN BLANCO
-        //console.log(this.calNumb);
-        //console.log(this.calString);
         this.getAllPlacasBusByEmSuEm(this.emid,0);
-        //console.log(this.PrCantidadBuses);
+    
+        this.nomArchivoPDF='programacion de '+this.PrFechaInicio+' al '+this.PrFechaFin;
+        this.titArchivoPDF='CUADRO DE UBICACION DE SALIDAS DE LA ';
         this.descargarProgramacion(this.nomArchivoPDF, this.titArchivoPDF, this.calNumb,this.calString, this.PrCantidadBuses , nroDias, this.progBDDetalle, this.extrayendoPlacasBus(this.placas,'tablavista') );
         this.displayDatosPDF=false;
     }
@@ -1755,16 +1763,17 @@ export class ProgComponent implements OnInit{
     }
 
     //validando fecha 
-    validarProgFechaInicio(PrFechaInicio:string, arrProg=[]):boolean{
+    validarProgFechaInicio(PrFechaInicio:string, arrProg=[], arrDiasSemana=[]):boolean{
         let resultado:boolean, fechaAnt:string;
         
       
         if(arrProg.length!=0){
             fechaAnt=arrProg[arrProg.length-1].PrFechaFin;
-            //console.log(fechaAnt); console.log(formatFech(fechaAnt));
-
             let validFechaInit=fechaMayor(formatFech(fechaAnt),PrFechaInicio);
-            resultado=validFechaInit;
+            let diaValido=this.fechaInicioXDiasSemana(PrFechaInicio,arrDiasSemana,this.dtSelectDias);
+            let validez=validFechaInit && diaValido;
+          
+            resultado=validez;
         }else if(arrProg.length==0){
             resultado=true;
         }
@@ -1772,6 +1781,24 @@ export class ProgComponent implements OnInit{
         return resultado;
     }
 
+    /* fecha inicio dentro de dias de la semana */
+        fechaInicioXDiasSemana(fechaInicio:string,arrDiasSemana=[],dtSelectDias=[]):boolean{
+            //console.log(dtSelectDias);  console.log(fecha(fechaInicio).getDay()); console.log(arrDiasSemana);
+            let i:number=0, cen:number=0,  dia=fecha(fechaInicio).getDay(), result:boolean;
+            while(i<dtSelectDias.length && cen==0){
+                if(dia!=dtSelectDias[i].value){
+                    i++; cen=0;
+                }else if(dia==dtSelectDias[i].value){
+                    cen=1;
+                }
+            }
+            if(cen==0){
+                result=false;
+            }else if(cen==1){
+                result=true;
+            }
+            return result;
+        }
 /* CARGAR GLOBAL */ 
     //CONVERTIR STRING A DATE PARA FECHA   ----   FORMULARIO A BD 
     fecha(fecha: string) : Date{
