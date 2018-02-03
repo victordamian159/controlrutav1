@@ -46,12 +46,6 @@ export class RutaComponent implements OnInit{
     puntosRutaDetalleArray:any[]=[];
     puntosRutaDetalle:any;
 
-    /*capturando fecha actual 
-    date:any;
-    anio:string;
-    mes:string;
-    dia:string;*/
-
     private rutas:any=[];
     private isLoading: boolean = false;  
     private errorMessage:string='';
@@ -110,7 +104,7 @@ export class RutaComponent implements OnInit{
     actBtnGuardar:boolean;
     actBtnAtras:boolean;
     actBtnNuevo:boolean;
-
+    actBtnCancel:boolean;
     //HABILITAR O DESAHILITAR BOTONES
     disButEditar:boolean=true;
     disButTerminarRuta:boolean=true;
@@ -118,6 +112,7 @@ export class RutaComponent implements OnInit{
     disButDeshacer:boolean=true;
     disButNuevaRuta:boolean=true;
     disButBorrar:boolean=true;
+    disButCancelar:boolean=true;
 
     Mensaje           : string; // mensaje para modal confirmar
     aceptar           : boolean ; //TRUE: ACEPTAR    FALSE: CANCELAR
@@ -193,12 +188,21 @@ export class RutaComponent implements OnInit{
         /* CENTINELA, ATENCION TRAZA NO PERMITIDA (SOLO 2 NODOS Y 1 LINEA) */
         this.cen_2=0;
 
-         /* OCULTAR BOTONES MAPA */
-        this.actBtnBorrar=false;
-        this.actBtnEditar=true;
-        this.actBtnGuardar=false;
-        this.actBtnAtras=false;
-        this.actBtnNuevo=false;
+        // OCULTAR BOTONES MAPA
+            this.actBtnBorrar=false;
+            this.actBtnEditar=true;
+            this.actBtnGuardar=false;
+            this.actBtnAtras=false;
+            this.actBtnNuevo=false;
+            this.actBtnCancel=false;
+        //desactivar botones
+            this.disButEditar=true;
+            this.disButTerminarRuta=true;
+            this.disButSubirRuta=true;
+            this.disButDeshacer=true;
+            this.disButNuevaRuta=true;
+            this.disButBorrar=true;
+            this.disButCancelar=true;
     }
 
     /*CLICK SOBRE OBJETO*/
@@ -258,13 +262,9 @@ export class RutaComponent implements OnInit{
 
     /* EDITAR TRAZA DE LA RUTA*/
     editar(){
-        this.displayfromEditar = false;
-        this.editando = 1; // se esta editando
+        this.displayfromEditar = false; this.editando = 1; // se esta editando
          
-        //CUATRO CASOS PARA EDITAR 
-
-        //SI EXISTEN PUNTOS EN EL ARRAY PUNTOSRUTA -> SE PUEDE EDITAR  // rutaRecuperada = 0 -> la ruta no esta en la BD ( NUEVA TRAZA)
-       
+        //CUATRO CASOS PARA EDITAR, rutaRecuperada = 0 -> la ruta no esta en la BD ( NUEVA TRAZA)
         //ESTA ES PARA UNA RUTA RECIEN CREADA (NO ESTA EN LA BD)
         if(this.rutaRecuperada == 0  ){
             //caso de ruta no terminada que no esta en la BD
@@ -315,17 +315,14 @@ export class RutaComponent implements OnInit{
                 }//cierra while
             }
 
-        //LA RUTA ESTA EN LA BD Y SOLO SE MUESTRA UNA LINEA(TRAZA DE LA RUTA) 
-        //FALTA TERMINAR SU PROGRAMACION 
+        //LA RUTA ESTA EN LA BD Y SOLO SE MUESTRA UNA LINEA(TRAZA DE LA RUTA) //FALTA TERMINAR SU PROGRAMACION 
         //AGREGANDO MARCADORES Y LINEAS COMO CORRESPONDE 0,1,3,5...(IMPARES-- PARA MARKER) 2,4,6,8...(PARES--LINEAS) EN EL OVERLAYS
         }else if(this.rutaRecuperada == 1){
             this.i= this.puntosRuta.length -1;
-            //console.log("i: "+this.i);    //console.log("editar una ruta que esta en la bd");       //console.log(this.puntosRuta);
             this.disButEditar=true;
             this.disButBorrar=false;
           
             //LIMPIANDO OBJETOS
-            //this.overlays=[];  //this.RutaTerminada=0;    //this.puntosRuta=[];
             this.coordenadas=[];
             this.i=0;
             this.RutaTerminada=0;
@@ -381,32 +378,25 @@ export class RutaComponent implements OnInit{
            this.ultimalinea();
         }
         
-        {
-            //DESACTIVANDO EL BOTON EDITAR PARA QUE NO ESTE ACTIVO AL MODIFICAR LA RUTA
-            //ACTIVANDO & DESACTIVANDO
+    
+        //ACTIVANDO & DESACTIVANDO
             this.disButBorrar = false;
             this.disButDeshacer = false;
             this.disButNuevaRuta = true;
             this.disButSubirRuta = false;
             this.disButTerminarRuta = true;
             this.disButEditar = true; 
+            this.disButCancelar=false;
+        //oculta botones
+            this.actBtnBorrar=false;
+            this.actBtnEditar=true;
+            this.actBtnGuardar=false;
+            this.actBtnAtras=false;
+            this.actBtnNuevo=true;
+            this.actBtnCancel=false;
 
-            //if(this.RutaTerminada == 0){ //RUTA NO TERMINADA
-                //addmarker desactivado
-                this.activarAddMarker = 0;
-            
-            //}else if(this.RutaTerminada == 1){ //RUTA TERMINADA
-                //addmarker activado
-                //this.activarAddMarker = 1;
-            
-            //}
-        
-            this.modRegistro=0;    //select row grilla desactivado
-
-            //condicionales para activar el arrastre de markers
-            this.edit_RutaTerminada = 1; 
-            //this.RutaTerminada = 1; //LA RUTA ESTA TERMINADA
-        }
+        this.activarAddMarker = 0; this.modRegistro=0; //select row grilla desactivado
+        this.edit_RutaTerminada = 1;  //condicionales para activar el arrastre de markers
 }
 
     /*EVENTO ARRASTRAR FINAL  -- ARRASTRAR LOS MARCADORES(NODOS)*/
@@ -661,7 +651,7 @@ export class RutaComponent implements OnInit{
 
         }else if(this.activarAddMarker == 0){//addmarker desactivado
             //MENSAJE EN MODAL
-            this.Mensaje="No se puede agregar nodos sobre el mapa";
+            this.Mensaje="No se puede agregar nodos";
             this.displayAddMakerDesactivado=true;
             //console.log("no se puede hacer click sobre el mapa, addmarker desactivado");
         }
@@ -874,31 +864,55 @@ export class RutaComponent implements OnInit{
 
     //CLICK SOBRE UNA FILA DE LA GRILLA
     onRowSelect(event){
-        /* MODIFICACION TERMINADA */
+        let RuId=event.data.RuId;
+        // MODIFICACION TERMINADA
         if(this.modRegistro==1){
-                //obtener le ID de la fila seleccionada
-                this.indiceRowTabla = event.data.RuId;
+            //obtener le ID de la fila seleccionada
+            this.indiceRowTabla = event.data.RuId;
 
-                //actualizando para poder saber si es un nuevo registro o si se va editar el seleccionado
-                //this.Ruta.RuId esta iniciado a cero
-                this.Ruta.RuId = this.indiceRowTabla;
+            //actualizando para poder saber si es un nuevo registro o si se va editar el seleccionado
+            //this.Ruta.RuId esta iniciado a cero
+            this.Ruta.RuId = this.indiceRowTabla;
 
-                //limpiar el mapa
-                this.overlays=[];
-                this.coordenadas=[];
-                this.RutaTerminada=0; //0: ruta terminada   1:ruta no terminada
-                this.puntosRuta=[];
-                
-                //CONSULTAR PUNTOS RUTADETALLE AL rest
-                this.consultaRuta(this.indiceRowTabla);
-        
-        /* MODIFICACION NO TERMINADA */
+            //limpiar el mapa
+            this.overlays=[];
+            this.coordenadas=[];
+            this.RutaTerminada=0; //0: ruta terminada   1:ruta no terminada
+            this.puntosRuta=[];
+            
+            //CONSULTAR PUNTOS RUTADETALLE AL rest
+            this.consultaRuta(this.indiceRowTabla);
+    
+        // MODIFICACION NO TERMINADA
         }else if(this.modRegistro==0){
-            this.Mensaje="Debe Guardar La Grafica De La Nueva Ruta";
+            this.Mensaje="Debe Guardar La Grafica";
             this.displayTerminarForSave=true;
         }
     }
+    funcBtnMCancel(){
+        //this.clear();
+        this.modRegistro=1 ; /*ACTIVANDO SELECCION DE ROWS GRILLA modRegistro=1*/    
+        this.activarAddMarker=0; /* DESACTIVANDO AGREGAR NODOS */
+        this.overlays=[];
+        this.coordenadas=[];
+        this.RutaTerminada=0;
+        this.puntosRuta=[];
 
+        this.disButBorrar = true;
+        this.disButDeshacer = true;
+        this.disButNuevaRuta = true;
+        this.disButSubirRuta = true;
+        //this.disButTerminarRuta = true;
+        this.disButEditar = true; 
+        this.disButCancelar=true;
+    
+        this.actBtnBorrar=false;
+        this.actBtnEditar=false;
+        this.actBtnGuardar=false;
+        this.actBtnAtras=false;
+        this.actBtnNuevo=true;
+        this.actBtnCancel=true; 
+    }
     aceptarTerminarRuta(){
         this.Mensaje="";
         this.displayTerminarForSave=false;
@@ -907,25 +921,43 @@ export class RutaComponent implements OnInit{
     /*CONSULTAR PUNTOS RUTADETALLE A LA BD*/
     consultaRuta(idRuta : number){
          this.rutaService.getAllRutaDetalleByRu(idRuta).subscribe(
-                    data => {   this.puntosRuta=data; 
-                                this.cargarRuta();
-
+                    data => {   this.puntosRuta=data; this.cargarRuta();
+                                //modo editar
                                 if(this.puntosRuta.length>0){
-                                    this.disButEditar=false; /*boton habilitado*/
-                                    this.disButBorrar=false; /*boton habilitado*/
-                                    this.disButNuevaRuta=true;
-                                    this.disButSubirRuta=true;
-                                    this.disButDeshacer=true;
+                               
+                                        this.disButBorrar = false;
+                                        this.disButDeshacer = true;
+                                        this.disButNuevaRuta = true;
+                                        this.disButSubirRuta = true;
+                                        //this.disButTerminarRuta = true;
+                                        this.disButEditar = false; 
+                                        this.disButCancelar=false;
+                                 
+                                        this.actBtnBorrar=false;
+                                        this.actBtnEditar=false;
+                                        this.actBtnGuardar=false;
+                                        this.actBtnAtras=false;
+                                        this.actBtnNuevo=true;
+                                        this.actBtnCancel=true; 
 
                                     //RUTA RECUPERADA (SI)
                                     this.rutaRecuperada=1;
+                                //modo nuevo
                                 }else if(this.puntosRuta.length==0){
-                                    //HABILITANDO BOTONES EN EL FORMULARIO
-                                    this.disButBorrar=true;  /*boton deshabilitado*/
-                                    this.disButEditar=true; /*boton deshabilitado*/
-                                    this.disButNuevaRuta=false; /*boton habilitado*/ 
-                                    this.disButSubirRuta=true;
-                                    this.disButDeshacer=true;
+                                    this.disButBorrar = true;
+                                    this.disButDeshacer = true;
+                                    this.disButNuevaRuta = false;
+                                    this.disButSubirRuta = true;
+                                    //this.disButTerminarRuta = true;
+                                    this.disButEditar = true; 
+                                    this.disButCancelar=false;
+                                
+                                    this.actBtnBorrar=false;
+                                    this.actBtnEditar=true;
+                                    this.actBtnGuardar=false;
+                                    this.actBtnAtras=false;
+                                    this.actBtnNuevo=false;
+                                    this.actBtnCancel=true;
 
                                     //RUTA RECUPERADA (NO)
                                     this.rutaRecuperada=0;
@@ -975,7 +1007,7 @@ export class RutaComponent implements OnInit{
             this.actBtnNuevo=false;
 
             //EVALUAR MENSAJE MODAL RUTA NO VALIDA
-            this.Mensaje="Registro Vacio, no contiene ruta trazada.";
+            this.Mensaje="Registro Vacio, no contiene una ruta.";
             this.displaySinGrafica=true;
             this.puntosRuta=[]; //LIMPIANDO PUNTOSRUTA
         }
@@ -993,7 +1025,7 @@ export class RutaComponent implements OnInit{
     clear(){
         /* CONDICIONAL PARA SABER SI ES UNA RUTA O SU TRAZA */
         if(this.overlays.length!=1){
-        console.log("limpiando variables");
+     
             this.overlays=[];
             this.coordenadas=[];
             this.RutaTerminada=0;
@@ -1040,7 +1072,7 @@ export class RutaComponent implements OnInit{
                 console.log("NO PROGRAMADO");
             }
         }else if(this.overlays.length==1){
-        console.log("borrando ruta de la BD D=");
+            console.log("borrando ruta de la BD D=");
             this.displayConfBorrarRuta=true;
             this.Mensaje="¿Esta seguro de borrar la ruta?";
         }
@@ -1201,21 +1233,26 @@ export class RutaComponent implements OnInit{
     //crea una nueva ruta detalle para SUBIRLO AL SERVIDOR agregar marcadores al mapa
     nuevaRutaDetalle(){
         this.modRegistro=0; //DESACTIVANDO LA SELECCION DE REGISTROS MAESTRO
-        
-        /*OCULTANDO BOTON NUEVO MOSTRANDO BOTON EDITAR */
-        this.actBtnNuevo=true;
-        this.actBtnEditar=false;
-
-        //crear la nueva rutadetalle
         this.Mensaje="Traza la Nueva Ruta";
         this.displayNuevaRuta=true;
 
+        this.disButBorrar = true;
+        this.disButDeshacer = true;
+        this.disButNuevaRuta = true; //cuando se crea un nuevo rutadetalle se deshabilita el boton
+        this.disButSubirRuta = true; //activar boton subirRuta
+        //this.disButTerminarRuta = true;
+        this.disButEditar = true; 
+        this.disButCancelar=false;
+    
+        this.actBtnBorrar=false;
+        this.actBtnEditar=true;
+        this.actBtnGuardar=false;
+        this.actBtnAtras=false;
+        this.actBtnNuevo=true;
+        this.actBtnCancel=false;
+
         /*CONSULTA SERVICIO NUEVA RUTADETALLE */
         this.rutaService.newRutaDetalle().subscribe(data=>{this.puntosRutaDetalle=data});
-
-        this.disButNuevaRuta=true; //cuando se crea un nuevo rutadetalle se deshabilita el boton
-        this.disButSubirRuta=false;//activar boton subirRuta
-        
         this.rutaRecuperada=0; //la ruta no se encuentra en ela BD
         this.activarAddMarker=1; //1 : permite agregar marcadores 
         this.i=0; //se reinicia o inicia el i para ponerlo como indice de los marcadores
@@ -1307,7 +1344,7 @@ export class RutaComponent implements OnInit{
             //this.modRegistro==1 //ACTIVANDO LA SELECCION DEL FILAS GRILLA MAESTRO (RUTA TRAZA GUARDADA EN LA BD)
         }else if(this.overlays.length<5){
             this.displayrutaNoPermitida=true;
-             this.Mensaje="Error, no se puede guardar la ruta";
+             this.Mensaje="Error, no se puede guardar";
              cen=0;
         }
 

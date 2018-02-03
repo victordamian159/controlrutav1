@@ -103,7 +103,9 @@
 <!--VENTANAS FORMULARIO-->
     <!--dia con programacion-->
         <!--CUADRO DE SALIDAS-->
-        <p-dialog header="Cuadro de Salidas" [resizable]="false" [draggable]="false" [(visible)]="displayCuadroSalidas" modal="modal" width="100%" height="100%" [closable]= false>
+        <p-dialog header="Cuadro de Salidas" [resizable]="false" [draggable]="true" 
+                [(visible)]="displayCuadroSalidas" modal="modal" width="100%" 
+                height="100%" [closable]= false>
             
             <div class="row">
                 <div class="_cuadroSalidas">
@@ -148,15 +150,19 @@
                 </div>
             </div>  
 
-            <div class=" btnClassCuadroSalidas row justify-content-end">
-                <div class="col-xl-3 col-md-3 col-sm-4 col-xs-12">
-                    <button class="btn_modal" type="text" pButton icon="fa-trash-o" (click)="cerrarCuadroSalidas()" label = "Cerrar"></button>
-                </div>   
+            <div class=" btnClassCuadroSalidas ">
+                <div class="row justify-content-end">
+                    <div class="col-xl-2 col-md-2 col-sm-4 col-xs-12">
+                        <button class="btn_modal" type="text" pButton icon="fa-trash-o" 
+                                (click)="cerrarCuadroSalidas()" label = "Cerrar"></button>
+                    </div>   
+                </div>
             </div>
         </p-dialog>
         
         <!--TARJETA DETALLE -->
-        <p-dialog header="Tarjeta de Control" [resizable]="false" [(visible)]="displayTarjetaControlDetalle" modal="modal" width="100%" height="100%" [closable]= false>
+        <p-dialog header="Tarjeta de Control" [resizable]="false" [(visible)]="displayTarjetaControlDetalle"
+                     modal="modal" width="100%" height="100%" [draggable]="true" [closable]= false>
             
                 <div class="contTarjCtrlDet">
                     <div class="bodyTarjCtrlDet">
@@ -188,7 +194,7 @@
         </p-dialog>
 
         <!--MODAL ASIGNAR TARJETA DE CONTROL  DIA CON PROGRAMACION-->
-        <p-dialog [resizable]="false" [(visible)]="displayAsignarTarjeta" [draggable]="false" 
+        <p-dialog [resizable]="false" [(visible)]="displayAsignarTarjeta" [draggable]="true" 
             modal="modal" width="100%" height="100%" [closable]= false>
             <!--CONTENIDO-->
             <p-header>Asignar Tarjeta {{ReDiDeNroVuelta}}v de {{ReDiTotalVuelta}}v - {{fechaAsTarjUno}}</p-header>
@@ -448,7 +454,7 @@
 
         <!--calculando y validando reten-->
         <p-dialog [resizable]="false" header='Calcular Reten'
-                    [(visible)]="displayCalRetenDP" [draggable]="false" 
+                    [(visible)]="displayCalRetenDP" [draggable]="true" 
                     modal="modal" width="100%" height="100%" 
                     [closable]= false>
             
@@ -505,7 +511,7 @@
 
     <!--dia sin programacion  -->
         <!--MODAL asignar TARJETA DE CONTROL DIA SIN PROGRAMACION  DIA LIBRE -->
-        <p-dialog [resizable]="false" [(visible)]="displayAsignarTarjetaSinProg" [draggable]="false" 
+        <p-dialog [resizable]="false" [(visible)]="displayAsignarTarjetaSinProg" [draggable]="true" 
                 modal="modal" width="100%" height="100%" [closable]= false>
                 <p-header>Asignar Tarjeta {{ReDiDeNroVuelta}}v de {{ReDiTotalVuelta}}v - {{fechaAsTarjUno}}</p-header>
     

@@ -297,33 +297,31 @@
         </p-dialog>
 
     <!--EDITAR PROGRAMACION CABECERA-->
-        <p-dialog [(visible)]="displayEditProgC" [resizable]="false" modal="modal"
+        <p-dialog header="Editar Nombre de la Programacion" [(visible)]="displayEditProgC" [resizable]="false" modal="modal"
                    width="100%" height="100%" responsive="true" [closable]="false">
-            <!--CUERPO-->
-           
-                <div class="contFormEditNombProg">
-                    <div class="bodyFormEditNombProg">
-                        <!--NOMBRE PARA RECONOCER A LA PROGRAMACION  -->
-                        <div class="form-group">
-                            <label class="control-label">Nombre de la Programacion:</label>
-                            <input class="form-control" type="text" [(ngModel)]="progDescripcion" maxlength="30" #desc="ngModel" required />
-                        
-                            <span *ngIf="!descrip.valid && descrip.touched" >
-                                <div id="validation" [hidden]="!descrip.errors.required"> Obligatorio </div>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="pieFormEditNombProg">
-                        <div class="row justify-content-center">
-                            <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
-                                <button class="btn_modal"  pButton icon="fa-save" (click)="EditarProgCabecera()" label="Guardar"></button>
-                            </div>
-                            <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
-                                <button class="btn_modal"  pButton icon="fa-close" (click)="canEditarProgC()"   label="Cancelar"></button>
-                            </div>
-                       </div>
+            <div class="contFormEditNombProg">
+                <div class="bodyFormEditNombProg">
+                    <!--NOMBRE PARA RECONOCER A LA PROGRAMACION  -->
+                    <div class="form-group">
+                        <label class="control-label">Nombre:</label>
+                        <input class="form-control" type="text" [(ngModel)]="progDescripcion" maxlength="30" #desc="ngModel" required />
+                    
+                        <span *ngIf="!descrip.valid && descrip.touched" >
+                            <div id="validation" [hidden]="!descrip.errors.required"> Obligatorio </div>
+                        </span>
                     </div>
                 </div>
+                <div class="pieFormEditNombProg">
+                    <div class="row justify-content-center">
+                        <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                            <button class="btn_modal"  pButton icon="fa-save" (click)="EditarProgCabecera()" label="Guardar"></button>
+                        </div>
+                        <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                            <button class="btn_modal"  pButton icon="fa-close" (click)="canEditarProgC()"   label="Cancelar"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
         </p-dialog>
 
@@ -427,127 +425,182 @@
 
         <!--MODAL CONFIRMAR ELIMINAR REGISTRO-->
         <p-dialog [(visible)]="displayConfEliminarCabecera" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
-                <p>{{mensaje}}</p>
-                <div class="btn_Modal row">
-                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
-                        <button class="btn_modal"  pButton (click)="borrarRegistro()" label="Aceptar"></button>
-                    </div>
-                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
-                        <button class="btn_modal"  pButton (click)="displayConfEliminarCabecera=false"   label="Cancelar"></button>
+            <div class="conMMjsUser">    
+                <div class="bodyMMjsUser">    
+                    <p>{{mensaje}}</p>
+                </div>
+                <div class="pieMMjsUser"> 
+                    <div class="row">
+                        <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                            <button class="btn_modal"  pButton (click)="borrarRegistro()" label="Aceptar"></button>
+                        </div>
+                        <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                            <button class="btn_modal"  pButton (click)="displayConfEliminarCabecera=false"   label="Cancelar"></button>
+                        </div>
                     </div>
                 </div>
+            </div>
         </p-dialog>
 
         <!--MODAL ACEPTAR NUEVA PROGRAMACION (CONFIRMAR)-->
         <p-dialog [(visible)]="displayAceptarProgNueva" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
-            <div *ngIf="nroTotalMinibuses==nroMiniBus">
-                <p>{{mensajeEspera}}</p>
-            </div>
-            
-            <div *ngIf="lengthProgDet!=0">
-                    <p>{{mensajeProcesando}}</p>
-            </div>
+            <div class="conMMjsUser">
+                <div class="bodyMMjsUser">
+                    <div *ngIf="nroTotalMinibuses==nroMiniBus">
+                        <p>{{mensajeEspera}}</p>
+                    </div>
+                    
+                    <div *ngIf="lengthProgDet!=0">
+                            <p>{{mensajeProcesando}}</p>
+                    </div>
 
-            <div *ngIf="nroMiniBus==0 && nroTotalMinibuses==-1">
-                <p>{{mensaje}}</p>
-            </div>
-            
-            <div class="btn_Modal row">
-                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                    <button [hidden]="nroMiniBus!=0 && nroTotalMinibuses!=-1" class="btn_modal"  pButton (click)="aceptarNuevaProg()" label="Aceptar"></button>
+                    <div *ngIf="nroMiniBus==0 && nroTotalMinibuses==-1">
+                        <p>{{mensaje}}</p>
+                    </div>
+                </div>
+                <div class="pieMMjsUser"> 
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <button [hidden]="nroMiniBus!=0 && nroTotalMinibuses!=-1" class="btn_modal"  pButton (click)="aceptarNuevaProg()" label="Aceptar"></button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </p-dialog>
 
         <!--ERROR AL INGRESAR DATOS 1ERA VENTANA MODAL-->
         <p-dialog [(visible)]="displayErrorDatos" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
-                <p>{{mensaje}}</p>
-                
-                <div class="btn_Modal row">
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <button class="btn_modal"  pButton (click)="errorDatos()" label="Aceptar"></button>
+            <div class="conMMjsUser">
+                <div class="bodyMMjsUser">
+                    <p>{{mensaje}}</p>
+                </div>
+                <div class="pieMMjsUser">             
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <button class="btn_modal"  pButton (click)="errorDatos()" label="Aceptar"></button>
+                        </div>
                     </div>
                 </div>
+            </div>
         </p-dialog>
 
         <!--ERROR EN LA TABLA DE PROGRAMACION, VENTANA MODAL-->
         <p-dialog [(visible)]="displayErrorTablaProgramacion" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
-                <p>{{mensaje}}</p>
-              
-                <div class="btn_Modal row">
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <button class="btn_modal"  pButton (click)="errorTablaProgramacion()" label="Aceptar"></button>
+            <div class="conMMjsUser">
+                <div class="bodyMMjsUser">
+                    <p>{{mensaje}}</p>
+                </div>
+                <div class="pieMMjsUser">             
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <button class="btn_modal"  pButton (click)="errorTablaProgramacion()" label="Aceptar"></button>
+                        </div>
                     </div>
                 </div>
+            </div>
         </p-dialog>
 
         <!--ERROR FALTAN PLACAS EN EL SORTEO, VENTANA MODAL-->
         <p-dialog [(visible)]="displayFaltanPlacas" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
-                <p>{{mensaje}}</p>
-                <div class="btn_Modal row">
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <button class="btn_modal"  pButton (click)="faltanPlacas()" label="Aceptar"></button>
+            <div class="conMMjsUser">
+                <div class="bodyMMjsUser">
+                    <p>{{mensaje}}</p>
+                </div>
+                <div class="pieMMjsUser"> 
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <button class="btn_modal"  pButton (click)="faltanPlacas()" label="Aceptar"></button>
+                        </div>
                     </div>
                 </div>
+            </div>    
         </p-dialog>
 
         <!--MENSAJE SE ACABA DE DESCARGAR LA PROGRAMACION, VENTANA MODAL-->
         <p-dialog [(visible)]="displayDescargaProg" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
-                <p>{{mensaje}}</p>
-                <div class="btn_Modal row">
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <button class="btn_modal"  pButton (click)="descargaProg()" label="Aceptar"></button>
+            <div class="conMMjsUser">
+                <div class="bodyMMjsUser">
+                    <p>{{mensaje}}</p>
+                </div>
+                <div class="pieMMjsUser"> 
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <button class="btn_modal"  pButton (click)="descargaProg()" label="Aceptar"></button>
+                        </div>
                     </div>
                 </div>
+            </div>
         </p-dialog>
 
         <!--ERROR  MENSAJE NO SE PUEDE BORRAR LA PROGRAMACION-->
         <p-dialog [(visible)]="displayAvisoNoPuedeBorrarProg" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
-                <p>{{mensaje}}</p>
-               
-                <div class="btn_Modal row">
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <button class="btn_modal"  pButton (click)="OkProgNoPuedoBorrar()" label="Aceptar"></button>
+            <div class="conMMjsUser">
+                <div class="bodyMMjsUser">
+                    <p>{{mensaje}}</p>
+                </div>
+                <div class="pieMMjsUser"> 
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <button class="btn_modal"  pButton (click)="OkProgNoPuedoBorrar()" label="Aceptar"></button>
+                        </div>
                     </div>
                 </div>
+            </div>
         </p-dialog>
 
          <!--ERROR  NO SE PUEDE DESCARGAR LAS PLACAS DE LA BD-->
          <p-dialog [(visible)]="displayErrorCargarPlacas" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
-                <p>{{mensaje}}</p>
-               
-                <div class="btn_Modal row">
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <button class="btn_modal"  pButton (click)="aceptarErrorPlacas()" label="Aceptar"></button>
+            <div class="conMMjsUser">
+                <div class="bodyMMjsUser">
+                    <p>{{mensaje}}</p>
+                </div>
+                <div class="pieMMjsUser"> 
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <button class="btn_modal"  pButton (click)="aceptarErrorPlacas()" label="Aceptar"></button>
+                        </div>
                     </div>
                 </div>
+            </div>
         </p-dialog>
 
         <!--SE GENERO CORRECTAMENTE LA PROGRAMACION-->
         <p-dialog [(visible)]="displayTerminoTodoGenerarProg" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
-            <p>{{mensaje}}</p>
-           
-            <div class="btn_Modal row">
-                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                    <button class="btn_modal"  pButton (click)="aceptarGenProgComplet()" label="Aceptar"></button>
+            <div class="conMMjsUser">
+                <div class="bodyMMjsUser">
+                    <p>{{mensaje}}</p>
+                </div>
+                <div class="pieMMjsUser">         
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <button class="btn_modal"  pButton (click)="aceptarGenProgComplet()" label="Aceptar"></button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </p-dialog>
 
          <!--ERROR ENTRE FECHAS IGNRESADAS EN EL PRIMER FORMULARIO CREAR PROGRAMACION-->
          <p-dialog [(visible)]="displayErrorFechIngrFormUno" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
-                <p>{{mensaje}}</p>
-               
-            <div class="btn_Modal row">
-                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                    <button class="btn_modal"  pButton (click)="aceptarErrorFechasValidas()" label="Aceptar"></button>
+            <div class="conMMjsUser">
+                <div class="bodyMMjsUser">
+                    <p>{{mensaje}}</p>
+                </div>
+                <div class="pieMMjsUser"> 
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <button class="btn_modal"  pButton (click)="aceptarErrorFechasValidas()" label="Aceptar"></button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </p-dialog>
 
         <!--MENSAJE DE ESPERA-->
         <p-dialog [(visible)]="displayMensajeEspera" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
-            <p>{{mensajeEspera}}</p>
+            <div class="conMMjsUser">
+                <p>{{mensajeEspera}}</p>
+            </div>
         </p-dialog>
 
 

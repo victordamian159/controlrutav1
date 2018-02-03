@@ -848,32 +848,7 @@ export class TcontrolComponent implements OnInit{
             }
 
     /* MANTENIMIENTO */
-        //  RETEN
-            procDeleteRegistroReten(ReReId:number){
-                this.regRetenService.deleteregistroRetenByid(ReReId).subscribe(
-                    realizar => {/* REFRESCAR */},
-                    error => {console.log(error);}
-                );
-            }
-            procSaveRegistroReten(ObjReten:any){
-                this.regRetenService.saveregistroReten(ObjReten).subscribe(
-                    realizar => {/* REFRESCAR */},
-                    error => {console.log(error);}
-                );
-            }
-
-            procNewRegistroReten(){
-                let objReten:any;
-                this.regRetenService.newregistroReten().subscribe(
-                    data=>{ objReten=data;
-                            //console.log(data); 
-                            this.ReReId=objReten.ReReId;
-                            this.ReReTiempo=objReten.ReReTiempo;
-                          },
-                    error=>{console.log(error);}
-                );
-            }
-
+    
         /* PROCEDURE ELIMINAR REGISTRO*/
             procDeleteTarjetaControl(TaCoId:number){
                 /**/
@@ -1264,7 +1239,7 @@ export class TcontrolComponent implements OnInit{
                 //buscar si se esta usando un punto de control
                 this.tcontrolservice.getalltarjetacontrolbybuidfecha(this.emID,0, this.fechaAsTarjUno).subscribe(
                     data=>{
-                        //console.log(data);
+                        console.log(data);
                         this.buscarDatosTarjetaXNroVuelta(data,this.ReDiDeNroVuelta);
                     },
                     error=>{
@@ -1516,7 +1491,7 @@ export class TcontrolComponent implements OnInit{
                         this.puntoControl=null;
                     }else if((this.ReDiTotalVuelta-this.ReDiDeNroVuelta+1)>=3) {
                         this.nroTarjetas=this.ReDiTotalVuelta-this.ReDiDeNroVuelta+1;
-                        this.procNewRegistroReten();
+                        //this.procNewRegistroReten();
                         //input horas para multiples tarjeta
                         this.actMInputPrimerReten=true; this.actMInputRepeatReten=true;  this.actMInputHoraEslavon=true;
                         this.mensaje="";    this.estadoPlaca=-1;  this.mnjNroTarjetaValido="";
@@ -1552,7 +1527,7 @@ export class TcontrolComponent implements OnInit{
                 //individual
                 }else if(this.TaCoMultiple==0){
                     this.nroTarjetas=1;
-                    this.procNewRegistroReten();
+                    //this.procNewRegistroReten();
                     //input horas para una sola tarjeta
                     this.actInputTHora=true;
                     this.actInputReten=true;
@@ -1788,28 +1763,8 @@ export class TcontrolComponent implements OnInit{
 
                             //anterior es asignado
                             }else if(this.TarjetaBus_Anterior.TaCoAsignado=='1'){
-
-                                /*reten={
-                                    ReDiDeId:this.ReDiDeId,
-                                    ReReId:this.ReReId,
-                                    PrDeId:this._prDeId,
-                                    ReReTiempo:hora(this.ReReTiempo),
-                                    UsId:this.UsId,
-                                    UsFechaReg:new Date()
-                                }
-                                //console.log(reten);
-
-                                this.regRetenService.saveregistroReten(reten).subscribe(
-                                    data => { 
-                                        _tarjeta.ReDiDeId=data.ReDiDeId; 
-                                        this.procAsigTarjCtrl(_tarjeta);  
-                                    },
-                                    error=>{alert('No se pudo crear la tarjeta, Error R');console.log(error);}
-                                );*/
-
                                 _tarjeta.TaCoTiempoReten=hora(this.ReReTiempo);
                                 this.procAsigTarjCtrl(_tarjeta); 
-                                //this.regRetenService.unsubcribe();
                             }
 
                         //1era vuelta
@@ -3190,28 +3145,6 @@ export class TcontrolComponent implements OnInit{
 
                             //anterior es asignado
                             }else if(this.TarjetaBus_Anterior.TaCoAsignado=='1'){
-                                
-                                /*
-                                    reten={
-                                        ReDiDeId:this.ReDiDeId,
-                                        ReReId:this.ReReId,
-                                        PrDeId:0,
-                                        ReReTiempo:hora(this.ReReTiempo),
-                                        UsId:this.UsId,
-                                        UsFechaReg:new Date()
-                                    }
-                                    console.log(reten);  console.log(_tarjeta);
-                                    this.regRetenService.saveregistroReten(reten).subscribe(
-                                        data => { 
-                                            _tarjeta.ReDiDeId=data.ReDiDeId; 
-                                            this.procAsigTarjCtrlDiaLibre(_tarjeta);  
-                                        },
-                                        error=>{
-                                            alert('No se pudo crear la tarjeta, Error R');
-                                            console.log(error);
-                                        }
-                                    );
-                                */
                                 _tarjeta.TaCoTiempoReten=hora(this.ReReTiempo);
                                 this.procAsigTarjCtrlDiaLibre(_tarjeta);
                             }
@@ -3718,7 +3651,7 @@ export class TcontrolComponent implements OnInit{
             //individual
             }else if(this.TaCoMultiple==0){
                 this.nroTarjetas=1;
-                this.procNewRegistroReten();
+                //this.procNewRegistroReten();
                 //input horas para una sola tarjeta
                 this.actInputTHora=true;
                 this.actInputReten=true;

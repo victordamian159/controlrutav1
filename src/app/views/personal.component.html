@@ -11,28 +11,27 @@
     </div>
 
     <!--TABLA PRINCIPAL-->
+    <br>          
+    <p-dataTable [value]="personalArr"  [globalFilter]="filtroGlobal" 
+                emptyMessage="No Hay Registros"
+                [rows]="6"  [paginator]="true"
+                selectionMode="single" 
+                (onRowSelect)="onRowSelectPersonal($event)">
 
-          
-                <p-dataTable [value]="personalArr"  [globalFilter]="filtroGlobal" 
-                            emptyMessage="No Hay Registros"
-                            [rows]="6"  [paginator]="true"
-                            selectionMode="single" 
-                            (onRowSelect)="onRowSelectPersonal($event)">
-
-                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                        <template let-col  let-Personal="rowData"  pTemplate="body">
-                                <button  pButton id="btnTable" (click)=  "editarPersonal(Personal.PeId)" icon="fa-pencil-square-o" > </button>                  
-                                <button  pButton id="btnTable" (click)= "eliminarPersonal(Personal.PeId)" icon="fa-trash">  </button>
-                        </template>
-                    </p-column>
-                    <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
-                    <p-column field="PeNombres" header="Nombres" [style]="{'width':'10em'}"></p-column>
-                    <p-column field="PeApellidos" header="Apellidos" [style]="{'width':'10em'}" ></p-column>
-                    <p-column field="PeDNI" header="Dni" [style]="{'width':'6em','text-align':'center'}"></p-column>
-                    <p-column field="PeDireccion" header="Direccion" [style]="{'width':'14em'}"></p-column>
-                    <p-column field="PeTipoLicencia" header="Licencia" [style]="{'width':'6em'}"></p-column>
-                    <p-column field="PeCelular" header="Celular" [style]="{'width':'6em','text-align':'center'}"></p-column>
-                </p-dataTable>
+        <p-column styleClass="col-button" [style]="{'width':'3em'}">
+            <template let-col  let-Personal="rowData"  pTemplate="body">
+                    <button  pButton id="btnTable" (click)=  "editarPersonal(Personal.PeId)" icon="fa-pencil-square-o" > </button>                  
+                    <button  pButton id="btnTable" (click)= "eliminarPersonal(Personal.PeId)" icon="fa-trash">  </button>
+            </template>
+        </p-column>
+        <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
+        <p-column field="PeNombres" header="Nombres" [style]="{'width':'10em'}"></p-column>
+        <p-column field="PeApellidos" header="Apellidos" [style]="{'width':'10em'}" ></p-column>
+        <p-column field="PeDNI" header="Dni" [style]="{'width':'6em','text-align':'center'}"></p-column>
+        <p-column field="PeDireccion" header="Direccion" [style]="{'width':'14em'}"></p-column>
+        <p-column field="PeTipoLicencia" header="Licencia" [style]="{'width':'6em'}"></p-column>
+        <p-column field="PeCelular" header="Celular" [style]="{'width':'6em','text-align':'center'}"></p-column>
+    </p-dataTable>
          
     
 </div>

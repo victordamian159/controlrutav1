@@ -8,41 +8,41 @@
 
 
 /*estilos form modal add new ruta*/
-    .contMAddRuta{  height: 440px; width: 300px; }
-    .bodyMAddRuta{ height: 400px; width: 99%;}
-    .pieMAddRuta{margin-top:10px; height: 40px; width: 99%;}
+    .contMAddRuta{ height: 420px; width: 300px;overflow:hidden;}
+    .bodyMAddRuta{ height: 380px; width: 99%; }
+    .pieMAddRuta{ height: 40px; width: 99%;}
 
 /*estilos mensajes usuario modal*/
-    .contMMjsUser{  height: 100px; width: 300px; }
+    .conMMjsUser{  height: 100px; width: 320px; overflow:hidden;}
     .bodyMMjsUser{ height: 50px; width: 99%;}
     .pieMMjsUser{margin-top:10px; height: 40px; width: 99%;}
 
 
 /* responsive */
-/* iphone 6 plus*/
-@media(max-width:480px){ 
-    #contMapa{height: 520px; width: 380px;}
-    #pieMapa{height: 40px; width: 380px; }
-    .btn_modal{margin-bottom: 0;}
-}
+    /* iphone 6 plus*/
+    @media(max-width:480px){ 
+        #contMapa{height: 520px; width: 380px;}
+        #pieMapa{height: 40px; width: 380px; }
+        .btn_modal{margin-bottom: 0;}
+    }
 
-/* iphone 6 */
-@media(max-width:380px){ 
-    #contMapa{height: 460px; width: 346px;}
-    #pieMapa{height: 40px; width: 346px; }
-    .btn_modal{margin-bottom: 0;}
-}
+    /* iphone 6 */
+    @media(max-width:380px){ 
+        #contMapa{height: 460px; width: 346px;}
+        #pieMapa{height: 40px; width: 346px; }
+        .btn_modal{margin-bottom: 0;}
+    }
 
-/* iphone 5 */
-@media(max-width:320px){ 
-    #contMapa{height: 400px; width: 286px;}
-    #pieMapa{height: 40px; width: 286px; }
-    .btn_modal{margin-bottom: 0;}
-}
+    /* iphone 5 */
+    @media(max-width:320px){ 
+        #contMapa{height: 400px; width: 286px;}
+        #pieMapa{height: 40px; width: 286px; }
+        .btn_modal{margin-bottom: 0;}
+    }
 
-/* iphone 4 */
-@media(max-height:480px){
-    #contMapa{height: 350px; width: 286px;}
-    #pieMapa{height: 40px; width: 286px; }
-    .btn_modal{margin-bottom: 0;}
-}
+    /* iphone 4 */
+    @media(max-height:480px){
+        #contMapa{height: 350px; width: 286px;}
+        #pieMapa{height: 40px; width: 286px; }
+        .btn_modal{margin-bottom: 0;}
+    }

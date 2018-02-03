@@ -64,20 +64,38 @@
             <div id="pieMapa">
                 <div class="row justify-content-center">
                     <div class="col-xl-2 col-md-2 col-sm-6 col-xs-12" >
-                        <button class="btn_modal" [hidden]="actBtnEditar"  pButton label="Editar" icon="fa-edit" (click)="showmodalEditar()" [disabled]="disButEditar"></button>           
-                        <button class="btn_modal" [hidden]="actBtnNuevo" pButton  label="Nuevo" icon="fa-file-o" (click)="nuevaRutaDetalle()" [disabled]="disButNuevaRuta"></button>
-                    </div>
-                    <div class="col-xl-2 col-md-2 col-sm-6 col-xs-12" >
                         
-                        <button class="btn_modal" [hidden]="actBtnGuardar"  pButton  label="Guardar" icon="fa-save" (click)="guardarPuntosRutaDetalle()" [disabled]="disButSubirRuta"></button>
+                        <button class="btn_modal" [hidden]="actBtnCancel"  pButton  label="Cancelar" 
+                                icon="fa-close" (click)="funcBtnMCancel()" [disabled]="disButCancelar"
+                        ></button>
+                        
+                        <button class="btn_modal" [hidden]="actBtnEditar"  pButton label="Editar" 
+                                icon="fa-edit" (click)="showmodalEditar()" [disabled]="disButEditar"
+                        ></button>  
+
+                        <button class="btn_modal" [hidden]="actBtnNuevo" pButton  label="Nuevo" 
+                                icon="fa-file-o" (click)="nuevaRutaDetalle()" [disabled]="disButNuevaRuta"
+                        ></button>
                     </div>
+
                     <div class="col-xl-2 col-md-2 col-sm-6 col-xs-12" >
-                        <button class="btn_modal" [hidden]="actBtnAtras"  pButton  label="Atras" icon="fa-mail-reply" (click)="deshacer()" [disabled]="disButDeshacer"></button>
+                        <button class="btn_modal" [hidden]="actBtnGuardar"  pButton  label="Guardar"
+                                icon="fa-save" (click)="guardarPuntosRutaDetalle()" [disabled]="disButSubirRuta"
+                        ></button>
                     </div>
+
                     <div class="col-xl-2 col-md-2 col-sm-6 col-xs-12" >
-                        <button class="btn_modal" [hidden]="actBtnBorrar" pButton label="Borrar" icon="fa-eraser" (click)="clear()"[disabled]="disButBorrar"></button>
-                    
+                        <button class="btn_modal" [hidden]="actBtnAtras"  pButton  label="Atras" 
+                                icon="fa-mail-reply" (click)="deshacer()" [disabled]="disButDeshacer"
+                        ></button>
                     </div>
+
+                    <div class="col-xl-2 col-md-2 col-sm-6 col-xs-12" >
+                        <button class="btn_modal" [hidden]="actBtnBorrar" pButton label="Borrar" 
+                                icon="fa-eraser" (click)="clear()"[disabled]="disButBorrar"
+                        ></button>                    
+                    </div>
+
                 </div>
             </div>
 
@@ -89,7 +107,7 @@
 
          <!--Modal boton nuevo ruta-Maestro-->
          <p-dialog [(visible)]="displayNuevaRutaModal" [resizable]="false" 
-                    modal="modal" width="100%" 
+                    modal="modal" width="100%" height="100%"
                     responsive="true" [closable]=false>
             <p-header>{{headertitle}} Ruta</p-header>
 
@@ -157,9 +175,7 @@
          <!--modal boton editar (PARA DECIDIR SI SE EDITA O NO)-->
          <p-dialog  [(visible)]="displayfromEditar" [resizable]="false" modal="modal" width="100%" 
                     [closable]="false" responsive="true">
-            
-            
-                <!--<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">-->
+
                 <div class="conMMjsUser">
                     <div class="bodyMMjsUser">
                         <p>¿Desea editar la Ruta?</p>

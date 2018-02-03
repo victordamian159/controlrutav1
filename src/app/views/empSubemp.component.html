@@ -35,7 +35,9 @@
         <!--BTN NUEVA SUBEMPRESA-->
         <div class="row">
             <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
-                <button type="button" pButton class="btn_modal" icon="fa-file-text-o" (click)="nuevaSubEmpresa();" [disabled]="selectRow==false" label="Agregar Empresa"></button>
+                <button type="button" pButton class="btn_modal" icon="fa-file-text-o" 
+                        (click)="nuevaSubEmpresa();" [disabled]="selectRow==false" 
+                        label="Agregar Sub-Empresa"></button>
             </div>
         </div>
 
@@ -65,12 +67,12 @@
     <!--CONFIGURACION-->
   
         <label>Configuracion</label>
-        <!--input-->
+        <!--input  [disabled]="selectRow==false || periodo==true" -->
         <div class="row">
             <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
                 <button type="button" pButton class="btn_modal" icon="fa-file-text-o" 
                         (click)="nuevaConfiguracionPeriodo();" 
-                        [disabled]="selectRow==false || periodo==true" label="Nuevo Periodo"></button>
+                         label="Nuevo Periodo"></button>
             </div>
         </div>
         <!--tabla-->
@@ -255,28 +257,36 @@
                       modal="modal" width="100%" responsive="true" [closable]=false>
                 <div class="contNuevoPer">
                     <div class="nPerBody">
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-sm-6">
-                            <label>N° Total de Vueltas</label>
-                            <input class="form-control" type="number" maxlength=30 value=5
-                                    [(ngModel)]="CoNroMaxVueltas" required #CoNroMax="ngModel">
-                            <span *ngIf="!CoNroMax.valid && (CoNroMax.touched || CoNroMax.dirty)"  >  
-                                <div id="validation" [hidden]="!CoNroMax.errors.required"> obligatorio </div>
-                            </span> 
+                            <div class="row">
+                                
+                            <div class="col-xl-12 col-md-12 col-sm-12 col-sm-6">
+                                    <div class="form-group">
+                                <label>N° Total de Vueltas</label>
+                                <input class="form-control" type="number" maxlength=30 value=5
+                                        [(ngModel)]="CoNroMaxVueltas" required #CoNroMax="ngModel">
+                                <span *ngIf="!CoNroMax.valid && (CoNroMax.touched || CoNroMax.dirty)"  >  
+                                    <div id="validation" [hidden]="!CoNroMax.errors.required"> obligatorio </div>
+                                </span> 
+                            </div>
+                            </div>
+                            </div>
+                        <div class="row">
+                            <div class="col-xl-12 col-md-12 col-sm-12 col-sm-6">
+                                    <div class="form-group">
+                                <label>Membre Empresa</label>
+                                <input class="form-control" type="text" maxlength=30 
+                                        [(ngModel)]="CoMembreReporte" required #CoMembre="ngModel">
+                                <span *ngIf="!CoMembre.valid && (CoMembre.touched || CoMembre.dirty)"  >  
+                                    <div id="validation" [hidden]="!CoMembre.errors.required"> obligatorio </div>
+                                </span> 
+                            </div>
+                            </div>
                         </div>
-                        <br>
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-sm-6">
-                            <label>Membre Empresa</label>
-                            <input class="form-control" type="text" maxlength=30 
-                                    [(ngModel)]="CoMembreReporte" required #CoMembre="ngModel">
-                            <span *ngIf="!CoMembre.valid && (CoMembre.touched || CoMembre.dirty)"  >  
-                                <div id="validation" [hidden]="!CoMembre.errors.required"> obligatorio </div>
-                            </span> 
-                        </div>
-                        <br>
+                     
                     </div>
                    
                     <div class="nPerBtns">
-                        <div class="row justify-content-end">      
+                        <div class="row">      
                             <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
                                 <button class="btn_modal" pButton icon="fa-save" label="Guardar" 
                                 [disabled]="(!CoNroMax.valid || !(CoNroMax.value>5)) || !CoMembre.valid"  

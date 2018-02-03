@@ -489,8 +489,9 @@ export class ProgComponent implements OnInit{
         let validFechInit=this.validarProgFechaInicio(this.progMaestro.PrFechaInicio, this.programacionMaestroArrayHTML, this.diasSemana);
         //console.log(validFechInit);
         
+        //validando el numero de dias de entre las fechas de la nueva programacion
         if(validez==1){
-            
+            //validando fecha de inicio
             if(validFechInit==true){
                 this.tipoProgramacion(placas,placas.length,this.tipoProg );//FORMA SORTEO
                 progCab = {
@@ -515,7 +516,8 @@ export class ProgComponent implements OnInit{
                 this.displayProgramacionBase=true; //abrir 2da ventana
             }else if(validFechInit==false){
                 this.displayErrorFechIngrFormUno=true;
-                this.mensaje="la fecha de inicio no es valida ("+this.progMaestro.PrFechaInicio+")";
+                this.mensaje="La fecha de inicio ("+this.progMaestro.PrFechaInicio+
+                              "), interfiere en la ultima programacion o no esta dentro de los dias de trabajo";
             }
         
     
