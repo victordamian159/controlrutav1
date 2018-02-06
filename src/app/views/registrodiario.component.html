@@ -66,66 +66,128 @@
             <p-header> Nuevo registro diario </p-header>
 
             <!--CUERPO-->
-            <div class="row">
-                <div class="cont_modal">
-                    <div class="container">
-                        <div class="row">
-                            <!--FECHA FUNCIONAR EL REGISTRO DIARIO-->
-                            <div class="form-group">
-                                <label class="control-label">Fecha Actual:</label>
-                                <input class="form-control" type="date" [(ngModel)]="fechRegDir" #fechRegDiario="ngModel" required />
+            <div class="contFormMRegDiario">
+                <div class="bodyFormMRegDiario">
+                    
+                   
+                        <!--orden subempresas-->
+                        <div class="form-group">
+                        
+                                <button class="btn_modal" type="text" pButton icon="fa-file" 
+                                (click)="funcBtnModOrdenSubEmpre(); " 
+                                label="Orden Empresas"></button>
                             
-                                <span *ngIf="!fechRegDiario.valid && fechRegDiario.touched" >
-                                    <div id="validation" [hidden]="!fechRegDiario.errors.required"> Obligatorio </div>
-                                </span>
-                            </div>
-                            <!--TOTAL DE VUELTAS POR EL DIA-->
-                            <div class="form-group">
-                                <label class="control-label">Numero Vueltas:</label>
-                                <input class="form-control" type="number" [(ngModel)]="nTolVueltas" max=20 #ntolvul="ngModel" required />
-                            
-                                <span *ngIf="!ntolvul.valid && ntolvul.touched" >
-                                    <div id="validation" [hidden]="!ntolvul.errors.required"> Obligatorio </div>
-                                </span>
-                            </div>
-                            <!--TIEMPO VUELTA-->
-                            <div class="form-group">
-                                <label class="control-label">Hora de Inicio:</label>
-                                <input class="form-control" type="text" [(ngModel)]="ReDiHoraInicioDiario" #tmpvul="ngModel" required />
-                            
-                                <span *ngIf="!tmpvul.valid && tmpvul.touched" >
-                                    <div id="validation" [hidden]="!tmpvul.errors.required"> Obligatorio </div>
-                                </span>
-                            </div>
+                        </div>
+                        <!--FECHA FUNCIONAR EL REGISTRO DIARIO-->
+                        <div class="form-group">
+                            <label class="control-label">Fecha Actual:</label>
+                            <input class="form-control" type="date" [(ngModel)]="fechRegDir" #fechRegDiario="ngModel" required />
+                        
+                            <span *ngIf="!fechRegDiario.valid && fechRegDiario.touched" >
+                                <div id="validation" [hidden]="!fechRegDiario.errors.required"> Obligatorio </div>
+                            </span>
+                        </div>
+                        <!--TOTAL DE VUELTAS POR EL DIA-->
+                        <div class="form-group">
+                            <label class="control-label">Numero Vueltas:</label>
+                            <input class="form-control" type="number" [(ngModel)]="nTolVueltas" max=20 #ntolvul="ngModel" required />
+                        
+                            <span *ngIf="!ntolvul.valid && ntolvul.touched" >
+                                <div id="validation" [hidden]="!ntolvul.errors.required"> Obligatorio </div>
+                            </span>
+                        </div>
+                        <!--TIEMPO VUELTA-->
+                        <div class="form-group">
+                            <label class="control-label">Hora de Inicio:</label>
+                            <input class="form-control" type="text" placeholder="hh:mm:ss"
+                                    [(ngModel)]="ReDiHoraInicioDiario" #tmpvul="ngModel" required />
+                        
+                            <span *ngIf="!tmpvul.valid && tmpvul.touched" >
+                                <div id="validation" [hidden]="!tmpvul.errors.required"> Obligatorio </div>
+                            </span>
+                        </div>
+                   
+                    
+                </div>
+                
+                <!--BOTONES-->
+                <div class="pieFormMRegDiario">
+                    <div class="row">
+                        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                            <button class="btn_modal" type="text" pButton icon="fa-check" 
+                            (click)="guardarRegistroDiario(); fechRegDiario.reset(); ntolvul.reset(); tmpvul.reset();" 
+                            label="Guardar Registro" [disabled]="!fechRegDiario.valid || !ntolvul.valid || !tmpvul.valid"></button>
+                            <br>
+                        </div>
+                        
+                        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                            <button class="btn_modal" type="text" pButton icon="fa-close" 
+                            (click)="cancelGuardarRegistroDiario(); fechRegDiario.reset(); ntolvul.reset(); tmpvul.reset();" 
+                            label="Cancelar"></button>
                         </div>
                     </div>
                 </div>
             </div>
+        </p-dialog>
+        
 
-            <!--BOTONES-->
-            <div class="btn_Modal row">
-                <div class="col-xl-6 col-md-6 col-sm-12 col-sx-12">
-                    <button class="btn_modal" type="text" pButton icon="fa-check" 
-                    (click)="guardarRegistroDiario(); fechRegDiario.reset(); ntolvul.reset(); tmpvul.reset();" 
-                    label="Guardar Registro" [disabled]="!fechRegDiario.valid || !ntolvul.valid || !tmpvul.valid"></button>
-                    <br>
+        <!--Nuevo registro diario / orden de subempresas -->
+        <p-dialog header="Orden de Sub-Empresas" [(visible)]="displayOrdenSubEmpresas" 
+                  modal="modal" width="100%" height="100%" 
+                  responsive="true" [resizable]="false" [closable]="false">
+            <!--tabla-->
+            <div class="contFormMRegDiaOrdSubEmp">
+                <div class=" row bodyFormMRegDiaOrdSubEmp">
+                    
+                        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                            <p-dataTable [value]="arrSubEmp" scrollable="true" 
+                            (onRowSelect)="onRowSelectSubEmp($event)"
+                            (onRowUnselect)="onRowUnselectSubEmp($event)"
+                            (onHeaderCheckboxToggle)="onHeaderCheckboxToggleSubEmp($event)"
+                                scrollHeight="380px" scrollWidth="100%" 
+                                emptyMessage="Lista Vacia" [(selection)]="selectedSubEmp">
+
+                                <p-column field="Nro" header="N°"  [style]="{'width':'2em','text-align':'center'}"></p-column>
+                                <p-column selectionMode="multiple" [style]="{'width':'2em'}"></p-column>
+                                <p-column field="SuEmRSocial" header="Empresa"  [style]="{'width':'6em'}"></p-column>
+                                <!--<p-column field="Orden" header="N° Orden"  [style]="{'width':'2em','text-align':'center'}"></p-column>-->
+                            
+                            </p-dataTable>
+                        </div>
+
+                        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                            <label>Listado:</label>
+                            <ul>
+                                <li *ngFor="let SubEmp of selectedSubEmp" style="text-align: left">
+                                    {{SubEmp.Orden + ' - ' + SubEmp.SuEmRSocial}}
+                                </li>
+                            </ul>
+                        </div>
                 </div>
-                
-                <div class="col-xl-6 col-md-6 col-sm-12 col-sx-12">
-                    <button class="btn_modal" type="text" pButton icon="fa-close" 
-                    (click)="cancelGuardarRegistroDiario(); fechRegDiario.reset(); ntolvul.reset(); tmpvul.reset();" 
-                    label="Cancelar"></button>
+            
+                <!--botones-->
+                <div class="pieFormMRegDiaOrdSubEmp">
+                    <div class="row justify-content-end">
+                        <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
+                            <button class="btn_modal" type="text" pButton icon="fa-check" 
+                            (click)="aceptarOrderSubEmp();" label="Aceptar"></button>
+                        </div>
+                        <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
+                            <button class="btn_modal" type="text" pButton icon="fa-check" 
+                            (click)="cancelOrderSubEmp();" label="Cancelar"></button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </p-dialog>
-        
+
         <!--registro diario detalle-->
         <p-dialog header="Vuelta + Estado" [(visible)]="displayRegDiarioDetalle" modal="modal" width="100%" height="100%" 
                     responsive="true" [resizable]="false" [closable]="false">
             <!--tabla-->
-            <div class="row">
-                <div class="modalRegDetalle">
-                    <div class="_modalRegDetalle">
+            <div class="contFormMRegDiarioDet">
+                <div class="bodyFormMRegDiarioDet">
+                    
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                             <p-dataTable [value]="arrRegDiarioDetalleByEmId" scrollable="true"
                                 scrollHeight="380px" scrollWidth="100%" selectionMode="single"
@@ -136,15 +198,16 @@
                                 <p-column field="ReDiDeEstado" header="Estado"  [style]="{'width':'6em'}"></p-column>
                             </p-dataTable>
                         </div>
-                    </div>
+                   
                 </div>
-            </div>
-            <!--botones-->
-            <div class="btn_Modal">
-                <div class="row justify-content-end">
-                    <div class="col-xl-3 col-md-4 col-sm-6 col-sx-12">
-                        <button class="btn_modal" type="text" pButton icon="fa-check" 
-                        (click)="cerrarTabRegDiarioDetalle();" label="Cerrar"></button>
+            
+                <!--botones-->
+                <div class="pieFormMRegDiarioDet">
+                    <div class="row justify-content-end">
+                        <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
+                            <button class="btn_modal" type="text" pButton icon="fa-check" 
+                            (click)="cerrarTabRegDiarioDetalle();" label="Cerrar"></button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -155,10 +218,10 @@
         <p-dialog [(visible)]="displayConfDelRegDiario" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 <p>{{mensajevalidacion}}</p>
                 <div class="btn_Modal row">
-                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                         <button class="btn_modal"  pButton (click)="okDelRegDiario()" label="Aceptar"></button>
                     </div>
-                    <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                         <button class="btn_modal"  pButton (click)="cancelDelRegDiario()"   label="Cancelar"></button>
                     </div>
                 </div>
@@ -167,7 +230,7 @@
         <p-dialog [(visible)]="displayErrorMismaFecha" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 <p>{{mensaje}}</p>
                 <div class="btn_Modal row">
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xm-12">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                         <button class="btn_modal"  pButton (click)="aceptarErrorMismoRegFecha()" label="Aceptar"></button>
                     </div>
                 </div>
@@ -176,7 +239,7 @@
         <p-dialog [(visible)]="displayErrorGuardar" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
             <p>{{mensaje}}</p>
             <div class="btn_Modal row">
-                <div class="col-xl-12 col-md-12 col-sm-12 col-xm-12">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                     <button class="btn_modal"  pButton (click)="aceptarErrorGuardar()" label="Aceptar"></button>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 <body>
     <div class="form-container">
         <header>Iniciar Sesion</header>
-
+        <br>
         <div (keyup.enter)="enterDataUser(username.value, password.value)">
             <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="form-group">
@@ -9,18 +9,21 @@
                     <input #username type="text" class="form-control" placeholder="username" [(ngModel)]="LoginUser.Usuario">
                 </div>
             </div>
+            <br>
             <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="form-group">
                     <label>Contraseña</label>
                     <input #password type="password" class="form-control" placeholder="password" [(ngModel)]="LoginUser.Password">
+                    <label [hidden]="inicioSesion!=0" id="errorSesion"> {{mnjeSesionError}} </label>
                 </div>
             </div>
         </div>
-
+        
+        <br>
         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
             <button id="btnLogin" class="form-control" pButton icon="fa-check" (click)="login()" label="Iniciar Sesion"></button>
         </div>
         
-        <label [hidden]="inicioSesion!=0" id="errorSesion"> {{mnjeSesionError}} </label>
+        
     </div>
 </body>

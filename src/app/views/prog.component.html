@@ -50,7 +50,7 @@
     <!--1ERA VENTANA BOTON NUEVO (PROGRAMACION 1ERA VENTANA)-->
         <p-dialog  [(visible)]="displayNuevaProgramacion" modal="modal" width="100%" height="100%" responsive="true" [resizable]="false" [closable]="false">
             <!--TITULO-->
-            <p-header> {{titleNuevoProgPrimerModal }} Programacion </p-header>
+            <p-header> Nueva programacion </p-header>
             
             <!--CUERPO-->
             <div class="contFormMNPUno">
@@ -82,13 +82,27 @@
                                     </div>
                                 </div>
                             
-                                <!--CANTIDAD DE BUSES ACTIVOS E INACTIVOS-->
+                                
                                 <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                                    <div class="form-group">
+                                    <!--todas las subempresas-->
+                                    <div class="form-group" [hidden]='CoSiId==2'>
                                         <label >Buses:</label>
                                         <div class="control-label">
                                             <label>{{resBusUnidades}}</label>
                                             <label [hidden]="bAct>0 && bAct!=0"></label>
+                                        </div>
+                                    </div>
+
+                                    <!--subempresas-->
+                                    <div class="form-group" [hidden]='CoSiId==1'>
+                                        <label  class="control-label" >Sub-Empresas: {{resBusUnidades}}</label>
+                                        <select class="form-control" [(ngModel)]="SuEmId" (change)="funcCboAllBusBySuEmId()" required #cboSubEmp="ngModel" >
+                                            <option *ngFor="let SuEm of arrSubEmp" [ngValue]="SuEm.SuEmId">
+                                                {{SuEm.SuEmRSocial}}
+                                            </option>
+                                        </select>
+                                        <div id="validation" [hidden]="!cboSubEmp.touched || cboSubEmp.valid ">
+                                                Error, revise los datos ingresados
                                         </div>
                                     </div>
                                 </div>
@@ -174,13 +188,20 @@
                     <div class="row justify-content-center">
                         <label>Orden de Sorteo</label>
                         <br>
-                        <p-pickList [source]="arrayPlacas" [target]="ordenSorteo" sourceHeader="Placa" targetHeader="Orden" [responsive]="false" 
+                        <p-pickList [source]="arrayPlacas" 
+                                    [target]="ordenSorteo" 
+                                    sourceHeader="Placa" 
+                                    targetHeader="Orden" [responsive]="false" 
                                     [sourceStyle]="{'height':'220px','width':'100px'}"  
                                     [targetStyle]="{'height':'220px','width':'100px'}">
                             <template let-placa pTemplate="item">
                                 <div class="ui-helper-clearfix">
-                                    <div style="display:inline-block; margin:5px 2px 2px 2px" >{{placa.nro}}</div>
-                                    <div style="font-size:16px; float:right; margin:5px 5px 0 0">{{placa.nroPlaca}}</div>
+                                    <!--<div style="display:inline-block; margin:5px 2px 2px 2px" >
+                                        {{placa.nro}}
+                                    </div>-->
+                                    <div style="font-size:16px; float:right; margin:5px 5px 0 0">
+                                        {{placa.BuPlaca}}
+                                    </div>
                                 </div>
                             </template>
                         </p-pickList>                                                                                 
@@ -249,11 +270,9 @@
                     <!--boton agregar hora-->
                     <div class="row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="form-group">
-                            
+                            <div class="form-group">                            
                                 <button class="btn_modal" type="text" pButton icon="fa-check" 
-                                (click)="AgregarHBase(hBase.valid, hIncremento.valid);" 
-                    
+                                (click)="AgregarHBase(hBase.valid, hIncremento.valid);"                     
                                 label="Agregar" [disabled]="(!hBase.valid || !hIncremento.valid) || nroMiniBus==nroTotalMinibuses"></button>                                    
                             </div>
                         </div>
@@ -268,7 +287,7 @@
                                 scrollWidth="100%" 
                                 emptyMessage="Lista vacia"> 
                         <p-column field="nro" header="N°"  [style]="{'width':'3em','text-align':'center'}"></p-column>
-                        <p-column field="nroPlaca" header="Placa"  [style]="{'width':'6em','text-align':'center'}"></p-column>
+                        <p-column field="BuPlaca" header="Placa"  [style]="{'width':'6em','text-align':'center'}"></p-column>
                         <p-column field="HoraBase" header="Hora Base" [editable]="true" [style]="{'width':'6em','text-align':'center'}" ></p-column>
                     </p-dataTable>
                         

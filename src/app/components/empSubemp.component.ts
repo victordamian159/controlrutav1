@@ -25,6 +25,7 @@ export class EmpSubEmpComponent implements OnInit{
             private CoNroMaxVueltas:number;
             private CoMembreReporte:string;
             private CoId:number;
+            private CoSiId:number;
             private CoCountMovilTaCo:number;
             private CoCountMovilTaCoDe:number;
             private CoLogo:string;
@@ -35,20 +36,7 @@ export class EmpSubEmpComponent implements OnInit{
             private mpresa:any;
             private empresas:any[]=[];
             private _empresa:any; /* VAR EN BTNNUEVO EMPRESA */
-            private subempresa:any={
-                        //EmId
-                        SuEmActivo:"",
-                        SuEmDireccion:"",
-                        SuEmEmail:"",
-                        //SuEmId
-                        SuEmRSocial:"",
-                        SuEmRuc:"",
-                        SuEmTelefono:"",
-                        SuEmTiempoVuelta:"",
-                        SuEmUbigeo:""
-                        //UsFechaReg
-                        //UsId
-                    }
+            private subempresa:any={ SuEmActivo:"", SuEmDireccion:"", SuEmEmail:"", SuEmRSocial:"",SuEmRuc:"",SuEmTelefono:"", SuEmTiempoVuelta:"", SuEmUbigeo:"" }
             private _subempresa:any;
             private subempresas:any[]=[];
             private empresa:any={ EmConsorcio:"", EmId:null}
@@ -69,6 +57,7 @@ export class EmpSubEmpComponent implements OnInit{
 
         //arrays
             private arrConfig:any;
+            private arrConfSistema=[];
     ngOnInit(){
         this.getempresas();
         this.procGetAllConfiguraByEmIdPeriodo(this.EmId, new Date().getFullYear().toString());
@@ -88,6 +77,7 @@ export class EmpSubEmpComponent implements OnInit{
             this.displayElimEmp=false;
             this.displayNuevaConfigXPeriodo=false;
         this.arrTiposEmp=[{tipId:"00",nomTipo:"CONSORCIO"},{tipId:"01",nomTipo:"INDIVIDUAL"}]
+        this.arrConfSistema=[{id:1,nomb:"Todas Sub-Empresas"},{id:2,nomb:"Por Sub-Empresas"}];
         this.selectRow=false; /*false: no se selecciono ninguna fila, true: si se selecciono una fila */
         this.arrConfig=[];
         this.periodo=false;
@@ -106,7 +96,11 @@ export class EmpSubEmpComponent implements OnInit{
             getsubempresasbyemid(emid:number){
                 let subemps:any[]=[];
                 this.empSubempservice.getallsubempresasbyemid(emid).subscribe(
-                    data => { subemps=data; console.log(subemps); this.mgsubempresas(subemps);},
+                    data => { 
+                        subemps=data; 
+                        console.log(subemps); 
+                        this.mgsubempresas(subemps);
+                    },
                     err => {this.errorMessage=err},
                 );
             }
@@ -164,8 +158,13 @@ export class EmpSubEmpComponent implements OnInit{
         /* GUARDAR */
             guardarSubEmp(suemp:Object){
                 this.empSubempservice.saveSubEmpresa(suemp).subscribe(
-                    realizar => {this.getsubempresasbyemid(this.EmId)},
-                    err      => {this.errorMessage=err;}
+                    realizar => {
+                        this.getsubempresasbyemid(this.EmId)
+                    },
+                    err      => {
+                        this.errorMessage=err;
+                        console.log(this.errorMessage);
+                    }
                 );
             }
 
@@ -238,11 +237,19 @@ export class EmpSubEmpComponent implements OnInit{
                             EmId:config.EmId,
                             UsFechaReg:config.UsFechaReg,
                             UsId:config.UsId,
+                            CoSiId:config.CoSiId,
+                            nomCoSiId:''
                         });
                     }
                     for(let i=0; i<_arrConfigs.length; i++){
                         _arrConfigs[i].Nro=i+1;
+                        if(_arrConfigs[i].CoSiId==1){
+                            _arrConfigs[i].nomCoSiId='Todas Sub-Empresas';
+                        }else if(_arrConfigs[i].CoSiId==2){
+                            _arrConfigs[i].nomCoSiId='Por Sub-Empresas';
+                        }
                     }
+                    console.log(_arrConfigs);
                     this.arrConfig=_arrConfigs;
                 }
 
@@ -455,6 +462,7 @@ export class EmpSubEmpComponent implements OnInit{
                                     this.CoNroMaxVueltas=data.CoNroMaxVueltas;
                                     this.CoPeriodo=data.CoPeriodo;
                                     this._EmId=data.EmId;
+                                    this.CoSiId=data.CoSiId;
                                     //UsFechaReg
                                     //UsId
                                 },
@@ -570,7 +578,8 @@ export class EmpSubEmpComponent implements OnInit{
                         CoPeriodo: new Date().getFullYear(),
                         CoNroMaxVueltas: this.CoNroMaxVueltas,
                         CoLogo: '',
-                        CoMembreReporte: this.CoMembreReporte
+                        CoMembreReporte: this.CoMembreReporte,
+                        CoSiId: this.CoSiId,
                     }
                 }else if(this.CoId!=0){
                     objConfigura={
@@ -583,7 +592,8 @@ export class EmpSubEmpComponent implements OnInit{
                         CoPeriodo: this.CoPeriodo,
                         CoNroMaxVueltas:this.CoNroMaxVueltas,
                         CoLogo:this.CoLogo,
-                        CoMembreReporte: this.CoMembreReporte
+                        CoMembreReporte: this.CoMembreReporte,
+                        CoSiId: this.CoSiId,
                     }
                 }
                 
@@ -613,5 +623,9 @@ export class EmpSubEmpComponent implements OnInit{
 
             }
         );
+    }
+
+    fcboConfSistema(){
+        //console.log(this.CoSiId);
     }
 }

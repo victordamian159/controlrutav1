@@ -1,10 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {SelectItem} from 'primeng/primeng';
-import {ProgramacionService} from '../service/prog.service'
-import {PlacasService} from '../service/placas.service'
+import {ProgramacionService} from '../service/prog.service';
+import {PlacasService} from '../service/placas.service';
+import {EmpSubEmpService} from '../service/empSubemp.service';
+import {ConfiguraService} from '../service/configura.service';
 import {GlobalVars} from 'app/variables'
-import {hora,formatFechInArr,_fnroDias,fecha,arrABI,arrANBI,_hora, tipoAnio,_fecha1,_fecha2,slash_posFecha,horaValida,
-        formatFech,addDays,operSHoras,_addDays,editf1,fechaActual1,fechaMayor, cambianBuIdxNroPlaca} from 'app/funciones';
+import {hora,formatFechInArr,_fnroDias,fecha,arrABI,arrANBI,_hora, 
+        tipoAnio,_fecha1,_fecha2,slash_posFecha,horaValida,
+        formatFech,addDays,operSHoras,_addDays,editf1,
+        fechaActual1,fechaMayor, cambianBuIdxNroPlaca} from 'app/funciones';
 
 
 declare var jsPDF: any; //PARA PASAR HTML A PDF 
@@ -105,6 +109,7 @@ export class ProgComponent implements OnInit{
         private progBDDetalle:any[]=[]; // para recoger resultado de la BD
         private _progBDDetalle:any[]=[]; /* NO USO */
         private modo:string; 
+
     //COLUMNAS DEL DATATABLE PRIMENG
         private columnas:any[]=[];
         private _columnas : SelectItem[];
@@ -117,6 +122,11 @@ export class ProgComponent implements OnInit{
         private calString:any[]=[];
         private anio:number;
         private arrHoraBaseSal:any[]=[];
+        private arrSubEmp:any[]=[];
+        private SuEmId:number;
+        private CoSiId:number;
+        private CoId:number;
+        private objConfigSystem:any;
 
     /* DISPLAY VENTANAS MODALES */
         private displayNuevaProgramacion: boolean = false;
@@ -141,28 +151,26 @@ export class ProgComponent implements OnInit{
     ngOnInit(){
         /*console.log(fechaSgte("2017/02/07",32));*/  /* TERMINAR ESTO */
         this.ordenSorteo = [];
-        this.getAllPlacasBusByEmSuEm(this.emid,0); 
+        //this.getAllPlacasBusByEmSuEm(this.emid,0); 
         this.getAllProgramacionByEm(this.emid,this.anio); /* EMID + AÑO */
        
         //console.log(this.descartarFechas(this.calendarioNumerico('2017-11-13', '2017-12-13'), '1,1,1,0,1,0,1'));
     }
     
     constructor(private programacionService: ProgramacionService, 
+                private empSubEmpService:EmpSubEmpService,
                 private placasservice: PlacasService,
+                private configService : ConfiguraService,
                 public ClassGlobal:GlobalVars){
+
+        //this.arrSubEmp=[{ EmId:1, SuEmActivo:true, SuEmDireccion:"", SuEmEmail:"", SuEmId:0, SuEmRSocial:"TODOS SUB-EMPPRESAS", SuEmRuc:"", SuEmTelefono: "", SuEmTiempoVuelta:null, SuEmUbigeo:"", UsFechaReg:null, UsId:null}]
         this.emid=this.ClassGlobal.GetEmId();
         this.userid=this.ClassGlobal.GetUsId();
         this.lengthProgDet=0;
         this.anio=0;
         this.progMaestro.EmId = 1; /* ELIMINAR ESTO */
-        this._tipoProg =[
-            {id:0,nTipo:"automatico"},
-            {id:1,nTipo:"manual"}
-        ];
-        this._formaProg=[
-            {id:"01", nForma:"pescadito"},
-            {id:"02", nForma:"escala"}
-        ];
+        this._tipoProg =[ {id:0,nTipo:"automatico"},{id:1,nTipo:"manual"} ];
+        this._formaProg=[ {id:"01", nForma:"pescadito"},{id:"02", nForma:"escala"}];
         this.nroMiniBus=0;
         this.nroTotalMinibuses=0;
         this.diasSemana=[
@@ -175,7 +183,20 @@ export class ProgComponent implements OnInit{
             {id:6,nro:7, nomb:'Domingo',value:0},
         ];
     }
+    
+    funcCboAllBusBySuEmId(){
+        //console.log(this.SuEmId);
+        this.placasservice.getAllPlacasBusByEmSuEm(this.emid,this.SuEmId).subscribe(
+            data=>{
+                //console.log('nro placas: '+data.length);
+                this.unidadesEstado(data);
+            },
+            error=>{},
+            ()=>{}
+        );
         
+    }
+
     funcCalendarioNumerico(refFecha1:string, refFecha2:string){
         let diaHoy = new Date(); 
         let arrCalendar:any[]=[]; 
@@ -453,8 +474,13 @@ export class ProgComponent implements OnInit{
 
             /*TODAS LAS PROGRAMACIONES POR EMPRESA Y AÑO*/
             getAllProgramacionByEm( empId: number, anio: number){
+
                 this.programacionService.getAllProgramacionByEm(empId, anio).subscribe(
-                        datos => { this.progRest = datos; this.mostrargrillaProgramacionMaestro(this.progRest); },
+                        datos => { 
+                            this.progRest = datos; 
+                            console.log(datos);
+                            this.mostrargrillaProgramacionMaestro(this.progRest); 
+                        },
                         err => {this.errorMessage = err}, 
                         () =>this.isLoading = false
                     );
@@ -464,68 +490,137 @@ export class ProgComponent implements OnInit{
             
     //ABRIR 1ERA VENTANA MODAL(BOTON NUEVO)
     NuevaProgCabecera(){
+        let añoActual=new Date().getFullYear().toString();
         this.modEdit=false;
         this.procNuevaProgrC();
         this.ordenSorteo=[]; //SORTEO DE PLACAS
-        this.titleNuevoProgPrimerModal = 'Nueva';
-        this.getAllPlacasBusByEmSuEm(this.emid,0);
+        
+        //consulta por periodos
+  
+            this.configService.getAllConfiguraByEmPeriodo(this.emid , añoActual).subscribe(
+            data=>{
+                    console.log(data); 
+                    if(data.length!=0){
+                        this.objConfigSystem=data[0];
+                        this.CoId=this.objConfigSystem.CoId;
+                        this.CoSiId=this.objConfigSystem.CoSiId;
+                        //console.log(this.objConfigSystem);
 
-        this.unidadesEstado(this.extrayendoPlacasBus(this.placas,'nuevaprog'));
-        this.displayNuevaProgramacion=true;        
+                        this.displayNuevaProgramacion=true;        
+                        this.progBDDetalle=[]; 
+                        this.lengthProgDet=0; 
+                        this.dtSelectDias=[];
+                        this.tipoProg=0; //PROGRAMACION POR DEFECTO: MANUAL
+                        this.formaProg="01"; /* (1)MANUAL O (2)AUTOMATICO */
 
-         //CALCULA EL NRO DE UNIDADES ACTIVAS Y NO ACTIVAS
-        this.progBDDetalle=[]; this.lengthProgDet=0; this.dtSelectDias=[];
-        this.tipoProg=0; //PROGRAMACION POR DEFECTO: MANUAL
-        this.formaProg="01"; /* (1)MANUAL O (2)AUTOMATICO */
+                        //por todas las empresas
+                        if(this.CoSiId==1){
+                            this.getAllPlacasBusByEmSuEm(this.emid,0);
+                            this.unidadesEstado(this.extrayendoPlacasBus(this.placas,'nuevaprog'));
+                            
+                        //por subempresa
+                        }else if(this.CoSiId==2){
+                            this.empSubEmpService.getallsubempresasbyemid(this.emid).subscribe(
+                                data=>{
+                                    this.arrSubEmp=[]; 
+                                    for(let subemp of data){
+                                        this.arrSubEmp.push(subemp);
+                                    }
+                                    //console.log(this.arrSubEmp);
+                                },
+                                error=>{},
+                                ()=>{}
+                            );
+                        }
+                        
+                    }else{
+                        console.log('Error, no se pudo descargar la configuracion del sistema');
+                    }
+                    
+                  },
+            error=>{alert('error al iniciar el periodo: '+error);},
+            ()=>{}
+            );
+        
+       
     }
 
     //1ERA VENTANA MODAL aqui recien se guarda la tabla MAESTRO en el REST 
     guardarProgCabecera(){
-        let progCab:any;  let fIni=this.progMaestro.PrFechaInicio; let fFin=this.progMaestro.PrFechaFin;
+        let progCab:any;  let fIni=this.progMaestro.PrFechaInicio; let fFin=this.progMaestro.PrFechaFin; let placas=[];
       
-        let placas=this.extrayendoPlacasBus(this.placas,'nuevaprog');
-
-        let validez=this.validandoFechas(fIni,fFin);
-        let validFechInit=this.validarProgFechaInicio(this.progMaestro.PrFechaInicio, this.programacionMaestroArrayHTML, this.diasSemana);
-        //console.log(validFechInit);
+        //let placas=this.extrayendoPlacasBus(this.placas,'nuevaprog');
         
-        //validando el numero de dias de entre las fechas de la nueva programacion
-        if(validez==1){
-            //validando fecha de inicio
-            if(validFechInit==true){
-                this.tipoProgramacion(placas,placas.length,this.tipoProg );//FORMA SORTEO
-                progCab = {
-                    PrId : this.progMaestro.PrId, //number
-                    EmId : this.emid, //number
-                    PrCantidadBuses : this.bAct, //number
-                    PrDescripcion : this.progMaestro.PrDescripcion, //string
-                    PrFecha : new Date(), //string
-                    PrFechaInicio : this.fecha(this.progMaestro.PrFechaInicio), //string
-                    PrFechaFin : this.fecha(this.progMaestro.PrFechaFin), //string
-                    PrTipo : Number(this.formaProg), //string escala pescadito
-                    PrAleatorio : Number(this.tipoProg), //string manual automatico(aleatorio)
-                    PrDiasIncluidos:this.diasIncluidos(this.dtSelectDias),
-                    UsId : this.userid, //number
-                    UsFechaReg : new Date() //string
-                }
-                console.log(progCab);
-                this.procSaveProgramacion(progCab);
+
+        this.placasservice.getAllPlacasBusByEmSuEm(this.emid, this.SuEmId).subscribe(
+            data=>{
+                console.log(data);
+                placas=data;
+                let validez=this.validandoFechas(fIni,fFin);
+                let validFechInit:boolean;
+                
                 
 
-                this.displayNuevaProgramacion=false; //cerrar 1era ventana
-                this.displayProgramacionBase=true; //abrir 2da ventana
-            }else if(validFechInit==false){
-                this.displayErrorFechIngrFormUno=true;
-                this.mensaje="La fecha de inicio ("+this.progMaestro.PrFechaInicio+
-                              "), interfiere en la ultima programacion o no esta dentro de los dias de trabajo";
-            }
-        
-    
-        }else if(validez==0){
-            this.displayErrorFechIngrFormUno=true;
-            this.mensaje="Error en las fechas ingresada, es menos de 9 dias o mayor a 62 dias";
+                //prgoramacion por subempresas
+                if(this.CoSiId==2){
+                    validFechInit=this.fechaInicioXDiasSemana(this.progMaestro.PrFechaInicio,this.diasSemana,this.dtSelectDias);
+                //programacion por empresa
+                }else if(this.CoSiId==1){
+                    //el valor de validFechInit, no cambiara
+                    validFechInit=this.validarProgFechaInicio(this.progMaestro.PrFechaInicio, this.programacionMaestroArrayHTML, this.diasSemana);
+                }
 
-        }
+                console.log(validFechInit);
+                
+                //validando el numero de dias de entre las fechas de la nueva programacion
+                if(validez==1){
+                    
+                        //validando fecha de inicio
+                        if(validFechInit==true){
+                            this.tipoProgramacion(placas,placas.length,this.tipoProg );//FORMA SORTEO
+            
+                            progCab = {
+                                PrId : this.progMaestro.PrId, //number
+                                EmId : this.emid, //number
+                                PrCantidadBuses : this.bAct, //number
+                                PrDescripcion : this.progMaestro.PrDescripcion, //string
+                                PrFecha : new Date(), //string
+                                PrFechaInicio : fecha(this.progMaestro.PrFechaInicio), //string
+                                PrFechaFin : fecha(this.progMaestro.PrFechaFin), //string
+                                PrTipo : Number(this.formaProg), //string escala pescadito
+                                PrAleatorio : Number(this.tipoProg), //string manual automatico(aleatorio)
+                                PrDiasIncluidos:this.diasIncluidos(this.dtSelectDias),
+                                UsId : this.userid, //number
+                                SuEmId:this.SuEmId,
+                                UsFechaReg : new Date() //string
+                            }
+            
+                            console.log(progCab);
+                            this.procSaveProgramacion(progCab);
+                            
+            
+                            this.displayNuevaProgramacion=false; //cerrar 1era ventana
+                            this.displayProgramacionBase=true; //abrir 2da ventana
+                        }else if(validFechInit==false){
+                            this.displayErrorFechIngrFormUno=true;
+                            this.mensaje="La fecha de inicio ("+this.progMaestro.PrFechaInicio+
+                                        "), interfiere en la ultima programacion o no esta dentro de los dias de trabajo";
+                        }
+                    
+            
+                }else if(validez==0){
+                    this.displayErrorFechIngrFormUno=true;
+                    this.mensaje="Error en las fechas ingresada, es menos de 9 dias o mayor a 62 dias";
+        
+                }
+            },
+            error=>{
+
+            },
+            ()=>{}
+        );
+
+       
         
     }
 
@@ -550,10 +645,26 @@ export class ProgComponent implements OnInit{
 
    
     /* FUNCION -> FORMA DE SORTEO MANUAL O AUTOMATICO */
-    tipoProgramacion(arrayplacas=[], long:number, tprog:number){
-        console.log(arrayplacas);
-        
-        this.ordenSorteo=[];
+    tipoProgramacion(_arrayplacas=[], long:number, tprog:number){
+        this.ordenSorteo=[]; let arrayplacas=[];
+        for(let i=0; i<_arrayplacas.length; i++){
+            if(_arrayplacas[i].BuActivo==true){
+                arrayplacas.push({                    
+                    BuActivo:_arrayplacas[i].BuActivo,
+                    BuCapacidad:_arrayplacas[i].BuCapacidad,
+                    BuDescripcion:_arrayplacas[i].BuDescripcion,
+                    BuFechaIngreso:_arrayplacas[i].BuFechaIngreso,
+                    BuId:_arrayplacas[i].BuId,
+                    BuMarca:_arrayplacas[i].BuMarca,
+                    BuPlaca:_arrayplacas[i].BuPlaca,
+                    SuEmId:_arrayplacas[i].SuEmId,
+                    SuEmRSocial:_arrayplacas[i].SuEmRSocial,
+                    HoraBase:"HH:MM:SS"
+                });
+            }
+            
+        }
+
         /* AUTOMATICO*/
         if(tprog==0){ 
             let array = ["c"];  let nro;//ARRAY NUMEROS ALEATORIOS NO REPETIDOS
@@ -583,7 +694,9 @@ export class ProgComponent implements OnInit{
                 _arrayplacas.push(arrayplacas[array[i]]);
                 i++;
             }
+            
             this.ordenSorteo=_arrayplacas;
+            console.log(this.ordenSorteo);
             this.arrayPlacas=[];
         /* MANUAL*/
         }else if(tprog==1){
@@ -730,6 +843,7 @@ export class ProgComponent implements OnInit{
         this.bAct = bAct;
         //this.bNAct= bNAct;
         this.resBusUnidades="  En Sorteo: "+this.bAct;
+        console.log(this.bAct);
     }
 
 
@@ -738,13 +852,15 @@ export class ProgComponent implements OnInit{
     programacionSegundoModal(){
         let arrProgDetalle=[];
         //this.programacionArrayDetalleBD=[];
+        console.log(this.progMaestro.PrCantidadBuses);
+        console.log(this.ordenSorteo.length);
         if(this.progMaestro.PrCantidadBuses!=this.ordenSorteo.length){
             this.mensaje="Error en las Placas Del Sorteo";
             this.displayFaltanPlacas=true;
         }else if(this.progMaestro.PrCantidadBuses == this.ordenSorteo.length){
             this.displayProgramacionBase=false; 
               
-            this.placaEditarCelda=this.ordenSorteo[0].nroPlaca;
+            this.placaEditarCelda=this.ordenSorteo[0].BuPlaca;
             this.progDetalle.PrDeFecha = new Date();
             
             //CARGAR EN ARRAY DE OBJETOS PARA MANDAR A LA BD
@@ -764,7 +880,7 @@ export class ProgComponent implements OnInit{
                     PrDeHoraBase:0,
                 });  
             } 
-            console.log(arrProgDetalle);
+            //console.log(arrProgDetalle);
             this._programacionArrayDetalleBD=arrProgDetalle.slice(0);  // SEPARO ESTO PARA DESPUES CARGARLO CON LOS PRDEID
             
             this.guardarProgDetalle(arrProgDetalle, this.emid, this.PrId, true);
@@ -778,16 +894,14 @@ export class ProgComponent implements OnInit{
     }
     
     buscarPrimerHMS(arrSorteo=[]):number{
-            let index:number; let strBuscado="HH:MM:SS"; let cen=0; let i=0;
-            
+            let index:number; let strBuscado="HH:MM:SS"; let cen=0; let i=0;            
             while(i<arrSorteo.length && cen==0){
                 if(arrSorteo[i].HoraBase=="HH:MM:SS"){
                     cen=1;
                 }else if(arrSorteo[i].HoraBase!="HH:MM:SS"){
                     i++; cen=0;
                 }
-            }
-            
+            }            
             index=i;
             return index;
     }
@@ -847,11 +961,12 @@ export class ProgComponent implements OnInit{
                 //cargando hora base a la tabla 
                 if(indicePorInicio>0){
                     let horaBaseSgte=operSHoras(this.horaBase,this.horaIncremento); this.horaBase=horaBaseSgte;
-                    console.log(horaBaseSgte);
+                    //console.log(horaBaseSgte);
                 }else if(indicePorInicio==0){
 
                 }
-
+                //console.log(this.ordenSorteo);
+                //console.log(indicePorInicio);
                 this.ordenSorteo[indicePorInicio].HoraBase=this.horaBase;
                 this.nroMiniBus=this.conteoHBAgregadas(this.ordenSorteo);
                 let indexNextPos=this.buscarSigtePosicion(this.ordenSorteo);
@@ -859,12 +974,12 @@ export class ProgComponent implements OnInit{
 
                 if(indexNextPos-indicePorInicio==1){
                     if(this.nroTotalMinibuses==indexNextPos){
-                        this.placaEditarCelda=this.ordenSorteo[indicePorInicio].nroPlaca;
+                        this.placaEditarCelda=this.ordenSorteo[indicePorInicio].BuPlaca;
                     }else{
-                        this.placaEditarCelda=this.ordenSorteo[indexNextPos].nroPlaca;
+                        this.placaEditarCelda=this.ordenSorteo[indexNextPos].BuPlaca;
                     }
                 }else if(indexNextPos-indicePorInicio>1){
-                    this.placaEditarCelda=this.ordenSorteo[indicePorInicio].nroPlaca;  
+                    this.placaEditarCelda=this.ordenSorteo[indicePorInicio].BuPlaca;  
                 }
                 
             }else if(this.nroMiniBus==this.nroTotalMinibuses){
@@ -897,21 +1012,22 @@ export class ProgComponent implements OnInit{
         this.programacionService.saveProgramacionDetalle(arrProg,emid,prid,base)
             .subscribe( 
                 realizar => {   
-                                if(realizar==true){
-                                    this.mensajeEspera="";
-                                    this.displayMensajeEspera= false; 
-                                    this.displayHoraBase=true;
-                                }else if(realizar==false){
-                                    this.mensajeEspera="Error al iniciar la Programacion";
-                                    this.displayAceptarProgNueva= true; 
-                                }    
-                                //this.getallprogramaciondetallebyprid(prid); 
-                            }, 
-                err => {this.errorMessage = err;
-                            console.log(err);
-                            this.mensajeEspera="Error al iniciar la Programacion";
-                            this.displayAceptarProgNueva= true; 
-                        },
+                    if(realizar==true){
+                        this.mensajeEspera="";
+                        this.displayMensajeEspera= false; 
+                        this.displayHoraBase=true;
+                    }else if(realizar==false){
+                        this.mensajeEspera="Error al iniciar la Programacion";
+                        this.displayAceptarProgNueva= true; 
+                    }    
+                    //this.getallprogramaciondetallebyprid(prid); 
+                }, 
+                err => {
+                    this.errorMessage = err;
+                    console.log(err);
+                    this.mensajeEspera="Error al iniciar la Programacion";
+                    this.displayAceptarProgNueva= true; 
+                },
                 () =>{this.lengthProgDet=0; console.log('guardado');}
         );
     }
@@ -987,8 +1103,8 @@ export class ProgComponent implements OnInit{
                 EmConsorcio : prog.EmConsorcio,
                 PrCantidadBuses : prog.PrCantidadBuses,
                 PrFecha : prog.PrFecha,
-                PrFechaInicio : this._fecha(prog.PrFechaInicio),
-                PrFechaFin : this._fecha(prog.PrFechaFin),
+                PrFechaInicio : _fecha1(prog.PrFechaInicio),
+                PrFechaFin : _fecha1(prog.PrFechaFin),
                 PrAleatorio : "0"+prog.PrAleatorio, 
                 PrTipo : "0"+prog.PrTipo,
                 dias : prog.dias,
@@ -1000,8 +1116,6 @@ export class ProgComponent implements OnInit{
         }
 
         arrAllProgrm=this.arrAllProgramacion(arrAllProgrm);
-        
-        //console.log(arrAllProgrm);
         this.programacionMaestroArrayHTML=arrAllProgrm.slice(0);
     }
 
@@ -1263,11 +1377,7 @@ export class ProgComponent implements OnInit{
         let arrcalendarioNumerico:any[]=[];
         let arrcalendarioString:any[]=[];
         let _arrcalendarioString:any[]=[];
-        //console.log(nrod);
-        /*console.log(arrProgramacion);
-        console.log(PrCantidadBuses);
-        console.log(NroDias);*/
-
+      
         for(let i=0; i<nrod; i++){
             arrCalendarioBase.push(new Date(arrProgramacion[i*PrCantidadBuses].PrDeFecha));
         }
@@ -1805,112 +1915,21 @@ export class ProgComponent implements OnInit{
     }
 
     /* fecha inicio dentro de dias de la semana */
-        fechaInicioXDiasSemana(fechaInicio:string,arrDiasSemana=[],dtSelectDias=[]):boolean{
-            //console.log(dtSelectDias);  console.log(fecha(fechaInicio).getDay()); console.log(arrDiasSemana);
-            let i:number=0, cen:number=0,  dia=fecha(fechaInicio).getDay(), result:boolean;
-            while(i<dtSelectDias.length && cen==0){
-                if(dia!=dtSelectDias[i].value){
-                    i++; cen=0;
-                }else if(dia==dtSelectDias[i].value){
-                    cen=1;
-                }
+    fechaInicioXDiasSemana(fechaInicio:string,arrDiasSemana=[],dtSelectDias=[]):boolean{
+        //console.log(dtSelectDias);  console.log(fecha(fechaInicio).getDay()); console.log(arrDiasSemana);
+        let i:number=0, cen:number=0,  dia=fecha(fechaInicio).getDay(), result:boolean;
+        while(i<dtSelectDias.length && cen==0){
+            if(dia!=dtSelectDias[i].value){
+                i++; cen=0;
+            }else if(dia==dtSelectDias[i].value){
+                cen=1;
             }
-            if(cen==0){
-                result=false;
-            }else if(cen==1){
-                result=true;
-            }
-            return result;
         }
-/* CARGAR GLOBAL */ 
-    //CONVERTIR STRING A DATE PARA FECHA   ----   FORMULARIO A BD 
-    fecha(fecha: string) : Date{
-        let thoy:Date , _thoy:Date, _fecha:string;
-        thoy = new Date();
-        _fecha = fecha;
-        let resultado=_fecha.split('-');
-        _thoy = new Date(  Number(resultado[0]),  Number(resultado[1]) -1 ,  Number(resultado[2]) , 12, 0,0 );
-        return _thoy;
-    }
-
-    //CONVERTIR STRING A DATE FORMULARIO A BD  HORAS
-    hora(fecha : string) : Date{
-        //FECHA               
-        let thoy:Date,  otra:Date, horaTarjeta:string;
-        thoy=new Date();
-        if(fecha.length<=5){ fecha = fecha+":00"; }
-        horaTarjeta=fecha;
-        let resultado=horaTarjeta.split(':');
-        otra=new Date(thoy.getFullYear(),thoy.getMonth(),thoy.getDate(),Number(resultado[0]),Number(resultado[1]),Number(resultado[2]));    
-        return otra; 
-    }
-
-    //CONVERTIR DATE A STRING DE BD A FORMULARIO HORAS
-    _hora(fecha : Date) :string{
-        let hora : string; let _hora : string; let _fecha = new Date(fecha);
-        _hora =  (_fecha.getHours() - 1).toString();// restando 1 hora (CORREGIR EN EL BACKEND)
-            hora = _hora + ":"+_fecha.getMinutes()+":"+_fecha.getSeconds();
-
-            hora = this.cCeroHora(hora);
-        return hora;
-    }
-
-
-    //COMPLETANDO CEROS EN CASO DE NECESITAR PARA HORAS Y FECHAS   2017/
-    cCeroHora(h:string) :string{
-            //DIVIDIRLO EN PARTES Y COMPLETAR LOS CEROS PARA QUE LOS ELEMENTOS SEAN TODOS PARES
-            let hora : string, _hora :string, resultado, i=0;
-            resultado = h.split(':');
-            while(i<resultado.length){
-                if(resultado[i].length%2!=0){
-                    resultado[i]="0"+resultado[i];
-                }
-                i++;
-            }
-            //CONCATENANDO
-            _hora=resultado[0]+":"+resultado[1]+":"+resultado[2];
-        return _hora;
-    }
-
-    cCeroFecha(f : string) :string{
-        let fecha:string, _fecha:string, resultado, i=0;
-        resultado = f.split('/');
-            while(i<resultado.length){
-                resultado[i]=resultado[i].trim(); //BORRANDO ESPACIOS EN BLANCO
-                if(resultado[i].length%2!=0){
-                    resultado[i]="0"+resultado[i];
-                }
-                i++;
-            }
-            //CONCATENANDO
-            _fecha=resultado[0]+"/"+resultado[1]+"/"+resultado[2];
-        
-        return _fecha
-    }
-
-    cCeroFechaForEditar(f : string) :string{
-        let fecha:string, _fecha:string, resultado, i=0;
-        resultado = f.split('/');
-            while(i<resultado.length){
-                resultado[i]=resultado[i].trim(); //BORRANDO ESPACIOS EN BLANCO
-                if(resultado[i].length%2!=0){
-                    resultado[i]="0"+resultado[i];
-                }
-                i++;
-            }
-            //CONCATENANDO
-            _fecha=resultado[0]+"-"+resultado[1]+"-"+resultado[2];
-        
-        return _fecha
-    }
-    
-    //CONVERTIR DATE A STRING PARA FECHA  - ---   BD A GRILLA
-    _fecha(fecha: Date) :string{
-        let fechaProg : string; let _fechaProg : string; let _fecha = new Date(fecha); 
-        _fechaProg=(_fecha.getDate()).toString() +" / "+ (_fecha.getMonth() +1 ).toString() +" / "+ (_fecha.getFullYear()).toString();
-        //_fechaProg=(_fecha.getFullYear()).toString() +" / "+ (_fecha.getMonth() +1 ).toString() +" / "+(_fecha.getDate()).toString() ;
-        
-        _fechaProg=this.cCeroFecha(_fechaProg);
-        return  _fechaProg;
+        if(cen==0){
+            result=false;
+        }else if(cen==1){
+            result=true;
+        }
+        return result;
     }
 }

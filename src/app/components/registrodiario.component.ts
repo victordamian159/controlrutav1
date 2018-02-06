@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {GlobalVars} from 'app/variables'
-import {editf1,fechaActual1,fechaActual2, _fecha1, _hora, fecha, hora,guion_slash_inver} from 'app/funciones';
+import {editf1,fechaActual1,fechaActual2, _fecha1, _hora, fecha, hora,guion_slash_inver, arrABI} from 'app/funciones';
 import {RegDiarioService} from '../service/registrodiario.service';
+import {EmpSubEmpService} from '../service/empSubemp.service';
 
 /*import {ISubscription} from 'rxjs/Subscription';
 import {ConfiguraService} from '../service/configura.service';*/
@@ -23,6 +24,7 @@ export class RegistroDiarioComponent implements OnInit{
                 private displayRegDiarioDetalle:boolean;
                 private displayProcesoGuardando:boolean;
                 private displayErrorGuardar:boolean;
+                private displayOrdenSubEmpresas:boolean;
 
             //number
                 private nTolVueltas:number;
@@ -35,24 +37,33 @@ export class RegistroDiarioComponent implements OnInit{
                 private fechRegDir:string;
                 private mensajevalidacion:string;
                 private mensaje:string;
+                private ordenSuEmId:string;
+
             //any(objeto)
                 private objConfig:any;
         //arrays
             private arrRegDiarioByEmId:any[];
             private arrRegDiarioDetalleByEmId:any[];
             private arrEtdRegDiario:any[];
+            private arrSubEmp:any[];
+            private selectedSubEmp:any[];
+
         //function init
         ngOnInit(){
             this.getAllRegistroDiarionByemId(this.emid);
         }
+
         //constructor
         constructor(private registrodiarioservice:RegDiarioService, 
+                    private empsubempservice:EmpSubEmpService,
                     public ClassGlobal:GlobalVars){
 
             this.emid=this.ClassGlobal.GetEmId();
             this.userid=this.ClassGlobal.GetUsId();
             this.arrRegDiarioByEmId=[];
             this.arrRegDiarioDetalleByEmId=[];
+            this.arrSubEmp=[];
+            this.selectedSubEmp=[];
 
             this.displayNuevoRegistroDiario=false;
             this.displayConfDelRegDiario=false;
@@ -60,6 +71,7 @@ export class RegistroDiarioComponent implements OnInit{
             this.displayRegDiarioDetalle=false;
             this.displayProcesoGuardando=false;
             this.displayErrorGuardar=false;
+            this.displayOrdenSubEmpresas=false;
            
             this.nTolVueltas=null;
             this.ReDiHoraInicioDiario=null;
@@ -209,7 +221,7 @@ export class RegistroDiarioComponent implements OnInit{
                     
                 //CABECERA FORM PRINCIPAL REGISTRO CABECERA
                     mgAllRegistroDiario(arrRegDiario=[]){
-                        console.log(arrRegDiario);
+                        //console.log(arrRegDiario);
                         let arrRegDiarioByEmId=[];
                         
                         for(let arrReg of arrRegDiario){
@@ -224,7 +236,7 @@ export class RegistroDiarioComponent implements OnInit{
                         for(let i=0; i<arrRegDiarioByEmId.length; i++){
                             arrRegDiarioByEmId[i].Nro=i+1;
                         }
-                        console.log();
+                        //console.log();
                         this.arrRegDiarioByEmId=arrRegDiarioByEmId.slice(0);
                     }
         //func btn datatable
@@ -233,14 +245,14 @@ export class RegistroDiarioComponent implements OnInit{
                         //editar
                         btnTabEditReDi(ReDiId:number){
                             this.ReDiId=ReDiId;
-                            console.log(ReDiId);
+                            //console.log(ReDiId);
                         }
                         //delete
                         btnTabDelReDi(ReDiId:number){
                             this.ReDiId=ReDiId;
                             this.displayConfDelRegDiario=true;
                             this.mensajevalidacion="¿Esta seguro de eliminar el registro diario?";
-                            console.log(ReDiId);
+                            //console.log(ReDiId);
                         }
                         okDelRegDiario(){
                             this.delRegistroDiario(this.ReDiId);
@@ -267,7 +279,8 @@ export class RegistroDiarioComponent implements OnInit{
                         ReDiId :this.ReDiId,
                         ReDiFeha :fecha(this.fechRegDir),
                         ReDiTotalVuelta:this.nTolVueltas,
-                        ReDiHoraInicioDiario:hora(this.ReDiHoraInicioDiario)
+                        ReDiHoraInicioDiario:hora(this.ReDiHoraInicioDiario),
+                        ReDiOrdenSubEmpresa:this.ordenSuEmId
                     }
 
                     if(this.nTolVueltas>20){
@@ -311,5 +324,108 @@ export class RegistroDiarioComponent implements OnInit{
                     }
                     return cen;
                 }
+
+                funcBtnModOrdenSubEmpre(){
+                    this.displayOrdenSubEmpresas=true;
+                    this.empsubempservice.getallsubempresasbyemid(this.emid).subscribe(
+                        data=>{
+                            //console.log(data);
+                            this.mgEmpSubEmp(data);
+                            this.selectedSubEmp=[];
+                        },
+                        error=>{
+
+                        },
+                        ()=>{}
+                    );
+                }
+
+                mgEmpSubEmp(arrSubEmp=[]){
+                    let _arrSubEmp=[]
+        
+                    for(let i=0; i<arrSubEmp.length; i++){
+                        _arrSubEmp.push({
+                            Nro:i+1,
+                            EmId:arrSubEmp[i].EmId,
+                            SuEmActivo:arrSubEmp[i].SuEmActivo,
+                            SuEmDireccion:arrSubEmp[i].SuEmDireccion,
+                            SuEmEmail:arrSubEmp[i].SuEmEmail,
+                            SuEmId:arrSubEmp[i].SuEmId,
+                            SuEmRSocial:arrSubEmp[i].SuEmRSocial,
+                            SuEmRuc:arrSubEmp[i].SuEmRuc,
+                            SuEmTelefono:arrSubEmp[i].SuEmTelefono,
+                            SuEmTiempoVuelta:arrSubEmp[i].SuEmTiempoVuelta,
+                            SuEmUbigeo:arrSubEmp[i].SuEmUbigeo,
+                            UsFechaReg:arrSubEmp[i].UsFechaReg,
+                            UsId:arrSubEmp[i].UsId,
+                            Orden:null
+                        })
+                    }
+                    //console.log(_arrSubEmp);
+                    this.arrSubEmp=_arrSubEmp;
+                }
+
+        onRowSelectSubEmp(event){
+            for(let i=0; i<this.selectedSubEmp.length; i++){
+                this.selectedSubEmp[i].Orden=i+1;
+            }   
+        }
+        
+
+        onRowUnselectSubEmp(event){
+            let index=this.funcBuscarEnArrayByValue(event.data.SuEmId,this.arrSubEmp);
+            this.arrSubEmp[index].Orden=null;
+            for(let i=0; i<this.selectedSubEmp.length; i++){
+                this.selectedSubEmp[i].Orden=i+1;
+            }
+        }
+
+        onHeaderCheckboxToggleSubEmp(event){
+            if(event.checked==true){
+                for(let i=0; i<this.arrSubEmp.length; i++){
+                    this.arrSubEmp[i].Orden=i+1;
+                }
+            }else if(event.checked==false){
+                for(let subemp of this.arrSubEmp){
+                    subemp.Orden=null;
+                }
+            }
+            //console.log(this.selectedSubEmp);
+        }
+
+        aceptarOrderSubEmp(){
+            this.displayOrdenSubEmpresas=false;
+            this.selectedSubEmp
+            let arrOrderSubEmp=[];
+            for(let i=0; i<this.selectedSubEmp.length; i++){
+                arrOrderSubEmp.push(this.selectedSubEmp[i].SuEmId);
+            }
+            //console.log(this.arrSubEmp);
+            //console.log(this.selectedSubEmp);
+            //console.log(arrOrderSubEmp);
+            this.ordenSuEmId=arrOrderSubEmp.join(',');
+            console.log(this.ordenSuEmId);
+        }
+        cancelOrderSubEmp(){
+            this.displayOrdenSubEmpresas=false;
+        }
+
+        funcBuscarEnArrayByValue(value:string, array=[]):number{
+            let i:number=0, cen:number=0, index:number;
+            while(i<array.length && cen==0){
+                if(array[i].SuEmId==value){
+                    cen=1;
+                }else if(array[i].SuEmId!=value){
+                    cen=0; i++;
+                }
+            }
+            if(cen==0){
+                index=-1;
+            }else if(cen==1){
+                index=i;
+            }
+            return index;
+        }
+
 
 }

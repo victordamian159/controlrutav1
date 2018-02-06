@@ -44,7 +44,11 @@
         <!--TABLA SUBEMPRESA-->
         <div class="row">
             <div class="table table-responsive">
-                <p-dataTable [value]="subempresas" [rows]="4" scrollable="true"  scrollWidth="100%" selectionMode="single" (onRowSelect)="onRowSelectSubEmp($event)" emptyMessage="No Hay Registros">
+                <p-dataTable [value]="subempresas" [rows]="4" 
+                            scrollable="true"  scrollWidth="100%" 
+                            selectionMode="single" 
+                            (onRowSelect)="onRowSelectSubEmp($event)" 
+                            emptyMessage="No Hay Registros">
                         <!--COLUMNAS-->
                         <p-column styleClass="col-button" [style]="{'width':'3em'}">
                             <template let-col let-ObjSubEmp="rowData" pTemplate="body" >
@@ -82,16 +86,17 @@
                             selectionMode="single" (onRowSelect)="onRowSelectConfig($event)"
                             emptyMessage="No Hay Registros">
 
-                        <p-column styleClass="col-button" [style]="{'width':'2em'}">
+                        <p-column styleClass="col-button" [style]="{'width':'3em'}">
                             <template let-col let-ObjConfig="rowData" pTemplate="body" >
                                 <button id="btnTable" type="button" pButton (click)="editarConfig(ObjConfig.CoId)" icon="fa-pencil-square-o" class="btn"></button>
                                 <button id="btnTable" type="button" pButton (click)="eliminarConfig(ObjConfig.CoId)" icon="fa-trash" class="btn"></button>					
                             </template>          
                         </p-column>
-                        <p-column field="Nro" header="N°" [style]="{'width':'1em'}"></p-column>
-                        <p-column field="CoNroMaxVueltas" header="N° Vueltas" [style]="{'width':'5em','text-align':'center'}" ></p-column>
+                        <p-column field="Nro" header="N°" [style]="{'width':'3em','text-align':'center'}"></p-column>
+                        <p-column field="CoNroMaxVueltas" header="N° Vueltas" [style]="{'width':'3em','text-align':'center'}" ></p-column>
                         <p-column field="CoPeriodo" header="Periodo" [style]="{'width':'8em','text-align':'center'}" ></p-column>
-                        <p-column field="CoMembreReporte" header="Membre" [style]="{'width':'15em'}" ></p-column>
+                        <p-column field="CoMembreReporte" header="Nombre Empresa" [style]="{'width':'15em'}" ></p-column>
+                        <p-column field="nomCoSiId" header="Sistema de Programacion" [style]="{'width':'15em'}" ></p-column>
                 </p-dataTable>
             </div>
         </div>
@@ -255,34 +260,48 @@
             <!--nueva configuracion por periodo-->
             <p-dialog header="Nuevo Periodo" [(visible)]="displayNuevaConfigXPeriodo" [resizable]="false"
                       modal="modal" width="100%" responsive="true" [closable]=false>
+
                 <div class="contNuevoPer">
                     <div class="nPerBody">
-                            <div class="row">
-                                
-                            <div class="col-xl-12 col-md-12 col-sm-12 col-sm-6">
-                                    <div class="form-group">
-                                <label>N° Total de Vueltas</label>
-                                <input class="form-control" type="number" maxlength=30 value=5
-                                        [(ngModel)]="CoNroMaxVueltas" required #CoNroMax="ngModel">
-                                <span *ngIf="!CoNroMax.valid && (CoNroMax.touched || CoNroMax.dirty)"  >  
-                                    <div id="validation" [hidden]="!CoNroMax.errors.required"> obligatorio </div>
-                                </span> 
-                            </div>
-                            </div>
-                            </div>
-                        <div class="row">
-                            <div class="col-xl-12 col-md-12 col-sm-12 col-sm-6">
-                                    <div class="form-group">
-                                <label>Membre Empresa</label>
-                                <input class="form-control" type="text" maxlength=30 
-                                        [(ngModel)]="CoMembreReporte" required #CoMembre="ngModel">
-                                <span *ngIf="!CoMembre.valid && (CoMembre.touched || CoMembre.dirty)"  >  
-                                    <div id="validation" [hidden]="!CoMembre.errors.required"> obligatorio </div>
-                                </span> 
-                            </div>
+                        <div class="row">                                
+                            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>N° Total de Vueltas</label>
+                                    <input class="form-control" type="number" maxlength=30 value=5
+                                            [(ngModel)]="CoNroMaxVueltas" required #CoNroMax="ngModel">
+                                    <span *ngIf="!CoNroMax.valid && (CoNroMax.touched || CoNroMax.dirty)"  >  
+                                        <div id="validation" [hidden]="!CoNroMax.errors.required"> obligatorio </div>
+                                    </span> 
+                                </div>
                             </div>
                         </div>
-                     
+
+                        <div class="row">
+                            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Membre Empresa</label>
+                                    <input class="form-control" type="text" maxlength=30 
+                                            [(ngModel)]="CoMembreReporte" required #CoMembre="ngModel">
+                                    <span *ngIf="!CoMembre.valid && (CoMembre.touched || CoMembre.dirty)"  >  
+                                        <div id="validation" [hidden]="!CoMembre.errors.required"> obligatorio </div>
+                                    </span> 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label  class="control-label">Sistema de Programacion:</label>
+                                    <select class="form-control" [(ngModel)]="CoSiId" (change)="fcboConfSistema()" required #cboConfSys="ngModel">
+                                        <option *ngFor="let Conf of arrConfSistema" [ngValue]="Conf.id">{{Conf.nomb}}</option>
+                                    </select>
+                                    <div id="validation" [hidden]="!cboConfSys.touched || cboConfSys.valid ">
+                                            Error, revise los datos ingresados
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                    
                     <div class="nPerBtns">
@@ -308,24 +327,49 @@
                       modal="modal" width="100%" responsive="true" [closable]=false>
                 <div class="contNuevoPer">
                     <div class="nPerBody">
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-sm-6">
-                            <label>N° Total de Vueltas</label>
-                            <input class="form-control" type="number" maxlength=30 value=5
-                                    [(ngModel)]="CoNroMaxVueltas" required #CoNroMax="ngModel">
-                            <span *ngIf="!CoNroMax.valid && (CoNroMax.touched || CoNroMax.dirty)"  >  
-                                <div id="validation" [hidden]="!CoNroMax.errors.required"> obligatorio </div>
-                            </span> 
+                        <div class="row">
+                            <div class="col-xl-12 col-md-12 col-sm-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>N° Total de Vueltas</label>
+                                    <input class="form-control" type="number" maxlength=30 value=5
+                                            [(ngModel)]="CoNroMaxVueltas" required #CoNroMax="ngModel">
+                                    <span *ngIf="!CoNroMax.valid && (CoNroMax.touched || CoNroMax.dirty)"  >  
+                                        <div id="validation" [hidden]="!CoNroMax.errors.required"> obligatorio </div>
+                                    </span> 
+                                </div>
+                            </div>
                         </div>
-                        <br>
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-sm-6">
-                            <label>Membre Empresa</label>
-                            <input class="form-control" type="text" maxlength=30 
-                                    [(ngModel)]="CoMembreReporte" required #CoMembre="ngModel">
-                            <span *ngIf="!CoMembre.valid && (CoMembre.touched || CoMembre.dirty)"  >  
-                                <div id="validation" [hidden]="!CoMembre.errors.required"> obligatorio </div>
-                            </span> 
+
+                        <div class="row">
+                            <div class="col-xl-12 col-md-12 col-sm-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Membre Empresa</label>
+                                    <input class="form-control" type="text" maxlength=30 
+                                            [(ngModel)]="CoMembreReporte" required #CoMembre="ngModel">
+                                    <span *ngIf="!CoMembre.valid && (CoMembre.touched || CoMembre.dirty)"  >  
+                                        <div id="validation" [hidden]="!CoMembre.errors.required"> obligatorio </div>
+                                    </span> 
+                                </div>
+                            </div>
                         </div>
-                        <br>
+
+                        <div class="row">
+                            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label  class="control-label">Sistema de Programacion:</label>
+                                    <select class="form-control" [(ngModel)]="CoSiId" (change)="fcboConfSistema()" required #cboConfSys="ngModel">
+                                        <option *ngFor="let Conf of arrConfSistema" 
+                                                [selected]="Conf.id===CoSiId"    
+                                                [ngValue]="Conf.id">
+                                                {{Conf.nomb}}
+                                        </option>
+                                    </select>
+                                    <div id="validation" [hidden]="!cboConfSys.touched || cboConfSys.valid ">
+                                            Error, revise los datos ingresados
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                    
                     <div class="nPerBtns">        
