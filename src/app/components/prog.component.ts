@@ -554,12 +554,9 @@ export class ProgComponent implements OnInit{
 
         this.placasservice.getAllPlacasBusByEmSuEm(this.emid, this.SuEmId).subscribe(
             data=>{
-                console.log(data);
+                //console.log(data);
                 placas=data;
-                let validez=this.validandoFechas(fIni,fFin);
-                let validFechInit:boolean;
-                
-                
+                let validez=this.validandoFechas(fIni,fFin); let validFechInit:boolean;                                
 
                 //prgoramacion por subempresas
                 if(this.CoSiId==2){
@@ -570,7 +567,7 @@ export class ProgComponent implements OnInit{
                     validFechInit=this.validarProgFechaInicio(this.progMaestro.PrFechaInicio, this.programacionMaestroArrayHTML, this.diasSemana);
                 }
 
-                console.log(validFechInit);
+                //console.log(validFechInit);
                 
                 //validando el numero de dias de entre las fechas de la nueva programacion
                 if(validez==1){
@@ -1111,7 +1108,9 @@ export class ProgComponent implements OnInit{
                 prDescripcion : prog.prDescripcion,
                 prId : prog.prId,
                 PrDiasIncluidosNumber:prog.PrDiasIncluidos,
-                PrDiasIncluidosString:0
+                PrDiasIncluidosString:0,
+                SuEmId:prog.SuEmId,
+                SuEmRSocial:prog.SuEmRSocial
             });
         }
 
