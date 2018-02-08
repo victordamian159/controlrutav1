@@ -114,16 +114,8 @@
                 height: 520px;
                 /*border: 2px solid green;*/ /*padding: 0; bottom: 0;*/
             }
-            .contenidoAsignarTarjetaIndividual{
-                height: 350px;
-                width:100%;
-                margin-bottom: 40px;
-            }
-            .contenidoAsignarTarjetaMulti{
-                height: 350px;
-                width:100%;
-                margin-bottom: 40px;
-            }
+            .contenidoAsignarTarjetaIndividual{ height: 350px; width:100%; margin-bottom: 40px; }
+            .contenidoAsignarTarjetaMulti{ height: 350px; width:100%; margin-bottom: 40px;}
             .btnCloseOnly{
                 /*border: 2px solid green;*/
                 width:100%;
@@ -228,11 +220,12 @@
         }
         
         table tbody td{
+           font-size: 14px;
             text-align:center;
-            border:none;
-            margin:auto;
-            padding:10px 14px;
-            width:147px;
+            /*border:none;*/
+            margin:0;
+            padding:10px 0;
+            width:190px;
         }
 
 /*ESTILOS TABLAS*/

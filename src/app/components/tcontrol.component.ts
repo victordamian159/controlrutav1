@@ -237,6 +237,7 @@ export class TcontrolComponent implements OnInit{
     // varibles globales
         private emID : number;
         private UsId:number;
+        private CoSiId:number;
         
     
     //ARRAYS
@@ -306,6 +307,7 @@ export class TcontrolComponent implements OnInit{
         this.val='x';
         this.validarTiempo="";
         this.mnjNroTarjetaValido="";
+        
         //this.TaCoMultiple=0; //tipo tarjeta individual(0)
 
         //DISPLAY
@@ -511,6 +513,7 @@ export class TcontrolComponent implements OnInit{
                     if(data.length!=0){
                       this.objConfigSystem=data[0];
                       this.CoId=this.objConfigSystem.CoId;
+                      this.CoSiId=this.objConfigSystem.CoSiId;
                     }else{
                         console.log('Error, no se pudo descargar la configuracion del sistema');
                     }
@@ -559,7 +562,7 @@ export class TcontrolComponent implements OnInit{
             this.tcontrolservice.getallregistrovueltasdiariasbyemprfe(emid,prid,fecha).subscribe(
                 data => {
                     arrCuadro=data;
-                    //console.log(arrCuadro);
+                    console.log(arrCuadro);
                     if(arrCuadro.length!=0 && arrCuadro.length>0){
                         this.arrCuadro=arrCuadro;
                         this.arrCuadroBusqueda=arrCuadro; //para la busqueda y validacion de reten
@@ -629,6 +632,7 @@ export class TcontrolComponent implements OnInit{
             this.tcontrolservice.getallregistrovueltasdiariasbyemprfe(emid,prid,fecha).subscribe(
                 data => {
                             arrCuadro=data;  
+                            
                             if(arrCuadro.length!=0 && arrCuadro.length>0){                 
                                 this.arrCuadro=arrCuadro;
                                 this.arrCuadroBusqueda=arrCuadro; //para la busqueda y validacion de reten
@@ -1002,12 +1006,14 @@ export class TcontrolComponent implements OnInit{
             
         //cuadro de registro diario
             extraRegistroDiario(arrregdiario=[]){
+                console.log(arrregdiario);
                 let arrreg:any[]=[];
                 for(let reg of arrregdiario){
                     arrreg.push({
+                        CuSaId:reg.Id,
                         TaCoId:reg.TaCoId,
                         TaCoHoraSalida:reg.TaCoHoraSalida,
-                        //PrDeOrden:reg.PrDeOrden,
+                        PrDeOrden:reg.PrDeOrden,
                         ReDiId:reg.ReDiId,
                         ReDiDeId:reg.ReDiDeId,
                         ReReId:reg.ReReId,
@@ -1080,8 +1086,8 @@ export class TcontrolComponent implements OnInit{
 
         //MOSTRANDO RESULTADO EN LA GRILLA PRINCIPAL
             mgTarjetasControl(arrTarjetasControl=[]){
-                this._allTarjControl = [];
-                //console.log(arrTarjetasControl);
+                //this._allTarjControl = [];
+                console.log(arrTarjetasControl);
                 let j:number=0, k:number=0, cen:number=0, _arrTarjetasControl:any[]=[], arrTarjCtrl:any[]=[];
 
                 //TARJETAS EXISTENTES
@@ -1144,20 +1150,23 @@ export class TcontrolComponent implements OnInit{
                     _arrTarjetasControl[i].NomPuntosControl=_arrTarjetasControl[i].PuCoDescripcion+' / '+_arrTarjetasControl[i].PuCoTiempoBus,
                     _arrTarjetasControl[i].NomTaCoNroVuelta=(_arrTarjetasControl[i].TaCoNroVuelta).toString()+'v';
                 }
-                
+                console.log(_arrTarjetasControl);
                 if(_arrTarjetasControl.length!=0 && _arrTarjetasControl.length>1){
                     //ordenar las tarjetas por su id
                     arrTarjCtrl=this.ordenarXTarj(_arrTarjetasControl).slice(0);
+                    this._allTarjControl=arrTarjCtrl;
+                }else {
+                    this._allTarjControl=_arrTarjetasControl;
                 }
-                                
-                this._allTarjControl=arrTarjCtrl;
+                //console.log(arrTarjCtrl);
+                
             }
 
             
 
             ordenarXTarj(arrTarjetas=[]){
                 let result:any[]=[], index:any[]=[], arrAux:any[]=[], _arrAux:any[]=[];
-
+                
                     for(let i=0;  i<arrTarjetas.length; i++){
                         index[i]=arrTarjetas[i].TaCoId;
                     }
@@ -1184,6 +1193,7 @@ export class TcontrolComponent implements OnInit{
                     }
                     
                     result=_arrAux;
+                
                 return result;
             }
 
@@ -1250,7 +1260,7 @@ export class TcontrolComponent implements OnInit{
             }
             buscarDatosTarjetaXNroVuelta(arrCuadroXFecha=[], ReDiDeNroVuelta:number){
                 let arr=this.sacarArrCuadroPrincipalXNroVuelta(arrCuadroXFecha,ReDiDeNroVuelta);
-                //console.log(arr);
+                console.log(arr);
                 if(arr.length!=0){
                     this._PuCoId=arr[0].PuCoId
                     this.PrId=arr[0].PrId
@@ -1713,7 +1723,7 @@ export class TcontrolComponent implements OnInit{
             //guardarObjeto una tarjeta
             guardarObjetoTarjeta(TaCoHoraSalida:string, TaCoFinish:number){
                 let _tarjeta:any, tarjEncontrado:number , reten:any;   //console.log(TaCoHoraSalida); 
-                
+               
                 _tarjeta={
                     TaCoId : this._TaCoId,
                     PuCoId : this._PuCoId,
@@ -1743,7 +1753,7 @@ export class TcontrolComponent implements OnInit{
                     TaCoTiempoReten:0
                 }; 
                 
-                //console.log(_tarjeta);
+                console.log(_tarjeta);
             
                 tarjEncontrado=this.buscarTarjetaAsignada(_tarjeta); //console.log(tarjEncontrado); //buscar si esta asignado o no
 
@@ -2317,22 +2327,34 @@ export class TcontrolComponent implements OnInit{
                     arrMatCuadro[i].EstadoAsignado='Asignado';
                 }else if(arrMatCuadro[i].TaCoAsignado=='2'){
                     arrMatCuadro[i].EstadoAsignado='Ausente';
-                    arrMatCuadro[i].RetenTiempo='--:--:--';
+                    /*arrMatCuadro[i].RetenTiempo='--:--:--';
                     arrMatCuadro[i].TiempoVuelta='--:--:--';
                     arrMatCuadro[i].HoraLlegada='--:--:--';
-                    arrMatCuadro[i].HoraSalida='--:--:--';
+                    arrMatCuadro[i].HoraSalida='--:--:--';*/
+                    arrMatCuadro[i].RetenTiempo='Ausente';
+                    arrMatCuadro[i].TiempoVuelta='Ausente';
+                    arrMatCuadro[i].HoraLlegada='Ausente';
+                    arrMatCuadro[i].HoraSalida='Ausente';
                 }else if(arrMatCuadro[i].TaCoAsignado=='3'){
                     arrMatCuadro[i].EstadoAsignado='Castigado';
-                    arrMatCuadro[i].RetenTiempo='--:--:--';
+                    /*arrMatCuadro[i].RetenTiempo='--:--:--';
                     arrMatCuadro[i].TiempoVuelta='--:--:--';
                     arrMatCuadro[i].HoraLlegada='--:--:--';
-                    arrMatCuadro[i].HoraSalida='--:--:--';
+                    arrMatCuadro[i].HoraSalida='--:--:--';*/
+                    arrMatCuadro[i].RetenTiempo='Castigado';
+                    arrMatCuadro[i].TiempoVuelta='Castigado';
+                    arrMatCuadro[i].HoraLlegada='Castigado';
+                    arrMatCuadro[i].HoraSalida='Castigado';
                 }else if(arrMatCuadro[i].TaCoAsignado==null){
                     arrMatCuadro[i].EstadoAsignado='No_Asig.';
                     arrMatCuadro[i].RetenTiempo='--:--:--';
                     arrMatCuadro[i].TiempoVuelta='--:--:--';
                     arrMatCuadro[i].HoraLlegada='--:--:--';
                     arrMatCuadro[i].HoraSalida='--:--:--';
+                    /*arrMatCuadro[i].RetenTiempo='No_Asig.';
+                    arrMatCuadro[i].TiempoVuelta='No_Asig.';
+                    arrMatCuadro[i].HoraLlegada='No_Asig.';
+                    arrMatCuadro[i].HoraSalida='No_Asig.';*/
                 }
 
                 if(i==arrProgFecha.length-1){
@@ -2343,7 +2365,7 @@ export class TcontrolComponent implements OnInit{
             }
 
             //dividiendo array en una matriz
-            _matSalidas=this.matrizCuadroDiario(arrMatCuadro, arrProgFecha.length);  //console.log(_matSalidas);
+            _matSalidas=this.matrizCuadroDiario(arrMatCuadro, arrMatCuadro.length/this.ReDiTotalVuelta, this.ReDiTotalVuelta);  //console.log(_matSalidas);
            
                         
             //ENCABEZADO NUMERICO
@@ -2362,52 +2384,93 @@ export class TcontrolComponent implements OnInit{
         }
        
         //dividiendo array en matriz
-        matrizCuadroDiario(arrMatCuadro=[], longxArray){
+        matrizCuadroDiario(arrMatCuadro=[], longxArray, ReDiTotalVuelta:number){
+    
             let resultado:any[]=[],   nroArraysMat=(arrMatCuadro.length)/longxArray,    
                 i:number=0, j:number=0, k:number=0, mat:any[]=[[]];
-            //console.log(nroArraysMat);  console.log(longxArray);  console.log(arrMatCuadro);
+            /*console.log(nroArraysMat);  
+            console.log(longxArray);  
+            console.log(arrMatCuadro);*/
             
             //iniciar array de arrays en blanco
-            for(let i=0; i<nroArraysMat; i++){  mat[i]=[];  }
+            for(let i=0; i<nroArraysMat; i++){  mat[i]=[];  } 
 
-            while(i<nroArraysMat){
-                while(j<longxArray){
-                    //console.log('i: '+i+' -- '+'j: '+j+' -- '+'k: '+k);
-                    mat[i][j]=[arrMatCuadro[k].BuPlaca, arrMatCuadro[k].EstadoAsignado, arrMatCuadro[k].RetenTiempo,arrMatCuadro[k].HoraSalida,arrMatCuadro[k].TiempoVuelta,arrMatCuadro[k].HoraLlegada]; 
-                    k++; j++;
+            if(this.CoSiId==1){
+                while(i<nroArraysMat){
+                    while(j<longxArray){        
+                            
+                        mat[i][j]=[
+                            arrMatCuadro[k].BuPlaca, 
+                            arrMatCuadro[k].EstadoAsignado, 
+                            arrMatCuadro[k].RetenTiempo,
+                            arrMatCuadro[k].HoraSalida,
+                            arrMatCuadro[k].TiempoVuelta,
+                            arrMatCuadro[k].HoraLlegada
+                        ]; 
+                        k++; 
+                        j++;
+                    }
+                    j=0; i++;
                 }
-                j=0; i++;
+            }else if(this.CoSiId==2){
+                j=0; let k=0, cen=0;
+
+                for(let i=0; i<nroArraysMat; i++){
+                    while(j<arrMatCuadro.length && k<longxArray){
+                        if(arrMatCuadro[j].ReDiDeNroVuelta==i+1){
+                            mat[i][k]=[
+                                arrMatCuadro[j].BuPlaca, arrMatCuadro[j].EstadoAsignado, 
+                                arrMatCuadro[j].RetenTiempo, arrMatCuadro[j].HoraSalida,
+                                arrMatCuadro[j].TiempoVuelta, arrMatCuadro[j].HoraLlegada
+                            ]; 
+                            k++;
+                        }else if(arrMatCuadro[j].ReDiDeNroVuelta!=i+1){
+                            
+                        }
+                        j++;
+                    }
+                    j=0;
+                    k=0;
+                }
+
             }
             resultado=mat;
+            console.log(resultado);
             return resultado;
         }
 
         //concatenar par acuadro pequeño
         concatenarRegDiarioProgxFecha(arrProgFecha=[], arrCuadroDiario=[]){
-            //console.log(arrProgFecha); console.log(arrCuadroDiario); 
+            console.log(arrProgFecha); 
+            console.log(arrCuadroDiario); 
+
             let arrMatCuadro:any[]=[], arrCuadro:any[]=[];
             arrCuadro=this.sacarArrCuadroXNroVuelta(arrCuadroDiario, this.ReDiDeNroVuelta);
-            //console.log(arrCuadro);
+            console.log(arrCuadro);
             for(let i=0; i<arrCuadro.length;i++){
+                    //console.log(arrProgFecha[i].PrDeOrden);
                 arrMatCuadro[i]={
                     nro:i+1,
-                    PrDeOrden:arrProgFecha[i].PrDeOrden,
+                    
                     ReDiId:arrCuadro[i].ReDiId,
                     ReDiDeId:arrCuadro[i].ReDiDeId,
                     ReReId:arrCuadro[i].ReReId,
-                    BuId:arrProgFecha[i].BuId,
                     BuPlaca:arrCuadro[i].BuPlaca,
-                    PrDeId:arrProgFecha[i].PrDeId,
-                    PrId:arrProgFecha[i].PrId,
 
-                    PrDeAsignadoTarjeta:arrProgFecha[i].PrDeAsignadoTarjeta,
+                    BuId:arrCuadro[i].BuId,
+                    PrDeOrden:arrCuadro[i].PrDeOrden,
+                    PrDeId:arrCuadro[i].PrDeId,
+
+                    //PrId:arrProgFecha[i].PrId,
+                    //PrDeAsignadoTarjeta:arrProgFecha[i].PrDeAsignadoTarjeta,//no uso
+                    //PrDeCountVuelta:arrProgFecha[i].PrDeCountVuelta,//no uso
+                    //PrDeHoraBaseSalida:_hora(arrProgFecha[i].PrDeHoraBase),
+
                     TaCoAsignado:arrCuadro[i].TaCoAsignado,
                     EstadoAsignado:"",
 
                     ReDiDeNroVuelta:arrCuadro[i].ReDiDeNroVuelta,
-                    PrDeCountVuelta:arrProgFecha[i].PrDeCountVuelta,
-
-                    PrDeHoraBaseSalida:_hora(arrProgFecha[i].PrDeHoraBase),
+                    
                     TaCoHoraSalida:_hora(arrCuadro[i].TaCoHoraSalida),
                     HoraLlegada:_hora(arrCuadro[i].HoraLlegada),
                     ReReTiempo:arrCuadro[i].ReReTiempo,
@@ -4103,33 +4166,34 @@ export class TcontrolComponent implements OnInit{
                     arrMatCuadro[i].EstadoAsignado='Asignado';
                 }else if(arrMatCuadro[i].TaCoAsignado=='2'){
                     arrMatCuadro[i].EstadoAsignado='Ausente';
-                    arrMatCuadro[i].RetenTiempo='__:__:__';
-                    arrMatCuadro[i].TiempoVuelta='__:__:__';
-                    arrMatCuadro[i].HoraLlegada='__:__:__';
-                    arrMatCuadro[i].HoraSalida='__:__:__';
+                    //arrMatCuadro[i].RetenTiempo='__:__:__'; arrMatCuadro[i].TiempoVuelta='__:__:__';
+                    //arrMatCuadro[i].HoraLlegada='__:__:__';  arrMatCuadro[i].HoraSalida='__:__:__';
+                    arrMatCuadro[i].RetenTiempo='Ausente'; arrMatCuadro[i].TiempoVuelta='Ausente';
+                    arrMatCuadro[i].HoraLlegada='Ausente';  arrMatCuadro[i].HoraSalida='Ausente';
                 }else if(arrMatCuadro[i].TaCoAsignado=='3'){
                     arrMatCuadro[i].EstadoAsignado='Castigado';
-                    arrMatCuadro[i].RetenTiempo='__:__:__';
-                    arrMatCuadro[i].TiempoVuelta='__:__:__';
-                    arrMatCuadro[i].HoraLlegada='__:__:__';
-                    arrMatCuadro[i].HoraSalida='__:__:__';
+                    /*arrMatCuadro[i].RetenTiempo='__:__:__';  arrMatCuadro[i].TiempoVuelta='__:__:__';
+                    arrMatCuadro[i].HoraLlegada='__:__:__';  arrMatCuadro[i].HoraSalida='__:__:__';*/
+                    arrMatCuadro[i].RetenTiempo='Castigado';  arrMatCuadro[i].TiempoVuelta='Castigado';
+                    arrMatCuadro[i].HoraLlegada='Castigado';  arrMatCuadro[i].HoraSalida='Castigado';
                 }else if(arrMatCuadro[i].TaCoAsignado==null){
                     arrMatCuadro[i].EstadoAsignado='No_Asig.';
-                    arrMatCuadro[i].RetenTiempo='__:__:__';
-                    arrMatCuadro[i].TiempoVuelta='__:__:__';
-                    arrMatCuadro[i].HoraLlegada='__:__:__';
-                    arrMatCuadro[i].HoraSalida='__:__:__';
+                    /*arrMatCuadro[i].RetenTiempo='__:__:__';  arrMatCuadro[i].TiempoVuelta='__:__:__';
+                    arrMatCuadro[i].HoraLlegada='__:__:__';  arrMatCuadro[i].HoraSalida='__:__:__';*/
+                    arrMatCuadro[i].RetenTiempo='__:__:__';  arrMatCuadro[i].TiempoVuelta='__:__:__';
+                    arrMatCuadro[i].HoraLlegada='__:__:__';  arrMatCuadro[i].HoraSalida='__:__:__';
                 }
             }
 
             //dividiendo array en una matriz
-            _matSalidas=this.matrizCuadroDiario(arrMatCuadro, nroBuses);  //console.log(_matSalidas);
+            //console.log(arrMatCuadro);
+            _matSalidas=this.matrizCuadroDiario(arrMatCuadro, nroBuses, this.ReDiTotalVuelta);  //console.log(_matSalidas);
            
                         
             //ENCABEZADO NUMERICO
             for(let i=0; i<ReDiTotalVuelta; i++){ arrEncNumber.push(i+1);}
             //ENCABEZADO STRING
-            for(let i=0; i<ReDiTotalVuelta;i++){ arrEncHoras.push(['N°Placa', 'Etd_Tarj.',  'H.Reten', 'H.Salida', 'H.Vuelta' ,'H.Llegada']);  }
+            for(let i=0; i<ReDiTotalVuelta;i++){ arrEncHoras.push(['Nro Placa', 'Etd_Tarj.',  'H.Reten', 'H.Salida', 'H.Vuelta' ,'H.Llegada']);  }
 
             this.headerTabCuadroNumber=arrEncNumber; this.headerTabCuadroHoras=arrEncHoras;
             _arrCuadroSalidas=this.mgCuadroSalidas(this.ReDiTotalVuelta,nroBuses);
@@ -4137,7 +4201,7 @@ export class TcontrolComponent implements OnInit{
     
             for(let i=0; i<_matSalidas.length; i++){  _arrCuadroSalidas[i]=_matSalidas[i]; }
 
-            console.log(_arrCuadroSalidas);
+            //console.log(_arrCuadroSalidas);
             this.arrCuadroSalidas=_arrCuadroSalidas;
             
         }
@@ -4284,5 +4348,22 @@ export class TcontrolComponent implements OnInit{
                 ()   => {}
             );
         }
-        
+
+        returnPrIdByBuId(arrCuadroByVuelta=[], BuId:number){
+            let i=0,result:number, cen=0;
+            while(i<arrCuadroByVuelta.length && cen==0){
+                if(arrCuadroByVuelta[i].BuId!=BuId){
+                    cen=0; i++;
+                }else if(arrCuadroByVuelta[i].BuId==BuId){
+                    cen=1;
+                }
+            }
+            if(cen==0){
+                result=arrCuadroByVuelta[i].PrId;
+            }else if(cen==1){
+                result=-1;
+            }
+            return result;
+        }
+
 }

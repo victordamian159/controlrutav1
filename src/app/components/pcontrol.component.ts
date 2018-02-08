@@ -1945,7 +1945,13 @@ export class PcontrolComponent implements OnInit{
 
     //validar si nuevo registro es activo o inactivo
     validarCboPuCoActivo(PuCoActivo:number, arrPts=[], nroValidos:number):boolean{
+        console.log(PuCoActivo);
+        console.log(arrPts);
+        console.log(nroValidos);
         let result:boolean, nroSi:number=0;
+        if(arrPts.length==0){
+            result=true;
+        }else if(arrPts.length!=0){
             //conteo 'si'
             for(let i=0;i<arrPts.length;i++){
                 if(arrPts[i].nomPuCoActivo=="SI"){
@@ -1953,7 +1959,7 @@ export class PcontrolComponent implements OnInit{
                 }
             }
             //console.log(PuCoActivo);
-
+            //contando el ingresado, saber si es activo o no
             if(PuCoActivo==1){
                 nroSi++;
             }else if(PuCoActivo==0){
@@ -1965,6 +1971,7 @@ export class PcontrolComponent implements OnInit{
             }else if(nroValidos!=nroSi){
                 result=false;
             }
+        }
         return result;
     }
 }
