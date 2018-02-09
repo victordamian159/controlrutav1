@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, EventEmitter, Input, Output} from '@angular/core';
 import {UserSystemService} from '../service/usuarioSistema.service';
 import { AppComponent } from '../app.component';
 import { Router} from '@angular/router';
@@ -28,6 +28,7 @@ export class loginUserComponent implements OnInit{
     private mnjeSesionError:string;
     private EmId:number;
     
+    @Output() outUserName = new EventEmitter();
 
     ngOnInit(){
         this.procNuevoUser();
@@ -60,39 +61,34 @@ export class loginUserComponent implements OnInit{
             );
         }
 
-        /*  NO FUNCIONA
-        procAutenticar(user:Object){
-            let validUser:any;
-            this.userservice.autenticacion(user).subscribe(
-                data => { console.log(data);},
-                error => {this.errorMessage=error;}
-            );
-        }*/
-
-    
         procAutenticar(user:Object){
             let validUser:any[]=[];
             this.userservice.autenticacion(user).subscribe(
                 data => {   
-                            console.log(data);
-                            validUser=data;     
-                            this.EmId=data.EmId;
-                            if(validUser.length!=0){
-                                this.userValid=validUser;
+                    //console.log(data);
+                    validUser=data;     
+                    this.EmId=data.EmId;
+                    if(validUser.length!=0){
+                        this.userValid=validUser;
+                        
+                        this.outUserName.emit({
+                            nombres: this.userValid.PeNombres, 
+                            apellidos: this.userValid.PeApellidos, 
+                        });
 
-                                localStorage.removeItem('DATOSUSER');
-                                localStorage.setItem('DATOSUSER',JSON.stringify(validUser));
-                                localStorage.getItem('DATOSUSER');
+                        localStorage.removeItem('DATOSUSER');
+                        localStorage.setItem('DATOSUSER',JSON.stringify(validUser));
+                        localStorage.getItem('DATOSUSER');
 
-                                this.router.navigate(['/regempper']);
-                                this.appcomp.ocNavBar=true;
-                                
-                            }else{
-                                this.userValid=validUser;
-                                this.mnjeSesionError="Error en el usuario o contraseña";
-                                this.inicioSesion=0;
-                            }
-                        },
+                        this.router.navigate(['/regempper']);
+                        this.appcomp.ocNavBar=true;
+                        
+                    }else{
+                        this.userValid=validUser;
+                        this.mnjeSesionError="Error en el usuario o contraseña";
+                        this.inicioSesion=0;
+                    }
+                },
                 error => {this.errorMessage=error;}
             );
         }

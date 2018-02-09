@@ -515,9 +515,14 @@ export class ProgComponent implements OnInit{
 
                         //por todas las empresas
                         if(this.CoSiId==1){
-                            this.getAllPlacasBusByEmSuEm(this.emid,0);
-                            this.unidadesEstado(this.extrayendoPlacasBus(this.placas,'nuevaprog'));
-                            
+                            this.placasservice.getAllPlacasBusByEmSuEm(this.emid,0).subscribe(
+                                data=>{
+                                    this.unidadesEstado(this.extrayendoPlacasBus(data,'nuevaprog'));
+                                },
+                                error=>{console.log(error);},
+                                ()=>{}
+                            );
+                    
                         //por subempresa
                         }else if(this.CoSiId==2){
                             this.empSubEmpService.getallsubempresasbyemid(this.emid).subscribe(
@@ -551,6 +556,9 @@ export class ProgComponent implements OnInit{
       
         //let placas=this.extrayendoPlacasBus(this.placas,'nuevaprog');
         
+        if(this.CoSiId==1){
+            this.SuEmId=0;
+        }
 
         this.placasservice.getAllPlacasBusByEmSuEm(this.emid, this.SuEmId).subscribe(
             data=>{
@@ -595,7 +603,8 @@ export class ProgComponent implements OnInit{
                             console.log(progCab);
                             this.procSaveProgramacion(progCab);
                             
-            
+                            console.log(this.arrayPlacas);
+                            console.log(this.ordenSorteo);
                             this.displayNuevaProgramacion=false; //cerrar 1era ventana
                             this.displayProgramacionBase=true; //abrir 2da ventana
                         }else if(validFechInit==false){
@@ -643,8 +652,10 @@ export class ProgComponent implements OnInit{
    
     /* FUNCION -> FORMA DE SORTEO MANUAL O AUTOMATICO */
     tipoProgramacion(_arrayplacas=[], long:number, tprog:number){
+        
         this.ordenSorteo=[]; let arrayplacas=[];
         for(let i=0; i<_arrayplacas.length; i++){
+            
             if(_arrayplacas[i].BuActivo==true){
                 arrayplacas.push({                    
                     BuActivo:_arrayplacas[i].BuActivo,
@@ -661,15 +672,14 @@ export class ProgComponent implements OnInit{
             }
             
         }
-
+        
         /* AUTOMATICO*/
         if(tprog==0){ 
-            let array = ["c"];  let nro;//ARRAY NUMEROS ALEATORIOS NO REPETIDOS
-            let _arrayplacas=[];  let i=0,j=0, cen=0; // cen=0: no existe         cen=1: existe
-
+            let array = ["c"],nro, i=0, j=0, cen=0; 
+            
             //ALGORITMO NROS ALEATORIOS
-            while(i<long ){
-                nro = Math.floor(Math.random()*long);//NUMEROS ALEATORIOS ENTRE 0 Y LONG
+            while(i<arrayplacas.length ){
+                nro = Math.floor(Math.random()*arrayplacas.length);//NUMEROS ALEATORIOS ENTRE 0 Y LONG
                 while(j<array.length ){
                     if(array[j]!=nro){
                         cen=0;
@@ -684,16 +694,16 @@ export class ProgComponent implements OnInit{
                 }
                 cen=0; j=0;
             }
-            
+            console.log(array);
             //APLICANDO ALGORITMO, BUSCANDO INDICES CON ARRAY DE PLACAS
-            i=0; nro=0;
+            i=0; nro=0;_arrayplacas=[]; 
             while(i<array.length){
                 _arrayplacas.push(arrayplacas[array[i]]);
                 i++;
             }
-            
+            this.ordenSorteo=[];
             this.ordenSorteo=_arrayplacas;
-            console.log(this.ordenSorteo);
+            
             this.arrayPlacas=[];
         /* MANUAL*/
         }else if(tprog==1){

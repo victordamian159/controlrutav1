@@ -5,17 +5,7 @@
 
 
 /* APARIENCIA BOTONES DE LA VENTANA NUEVO */
-.btn_modal{
-    width:100%; 
-    height:40px; 
-    font-size:15px;
-    background-color:#4CAF50;
-}
-
-
-
-
-
+.btn_modal{ width:100%; height:40px; font-size:15px; background-color:#4CAF50;}
 
 
 /* desktop */
@@ -36,12 +26,12 @@
         .bodyFmEditPC{ height: 360px; width: 100%;}
         .pieFmEditPC{height: 40px; width: 100%;}
 
-    /*form agregar puntos de control sobre el mapa*/
-        .contFmMAddPtoCtrl{height: 410px; width: 500px;}
+    /*form modal agregar puntos de control sobre el mapa*/
+        .contFmMAddPtoCtrl{height: 410px; width: 600px;}
         .bodyFmMAddPtoCtrl{height: 360px; width: 100%;}
         .pirFmMAddPtoCtrl{margin-top:10px; height: 40px; width: 100%;}
 
-    /*mensaje de usuario*/
+    /*mensaje modal de usuario*/
         .contFmMMjUser{height: 100px; width: 300px;}
         .bodyFmMMjUser{height: 60px; width: 100%;}
         .pieFmMMjUser{ height: 40px; width: 100%;}
@@ -50,26 +40,70 @@
 
     /* iphone 6 plus*/
     @media(max-width:480px){ 
-        .container{max-height: 520px;max-width: 330px;}
- 
-        .cont_modal{
-            overflow-y: auto; 
-            overflow-x: auto;
-            height:520px;
-            width: 100%;
-        }
+        .contenedor{height: 1300px; width:390px}
+        .form-group{ margin-bottom:20px; }
+        .btn_modal{ width:100%; height:40px; font-size:15px; background-color:#4CAF50;}
+
+        /*form contenedor mapa (iphone 6)*/
+        #contMapa{height: 520px; width: 390px; }
+        #pieMapa{margin-top:10px;;height: 200px; width:100%; }
+        .btn_mapa{ width:100%; height:40px; font-size:15px; background-color:#4CAF50;}
+
+
+        /*mensaje modal de usuario*/
+        .contFmMMjUser{height: 140px; width: 350px;}
+        .bodyFmMMjUser{height: 60px; width: 100%;}
+        .pieFmMMjUser{ height: 80px; width: 100%;}
+
+        /* form modal editar puntos de control */
+        .contFmEditPC{ height: 410px; width: 355px; }
+        .bodyFmEditPC{ height: 360px; width: 100%;}
+        .pieFmEditPC{height: 40px; width: 100%;}
+
+        /* form modal preview puntos de control */
+        .contFmVistaPC{ height: 410px; width: 355px; }
+        .bodyFmVistaPC{ height: 360px; width: 100%;}
+        .pieFmVistaPC{height: 40px; width: 100%;}
+
+        /*agregar marcadores ptos control*/
+        /*form modal agregar puntos de control sobre el mapa*/
+        .contFmMAddPtoCtrl{height: 620px; width: 355px; overflow-y: visible}
+        .bodyFmMAddPtoCtrl{height: 780px; width: 100%;}
+        .pirFmMAddPtoCtrl{height: 100px; width: 100%;}
     }
 
     /* iphone 6 */
     @media(max-width:380px){ 
-        .container{max-height: 450px;max-width: 330px;}
-      
-        .cont_modal{
-            overflow-y: auto; 
-            overflow-x: auto;
-            height:450px;
-            width: 100%;
-        }
+        .contenedor{height: 1300px; width:355px}
+        .form-group{ margin-bottom:20px; }
+        .btn_modal{ width:100%; height:40px; font-size:15px; background-color:#4CAF50;}
+
+        /*form contenedor mapa (iphone 6)*/
+        #contMapa{height: 520px; width: 355px; }
+        #pieMapa{margin-top:10px;;height: 200px; width:100%; }
+        .btn_mapa{ width:100%; height:40px; font-size:15px; background-color:#4CAF50;}
+
+        /*mensaje modal de usuario*/
+        .contFmMMjUser{height: 140px; width: 350px;}
+        .bodyFmMMjUser{height: 60px; width: 100%;}
+        .pieFmMMjUser{ height: 80px; width: 100%;}
+
+        /* form modal editar puntos de control */
+        .contFmEditPC{ height: 410px; width: 355px; }
+        .bodyFmEditPC{ height: 360px; width: 100%;}
+        .pieFmEditPC{height: 40px; width: 100%;}
+
+        /* form modal preview puntos de control */
+        .contFmVistaPC{ height: 410px; width: 355px; }
+        .bodyFmVistaPC{ height: 360px; width: 100%;}
+        .pieFmVistaPC{height: 40px; width: 100%;}
+
+        /*agregar marcadores ptos control*/
+        /*form modal agregar puntos de control sobre el mapa*/
+        .contFmMAddPtoCtrl{height: 410px; width: 355px;}
+        .bodyFmMAddPtoCtrl{height: 360px; width: 100%;}
+        .pirFmMAddPtoCtrl{margin-top:10px; height: 40px; width: 100%;}
+        
     }
 
     /* iphone 5 */

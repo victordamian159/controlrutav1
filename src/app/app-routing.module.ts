@@ -15,6 +15,7 @@ import {EmpSubEmpComponent} from './components/empSubemp.component';
 import {PersComponent} from './components/personal.component';
 import {loginUserComponent} from './components/loginUser.component';
 import {RegistroDiarioComponent} from './components/registrodiario.component';
+//import {AppComponent} from './app.component';
 
 import {reportPersonas} from './components/reportPersonas.component';
 import {reportBuses} from './components/reportBus.component';
@@ -23,15 +24,12 @@ import {consulVistaEnLineaComponent} from './components/vistaEnLinea.component';
 import {consulAlertNotifComponent} from './components/alertNotificacion.component';
 import {consulIncidenciaComponent} from './components/incidencia.component';
 
-/*import {LoginComponent} from './login/_login/_login.component';
-import { RegisterComponent } from './login/register/register.component';*/
-
-
-/*COMPONENTES PARA EL LOGIN */
-//import { HomeComponent } from './home/index';
-//import { LoginComponent } from './login/index';
-//import { RegisterComponent } from './register/index';
-//import { AuthGuard } from './login/guards/auth.guard';
+/*
+  import {LoginComponent} from './login/_login/_login.component'; import { RegisterComponent } from './login/register/register.component';
+  //COMPONENTES PARA EL LOGIN 
+  import { HomeComponent } from './home/index'; import { LoginComponent } from './login/index';
+  import { RegisterComponent } from './register/index'; import { AuthGuard } from './login/guards/auth.guard';
+*/
 import {AuthGuard} from './components/auth.guard';
 
 //estableciencido las path para los componentes del aplicativo

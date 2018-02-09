@@ -29,6 +29,7 @@ import {EmpPerComponent} from './components/empresapersonal.component';
 import {PersComponent} from './components/personal.component';
 import {loginUserComponent} from './components/loginUser.component';
 import {distribTiempoComponent} from './components/distribTiempo.component';
+import {userNameComponent} from './components/userName.component';
 import { AuthGuard } from './components/auth.guard';
 
 //MANTENIMIENTO
@@ -83,22 +84,22 @@ import {DatosCompartidosService} from './service/dataComunicationApp.service';
 
 
 /* PARA EL LOGIN   BORRAR DESPUES DE TERMINAR DE PROGRAMARLO
-import { AlertComponent } from './login/_directives/alert.component';
-/*import { AuthGuard } from './login/guards/auth.guard';
-import { AlertService} from './login/services/alert.service';
-import { AuthenticationService } from './login/services/authentication.service';
-import { UserService } from './login/services/user.service';
-import { LoginComponent} from "./login/_login/_login.component";
-import { RegisterComponent } from "./login/register/register.component";*/
+    import { AlertComponent } from './login/_directives/alert.component';
+    /*import { AuthGuard } from './login/guards/auth.guard';
+    import { AlertService} from './login/services/alert.service';
+    import { AuthenticationService } from './login/services/authentication.service';
+    import { UserService } from './login/services/user.service';
+    import { LoginComponent} from "./login/_login/_login.component";
+    import { RegisterComponent } from "./login/register/register.component";*/
 
-// used to create fake backend
-/*import { fakeBackendProvider } from './login/helper/fake-backend';
-import { MockBackend, MockConnection } from '@angular/http/testing';
-import { BaseRequestOptions } from '@angular/http';*/
-/*  
-  import { RegisterComponent } from './register/index';
-  import { InMemoryWebApiModule } from 'angular2-in-memory-web-api';
-  import { InMemoryDataService }  from './in-memory-data.service';
+    // used to create fake backend
+    /*import { fakeBackendProvider } from './login/helper/fake-backend';
+    import { MockBackend, MockConnection } from '@angular/http/testing';
+    import { BaseRequestOptions } from '@angular/http';*/
+    /*  
+    import { RegisterComponent } from './register/index';
+    import { InMemoryWebApiModule } from 'angular2-in-memory-web-api';
+    import { InMemoryDataService }  from './in-memory-data.service';
 */
 
 @NgModule({
@@ -122,7 +123,8 @@ import { BaseRequestOptions } from '@angular/http';*/
     reportBuses,
     consulVistaEnLineaComponent,
     consulAlertNotifComponent,
-    consulIncidenciaComponent
+    consulIncidenciaComponent,
+    userNameComponent
   ],
   
   /*MODULOS FRAMWORK PRIMENG*/
@@ -194,7 +196,7 @@ import { BaseRequestOptions } from '@angular/http';*/
 export class AppModule { }
 
 
- /*
+/*
         LoginComponent,
         RegisterComponent,
         AlertComponent,
@@ -202,4 +204,5 @@ export class AppModule { }
         //InMemoryWebApiModule.forRoot(InMemoryDataService)
     */
     
-    /* REPORTES */
+    /* REPORTES 
+*/

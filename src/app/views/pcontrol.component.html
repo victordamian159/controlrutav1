@@ -3,7 +3,7 @@
     <!--CONTENIDO-->
     <div class="row">
         <!--TABLAS-->
-        <div class="col-xl-4 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-xl-4 col-md-5 col-sm-6 col-xs-12">
             <label>Puntos de Control</label>
             
             <!--BUSQUEDA + RUTAS-->
@@ -63,7 +63,7 @@
         </div>
 
         <!--GRAFICOS -->
-        <div class="col-xl-8 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-xl-8 col-md-7 col-sm-6 col-xs-12">
             <!--MAPA-->            
             <div id="contMapa">
                 <!--<p-growl [value]="msgs"></p-growl>-->
@@ -385,17 +385,17 @@
         <!--VENTANA MODALES DE CONFIRMACION ELIMINAR EDITAR ACEPTAR--> 
             <p-dialog [(visible)]="displayElimRegCabecera" [resizable]="false" modal="modal" width="100%" responsive="true" [closable]="false">
                 <div class="contFmMMjUser">
-                        
+                    
                     <div class="bodyFmMMjUser">  
                         {{mensaje}}
                     </div>
                     <div class="pieFmMMjUser">
                         <div class="row ">
-                            <div class="col-xl-6 col-md-6 col-sm-12 col-xm-12">
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
                                 <button class="btn_modal" pButton icon="fa-trash-o" label="Eliminar" (click)="_eliminarMaestro()"></button>
                             </div>
 
-                            <div class="col-xl-6 col-md-6 col-sm-12 col-xm-12"> 
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6"> 
                                 <button class="btn_modal" pButton icon="fa-close" label="Cancelar" (click)="cancel_eliminarMaestro()"></button>
                             </div>
                         </div>

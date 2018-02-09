@@ -1,3 +1,6 @@
+
+
+<!--navbar-->
 <div *ngIf="ClassGlobal.localstorageItems()==true">
     <nav class="navbar navbar-toggleable-md navbar-inverse"  >
             
@@ -9,9 +12,7 @@
 
         <!--ICONO NAVBAR-->
         <a class="navbar-brand"></a> 
-        <!--a class="navbar-brand" href="#"><img id="icono" src="./src/icons/Aviation_63-512.png" width="30" height="30" alt="">-->
-            
-
+       
         <!--LISTA NAVBAR-->
         <div class="navbar-collapse collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
@@ -92,7 +93,7 @@
                 <!--LOGIN PARA SMARTPHONE-->
                 <div id="loginSmartphone">
                     <li class="nav-item dropdown" >
-                        <a id="_username">Usuario:{{nombre}}</a>
+                        <a id="_username">Usuario:{{ClassGlobal.GetDatosUsuario().PeNombres}}</a>
                     </li>
                     <li class="nav-item dropdown" >
                         <a id="_btnlogout" href="#" routerLink="/login">Cerrar Sesion</a>
@@ -105,7 +106,7 @@
         <!--modo escritorio-->
         <div id="user_Logout">
             <li id="nomUser">
-                <a>Usuario:{{nombre}}</a>
+                <a>Usuario:{{ClassGlobal.GetDatosUsuario().PeNombres}}</a>
             </li>
             <li id="btn_logout" >
                 <a href="#" routerLink="/login">Cerrar Sesion</a>
@@ -115,9 +116,9 @@
     </nav>
 </div>
 
-<!--{{varGlobal.localstorageItems()}}-->
-<!--<alert></alert>-->
-
+<!--
+<app-loginuser (outUserName)="showUserName($event)" [hidden]='false' ></app-loginuser>
+-->
 <router-outlet></router-outlet>
 
 <footer *ngIf="!(ClassGlobal.localstorageItems()==true)">
