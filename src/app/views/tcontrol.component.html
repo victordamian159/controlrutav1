@@ -322,23 +322,25 @@
                                 </p-dataTable> 
                             </div>    
                             <!--botones-->              
-                            <div class="btnModAsigT row justify-content-end">
-                                <div class="col-xl-3 col-md-4 col-sm-12 col-xs-12">
-                                    <button class="btn_modal ajusteBtnModal" type="text" pButton icon="fa-save" 
-                                    (click)="guardarTarjeta(tmpSalida.valid, tmpReten.valid);" 
-                                    [disabled]="(  !(val!='x') || !(estadoPlaca==0) || placaValida==0)" label="Guardar"></button>
-                                    
-                                </div>
-                                <div class="col-xl-3 col-md-4 col-sm-12 col-xs-12">
-                                    <button class="btn_modal ajusteBtnModal" type="text" pButton icon="fa-close" 
-                                    (click)="cancelarTarjeta(); cboPtosControl.reset(); cboTipoTarjeta.reset();" label="Cerrar"></button>
-                                </div>
-                                <!--
-                                    <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
-                                        <button class="btn_modal" type="text" (click)="abrirCuadroSalidas();"
-                                        pButton icon="fa-file-o" label="Cuadro de Salidas"></button>
+                            <div class="btnModAsigT">
+                                <div class="row justify-content-end">
+                                    <div class="col-xl-2 col-md-2 col-sm-6 col-xs-12">
+                                        <button class="btn_modal ajusteBtnModal" type="text" pButton icon="fa-save" 
+                                        (click)="guardarTarjeta(tmpSalida.valid, tmpReten.valid);" 
+                                        [disabled]="(  !(val!='x') || !(estadoPlaca==0) || placaValida==0)" label="Asignar"></button>
+                                        
                                     </div>
-                                -->
+                                    <div class="col-xl-2 col-md-2 col-sm-6 col-xs-12">
+                                        <button class="btn_modal ajusteBtnModal" type="text" pButton icon="fa-close" 
+                                        (click)="cancelarTarjeta(); cboPtosControl.reset(); cboTipoTarjeta.reset();" label="Cerrar"></button>
+                                    </div>
+                                    <!--
+                                        <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
+                                            <button class="btn_modal" type="text" (click)="abrirCuadroSalidas();"
+                                            pButton icon="fa-file-o" label="Cuadro de Salidas"></button>
+                                        </div>
+                                    -->
+                                </div>
                             </div>                        
                         </div>
 
@@ -417,34 +419,32 @@
                             </div>
 
                             <!--botones-->              
-                            <div class="btnModAsigT row justify-content-end">
+                            <div class="btnModAsigT">
+                                <div class=" row justify-content-end">
                                     <!-- !(val!='x' && (estadoPlaca==0 || estadoPlaca==1 || estadoPlaca==2 || estadoPlaca==3 ))-->
-                                <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
-                                    <button class="btn_modal" type="text" pButton icon="fa-save" 
-                                    (click)="guardarMultiTarjetas(PrimerReten.valid,  tmpEslavon.valid, MulReten.valid); MulReten.reset(); ValTarjMulti.reset();" 
-                                    [disabled]="(!(val!='x') || !(estadoPlaca==0) || placaValida==0)" label="Guardar"></button>
-                                </div>
-                                <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
-                                    <button class="btn_modal" type="text" pButton icon="fa-close" 
-                                    (click)="cancelarMultiTarjeta(); ValTarjMulti.reset(); cboPtosControl.reset(); cboTipoTarjeta.reset();" label="Cerrar"></button>
-                                </div>
-                                <!--
-                                    <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
-                                        <button class="btn_modal" type="text" (click)="abrirCuadroSalidas();"
-                                        pButton icon="fa-file-o" label="Cuadro de Salidas"></button>
+                                    <div class="col-xl-2 col-lg-2 col-md-2 col-xs-12">
+                                        <button class="btn_modal" type="text" pButton icon="fa-save" 
+                                        (click)="guardarMultiTarjetas(PrimerReten.valid,  tmpEslavon.valid, MulReten.valid); MulReten.reset(); ValTarjMulti.reset();" 
+                                        [disabled]="(!(val!='x') || !(estadoPlaca==0) || placaValida==0)" label="Asignar"></button>
                                     </div>
-                                -->
+                                    <div class="col-xl-2 col-lg-2 col-md-2 col-xs-12">
+                                        <button class="btn_modal" type="text" pButton icon="fa-close" 
+                                        (click)="cancelarMultiTarjeta(); ValTarjMulti.reset(); cboPtosControl.reset(); cboTipoTarjeta.reset();" label="Cerrar"></button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <!--BOTON CERRAR(AL INICIO DEL FORMULARIO)-->
-                        <div class="form-group row" *ngIf='TaCoMultiple==-1 || TaCoMultiple==null'>
+                        <div *ngIf='TaCoMultiple==-1 || TaCoMultiple==null'>
                             <!--botones-->              
-                            <div class="btnCloseOnly row justify-content-end">
+                            <div class="btnCloseOnly">
+                                <div class=" row justify-content-end">
                                     <div class="col-xl-3 col-md-4 col-sm-12 col-xs-12">
                                         <button class="btn_modal" type="text" pButton icon="fa-close" 
                                         (click)="cancelarTarjeta(); cboPtosControl.reset(); cboTipoTarjeta.reset();" label="Cerrar"></button>
                                     </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -653,15 +653,17 @@
                         
                         </div>
 
-                        <div class="agTrjPie row justify-content-end">
-                            <div class="col-xl-3 col-md-4 col-sm-12 col-xs-12">
-                                <button class="form-control" id="btnNuevo" type="btn_modal"  pButton icon="fa-save" 
-                                [disabled]="(  !(val!='x') || !(estadoPlaca==0) || placaValida==0)"
-                                (click)="guardarTarjetaDiaLibre(horaInitDL.valid, tmpRetenDL.valid, tmpSalidaDL.valid)" label="Asignar" ></button>
-                            </div>
-                            <div class="col-xl-3 col-md-4 col-sm-12 col-xs-12">
-                                <button class="form-control" id="btnNuevo" type="btn_modal"  pButton icon="fa-close" 
-                                (click)="cancelarTarjetaDL(); cboPtosControl.reset(); cboTipoTarjeta.reset();" label="Cerrar" ></button>
+                        <div class="agTrjPie ">
+                            <div class="row justify-content-end">
+                                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                                    <button class="form-control" id="btnNuevo" type="btn_modal"  pButton icon="fa-save" 
+                                    [disabled]="(  !(val!='x') || !(estadoPlaca==0) || placaValida==0)"
+                                    (click)="guardarTarjetaDiaLibre(horaInitDL.valid, tmpRetenDL.valid, tmpSalidaDL.valid)" label="Asignar" ></button>
+                                </div>
+                                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                                    <button class="form-control" id="btnNuevo" type="btn_modal"  pButton icon="fa-close" 
+                                    (click)="cancelarTarjetaDL(); cboPtosControl.reset(); cboTipoTarjeta.reset();" label="Cerrar" ></button>
+                                </div>
                             </div>
                         </div> 
                     </div>
@@ -741,24 +743,27 @@
 
                         <!--pie form-->
                         <div class="agTrjPie row justify-content-end">
-                                <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
                                     <button class="btn_modal" type="text" pButton icon="fa-save" 
                                     (click)="guardarMultiTarjetasDL(PrimerReten.valid,  tmpEslavon.valid, MulReten.valid); MulReten.reset(); ValTarjMulti.reset();" 
                                     [disabled]="(!(val!='x') || !(estadoPlaca==0))" label="Guardar"></button>
                                 </div>
-                                <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
                                     <button class="btn_modal" type="text" pButton icon="fa-close" 
                                     (click)="cancelarMultiTarjetaDL(); ValTarjMulti.reset(); cboPtosControl.reset(); cboTipoTarjeta.reset();" label="Cerrar"></button>
                                 </div>
                         </div>
                     </div> 
                     
-                <div class="form-group row" *ngIf='TaCoMultiple==-1 || TaCoMultiple==null'>
+                <div *ngIf='TaCoMultiple==-1 || TaCoMultiple==null'>
                     <!--botones-->              
-                    <div class="btnCloseOnly row justify-content-end">
-                        <div class="col-xl-3 col-md-4 col-sm-12 col-xs-12">
-                            <button class="btn_modal" type="text" pButton icon="fa-close" 
-                            (click)="cancelarTarjetaDL(); cboPtosControl.reset(); cboTipoTarjeta.reset();" label="Cerrar"></button>
+                    <div class="btnCloseOnly">
+                        <div class="row justify-content-end">
+                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                                <button class="btn_modal" type="text" pButton icon="fa-close" 
+                                (click)="cancelarTarjetaDL(); cboPtosControl.reset(); cboTipoTarjeta.reset();"
+                                 label="Cerrar"></button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -804,16 +809,18 @@
                 </div>
 
                 <!--pie-->
-                <div class="modAddPlacaPie row justify-content-end">
-                    <div class="col-xl-3 col-md-4 col-sm-12 col-xs-12">
-                        <button class="btn_modal" type="text" pButton icon="fas fa-plus"
-                                (click)="btnAgregarPlacaDL()" label="Agregar" [disabled]='validAddPlacaDL'
-                        ></button>
-                    </div>
-                    <div class="col-xl-3 col-md-4 col-sm-12 col-xs-12">
-                        <button class="btn_modal" type="text" pButton icon="fa-close" 
-                                (click)="displayAgregarPlacaSinProg=false" label="Cancelar"
-                        ></button>
+                <div class="modAddPlacaPie">
+                    <div class="row justify-content-end">
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                            <button class="btn_modal" type="text" pButton icon="fas fa-plus"
+                                    (click)="btnAgregarPlacaDL()" label="Agregar" [disabled]='validAddPlacaDL'
+                            ></button>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                            <button class="btn_modal" type="text" pButton icon="fa-close" 
+                                    (click)="displayAgregarPlacaSinProg=false" label="Cancelar"
+                            ></button>
+                        </div>
                     </div>
                 </div>
             </div>

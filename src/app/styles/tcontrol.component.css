@@ -82,26 +82,14 @@
             
         }
     /* ESTILOS TABLA TARJETA DE CONTROL DETALLE */
-        .contTarjCtrlDet{
-            overflow-y: auto; 
-            overflow-x: hidden;
-            width: 450px;
-            height: 500px;
-        }
-        .bodyTarjCtrlDet{
-            width: 100%;
-            height: 450px;
-            /*border: 2px solid yellow;*/
-        }
+        .contTarjCtrlDet{overflow-y: auto; overflow-x: hidden; width: 450px; height: 500px;}
+        .bodyTarjCtrlDet{ width: 100%; height: 450px;/*border: 2px solid yellow;*/}
+        .pieTarjCtrlDet{ width:100%;height: 40px;}
 
-        .pieTarjCtrlDet{
-            width:100%;
-            height: 40px;
-        }
     /* CUADRO ASIGNAR TARJETA con programcion */
             /*LIMITA EL MAXIMO Y MINIMO DE LA VENTANA MODAL*/
             ._asignaUnaTarj{
-                overflow-y: auto; 
+                overflow-y: hidden; 
                 overflow-x: auto;
                 max-width: 800px;
                 max-height: 1000px;
@@ -112,7 +100,6 @@
                 margin:0px 15px;
                 width: 650px;
                 height: 520px;
-                /*border: 2px solid green;*/ /*padding: 0; bottom: 0;*/
             }
             .contenidoAsignarTarjetaIndividual{ height: 350px; width:100%; margin-bottom: 40px; }
             .contenidoAsignarTarjetaMulti{ height: 350px; width:100%; margin-bottom: 40px;}
@@ -121,7 +108,7 @@
                 width:100%;
                 margin:auto;
                 margin-top: 390px;
-                margin-bottom: -15px;
+                margin-bottom: 2px;
                 padding: 0;
                 bottom: 0px;
             }
@@ -135,29 +122,10 @@
                 /*margin-bottom: 0; position: absolute;float: right; */
             }
     /* asignar tarjeta sin programacion */
-            .asigTarjSinProgForm{
-                height: 520px;
-                width: 670px;
-                overflow-x: hidden;
-            }
-            .agTrjEncabezado{
-                height: 80px;
-                width: 650px;
-               
-              
-            }
-            .agTrjCuerpo{
-                height: 370px;
-                width: 650px;
-                
-            }
-            .agTrjPie{
-                height: 40px;
-                width: 100%;
-                margin-top: 20px;
-                padding-bottom: 0;
-                
-            }
+            .asigTarjSinProgForm{ height: 520px; width: 670px; overflow-x: hidden;}
+            .agTrjEncabezado{height: 80px; width: 650px;}
+            .agTrjCuerpo{ height: 370px; width: 650px;}
+            .agTrjPie{ height: 40px; width: 100%; margin-top: 20px; padding-bottom: 0;}
     /* buscar y agregar placa a salidas en dia sin programacion*/
             .modAddPlacaCont{
                 height: 520px;

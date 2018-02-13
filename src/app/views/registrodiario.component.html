@@ -31,11 +31,14 @@
                             [(selection)]="selectedTarjCab" (onRowSelect)="onRowSelectCabecera($event)">
                             scrollable="true" scrollHeight="360px" scrollWidth="100%"
                         -->
-                        <p-dataTable [value]="arrRegDiarioByEmId" [globalFilter]="filtroGlobal" 
-                                    
-                                    [rows]="8" [paginator]="true"
-                                    emptyMessage="Lista Vacia"  selectionMode="single" 
-                                [(selection)]="selectedTarjCab" (onRowSelect)="onRowSelectRegDiario($event)">
+                        <p-dataTable [value]="arrRegDiarioByEmId" 
+                                     [globalFilter]="filtroGlobal"                                     
+                                     [rows]="7" 
+                                     [paginator]="true"
+                                     emptyMessage="Lista Vacia"  
+                                     selectionMode="single" 
+                                     [(selection)]="selectedTarjCab" 
+                                     (onRowSelect)="onRowSelectRegDiario($event)">
 
                             <!--campos de la datatable-->
                             <p-column styleClass="col-button" [style]="{'width':'3em','height':'2em','text-align':'center'}">
@@ -68,16 +71,16 @@
             <!--CUERPO-->
             <div class="contFormMRegDiario">
                 <div class="bodyFormMRegDiario">
-                    
-                   
                         <!--orden subempresas-->
                         <div class="form-group">
                         
                                 <button class="btn_modal" type="text" pButton icon="fa-file" 
-                                (click)="funcBtnModOrdenSubEmpre(); " 
+                                (click)="funcBtnModOrdenSubEmpre();" 
+                                [disabled]="!(CoSiId==2)" 
                                 label="Orden Empresas"></button>
                             
                         </div>
+                        
                         <!--FECHA FUNCIONAR EL REGISTRO DIARIO-->
                         <div class="form-group">
                             <label class="control-label">Fecha Actual:</label>
@@ -190,7 +193,7 @@
                     
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                             <p-dataTable [value]="arrRegDiarioDetalleByEmId" scrollable="true"
-                                scrollHeight="380px" scrollWidth="100%" selectionMode="single"
+                                scrollHeight="370px" scrollWidth="100%" selectionMode="single"
                                 emptyMessage="Lista Vacia" >
                                 <p-column field="ReDiDeNroVuelta" header="N°"  [style]="{'width':'2em','text-align':'center'}"></p-column>
                                 <p-column field="ReDiDeNombreVuelta" header="Nombre"  [style]="{'width':'6em'}"></p-column>

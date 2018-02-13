@@ -3,6 +3,7 @@ import {GlobalVars} from 'app/variables'
 import {editf1,fechaActual1,fechaActual2, _fecha1, _hora, fecha, hora,guion_slash_inver, arrABI} from 'app/funciones';
 import {RegDiarioService} from '../service/registrodiario.service';
 import {EmpSubEmpService} from '../service/empSubemp.service';
+import {ConfiguraService} from '../service/configura.service';
 
 /*import {ISubscription} from 'rxjs/Subscription';
 import {ConfiguraService} from '../service/configura.service';*/
@@ -31,7 +32,7 @@ export class RegistroDiarioComponent implements OnInit{
                 private emid:number;
                 private userid:number;
                 private ReDiId:number;
-                
+                private CoSiId:number;
             //string 
                 private ReDiHoraInicioDiario:string;
                 private fechRegDir:string;
@@ -47,7 +48,7 @@ export class RegistroDiarioComponent implements OnInit{
             private arrEtdRegDiario:any[];
             private arrSubEmp:any[];
             private selectedSubEmp:any[];
-
+            private data:any;
         //function init
         ngOnInit(){
             this.getAllRegistroDiarionByemId(this.emid);
@@ -56,10 +57,12 @@ export class RegistroDiarioComponent implements OnInit{
         //constructor
         constructor(private registrodiarioservice:RegDiarioService, 
                     private empsubempservice:EmpSubEmpService,
+                    private configService : ConfiguraService,
                     public ClassGlobal:GlobalVars){
-
+          
             this.emid=this.ClassGlobal.GetEmId();
             this.userid=this.ClassGlobal.GetUsId();
+    
             this.arrRegDiarioByEmId=[];
             this.arrRegDiarioDetalleByEmId=[];
             this.arrSubEmp=[];
@@ -80,8 +83,20 @@ export class RegistroDiarioComponent implements OnInit{
         //funciones
         //btn nuevo registro diario ---- form principal
             funcBtnNuevoRegistroDiario(){
-                this.displayNuevoRegistroDiario=true;
-                this.newRegistroDiario();  
+                let añoActual=new Date().getFullYear().toString();
+                this.fechRegDir=editf1(fechaActual1());
+                this.configService.getAllConfiguraByEmPeriodo(this.emid,añoActual).subscribe(
+                    data=>{
+                        if(data.length!=0){
+                            this.CoSiId=data[0].CoSiId;
+                            //console.log(this.fechRegDir);
+                            this.displayNuevoRegistroDiario=true; this.newRegistroDiario();  
+                        }else{alert('No hay configuracion del sistema');}
+                    },error=>{
+
+                    },()=>{}
+                );
+             
             }
         //procedures
             
@@ -97,7 +112,7 @@ export class RegistroDiarioComponent implements OnInit{
                     let arrReg:any[]=[];
                     this.registrodiarioservice.getAllregistrodiarioDetalleByPrId(reDiId).subscribe(
                         data=>{ 
-                                arrReg=data; console.log(arrReg); 
+                                arrReg=data; 
                                 if(arrReg.length!=0){
                                     this.mgAllRegDiarioDetalle(arrReg);
                                     this.displayRegDiarioDetalle=true;
@@ -128,7 +143,7 @@ export class RegistroDiarioComponent implements OnInit{
                 saveRegistroDiario(objRegDiario:Object){
                     this.registrodiarioservice.saveregistrodiario(objRegDiario).subscribe(
                         data=>{ 
-                            console.log(data);
+                            //console.log(data);
                             this.mensaje="";
                             this.displayProcesoGuardando=false;
                             
@@ -163,7 +178,7 @@ export class RegistroDiarioComponent implements OnInit{
                     this.registrodiarioservice.newregistrodiario().subscribe(
                         data=>{ objReDi=data;
                                 //console.log(data);
-                                this.fechRegDir=editf1(fechaActual1());
+                                //this.fechRegDir=editf1(fechaActual1());
                                 this.ReDiId=objReDi.ReDiId;
                               },
                         err =>{console.log(err);}
@@ -270,8 +285,11 @@ export class RegistroDiarioComponent implements OnInit{
             //aceptar
                 guardarRegistroDiario(){
                     let objSaveRegDiario:any;
-                    //console.log(this.fechRegDir); console.log(this.nTolVueltas); console.log(this.ReDiHoraInicioDiario); console.log(this.arrRegDiarioByEmId); console.log(this.ReDiId);
-
+                    let añoActual=new Date().getFullYear().toString();
+              
+                    if(this.CoSiId==1){
+                        this.ordenSuEmId="";
+                    }
                     objSaveRegDiario={
                         UsFechaReg:new Date(),
                         EmId: this.emid,
@@ -288,9 +306,8 @@ export class RegistroDiarioComponent implements OnInit{
                     }else if(this.nTolVueltas==0){
                         this.nTolVueltas=1;
                     }
-
-                    console.log(objSaveRegDiario);  
                     
+                    //console.log(objSaveRegDiario);  
                     if(this.buscarFechaIgual(this.arrRegDiarioByEmId,guion_slash_inver(this.fechRegDir))==0){
                         this.mensaje="guardando registro diario...";
                         this.displayProcesoGuardando=true;
@@ -300,8 +317,6 @@ export class RegistroDiarioComponent implements OnInit{
                         this.mensaje="No puede crear dos registros con la misma fecha";
                         this.displayErrorMismaFecha=true;
                     }
-
-                    
                 }
             //cancelar
                 aceptarErrorMismoRegFecha(){

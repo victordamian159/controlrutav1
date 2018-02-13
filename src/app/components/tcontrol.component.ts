@@ -380,7 +380,7 @@ export class TcontrolComponent implements OnInit{
         this._ruId=0;
         this.TaCoMultiple=-1;
         this._allTarjControl=[];
-
+        console.log(this.emID);
         this.tcontrolservice.getAllProgramacionByEm(this.emID,0)
             .subscribe(
                 data=>{
@@ -393,12 +393,13 @@ export class TcontrolComponent implements OnInit{
                                     if(arrprog.length>0 ){
                                         alert('Programacion Encontrada');
                                         this.actiInputBtnAsignaTarjeta=1;
+                                        this.getallprogramacionbyem(this.emID,0); 
                                     }else if(arrprog.length==0 ){
                                         this.mensaje="No hay programacion en la fecha indicada";
                                         this.displayNoProgEnFecha = true;
                                         this.actiInputBtnAsignaTarjeta=0;
                                     }
-                                    this.getallprogramacionbyem(this.emID,0); 
+                                    //this.getallprogramacionbyem(this.emID,0); 
                                     this.getAllRegistroDiario(this.emID);
                                 },
                                 error=>{
@@ -508,17 +509,15 @@ export class TcontrolComponent implements OnInit{
             let añoActual=new Date().getFullYear().toString(), EmId=this.emID;
             //console.log(añoActual); console.log(EmId);
             this.configService.getAllConfiguraByEmPeriodo(EmId , añoActual).subscribe(
-            data=>{
-                    console.log(data); 
-                    if(data.length!=0){
-                      this.objConfigSystem=data[0];
-                      this.CoId=this.objConfigSystem.CoId;
-                      this.CoSiId=this.objConfigSystem.CoSiId;
-                    }else{
-                        console.log('Error, no se pudo descargar la configuracion del sistema');
-                    }
-                    
-                  },
+            data=>{ 
+                if(data.length!=0){
+                    this.objConfigSystem=data[0];
+                    this.CoId=this.objConfigSystem.CoId;
+                    this.CoSiId=this.objConfigSystem.CoSiId;
+                }else{
+                    console.log('Error, no se pudo descargar la configuracion del sistema');
+                }
+            },
             error=>{alert('error al iniciar el periodo: '+error);},
             ()=>{}
             );
@@ -1006,28 +1005,32 @@ export class TcontrolComponent implements OnInit{
             
         //cuadro de registro diario
             extraRegistroDiario(arrregdiario=[]){
-                console.log(arrregdiario);
+                //console.log(arrregdiario);
                 let arrreg:any[]=[];
                 for(let reg of arrregdiario){
                     arrreg.push({
                         CuSaId:reg.Id,
                         TaCoId:reg.TaCoId,
                         TaCoHoraSalida:reg.TaCoHoraSalida,
+                        TaCoMultiple:reg.TaCoMultiple,
                         PrDeOrden:reg.PrDeOrden,
                         ReDiId:reg.ReDiId,
                         ReDiDeId:reg.ReDiDeId,
                         ReReId:reg.ReReId,
                         BuId:reg.BuId,
+                        PrId:reg.PrId,
                         PrDeId:reg.PrDeId,
                         TaCoAsignado:reg.TaCoAsignado,
                         BuPlaca:reg.BuPlaca,
                         ReDiDeNroVuelta:reg.ReDiDeNroVuelta,
                         HoraLlegada:reg.HoraLlegada,
                         ReReTiempo:reg.ReReTiempo,
-                        PuCoTiempoBus:reg.PuCoTiempoBus                        
+                        PuCoTiempoBus:reg.PuCoTiempoBus,
+                        SuEmId:reg.SuEmId                  
                     });
                       
                 }
+
                 //console.log(arrreg);
                 return arrreg;
             }
@@ -1249,7 +1252,7 @@ export class TcontrolComponent implements OnInit{
                 //buscar si se esta usando un punto de control
                 this.tcontrolservice.getalltarjetacontrolbybuidfecha(this.emID,0, this.fechaAsTarjUno).subscribe(
                     data=>{
-                        console.log(data);
+                        //console.log(data);
                         this.buscarDatosTarjetaXNroVuelta(data,this.ReDiDeNroVuelta);
                     },
                     error=>{
@@ -1260,7 +1263,7 @@ export class TcontrolComponent implements OnInit{
             }
             buscarDatosTarjetaXNroVuelta(arrCuadroXFecha=[], ReDiDeNroVuelta:number){
                 let arr=this.sacarArrCuadroPrincipalXNroVuelta(arrCuadroXFecha,ReDiDeNroVuelta);
-                console.log(arr);
+                //console.log(arr);
                 if(arr.length!=0){
                     this._PuCoId=arr[0].PuCoId
                     this.PrId=arr[0].PrId
@@ -1722,8 +1725,9 @@ export class TcontrolComponent implements OnInit{
 
             //guardarObjeto una tarjeta
             guardarObjetoTarjeta(TaCoHoraSalida:string, TaCoFinish:number){
-                let _tarjeta:any, tarjEncontrado:number , reten:any;   //console.log(TaCoHoraSalida); 
-               
+                let _tarjeta:any, tarjEncontrado:number , reten:any;   
+                let pridAsignado=this.returnPrIdByBuId(this.arrprogxfecha,this._BuId);
+                //console.log(pridAsignado); 
                 _tarjeta={
                     TaCoId : this._TaCoId,
                     PuCoId : this._PuCoId,
@@ -1737,7 +1741,8 @@ export class TcontrolComponent implements OnInit{
                     
                     UsFechaReg :new Date(),
                     TaCoNroVuelta : this.ReDiDeNroVuelta,
-                    PrId : Number(this.PrId),
+                    //PrId : Number(this.PrId),
+                    PrId:pridAsignado,
                     TiSaId:this.TiSaObj.TiSaId,
                     
                     TaCoAsignado :Number(this.val),
@@ -1755,9 +1760,10 @@ export class TcontrolComponent implements OnInit{
                 
                 console.log(_tarjeta);
             
-                tarjEncontrado=this.buscarTarjetaAsignada(_tarjeta); //console.log(tarjEncontrado); //buscar si esta asignado o no
+                tarjEncontrado=this.buscarTarjetaAsignada(_tarjeta); //buscar si esta asignado o no
 
                 //PUEDE CREAR LA TARJETA existe uno que no esta terminado o la tarjeta no se a creado
+                
                 if(tarjEncontrado==1 || tarjEncontrado==-1 || tarjEncontrado==0){
                     this.msjEsperaGuardando='Guardando tarjeta, espere un momento';
                     this.displayMsjEsperaGuardarTarjeta=true;
@@ -1790,11 +1796,8 @@ export class TcontrolComponent implements OnInit{
                 }else{
                     alert("no puede crear la tarjeta");
                 }
-                this.validarTiempo="";
-                this.val='x';
+                this.validarTiempo=""; this.val='x';
 
-                //this.displayAsignarTarjeta = false;
-                
             }
 
             //limpiando campos al guardar tarjeta
@@ -2441,27 +2444,27 @@ export class TcontrolComponent implements OnInit{
 
         //concatenar par acuadro pequeño
         concatenarRegDiarioProgxFecha(arrProgFecha=[], arrCuadroDiario=[]){
-            console.log(arrProgFecha); 
-            console.log(arrCuadroDiario); 
+            //console.log(arrProgFecha); console.log(arrCuadroDiario); 
 
             let arrMatCuadro:any[]=[], arrCuadro:any[]=[];
             arrCuadro=this.sacarArrCuadroXNroVuelta(arrCuadroDiario, this.ReDiDeNroVuelta);
-            console.log(arrCuadro);
+            //console.log(arrCuadro);
             for(let i=0; i<arrCuadro.length;i++){
-                    //console.log(arrProgFecha[i].PrDeOrden);
+                    //console.log(arrProgFecha[i].PrDeOrden);        
                 arrMatCuadro[i]={
                     nro:i+1,
-                    
+                    CuSaId:arrCuadro[i].CuSaId,
+                    TaCoId:arrCuadro[i].TaCoId,
                     ReDiId:arrCuadro[i].ReDiId,
                     ReDiDeId:arrCuadro[i].ReDiDeId,
                     ReReId:arrCuadro[i].ReReId,
                     BuPlaca:arrCuadro[i].BuPlaca,
-
+                    TaCoMultiple:arrCuadro[i].TaCoMultiple,
                     BuId:arrCuadro[i].BuId,
                     PrDeOrden:arrCuadro[i].PrDeOrden,
                     PrDeId:arrCuadro[i].PrDeId,
-
-                    //PrId:arrProgFecha[i].PrId,
+                    SuEmId:arrCuadro[i].SuEmId,
+                    PrId:arrProgFecha[i].PrId,
                     //PrDeAsignadoTarjeta:arrProgFecha[i].PrDeAsignadoTarjeta,//no uso
                     //PrDeCountVuelta:arrProgFecha[i].PrDeCountVuelta,//no uso
                     //PrDeHoraBaseSalida:_hora(arrProgFecha[i].PrDeHoraBase),
@@ -2992,12 +2995,12 @@ export class TcontrolComponent implements OnInit{
                 this.actBtnCuadroSalidasDL=true;
                 this.actBtnAddPlacaDL=false;
             }
-            console.log(this._puntosControl);
-            console.log(this._PuCoId);
+            //console.log(this._puntosControl);
+            //console.log(this._PuCoId);
 
             if(this._PuCoId!=0){
                 indexArrPtoControl=this.buscarIndexPuntoControl(this._PuCoId, this._puntosControl);
-                console.log(indexArrPtoControl);
+                //console.log(indexArrPtoControl);
                 this.puntoControl=this._puntosControl[indexArrPtoControl];
             }else if(this._PuCoId==0){
                 //BORRANDO VARIABLES
@@ -3095,8 +3098,7 @@ export class TcontrolComponent implements OnInit{
             guardarTarjetaDiaLibre(horaInitDLValid:any, tiempoRetenValid:any, tiempoSalidaValid:any ){
                 // ASIGNAR VAL=01  ;   CASTIGADO VAL=03  AUSENTE VAL=02 
                 let  PrDeAsignadoTarjeta:number, TaCoFinish:number=0, HoraSalidaRecEslavon:string, TaCoHoraSalida:string; 
-                //console.log(this.campFormAsigUnaTarjeta.value.tReten);  
-                //console.log(tiempoSalidaValid);  console.log(tiempoRetenValid); 
+                //console.log(this.campFormAsigUnaTarjeta.value.tReten); console.log(tiempoSalidaValid);  console.log(tiempoRetenValid); 
                 //console.log(this.estadoPlaca);  console.log(this.val);  
 
                 //primera vuelta
@@ -3237,17 +3239,10 @@ export class TcontrolComponent implements OnInit{
         // multitarjeta para dia libre
         guardarMultiTarjetasDL(PrimerRetenValid, tmpEslavonValid, MulRetenValid){
             /*
-                console.log(PrimerRetenValid);
-                console.log(tmpEslavonValid);
-                console.log(MulRetenValid);
-                console.log(this.estadoPlaca);
-                console.log(this.modoTarjeta);
-                console.log(this.TaCoHoraSalida);// para primera vuelta
+                console.log(PrimerRetenValid); console.log(tmpEslavonValid); console.log(MulRetenValid);
+                console.log(this.estadoPlaca); console.log(this.modoTarjeta); console.log(this.TaCoHoraSalida);// para primera vuelta
                 console.log(this.HoraLlegadaTarjAnterior);//hora para demas vueltas
-                console.log(this.tVueltaBus);
-                console.log(this.ReReTiempo);
-                console.log(this.HoraSalidaRecEslavon);
-                console.log(this.MultiReten);
+                console.log(this.tVueltaBus); console.log(this.ReReTiempo); console.log(this.HoraSalidaRecEslavon); console.log(this.MultiReten);
             */
             //    console.log(this.ReDiDeId);
             let estadoTarjetaAnterior=this.modoTarjeta, estadoActualTarjeta=this.estadoPlaca, estadoNuevaTarjeta=this.val, 
@@ -4351,6 +4346,8 @@ export class TcontrolComponent implements OnInit{
 
         returnPrIdByBuId(arrCuadroByVuelta=[], BuId:number){
             let i=0,result:number, cen=0;
+            //console.log(arrCuadroByVuelta);
+            //console.log(BuId);
             while(i<arrCuadroByVuelta.length && cen==0){
                 if(arrCuadroByVuelta[i].BuId!=BuId){
                     cen=0; i++;
@@ -4358,11 +4355,12 @@ export class TcontrolComponent implements OnInit{
                     cen=1;
                 }
             }
-            if(cen==0){
+            if(cen==1){
                 result=arrCuadroByVuelta[i].PrId;
-            }else if(cen==1){
+            }else if(cen==0){
                 result=-1;
             }
+            console.log(result);
             return result;
         }
 

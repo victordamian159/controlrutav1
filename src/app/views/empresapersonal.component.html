@@ -1,85 +1,87 @@
 <div class="contenedor">
     <!--EMPRESAPERSONA-->
-        <div id="titulo">Persona por Empresa</div>
-        
-        <!--FILTRO BUSQUEDA(NUEVO-REG) -->
-        <div class="row">
-            <!--COMBO SUBEMPRESAS-->
-                <div class="col-xl-2 col-md-4 col-sm-12 col-xs-12">                 
-                    <select class="form-control" required [(ngModel)]="suemid" (change)="_SuEmId($event)">
-                        <option *ngFor="let suem of _arrsuEmp" [value]="suem.SuEmId">
-                            {{suem.SuEmRSocial}}
-                        </option>
-                    </select> 
-                </div>
-
-            <!--BUSQUEDA-->
-                <div class="col-xl-2 col-md-4 col-sm-6 col-xs-12">
-                    <input class="form-control" placeholder="Buscar..." type="text" #filtroGlobal/>
-                </div>
-            
-            <!--NUEVO REGISTRO-->
-                <div class="col-xl-2 col-md-4 col-sm-6 col-xs-12">
-                    <button id="btnNuevo" pButton icon="fa-user-plus" [disabled]="suemid==0" (click)="nuevoEmpPer(); vincularPersona();" label="Integrar Persona" ></button>
-                </div>
+    <div>Persona por Empresa</div>
+    <br>
+    <div class="row">
+    
+        <div class="col-xl-2 col-md-4 col-sm-12 col-xs-12">                 
+            <select class="form-control" required [(ngModel)]="suemid" (change)="_SuEmId($event)">
+                <option *ngFor="let suem of _arrsuEmp" [value]="suem.SuEmId">
+                    {{suem.SuEmRSocial}}
+                </option>
+            </select> 
         </div>
+
+    
+        <div class="col-xl-2 col-md-4 col-sm-6 col-xs-12">
+            <input class="form-control" placeholder="Buscar..." type="text" #filtroGlobal/>
+        </div>
+    
+    
+        <div class="col-xl-2 col-md-4 col-sm-6 col-xs-12">
+            <button id="btnNuevo" pButton icon="fa-user-plus" [disabled]="suemid==0" (click)="nuevoEmpPer(); vincularPersona();" label="Integrar Persona" ></button>
+        </div>
+    </div>
+    <div class="row">
         
-        <!--TABLA EMPRESAPERSONA-->
+            <div class="table table-responsive">
+                <p-dataTable [value]="arrEmpPer" [globalFilter]="filtroGlobal" 
+                            [rows]="3" [paginator]="true"
+                            [(selection)]="selectedRowTabEmpPer" emptyMessage="No Hay Registros"
+                            selectionMode="single" (onRowSelect)="onRowSelectPerEmp($event)">
+                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                        <template let-col  let-emp="rowData"  pTemplate="body">
+                                <button type="button" pButton id="btnTable"  (click)=  "editarEmpPer(emp.Id)" icon="fa-pencil-square-o" > </button>
+                                <button type="button" pButton id="btnTable" (click)=  "eliminarEmpPer(emp.Id)" icon="fa-trash" > </button>                  
+                        </template>
+                    </p-column>
+                    <p-column field="nro" header="N°" [style]="{'width':'4em','text-align':'center'}" ></p-column>
+                    <p-column field="PeNombres" header="Nombres" [style]="{'width':'10em'}"></p-column>
+                    <p-column field="PeApellidos" header="Apellidos" [style]="{'width':'10em'}" ></p-column>
+                    <p-column field="EmPeTipo" header="Cargo" [style]="{'width':'9em','text-align':'center'}"></p-column>
+                    <p-column field="PeDNI" header="Dni" [style]="{'width':'8em','text-align':'center'}" ></p-column>
+                </p-dataTable>
+            </div>
         
-        <p-dataTable [value]="arrEmpPer" [globalFilter]="filtroGlobal" 
-                    [rows]="4" [paginator]="true"
-                    [(selection)]="selectedRowTabEmpPer" emptyMessage="No Hay Registros"
-                    selectionMode="single" (onRowSelect)="onRowSelectPerEmp($event)">
-            <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                <template let-col  let-emp="rowData"  pTemplate="body">
-                        <button type="button" pButton id="btnTable"  (click)=  "editarEmpPer(emp.Id)" icon="fa-pencil-square-o" > </button>
-                        <button type="button" pButton id="btnTable" (click)=  "eliminarEmpPer(emp.Id)" icon="fa-trash" > </button>                  
-                </template>
-            </p-column>
-            <p-column field="nro" header="N°" [style]="{'width':'4em','text-align':'center'}" ></p-column>
-            <p-column field="PeNombres" header="Nombres" [style]="{'width':'10em'}"></p-column>
-            <p-column field="PeApellidos" header="Apellidos" [style]="{'width':'10em'}" ></p-column>
-            <p-column field="EmPeTipo" header="Cargo" [style]="{'width':'9em','text-align':'center'}"></p-column>
-            <p-column field="PeDNI" header="Dni" [style]="{'width':'8em','text-align':'center'}" ></p-column>
-        </p-dataTable>
-        
+    </div>
 
     <!--TABLA USUARIO DEL SISTEMA-->
-        <!--TITULO-->
-        <div id="titulo">Usuario de la Aplicacion</div>
-
-        <div class="row">
-            <!--BUSQUEDA-->
-            <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
-                <input class="form-control" placeholder="Buscar..." type="text" #filtroGlobal3/>
-            </div>
-
-            <!--BOTON NUEVO-->
-            <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
-                <button class="form-control" id="btnNuevo" pButton icon="fa-user-plus" 
-                        [disabled]="nombre=='x' || !(username==false)" (click)="nuevoUserSystem();" label="Nuevo Usuario"></button>
-            </div>
+    <div>Usuario de la Aplicacion</div>
+    <br>
+    <div class="row">
+        <!--BUSQUEDA-->
+        <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
+            <input class="form-control" placeholder="Buscar..." type="text" #filtroGlobal3/>
         </div>
 
-        <!--TABLA USUARIO DEL SISTEMA-->
+        <!--BOTON NUEVO-->
+        <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
+            <button class="form-control" id="btnNuevo" pButton icon="fa-user-plus" 
+                    [disabled]="nombre=='x' || !(username==false)" (click)="nuevoUserSystem();" label="Nuevo Usuario"></button>
+        </div>
+    </div>
+    <div class="row">
         
-        <p-dataTable [value]="arrAllUser" [globalFilter]="filtroGlobal3" 
-                    [rows]="4" [paginator]="true"
-                        emptyMessage="No Hay Registros" 
-                        (onRowSelect)="onRowSelectAllUserSystem($event)"
-                        [(selection)]="selectedRowTabAllUserSystem">
-            <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                <template let-col  let-usersystem="rowData"  pTemplate="body">
-                        <!--<button pButton class="btn" (click)="editarUserSystem(usersystem.UsId)" [disabled]="EmPeId==-1" icon="fa-pencil-square-o" > </button>-->
-                        <button pButton id="btnTable" (click)="eliminarUserSystem(usersystem.UsId)" icon="fa-trash" > </button>                  
-                </template>
-            </p-column>
-            <p-column field="Nro" header="N°" [style]="{'width':'4em','text-align':'center'}" ></p-column>
-            <p-column field="PeNombres" header="Nombres" [style]="{'width':'10em'}"></p-column>
-            <p-column field="PeApellidos" header="Apellidos" [style]="{'width':'10em'}" ></p-column>
-            <p-column field="UsUserName" header="Usuario" [style]="{'width':'8em','text-align':'center'}" ></p-column>
-        </p-dataTable>
-          
+            <div class="table table-responsive">
+                <p-dataTable [value]="arrAllUser" [globalFilter]="filtroGlobal3" 
+                            [rows]="3" [paginator]="true"
+                                emptyMessage="No Hay Registros" 
+                                (onRowSelect)="onRowSelectAllUserSystem($event)"
+                                [(selection)]="selectedRowTabAllUserSystem">
+                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                        <template let-col  let-usersystem="rowData"  pTemplate="body">
+                                <!--<button pButton class="btn" (click)="editarUserSystem(usersystem.UsId)" [disabled]="EmPeId==-1" icon="fa-pencil-square-o" > </button>-->
+                                <button pButton id="btnTable" (click)="eliminarUserSystem(usersystem.UsId)" icon="fa-trash" > </button>                  
+                        </template>
+                    </p-column>
+                    <p-column field="Nro" header="N°" [style]="{'width':'4em','text-align':'center'}" ></p-column>
+                    <p-column field="PeNombres" header="Nombres" [style]="{'width':'10em'}"></p-column>
+                    <p-column field="PeApellidos" header="Apellidos" [style]="{'width':'10em'}" ></p-column>
+                    <p-column field="UsUserName" header="Usuario" [style]="{'width':'8em','text-align':'center'}" ></p-column>
+                </p-dataTable>
+            </div>
+        
+    </div>
 </div>
 
 

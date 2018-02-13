@@ -1140,6 +1140,9 @@ export class ProgComponent implements OnInit{
         
         //MANUAL O AUTOMATICO PROGRAMACION
         for(let i=0; i<arrAllProg.length; i++){
+            if(arrAllProg[i].SuEmId==0){
+                arrAllProg[i].SuEmRSocial="Todas Sub-Empresas";
+            }
             if(arrAllProg[i].PrTipo=="02"){
                 arrAllProg[i].tipo="Manual";
             }else if(arrAllProg[i].PrTipo=="01"){
