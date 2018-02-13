@@ -774,17 +774,20 @@ export class TcontrolComponent implements OnInit{
             getallprogramacionbydate(PrId:number, fecha: string, nroTarjetas:number){
                 this.progDetalle=[];
                 this.tcontrolservice.getAllProgramacionDetalleByPrFecha(PrId, fecha).subscribe(
-                    data => {  this.progDetalle=data;
-                                if(this.progDetalle.length>0 ){
-                                    //this.mgCuadroSalidas(this.ReDiTotalVuelta, this.progDetalle.length);
-                                    this.concatenarRegDiarioProgxFecha(this.mgprogDetalle(this.progDetalle), this.extraRegistroDiario(this.arrCuadro));
-                                    this.nuevaAsignaTarjeta();
-                                }else if(this.progDetalle.length==0 ){
-                                    this.mensaje="No hay programacion en la fecha indicada";
-                                    this.displayNoProgEnFecha = true;
-                                }
-                            },
-                        error=>{alert('Error al buscar la programacion por fecha, vuelta a intentarlo');}
+                    data => {  
+                        this.progDetalle=data;
+                        if(this.progDetalle.length>0 ){
+                            //this.mgCuadroSalidas(this.ReDiTotalVuelta, this.progDetalle.length);
+                            this.concatenarRegDiarioProgxFecha(this.mgprogDetalle(this.progDetalle), this.extraRegistroDiario(this.arrCuadro));
+                            this.nuevaAsignaTarjeta();
+                        }else if(this.progDetalle.length==0 ){
+                            this.mensaje="No hay programacion en la fecha indicada";
+                            this.displayNoProgEnFecha = true;
+                        }
+                    },
+                    error=>{
+                        alert('Error al buscar la programacion por fecha, vuelta a intentarlo');
+                    }
                 );
             }
 
@@ -1036,12 +1039,13 @@ export class TcontrolComponent implements OnInit{
             }
         //GRILLA PROGRAMACION DETALLE  -  POR LA FECHA
             mgprogDetalle(arrProg=[]){ 
-                //console.log(arrProg);
+          
                 this._progDetalle=[];  let _arrProg:any[]=[]; let programacion=[]; 
                 programacion=this.cambianBuIdxNroPlaca(arrProg, this.placas);
-
+               
                 for(let progD of programacion){
-                    _arrProg[progD.PrDeOrden-1]={
+                    //_arrProg[progD.PrDeOrden-1]={
+                    _arrProg.push({
                         nro:0,
                         BuId:progD.BuId,
                         nroPlaca:progD.nroPlaca,
@@ -1054,7 +1058,7 @@ export class TcontrolComponent implements OnInit{
                         SuEmRSocial:progD.SuEmRSocial,
                         BuDescripcion:progD.BuDescripcion,
                         PrDeCountVuelta:progD.PrDeCountVuelta
-                    }
+                    })
                 }
                 
                //console.log(_arrProg);
@@ -3799,8 +3803,7 @@ export class TcontrolComponent implements OnInit{
                                     this.actBtnAddPlacaDL=false;
                                 }
                                 this.mensajesigvuelta='Termino la vuelta, pasando a la siguiente';  
-                                this.displayPasarSgteVuelta=true;
-                                //this.concatenarRegDiarioProgxFecha(this.mgprogDetalle(this.progDetalle), this.extraRegistroDiario(this.arrCuadro));   
+                                this.displayPasarSgteVuelta=true; 
                                 this.concatenarRegDiarioByVueltaDL(arrCuadroDL);
                             }
                             

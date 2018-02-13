@@ -1,108 +1,85 @@
 
 .contenedor{ margin-top:20px; margin-left:30px; margin-right:30px; margin-bottom:60px;}
-
 #btn{ width: 100%; padding: 10px 50px; margin:0;}
-
 #validation{color:red; margin:0; padding:0; position: absolute; font-size: 14px;}
-
-/* BOTONES (GUARDAR CANCELAR + OTROS) VENTANAS MODALES */
 .btn_modal{ width:100%; height:40px; font-size:15px; background-color:#4CAF50;}
-
 #btnTable{background-color: #4CAF50;}
 .table{ margin-top:20px;}
 
 
-/* estilos formuario nueva subempresa */
+/* estilos formuario nueva subempresa desktop*/
     .contFormNuevaSuEmp{ height:450px; width: 480px;}
     .bodyFormNuevaSuEmp{ height: 410px; width: 100%; overflow-x: hidden; overflow-y: auto;}
     .pieFormNuevaSuEmp{ height: 40px; width: 100%;}
 
-/* estilos formulario nueva empresa */
+/* estilos formulario nueva empresa desktop*/
     .contFormNuevaEmp{ height: 250px; width: 300px; }
     .bodyFormNuevaEmp{ height: 210px; width:100%;}
     .pieFormNuevaEmp{ height: 40px; width: 100%;}
 
-/* estilos formulario Nuevo Periodo */
-    .contNuevoPer{
-        width: 250px;
-        height: 300px;
-    }
-    .nPerBody{
-        width: 100%;
-        height: 250px;
-       
-    }
-    .nPerBtns{
-        width: 100%;
-        height: 40px;
-        
-    }
+/* estilos formulario Nuevo Periodo desktop*/
+    .contNuevoPer{width: 250px; height: 300px;}
+    .nPerBody{ width: 100%; height: 250px;}
+    .nPerBtns{ width: 100%; height: 40px;}
+
 /* RESPONSIVE */
     /*ipad PRO*/
     @media(max-width:1100px){ 
-        .container{max-height: 350px;
-                   max-width: 670px;}
     }
     
     /* ipad*/
     @media(max-width:600px){ 
-        .container{max-height: 350px;
-                   max-width: 420px;}
-        .form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            /*background: yellow;*/
-            padding: 0;
-            margin: 0;
-        }
     }
 
     /* iphone 6 plus*/
     @media(max-width:480px){ 
-        .container{max-height: 320px;max-width: 360px;}
-        .form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            /*background: yellow;*/
-            padding: 0 8px;
-            margin: 0;
-        }
+        /* estilos formuario nueva subempresa desktop*/
+            .contFormNuevaSuEmp{ height:510px; width: 330px;}
+            .bodyFormNuevaSuEmp{ height: 430px; width: 100%; overflow-x: hidden; overflow-y: auto;}
+            .pieFormNuevaSuEmp{ height: 80px; width: 100%;}
+
+        /* estilos formulario nueva empresa desktop*/
+            .contFormNuevaEmp{ height: 300px; width: 330px; }
+            .bodyFormNuevaEmp{ height: 210px; width:100%;}
+            .pieFormNuevaEmp{ height: 40px; width: 100%;}
+
         /* estilos formulario Nuevo Periodo */
-            .contNuevoPer{ width: 300px; height: 300px;}
-            .nPerBody{width: 100%; height: 220px;}
+            .contNuevoPer{ width: 350px; height: 370px;}
+            .nPerBody{width: 100%; height: 290px;}
             .nPerBtns{ width: 100%; height: 80px;}
     }
 
     /* iphone 6 */
     @media(max-width:380px){ 
-        .container{max-height: 260px;max-width: 340px;}
-        .form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            /*background: red;*/
-            padding: 0 8px;
-            margin: 0;
-        }
+        
+        /* estilos formulario nueva empresa desktop*/
+            .contFormNuevaEmp{ height: 300px; width: 300px; }
+            .bodyFormNuevaEmp{ height: 210px; width:100%;}
+            .pieFormNuevaEmp{ height: 40px; width: 100%;}
+
+        /* estilos formuario nueva subempresa desktop*/
+            .contFormNuevaSuEmp{ height:510px; width: 300px;}
+            .bodyFormNuevaSuEmp{ height: 430px; width: 100%; overflow-x: hidden; overflow-y: auto;}
+            .pieFormNuevaSuEmp{ height: 80px; width: 100%;}
+
         /* estilos formulario Nuevo Periodo */
-            .contNuevoPer{ width: 300px; height: 300px;}
-            .nPerBody{width: 100%; height: 220px;}
+            .contNuevoPer{ width: 300px; height: 350px;}
+            .nPerBody{width: 100%; height: 270px;}
             .nPerBtns{ width: 100%; height: 80px;}
     }
 
     /* iphone 5 */
     @media(max-width:320px){ 
-        .container{max-height: 200px;max-width: 300px;}
-        .form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            /*background: blue;*/
-            padding: 0 8px;
-            margin: 0;
-        }
+        /* estilos formulario nueva empresa desktop*/
+            .contFormNuevaEmp{ height: 300px; width: 300px; }
+            .bodyFormNuevaEmp{ height: 210px; width:100%;}
+            .pieFormNuevaEmp{ height: 40px; width: 100%;}
+
+        /* estilos formuario nueva subempresa desktop*/
+            .contFormNuevaSuEmp{ height:510px; width: 300px;}
+            .bodyFormNuevaSuEmp{ height: 430px; width: 100%; overflow-x: hidden; overflow-y: auto;}
+            .pieFormNuevaSuEmp{ height: 80px; width: 100%;}
+
         /* estilos formulario Nuevo Periodo */
             .contNuevoPer{ width: 250px; height: 300px;}
             .nPerBody{width: 100%; height: 220px;}
@@ -116,11 +93,10 @@
             width: 100%;
         }
         .col-xs-12{
-            /*background: blue;*/
+          
             padding: 0 8px;
             margin: 0;
         }
-        /* estilos formulario Nuevo Periodo */
             .contNuevoPer{ width: 250px; height: 300px;}
             .nPerBody{width: 100%; height: 220px;}
             .nPerBtns{ width: 100%; height: 80px;}
