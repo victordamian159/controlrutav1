@@ -4,46 +4,51 @@
     <br>
     <div class="row">
     
-        <div class="col-xl-2 col-md-4 col-sm-12 col-xs-12">                 
+        <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">       
+                <div class="form-group">          
             <select class="form-control" required [(ngModel)]="suemid" (change)="_SuEmId($event)">
                 <option *ngFor="let suem of _arrsuEmp" [value]="suem.SuEmId">
                     {{suem.SuEmRSocial}}
                 </option>
             </select> 
+            </div>
         </div>
 
     
-        <div class="col-xl-2 col-md-4 col-sm-6 col-xs-12">
+        <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
+                <div class="form-group">
             <input class="form-control" placeholder="Buscar..." type="text" #filtroGlobal/>
+                </div>
         </div>
     
     
-        <div class="col-xl-2 col-md-4 col-sm-6 col-xs-12">
+        <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
+                <div class="form-group">
             <button id="btnNuevo" pButton icon="fa-user-plus" [disabled]="suemid==0" (click)="nuevoEmpPer(); vincularPersona();" label="Integrar Persona" ></button>
+                </div>
         </div>
     </div>
-    <div class="row">
+   
         
-            <div class="table table-responsive">
-                <p-dataTable [value]="arrEmpPer" [globalFilter]="filtroGlobal" 
-                            [rows]="3" [paginator]="true"
-                            [(selection)]="selectedRowTabEmpPer" emptyMessage="No Hay Registros"
-                            selectionMode="single" (onRowSelect)="onRowSelectPerEmp($event)">
-                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                        <template let-col  let-emp="rowData"  pTemplate="body">
-                                <button type="button" pButton id="btnTable"  (click)=  "editarEmpPer(emp.Id)" icon="fa-pencil-square-o" > </button>
-                                <button type="button" pButton id="btnTable" (click)=  "eliminarEmpPer(emp.Id)" icon="fa-trash" > </button>                  
-                        </template>
-                    </p-column>
-                    <p-column field="nro" header="N°" [style]="{'width':'4em','text-align':'center'}" ></p-column>
-                    <p-column field="PeNombres" header="Nombres" [style]="{'width':'10em'}"></p-column>
-                    <p-column field="PeApellidos" header="Apellidos" [style]="{'width':'10em'}" ></p-column>
-                    <p-column field="EmPeTipo" header="Cargo" [style]="{'width':'9em','text-align':'center'}"></p-column>
-                    <p-column field="PeDNI" header="Dni" [style]="{'width':'8em','text-align':'center'}" ></p-column>
-                </p-dataTable>
-            </div>
-        
+    <div class="table table-responsive">
+        <p-dataTable [value]="arrEmpPer" [globalFilter]="filtroGlobal" 
+                    [rows]="3" [paginator]="true"
+                    [(selection)]="selectedRowTabEmpPer" emptyMessage="No Hay Registros"
+                    selectionMode="single" (onRowSelect)="onRowSelectPerEmp($event)">
+            <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                <template let-col  let-emp="rowData"  pTemplate="body">
+                        <button type="button" pButton id="btnTable"  (click)=  "editarEmpPer(emp.Id)" icon="fa-pencil-square-o" > </button>
+                        <button type="button" pButton id="btnTable" (click)=  "eliminarEmpPer(emp.Id)" icon="fa-trash" > </button>                  
+                </template>
+            </p-column>
+            <p-column field="nro" header="N°" [style]="{'width':'4em','text-align':'center'}" ></p-column>
+            <p-column field="PeNombres" header="Nombres" [style]="{'width':'10em'}"></p-column>
+            <p-column field="PeApellidos" header="Apellidos" [style]="{'width':'10em'}" ></p-column>
+            <p-column field="EmPeTipo" header="Cargo" [style]="{'width':'9em','text-align':'center'}"></p-column>
+            <p-column field="PeDNI" header="Dni" [style]="{'width':'8em','text-align':'center'}" ></p-column>
+        </p-dataTable>
     </div>
+        
 
     <!--TABLA USUARIO DEL SISTEMA-->
     <div>Usuario de la Aplicacion</div>
@@ -51,89 +56,96 @@
     <div class="row">
         <!--BUSQUEDA-->
         <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
+                <div class="form-group">
             <input class="form-control" placeholder="Buscar..." type="text" #filtroGlobal3/>
+                </div>
         </div>
 
         <!--BOTON NUEVO-->
         <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
+                <div class="form-group">
             <button class="form-control" id="btnNuevo" pButton icon="fa-user-plus" 
                     [disabled]="nombre=='x' || !(username==false)" (click)="nuevoUserSystem();" label="Nuevo Usuario"></button>
+                </div>
         </div>
     </div>
-    <div class="row">
+    
         
-            <div class="table table-responsive">
-                <p-dataTable [value]="arrAllUser" [globalFilter]="filtroGlobal3" 
-                            [rows]="3" [paginator]="true"
-                                emptyMessage="No Hay Registros" 
-                                (onRowSelect)="onRowSelectAllUserSystem($event)"
-                                [(selection)]="selectedRowTabAllUserSystem">
-                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                        <template let-col  let-usersystem="rowData"  pTemplate="body">
-                                <!--<button pButton class="btn" (click)="editarUserSystem(usersystem.UsId)" [disabled]="EmPeId==-1" icon="fa-pencil-square-o" > </button>-->
-                                <button pButton id="btnTable" (click)="eliminarUserSystem(usersystem.UsId)" icon="fa-trash" > </button>                  
-                        </template>
-                    </p-column>
-                    <p-column field="Nro" header="N°" [style]="{'width':'4em','text-align':'center'}" ></p-column>
-                    <p-column field="PeNombres" header="Nombres" [style]="{'width':'10em'}"></p-column>
-                    <p-column field="PeApellidos" header="Apellidos" [style]="{'width':'10em'}" ></p-column>
-                    <p-column field="UsUserName" header="Usuario" [style]="{'width':'8em','text-align':'center'}" ></p-column>
-                </p-dataTable>
-            </div>
-        
+    <div class="table table-responsive">
+        <p-dataTable [value]="arrAllUser" [globalFilter]="filtroGlobal3" 
+                    [rows]="3" [paginator]="true"
+                        emptyMessage="No Hay Registros" 
+                        (onRowSelect)="onRowSelectAllUserSystem($event)"
+                        [(selection)]="selectedRowTabAllUserSystem">
+            <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                <template let-col  let-usersystem="rowData"  pTemplate="body">
+                        <!--<button pButton class="btn" (click)="editarUserSystem(usersystem.UsId)" [disabled]="EmPeId==-1" icon="fa-pencil-square-o" > </button>-->
+                        <button pButton id="btnTable" (click)="eliminarUserSystem(usersystem.UsId)" icon="fa-trash" > </button>                  
+                </template>
+            </p-column>
+            <p-column field="Nro" header="N°" [style]="{'width':'4em','text-align':'center'}" ></p-column>
+            <p-column field="PeNombres" header="Nombres" [style]="{'width':'10em'}"></p-column>
+            <p-column field="PeApellidos" header="Apellidos" [style]="{'width':'10em'}" ></p-column>
+            <p-column field="UsUserName" header="Usuario" [style]="{'width':'8em','text-align':'center'}" ></p-column>
+        </p-dataTable>
     </div>
+        
+  
 </div>
 
 
-<!--FORMULARIOS-->
+<!--FORMULARIOS MODALES-->
     <!-- NUEVO REGISTRO EMPRESAPERSONA AGREGANDO (BUSCANDO) UN USUARIO PARA AGREGARLO A LA SUBEMPRESA CON UN CARGO-->
     <p-dialog header="Integrar a SubEmpresa" [(visible)]="displayNuevaEmpPersona" [resizable]="false" modal="modal" width="100%" height="100%" responsive="true" [closable]="false">
         <!-- COMBO SUEMPS - FILTRO - BTNNUEVAPERSONA - PERSONASTABLA-->
         <div class="contMAddEmpPer">
-            <div class="bodyMAddEmpPer">
+            <div class="bodyMAddEmpPer">             
                 <div class="row">
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <!--COMBO + FILTRO + BTNNUEVAPER-->
-                        <div class="row">
-                            <!--COMBO SUBEMPRESAS-->
-                                <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">                 
-                                    <select class="form-control" required [(ngModel)]="_suemid" (change)="SuEmId($event)" #subempid="ngModel">
-                                        <!--<option value="" disabled selected hidden>Please Choose...</option>-->
-                                        <option *ngFor="let suem of _arrsuEmp" [value]="suem.SuEmId">
-                                            {{suem.SuEmRSocial}}
-                                        </option>
-                                    </select> 
-                                    <div id="validation" [hidden]="!subempid.touched || subempid.valid ">
-                                        obligatorio
-                                    </div>
-                                </div>
-                            
-                            <!--COMBO TIPO PERSONA EN LA EMPRESA-->
-                                <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">                 
-                                    <select class="form-control" required [(ngModel)]="idTiEmpPer" (change)="idTipEmpPer($event)" #tipocargoempper="ngModel">
-                                        <option *ngFor="let tEmp of arrTipoEmpPer" [value]="tEmp.id">
-                                            {{tEmp.perTEmpPer}}
-                                        </option>
-                                    </select> 
-                                    <div id="validation" [hidden]="!tipocargoempper.touched || tipocargoempper.valid ">
-                                        obligatorio
-                                    </div>
-                                </div>
-
-                            <!--FILTRO-->
-                                <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
-                                    <input class="form-control" placeholder="Buscar..." type="text" #filtroGlobal2/>
-                                </div>
-
-                            <!--BTN NUEVA ASIGNACION-->
-                                <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
-                                    <button class="btn_modal" (click)="nuevaPersona();" pButton icon="fa-file-text-o" label="Nueva Persona"></button>
-                                </div>
+                    <!--COMBO SUBEMPRESAS-->
+                    <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                            <div class="form-group">                 
+                        <select class="form-control" required [(ngModel)]="_suemid" (change)="SuEmId($event)" #subempid="ngModel">
+                            <!--<option value="" disabled selected hidden>Please Choose...</option>-->
+                            <option *ngFor="let suem of _arrsuEmp" [value]="suem.SuEmId">
+                                {{suem.SuEmRSocial}}
+                            </option>
+                        </select> 
+                        <div id="validation" [hidden]="!subempid.touched || subempid.valid ">
+                            obligatorio
                         </div>
+                            </div>
+                    </div>
                     
-                        <!--PERSONASTABLA-->
-                       
-                                                     
+                    <!--COMBO TIPO PERSONA EN LA EMPRESA-->
+                    <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">      
+                            <div class="form-group">           
+                        <select class="form-control" required [(ngModel)]="idTiEmpPer" (change)="idTipEmpPer($event)" #tipocargoempper="ngModel">
+                            <option *ngFor="let tEmp of arrTipoEmpPer" [value]="tEmp.id">
+                                {{tEmp.perTEmpPer}}
+                            </option>
+                        </select> 
+                        <div id="validation" [hidden]="!tipocargoempper.touched || tipocargoempper.valid ">
+                            obligatorio
+                        </div>
+                            </div>
+                    </div>
+
+                    <!--FILTRO-->
+                    <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                            <div class="form-group">
+                        <input class="form-control" placeholder="Buscar..." type="text" #filtroGlobal2/>
+                            </div>
+                    </div>
+
+                    <!--BTN NUEVA ASIGNACION-->
+                    <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                            <div class="form-group">
+                        <button class="btn_modal" (click)="nuevaPersona();" pButton icon="fa-file-text-o" label="Nueva Persona"></button>
+                            </div>
+                    </div>
+           
+                        
+                        <div class="table table-responsive">                         
                             <p-dataTable [value]="personalArr" [globalFilter]="filtroGlobal2" 
                                         (onRowSelect)="onRowSelPers($event)" [(selection)]="selectRowPersona" 
                                         emptyMessage="Lista vacia" 
@@ -150,27 +162,27 @@
                                 <p-column field="PeDNI"       header="DNI"  [style]="{'width':'8em','text-align':'center'}"></p-column>
                                 <p-column field="PeTipoLicencia" header="Licencia"  [style]="{'width':'6em','text-align':'center'}"></p-column>
                             </p-dataTable>                  
-                            
-                    
-
-                    </div>
+                        </div>
+                  
                 </div>
             </div>        
         
             <div class="pieMAddEmpPer">
-                <div class="row justify-content-end">
-                    <div class="col-xl-2 col-md-3 col-sm-6 col-sx-12">
-                        <button class="btn_modal" 
-                        (click)="guardarEmpPersona(); subempid.reset(); tipocargoempper.reset();" 
-                        [disabled]="!this.selectPersona || !subempid.valid || !tipocargoempper.valid || !(_PeDNI==(-1))" pButton 
-                        icon="fa-save" label="Guardar"></button>
+               
+                    <div class="row justify-content-end">
+                        <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
+                            <button class="btn_modal" 
+                            (click)="guardarEmpPersona(); subempid.reset(); tipocargoempper.reset();" 
+                            [disabled]="!this.selectPersona || !subempid.valid || !tipocargoempper.valid || !(_PeDNI==(-1))" pButton 
+                            icon="fa-save" label="Guardar"></button>
+                        </div>
+                        <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
+                            <button class="btn_modal" 
+                            (click)="cancelarEmpPersona(); subempid.reset(); tipocargoempper.reset();" 
+                            pButton icon="fa-close" label="Cancelar"></button>
+                        </div>
                     </div>
-                    <div class="col-xl-2 col-md-3 col-sm-6 col-sx-12">
-                        <button class="btn_modal" 
-                        (click)="cancelarEmpPersona(); subempid.reset(); tipocargoempper.reset();" 
-                        pButton icon="fa-close" label="Cancelar"></button>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </p-dialog>
@@ -182,32 +194,32 @@
             <div class="bodyFormNuevaPer">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        
+                            <div class="form-group">    
                             <label>Nombres:</label>
                             <input type="text" class="form-control" maxlength="40" [(ngModel)]="persona.nombres" #nompersona="ngModel" required/>
                             <div id="validation" [hidden]="!nompersona.touched || nompersona.valid">Error en los datos</div>
-                    
+                            </div>
                     </div>
                     <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        
+                            <div class="form-group">    
                             <label>Apellidos:</label>
                             <input type="text" class="form-control" maxlength="60" [(ngModel)]="persona.apellidos" #apepersona="ngModel" required/>
                             <div id="validation" [hidden]="!apepersona.touched || apepersona.valid">Error en los datos</div>
-                        
+                        </div>
                     </div>
                     <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        
+                            <div class="form-group">    
                             <label>DNI:</label>
                             <input type="text" class="form-control" maxlength="8" [(ngModel)]="persona.dni" #dnipersona="ngModel" required/>
                             <div id="validation" [hidden]="!dnipersona.touched || dnipersona.valid">Error en los datos</div>
-                        
+                        </div>
                     </div>
                     <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        
+                            <div class="form-group">    
                             <label>Nro Celular:</label>
                             <input type="text" class="form-control" maxlength="10" [(ngModel)]="persona.nrocel" #nrocelpersona="ngModel" required/>
                             <div id="validation" [hidden]="!nrocelpersona.touched || nrocelpersona.valid">Error en los datos</div>
-                        
+                        </div>
                     </div>
                 </div>
             </div>
@@ -215,10 +227,10 @@
 
             <div class="pieFormNuevaPer ">
                 <div class="row justify-content-end">
-                    <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                         <button class="btn_modal" [disabled]="!nompersona.valid || !apepersona.valid || !dnipersona.valid || !nrocelpersona.valid" (click)="guardarNuevaPersona(); nompersona.reset();  apepersona.reset();  dnipersona.reset();  nrocelpersona.reset(); " pButton icon="fa-save" label="Guardar"></button>
                     </div>
-                    <div class="col-xl-6 col-md-6 col-sm-6 col-sx-12">
+                    <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                         <button class="btn_modal" (click)="cancelarNuevaPersona(); nompersona.reset();  apepersona.reset();  dnipersona.reset();  nrocelpersona.reset();" pButton icon="fa-close" label="Cancelar"></button>
                     </div>
                 </div>
@@ -268,6 +280,7 @@
             </div>
         </div>
     </p-dialog>
+    
 <!--VENTANAS CONFIRMACION-->
 
     <!--CONFIRMACION EDITAR EMPRESA_PERSONA--> 

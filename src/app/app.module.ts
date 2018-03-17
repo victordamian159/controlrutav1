@@ -30,6 +30,7 @@ import {PersComponent} from './components/personal.component';
 import {loginUserComponent} from './components/loginUser.component';
 import {distribTiempoComponent} from './components/distribTiempo.component';
 import {userNameComponent} from './components/userName.component';
+import {RelojComponent} from './components/reloj.component';
 import { AuthGuard } from './components/auth.guard';
 
 //MANTENIMIENTO
@@ -124,7 +125,8 @@ import {DatosCompartidosService} from './service/dataComunicationApp.service';
     consulVistaEnLineaComponent,
     consulAlertNotifComponent,
     consulIncidenciaComponent,
-    userNameComponent
+    userNameComponent,
+    RelojComponent
   ],
   
   /*MODULOS FRAMWORK PRIMENG*/

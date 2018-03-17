@@ -30,6 +30,8 @@ import {cCeroFechaForEditar,slash_posFecha,fechaActual2,ajustaHora,
 })
 
 export class TcontrolComponent implements OnInit{
+        private horaActual:number;
+
         private errorMessage:string='';  //mensaje error del rest
         private isLoading: boolean = false;  
 
@@ -512,8 +514,11 @@ export class TcontrolComponent implements OnInit{
             data=>{ 
                 if(data.length!=0){
                     this.objConfigSystem=data[0];
+                    
                     this.CoId=this.objConfigSystem.CoId;
                     this.CoSiId=this.objConfigSystem.CoSiId;
+                    this.horaActual=this.objConfigSystem.CoTiempoActual;
+                    
                 }else{
                     console.log('Error, no se pudo descargar la configuracion del sistema');
                 }
@@ -560,8 +565,7 @@ export class TcontrolComponent implements OnInit{
             //console.log(emid); console.log(prid); console.log(fecha);
             this.tcontrolservice.getallregistrovueltasdiariasbyemprfe(emid,prid,fecha).subscribe(
                 data => {
-                    arrCuadro=data;
-                    console.log(arrCuadro);
+                    arrCuadro=data;                
                     if(arrCuadro.length!=0 && arrCuadro.length>0){
                         this.arrCuadro=arrCuadro;
                         this.arrCuadroBusqueda=arrCuadro; //para la busqueda y validacion de reten
@@ -741,12 +745,13 @@ export class TcontrolComponent implements OnInit{
 
         // CONSULTAR TODOS LOS PUNTOS DE CONTROL EXISTENTES 
             getAllPControlBy(emId: number, ruId:number){
+                let arrPtosControl=[];
                 this.pcontrolService.getAllPuntoControlByEmRu(emId, ruId).subscribe(
                     data => {
                                 /*this.ptsControl = data; 
                                 this.puntosControl= this.ptsControl;*/
                                 this.puntosControl= data;
-                                this.mgPuntosControl();
+                                this.mgPuntosControl(this.puntosControl);
 
                             },
                     err  => {this.errorMessage = err; alert('Error al cargar los puntos de control validos');},
@@ -760,7 +765,7 @@ export class TcontrolComponent implements OnInit{
                 this.tcontrolservice.getAllProgramacionByEm(emId, anio).subscribe(
                     data => {
                                 this.programacion=data; arrProg=data;
-                                console.log(arrProg);
+                                //console.log(arrProg);
                                 //funcion que busque la programacion que este activa
                                 this.getallregistrovueltasdiariasbyemprfe(this.emID,arrProg[arrProg.length-1].prId,this.fechaAsTarjDos);
                                 this.mcobprogramacion(arrProg);
@@ -1076,25 +1081,41 @@ export class TcontrolComponent implements OnInit{
            
 
         //MOSTRAR PUNTOS DE CONTROL COMBOBOX
-            mgPuntosControl(){
-                this._puntosControl=[];
-                for(let puntos of this.puntosControl){
+            mgPuntosControl(arrPtosControl=[]){
+                let arrPtos=[];
+                //console.log(arrPtosControl);
+                for (let i=0; i<arrPtosControl.length; i++){
+                    if(arrPtosControl[i].PuCoActivo==1){
+                        arrPtos.push({
+                            EmId:arrPtosControl[i].EmId,
+                            PuCoClase:arrPtosControl[i].PuCoClase,
+                            PuCoId:arrPtosControl[i].PuCoId,
+                            PuCoTiempoBus:_hora(arrPtosControl[i].PuCoTiempoBus),
+                            /*RuDescripcion:puntos.RuDescripcion,*/
+                            RuId:arrPtosControl[i].RuId,
+                            PuCoDescripcion:arrPtosControl[i].PuCoDescripcion
+                        });
+                    }
+                }
+                /*for(let puntos of this.puntosControl){
                     this._puntosControl.push({
                         EmId:puntos.EmId,
                         PuCoClase:puntos.PuCoClase,
                         PuCoId:puntos.PuCoId,
                         PuCoTiempoBus:_hora(puntos.PuCoTiempoBus),
-                        /*RuDescripcion:puntos.RuDescripcion,*/
+                        RuDescripcion:puntos.RuDescripcion,
                         RuId:puntos.RuId,
                         PuCoDescripcion:puntos.PuCoDescripcion
                     });
-                }
+                }*/
+
+                this._puntosControl=arrPtos;
             }
 
         //MOSTRANDO RESULTADO EN LA GRILLA PRINCIPAL
             mgTarjetasControl(arrTarjetasControl=[]){
                 //this._allTarjControl = [];
-                console.log(arrTarjetasControl);
+                //console.log(arrTarjetasControl);
                 let j:number=0, k:number=0, cen:number=0, _arrTarjetasControl:any[]=[], arrTarjCtrl:any[]=[];
 
                 //TARJETAS EXISTENTES
@@ -1157,7 +1178,7 @@ export class TcontrolComponent implements OnInit{
                     _arrTarjetasControl[i].NomPuntosControl=_arrTarjetasControl[i].PuCoDescripcion+' / '+_arrTarjetasControl[i].PuCoTiempoBus,
                     _arrTarjetasControl[i].NomTaCoNroVuelta=(_arrTarjetasControl[i].TaCoNroVuelta).toString()+'v';
                 }
-                console.log(_arrTarjetasControl);
+                //console.log(_arrTarjetasControl);
                 if(_arrTarjetasControl.length!=0 && _arrTarjetasControl.length>1){
                     //ordenar las tarjetas por su id
                     arrTarjCtrl=this.ordenarXTarj(_arrTarjetasControl).slice(0);
@@ -1762,7 +1783,7 @@ export class TcontrolComponent implements OnInit{
                     TaCoTiempoReten:0
                 }; 
                 
-                console.log(_tarjeta);
+                //console.log(_tarjeta);
             
                 tarjEncontrado=this.buscarTarjetaAsignada(_tarjeta); //buscar si esta asignado o no
 
@@ -2325,8 +2346,8 @@ export class TcontrolComponent implements OnInit{
                 if(arrMatCuadro[i].ReReTiempo==null || arrMatCuadro[i].ReReTiempo==86400000){ 
                     arrMatCuadro[i].RetenTiempo='00:00:00';
                 }else if(arrMatCuadro[i].ReReTiempo!=null){
-                    console.log(arrMatCuadro[i].ReReTiempo);
-                    console.log(_hora(arrMatCuadro[i].ReReTiempo));
+                    /*console.log(arrMatCuadro[i].ReReTiempo);
+                    console.log(_hora(arrMatCuadro[i].ReReTiempo));*/
                     arrMatCuadro[i].RetenTiempo=_hora(arrMatCuadro[i].ReReTiempo);
                 }
 
@@ -2442,7 +2463,7 @@ export class TcontrolComponent implements OnInit{
 
             }
             resultado=mat;
-            console.log(resultado);
+            //console.log(resultado);
             return resultado;
         }
 
@@ -4363,7 +4384,7 @@ export class TcontrolComponent implements OnInit{
             }else if(cen==0){
                 result=-1;
             }
-            console.log(result);
+            //console.log(result);
             return result;
         }
 

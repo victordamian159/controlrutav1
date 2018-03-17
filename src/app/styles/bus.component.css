@@ -1,49 +1,15 @@
 #titulo{ color: black; margin-top:20px;  margin-bottom:10px;text-decoration: none; text-align: left;}
-
 .contenedor{  margin-top:20px;  margin-left:30px;  margin-right:30px;  margin-bottom:60px; }
-
 #btn{  width: 100%;  padding: 10px 50px;  margin:0; }
-
-/*.win_modal{}
-
-.form-control{
-    height: 38px;
-    margin:0;
-    padding: 0;
-    margin-bottom:10px;
-    width: 100%;
-}*/
-
-.form-group{
-    padding-bottom:10px;
-}
-
-
 #validation{ font-size: 14px; color:red; margin-top:0px; position: absolute;}
+.btn_modal{ width:100%; height:40px;  font-size:15px; background-color:#4CAF50; text-align: center;}
+#btnNuevo{padding:4px; width: 100%; background: #4CAF50; }
+#btnTable{ background-color: #4CAF50; }
+.table{ margin-top:20px;}
 
-
-/* BOTONES (GUARDAR CANCELAR + OTROS) VENTANAS MODALES */
-.btn_modal{
-    width:100%; 
-    height:40px; 
-    font-size:15px;
-    background-color:#4CAF50;
-    text-align: center;
-}
-
-/*GRUPO BOTONES DE LAS VENTANAS MODALES*/
-.btn_Modal{
-    margin-top: 30px;
-}
-
-/*APARIENCIA BOTON NUEVO (ARRIBA DE GRILLA PRINCIPAL)*/
-#btnNuevo{
-    padding:4px;
-    width: 100%;
-    background: #4CAF50; 
-}
-
-/* VENTANAS MODALES*/
+/*.btn_Modal{ margin-top: 30px;}*/
+/*.form-group{ padding-bottom:10px;}*/
+/* VENTANAS MODALES
     .container{
         margin-bottom: 20px;
         
@@ -60,15 +26,13 @@
     }
     col-xl-12{
         padding: 0;
-    }
+    }*/
 
-/*ESTILOS TABLAS*/
-    #btnTable{
-        background-color: #4CAF50;
-    }
-    .table{
-        margin-top:20px;
-    }
+
+/*estilos modal asignar smarthphone a bus (desktop)*/   
+    .contMAddBus{height: 450px; width: 730px;}
+    .bodyMAddBus{height: 410px; width: 100%;}
+    .pieMAddBus{ height: 40px; width: 100%;}
 
 /*estilos modal asignar smarthphone a bus (desktop)*/   
     .contMAsigPhone{height: 450px; width: 320px;}
@@ -77,7 +41,7 @@
 
 /*estilos modal asignar bus a persona (desktop)*/
     .contMAsigBus{height: 420px; width: 800px;}
-    .bodyMAsigBus{height: 370px; width: 99%;}
+    .bodyMAsigBus{height: 380px; width: 99%;}
     .pieMAsigBus{margin-top:10px; height: 40px; width: 99%;}
 
 /*estilos modal confirmacion (desktop)*/
@@ -88,72 +52,84 @@
 /* RESPONSIVE */
     /*ipad PRO*/
     @media(max-width:1100px){ 
-        .container{max-height: 350px;
-                   max-width: 670px;}
     }
     
     /* ipad*/
     @media(max-width:600px){ 
-        .container{max-height: 350px;
-                   max-width: 420px;}
-        .form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            /*background: yellow;*/
-            padding: 0;
-            margin: 0;
-        }
+        
     }
 
     /* iphone 6 plus*/
     @media(max-width:480px){ 
-        .container{max-height: 320px;max-width: 360px;}
-        .form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            /*background: yellow;*/
-            padding: 0 8px;
-            margin: 0;
-        }
+        /*estilos modal  bus (desktop)*/   
+            .contMAddBus{height: 540px; width: 340px;}
+            .bodyMAddBus{overflow-x: hidden; overflow-y: auto; height: 440px; width:100%; }
+            .pieMAddBus{ margin-top:10px; height: 80px; width: 100%}
+
+        /*estilos modal asignar smarthphone a bus (desktop)*/   
+            .contMAsigPhone{height: 450px; width: 340px;}
+            .bodyMAsigPhone{height: 360px; width: 100%;}
+            .pieMAsigPhone{margin-top:10px; height: 80px; width: 100%;}
+
+        /*estilos modal asignar bus a persona (desktop)*/
+            .contMAsigBus{height: 540px; width: 340px;}
+            .bodyMAsigBus{overflow-x: hidden; overflow-y: auto; height: 440px; width: 100%;}
+            .pieMAsigBus{margin-top:10px; height: 80px; width: 100%;}
+
+        /*estilos modal confirmacion (desktop)*/
+            .contMConf{height: 130px; width: 340px;}
+            .bodyMConf{height: 50px; width: 100%;}
+            .pieMConf{margin-top:10px; height: 80px; width: 100%;}
     }
 
     /* iphone 6 */
     @media(max-width:380px){ 
-        .container{max-height: 260px;max-width: 340px;}
-        .form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            /*background: red;*/
-            padding: 0 8px;
-            margin: 0;
-        }
+        /*estilos modal  bus (desktop)*/   
+            .contMAddBus{height: 510px; width: 300px;}
+            .bodyMAddBus{overflow-x: hidden; overflow-y: auto; height: 420px; width:100%; }
+            .pieMAddBus{ margin-top:10px; height: 80px; width: 100%}
+
+        /*estilos modal asignar bus a persona (desktop)*/
+            .contMAsigBus{height: 510px; width: 300px;}
+            .bodyMAsigBus{overflow-x: hidden; overflow-y: auto; height: 420px; width: 100%;}
+            .pieMAsigBus{margin-top:10px; height: 80px; width: 100%;}
+
+        /*estilos modal asignar smarthphone a bus (desktop)*/   
+            .contMAsigPhone{height: 450px; width: 300px;}
+            .bodyMAsigPhone{height: 360px; width: 100%;}
+            .pieMAsigPhone{margin-top:10px; height: 80px; width: 100%;}
+
+        /*estilos modal confirmacion (desktop)*/
+            .contMConf{height: 130px; width: 300px;}
+            .bodyMConf{height: 50px; width: 100%;}
+            .pieMConf{margin-top:10px; height: 80px; width: 100%;}
     }
 
     /* iphone 5 */
     @media(max-width:320px){ 
-        .container{max-height: 200px;max-width: 300px;}
-        .form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            /*background: blue;*/
-            padding: 0 8px;
-            margin: 0;
-        }
+        /*estilos modal agregar bus (desktop)*/   
+            .contMAddBus{height: 350px; width: 240px;}
+            .bodyMAddBus{overflow-x: hidden; overflow-y: auto; height: 270px; width:100%; }
+            .pieMAddBus{ margin-top:10px; height: 80px; width: 100%}
+
+        /*estilos modal asignar bus a persona (desktop)*/
+            .contMAsigBus{height: 350px; width: 240px;}
+            .bodyMAsigBus{overflow-x: hidden; overflow-y: auto; height: 270px; width: 100%;}
+            .pieMAsigBus{margin-top:10px; height: 80px; width: 100%;}
+
+        /*estilos modal asignar smarthphone a bus (desktop)*/   
+            .contMAsigPhone{height: 350px; width: 240px;}
+            .bodyMAsigPhone{ overflow-x: hidden; overflow-y: auto; height: 270px; width: 100%;}
+            .pieMAsigPhone{margin-top:10px; height: 80px; width: 100%;}
+
+        /*estilos modal confirmacion (desktop)*/
+            .contMConf{height: 130px; width: 240px;}
+            .bodyMConf{height: 50px; width: 100%;}
+            .pieMConf{margin-top:10px; height: 80px; width: 100%;}
+        
     }
 
     /* iphone 4 */
     @media(max-height:480px){
-        .container{max-height: 160px;max-width: 280px;}
-        .form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            /*background: blue;*/
-            padding: 0 8px;
-            margin: 0;
-        }
+      
     }

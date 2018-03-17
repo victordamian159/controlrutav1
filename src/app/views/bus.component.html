@@ -8,29 +8,36 @@
         <div class="row">
             <!--FILTRO-->
             <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
-                <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+                    <div class="form-group">
+                <input class="form-control" placeholder="Buscar..." type="text" #filtroGlobal/>
+                    </div>
             </div>
 
             <!--COMBO SUBEMPRESAS-->
             <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
+                    <div class="form-group">
                 <select class="form-control" required [(ngModel)]="_suemid" (change)="SuEmId($event)">
                     <!--<option value="" disabled selected hidden>Please Choose...</option>-->
                     <option *ngFor="let suem of _arrsuEmp" [value]="suem.SuEmId">
                         {{suem.SuEmRSocial}}
                     </option>
                 </select> 
+                    </div>
             </div>
             
             <!--BOTON NUEVO-->
             <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
-                <button class="form-control" id="btnNuevo" (click)="nuevoBus()" [disabled]="_suemid==0" pButton icon="fa-file-text-o" label="Agregar Bus"></button>
+                    <div class="form-group">
+                <button class="form-control" id="btnNuevo" (click)="nuevoBus()" [disabled]="_suemid==0" 
+                        pButton icon="fa-file-text-o" label="Agregar Bus"></button>
+                    </div>
             </div>
 
             
         </div>
 
         <!--TABLA BUS--> 
-        <div class="row">
+        
             <div class="table table-responsive">
                 <p-dataTable [value]="_gbus"   [globalFilter]="filtroGlobal" emptyMessage="No Hay Registros" 
                 [rows]="5"  [paginator]="true" selectionMode="single" (onRowSelect)="onRowSelectBus($event)"  >
@@ -49,19 +56,21 @@
                     
                 </p-dataTable>
             </div>
-        </div>
+        
     
 
     <!--TABLA ASIGNAR BUS A PERSONA -->
         <div id=titulo>Persona Encargada</div>
         <div class="row">
             <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
+                    <div class="form-group">
                 <button id="btnNuevo" (click)="nuevoBusPersona()" [disabled]="BuPlaca=='none'" pButton icon="fa-file-text-o" label="Nueva Asignacion"></button>
+                    </div>
             </div>
         </div>
 
-        <!--TABLA ASIGNAR BUSPERSONA-->
-        <div class="row">
+    <!--TABLA ASIGNAR BUSPERSONA-->
+       
             <div class=" table table-responsive">
                 <p-dataTable [value]="_gbusPer" emptyMessage="No Hay Registros" 
                             [rows]="2"  [paginator]="true" selectionMode="single">
@@ -77,242 +86,244 @@
                     <p-column field="EmPeTipo" header="Cargo Emp" [style]="{'width':'6em','text-align':'center'}"></p-column>
                 </p-dataTable>
             </div>
-        </div>
+        
         
     <!--TABLA TELEFONO -->
-            <div id=titulo>Telefono Movil Asignado</div>
-            <div class="row">
-                <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
-                    <button id="btnNuevo" (click)="nuevoTelMovPersona()" pButton icon="fa-file-text-o" [disabled]="BuPlaca=='none'" label="Asignar Telefono"></button>
-                </div>
+        <div id=titulo>Telefono Movil Asignado</div>
+        <div class="row">
+            <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                <button id="btnNuevo" (click)="nuevoTelMovPersona()" pButton icon="fa-file-text-o" [disabled]="BuPlaca=='none'" label="Asignar Telefono"></button>
+                    </div>
             </div>
+        </div>
 
-            <!--AGREGANDO TELEFONO AL SISTEMA-->
-            <div class="row">
-                <div class="table table-responsive">
-                    <p-dataTable [value]="arrTelAsig"  emptyMessage="No Hay Registros" 
-                                        [rows]="3"  [paginator]="true" selectionMode="single">
-                        <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                            <template let-col  let-objTel="rowData"  pTemplate="body">
-                                    <button pButton id="btnTable" (click)= "editarTelAsig(objTel.TeId)" icon="fa-pencil-square-o" > </button>                  
-                                    <button pButton id="btnTable" (click)= "eliminarTelAsig(objTel.TeId)" icon="fa-trash">  </button>
-                            </template>
-                        </p-column>
-                        <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
-                        <p-column field="TeMarca" header="Marca" [style]="{'width':'7em'}"></p-column>
-                        <p-column field="TeImei" header="Imei" [style]="{'width':'9em','text-align':'center'}" ></p-column>
-                        <p-column field="EmConsorcio" header="Consorcio" [style]="{'width':'12em'}"></p-column>
-                        <p-column field="SuEmRSocial" header="Emp. Asociada" [style]="{'width':'12em'}"></p-column>
-                        <p-column field="BuPlaca" header="Placa" [style]="{'width':'6em','text-align':'center'}"></p-column>
-                    </p-dataTable>
-                </div>
+        <!--AGREGANDO TELEFONO AL SISTEMA-->
+        
+            <div class="table table-responsive">
+                <p-dataTable [value]="arrTelAsig"  emptyMessage="No Hay Registros" 
+                                    [rows]="3"  [paginator]="true" selectionMode="single">
+                    <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                        <template let-col  let-objTel="rowData"  pTemplate="body">
+                                <button pButton id="btnTable" (click)= "editarTelAsig(objTel.TeId)" icon="fa-pencil-square-o" > </button>                  
+                                <button pButton id="btnTable" (click)= "eliminarTelAsig(objTel.TeId)" icon="fa-trash">  </button>
+                        </template>
+                    </p-column>
+                    <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}" ></p-column>
+                    <p-column field="TeMarca" header="Marca" [style]="{'width':'7em'}"></p-column>
+                    <p-column field="TeImei" header="Imei" [style]="{'width':'9em','text-align':'center'}" ></p-column>
+                    <p-column field="EmConsorcio" header="Consorcio" [style]="{'width':'12em'}"></p-column>
+                    <p-column field="SuEmRSocial" header="Emp. Asociada" [style]="{'width':'12em'}"></p-column>
+                    <p-column field="BuPlaca" header="Placa" [style]="{'width':'6em','text-align':'center'}"></p-column>
+                </p-dataTable>
             </div>
+      
 </div>
     
     <!--MODAL NUEVO BUS-->
-        <p-dialog [(visible)]="displayNuevoBus" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
-            <!--TITULO-->
-            <p-header> {{titulo}}  {{SuEmRSocial}} </p-header>
+        <p-dialog [(visible)]="displayNuevoBus" modal="modal" [resizable]="false" 
+                    width="100%" height="100%" responsive="true" [closable]="false">
             
-            <!--CUERPO-->     
-            <div class="row">
-                <div class="cont_modal">
-                    <div class="container">
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="row">
+            <!--<p-header>{{titulo}}  {{SuEmRSocial}}</p-header>-->
+            <p-header>Bus para {{SuEmRSocial}}</p-header>
+            <div class="contMAddBus">
+                <div class="bodyMAddBus">    
+                    <div class="row">
 
+                        
+                            <!--PLACA   **-->
+                            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label">Placa:</label>
+                                    <input class="form-control" type="text" [(ngModel)]="bus.BuPlaca" #placa="ngModel" required minlength="3" maxlength="12"/>
                                 
-                                    <!--PLACA   **-->
-                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="form-group">
-                                            <label class="control-label">Placa:</label>
-                                            <input class="form-control" type="text" [(ngModel)]="bus.BuPlaca" #placa="ngModel" required minlength="3" maxlength="12"/>
-                                        
-                                            <span *ngIf="!placa.valid && placa.touched" id="validation" style="display: inline-block; font-size: 80%;" >
-                                                <div [hidden]="!placa.errors.required"> Obligatorio </div>
-                                                <div [hidden]="!placa.errors.minlength"> Minimo 3 Caracteres </div>
-                                                <div [hidden]="!placa.errors.maxlength"> Maximo 12 Caracteres </div>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <!--AÑO  **-->
-                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="form-group">
-                                            <label class="control-label">Año:</label>
-                                            <input class="form-control" type="text" [(ngModel)]="bus.BuAnio" #anio="ngModel" length="4" pattern="([1-2]{1}[0-9]{1}[0-9]{1}[0-9]{1})" maxlength="4" required/>
-                                            
-                                            <div [hidden]="anio.valid || !anio.touched" id="validation" style="display: inline-block; font-size: 80%;" >
-                                                Error en el dato ingresado
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--MOTOR  **-->
-                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="form-group">
-                                            <label class="control-label">Motor:</label>
-                                            <input class="form-control" type="text" [(ngModel)]="bus.BuMotor" maxlength="29" required #motor="ngModel" />
-                                            <div [hidden]="motor.valid || !motor.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
-                                                Error en el dato ingresado
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--DESCRIPCION-->
-                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="form-group">
-                                            <label class="control-label" >Descripcion:</label>
-                                            <input class="form-control" type="text" maxlength="250" [(ngModel)]="bus.BuDescripcion" required #descr="ngModel"/>
-                                            <span *ngIf="!descr.valid && descr.touched" id="validation" style="display: inline-block; font-size: 80%;" >
-                                                <div [hidden]="!descr.errors.required"> Obligatorio </div>
-                                                <div [hidden]="!descr.errors.maxlength"> Maximo 250 Caracteres </div>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <!--TIPO COMBUSTIBLE  COMBOBOX-->
-                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="form-group">
-                                            <label class="control-label">Combustible:</label>
-                                            <!--
-                                                <input class="form-control" type="text" [(ngModel)]="bus.BuTipoCombustible" required #tipoCos="ngModel" />
-                                            -->
-                                            <select class="form-control" [(ngModel)]="BuTipoCombustible" (change)="FunComb_Combustibles($event)" required #tipoCos="ngModel">
-                                                <option *ngFor="let comb of combustibles" [ngValue]="comb.id">{{comb.nomb}}</option>
-                                            </select>
-
-                                            <span *ngIf="!tipoCos.valid && tipoCos.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
-                                                <div [hidden]="!tipoCos.errors.required"> Obligatorio </div>
-                                            </span>
-                                        </div>
-                                    </div>                           
-                                    <!--COLOR-->
-                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="form-group">
-                                            <label class="control-label">Color:</label>
-                                            <input class="form-control" type="text" maxlength="15" [(ngModel)]="bus.BuColor" />
-                                        </div>
-                                    </div>
-
-                                    <!--CAPACIDAD-->
-                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="form-group">
-                                            <label class="control-label">Capacidad:</label>
-                                            <input class="form-control" type="number" [(ngModel)]="bus.BuCapacidad" max="60"/>
-                                        </div>
-                                    </div>
-
-                                    <!--MARCA-->
-                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="form-group">
-                                            <label class="control-label">Marca:</label>
-                                            <!--DROPDOWN-->
-                                            <input class="form-control" type="text" [(ngModel)]="bus.BuMarca" maxlength="20" required #marca="ngModel"/>
-                                            <span *ngIf="!marca.valid && marca.touched" id="validation" style="display: inline-block; font-size: 80%;" >
-                                                <div [hidden]="!marca.errors.required"> Obligatorio </div>
-                                                <div [hidden]="!marca.errors.maxlength"> Maximo 20 Caracteres </div>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <!--TIPO-->
-                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="form-group">
-                                            <label class="control-label">Tipo:</label>
-                                            <input class="form-control" type="text" [(ngModel)]="bus.BuTipo" maxlength="15" required #tipo="ngModel"/>
-                                            <span *ngIf="!tipo.valid && tipo.touched" id="validation" style="display: inline-block; font-size: 80%;" >
-                                                <div [hidden]="!tipo.errors.required"> Obligatorio </div>
-                                                <div [hidden]="!tipo.errors.maxlength"> Maximo 15 Caracteres </div>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <!--SOAT  **-->
-                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="form-group">
-                                            <label class="control-label" >SOAT:</label>
-                                            <input class="form-control" type="text" [(ngModel)]="bus.BuSOAT" maxlength="20" required #soat="ngModel" />
-
-                                            <span *ngIf="!soat.valid && soat.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
-                                                <div [hidden]="!soat.errors.required"> Obligatorio </div>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <!--MODELO  **-->
-                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="form-group">
-                                            <label class="control-label">Modelo:</label>
-                                            <input class="form-control" type="text" [(ngModel)]="bus.BuModelo" maxlength="25" required #mod="ngModel" />
-                                            
-                                            <span *ngIf="!mod.valid && mod.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
-                                                <div [hidden]="!mod.errors.required"> Obligatorio </div>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <!--OPERATIVIDAD COMBOBOX (SI ESTA APTO EL BUS PARA CIRCULAR O SE ENCUENTRA EN EL TALLER POR REPARACION) -->
-                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="form-group">
-                                            <label class="control-label">En Funcionamiento:</label>
-                                            <!--
-                                            <input class="form-control" type="text" [(ngModel)]="bus.BuOperatividad" required #oper="ngModel" />
-                                            -->
-                                            <select class="form-control" [(ngModel)]="BuOperatividad" required #oper="ngModel">
-                                                <option *ngFor="let ope of operativo" [ngValue]="ope.id">{{ope.nomb}}</option>
-                                            </select>
-                                            <span *ngIf="!oper.valid && oper.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
-                                                <div [hidden]="!oper.errors.required"> Obligatorio </div>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <!--ACTIVO COMBOBOX (SI ESTA O NO CIRCULANDO EN LA EMPRESA)-->
-                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="form-group">
-                                            <label class="control-label"> Registro Activo:</label>
-                                            <!--
-                                            <input class="form-control" type="text" [(ngModel)]="bus.BuActivo" required #act="ngModel" />
-                                            -->
-                                            <select class="form-control" [(ngModel)]="BuActivo" required #act="ngModel">
-                                                <option *ngFor="let act of activo" [ngValue]="act.id">{{act.nomb}}</option>
-                                            </select>
-                                            <span *ngIf="!act.valid && act.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
-                                                <div [hidden]="!act.errors.required"> Obligatorio </div>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <!--FECHA INGRESO-->
-                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="form-group">
-                                            <label class="control-label" >Ingreso:</label>
-                                            <input class="form-control" type="date" [(ngModel)]="bus.BuFechaIngreso"  required #fingreso="ngModel" />
-                                            
-                                            <span *ngIf="!fingreso.valid && fingreso.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
-                                                <div [hidden]="!fingreso.errors.required"> Obligatorio </div>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <!--FECHA SALIDA-->
-                                    <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="form-group">
-                                            <label class="control-label" for="fsal">Salida:</label>
-                                            <input class="form-control" id="fsal" name="fsal"  type="date" [(ngModel)]="bus.BuFechaSalida"  />
-                                        </div>
-                                    </div>
-                            
+                                    <span *ngIf="!placa.valid && placa.touched" id="validation" style="display: inline-block; font-size: 80%;" >
+                                        <div [hidden]="!placa.errors.required"> Obligatorio </div>
+                                        <div [hidden]="!placa.errors.minlength"> Minimo 3 Caracteres </div>
+                                        <div [hidden]="!placa.errors.maxlength"> Maximo 12 Caracteres </div>
+                                    </span>
+                                </div>
                             </div>
-                        </div>
+                            <!--AÑO  **-->
+                            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label">Año:</label>
+                                    <input class="form-control" type="text" [(ngModel)]="bus.BuAnio" #anio="ngModel" length="4" pattern="([1-2]{1}[0-9]{1}[0-9]{1}[0-9]{1})" maxlength="4" required/>
+                                    
+                                    <div [hidden]="anio.valid || !anio.touched" id="validation" style="display: inline-block; font-size: 80%;" >
+                                        Error en el dato ingresado
+                                    </div>
+                                </div>
+                            </div>
+                            <!--MOTOR  **-->
+                            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label">Motor:</label>
+                                    <input class="form-control" type="text" [(ngModel)]="bus.BuMotor" maxlength="29" required #motor="ngModel" />
+                                    <div [hidden]="motor.valid || !motor.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
+                                        Error en el dato ingresado
+                                    </div>
+                                </div>
+                            </div>
+                            <!--DESCRIPCION-->
+                            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label" >Descripcion:</label>
+                                    <input class="form-control" type="text" maxlength="250" [(ngModel)]="bus.BuDescripcion" required #descr="ngModel"/>
+                                    <span *ngIf="!descr.valid && descr.touched" id="validation" style="display: inline-block; font-size: 80%;" >
+                                        <div [hidden]="!descr.errors.required"> Obligatorio </div>
+                                        <div [hidden]="!descr.errors.maxlength"> Maximo 250 Caracteres </div>
+                                    </span>
+                                </div>
+                            </div>
+                            <!--TIPO COMBUSTIBLE  COMBOBOX-->
+                            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label">Combustible:</label>
+                                    <!--
+                                        <input class="form-control" type="text" [(ngModel)]="bus.BuTipoCombustible" required #tipoCos="ngModel" />
+                                    -->
+                                    <select class="form-control" [(ngModel)]="BuTipoCombustible" (change)="FunComb_Combustibles($event)" required #tipoCos="ngModel">
+                                        <option *ngFor="let comb of combustibles" [ngValue]="comb.id">{{comb.nomb}}</option>
+                                    </select>
+
+                                    <span *ngIf="!tipoCos.valid && tipoCos.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
+                                        <div [hidden]="!tipoCos.errors.required"> Obligatorio </div>
+                                    </span>
+                                </div>
+                            </div>                           
+                            <!--COLOR-->
+                            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label">Color:</label>
+                                    <input class="form-control" type="text" maxlength="15" [(ngModel)]="bus.BuColor" />
+                                </div>
+                            </div>
+
+                            <!--CAPACIDAD-->
+                            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label">Capacidad:</label>
+                                    <input class="form-control" type="number" [(ngModel)]="bus.BuCapacidad" max="60"/>
+                                </div>
+                            </div>
+
+                            <!--MARCA-->
+                            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label">Marca:</label>
+                                    <!--DROPDOWN-->
+                                    <input class="form-control" type="text" [(ngModel)]="bus.BuMarca" maxlength="20" required #marca="ngModel"/>
+                                    <span *ngIf="!marca.valid && marca.touched" id="validation" style="display: inline-block; font-size: 80%;" >
+                                        <div [hidden]="!marca.errors.required"> Obligatorio </div>
+                                        <div [hidden]="!marca.errors.maxlength"> Maximo 20 Caracteres </div>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!--TIPO-->
+                            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label">Tipo:</label>
+                                    <input class="form-control" type="text" [(ngModel)]="bus.BuTipo" maxlength="15" required #tipo="ngModel"/>
+                                    <span *ngIf="!tipo.valid && tipo.touched" id="validation" style="display: inline-block; font-size: 80%;" >
+                                        <div [hidden]="!tipo.errors.required"> Obligatorio </div>
+                                        <div [hidden]="!tipo.errors.maxlength"> Maximo 15 Caracteres </div>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!--SOAT  **-->
+                            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label" >SOAT:</label>
+                                    <input class="form-control" type="text" [(ngModel)]="bus.BuSOAT" maxlength="20" required #soat="ngModel" />
+
+                                    <span *ngIf="!soat.valid && soat.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
+                                        <div [hidden]="!soat.errors.required"> Obligatorio </div>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!--MODELO  **-->
+                            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label">Modelo:</label>
+                                    <input class="form-control" type="text" [(ngModel)]="bus.BuModelo" maxlength="25" required #mod="ngModel" />
+                                    
+                                    <span *ngIf="!mod.valid && mod.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
+                                        <div [hidden]="!mod.errors.required"> Obligatorio </div>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!--OPERATIVIDAD COMBOBOX (SI ESTA APTO EL BUS PARA CIRCULAR O SE ENCUENTRA EN EL TALLER POR REPARACION) -->
+                            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label">En Funcionamiento:</label>
+                                    <!--
+                                    <input class="form-control" type="text" [(ngModel)]="bus.BuOperatividad" required #oper="ngModel" />
+                                    -->
+                                    <select class="form-control" [(ngModel)]="BuOperatividad" required #oper="ngModel">
+                                        <option *ngFor="let ope of operativo" [ngValue]="ope.id">{{ope.nomb}}</option>
+                                    </select>
+                                    <span *ngIf="!oper.valid && oper.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
+                                        <div [hidden]="!oper.errors.required"> Obligatorio </div>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!--ACTIVO COMBOBOX (SI ESTA O NO CIRCULANDO EN LA EMPRESA)-->
+                            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label"> Registro Activo:</label>
+                                    <!--
+                                    <input class="form-control" type="text" [(ngModel)]="bus.BuActivo" required #act="ngModel" />
+                                    -->
+                                    <select class="form-control" [(ngModel)]="BuActivo" required #act="ngModel">
+                                        <option *ngFor="let act of activo" [ngValue]="act.id">{{act.nomb}}</option>
+                                    </select>
+                                    <span *ngIf="!act.valid && act.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
+                                        <div [hidden]="!act.errors.required"> Obligatorio </div>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!--FECHA INGRESO-->
+                            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label" >Ingreso:</label>
+                                    <input class="form-control" type="date" [(ngModel)]="bus.BuFechaIngreso"  required #fingreso="ngModel" />
+                                    
+                                    <span *ngIf="!fingreso.valid && fingreso.touched" id="validation" style="display: inline-block; font-size: 80%;"  >  
+                                        <div [hidden]="!fingreso.errors.required"> Obligatorio </div>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!--FECHA SALIDA-->
+                            <div class="col-xl-3 col-md-4 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label" for="fsal">Salida:</label>
+                                    <input class="form-control" id="fsal" name="fsal"  type="date" [(ngModel)]="bus.BuFechaSalida"  />
+                                </div>
+                            </div>
+                    
                     </div>
                 </div>
-            </div>
 
-            <!--PIE-->
-            <div class="btn_Modal row justify-content-end">
-                <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
-                    <button class="btn_modal" pButton label="Guardar" icon="fa-save" [disabled]="!placa.valid || !anio.valid || !motor.valid || !tipoCos.valid ||  !soat.valid || !mod.valid || !oper.valid || !act.valid || !fingreso.valid || !descr.valid || !marca.valid || !tipo.valid" (click)= "guardarbus(); placa.reset(); anio.reset(); motor.reset(); tipoCos.reset();  soat.reset(); mod.reset(); oper.reset(); act.reset(); fingreso.reset(); descr.reset(); marca.reset(); tipo.reset();"></button>
-                </div>
-                <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
-                    <button class="btn_modal" pButton label="Cancelar" icon="fa-close" (click)="cancelarbus(); placa.reset(); anio.reset(); motor.reset(); tipoCos.reset();  soat.reset(); mod.reset(); oper.reset(); act.reset(); fingreso.reset(); descr.reset(); marca.reset(); tipo.reset(); "></button>
+                <div class="pieMAddBus">
+                    <div class="row justify-content-end">
+                        <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
+                            <button class="btn_modal" pButton label="Guardar" icon="fa-save" 
+                            [disabled]="!placa.valid || !anio.valid || !motor.valid || !tipoCos.valid ||  !soat.valid || !mod.valid || !oper.valid || !act.valid || !fingreso.valid || !descr.valid || !marca.valid || !tipo.valid" 
+                            (click)= "guardarbus(); placa.reset(); anio.reset(); motor.reset(); tipoCos.reset();  soat.reset(); mod.reset(); oper.reset(); act.reset(); fingreso.reset(); descr.reset(); marca.reset(); tipo.reset();"></button>
+                        </div>
+                        <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
+                            <button class="btn_modal" pButton label="Cancelar" icon="fa-close" 
+                            (click)="cancelarbus(); placa.reset(); anio.reset(); motor.reset(); tipoCos.reset();  soat.reset(); mod.reset(); oper.reset(); act.reset(); fingreso.reset(); descr.reset(); marca.reset(); tipo.reset(); "></button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </p-dialog>
@@ -324,60 +335,68 @@
                 <!--body-->
                 <div class="bodyMAsigBus">
                
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                       
                             <div class="row">
                                 <!--PLACA SELECCIONADA-->
                                     <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12" style="font-size: 150%">
+                                            <div class="form-group">
                                         Placa: {{BuPlaca}}
+                                            </div>
                                     </div>
 
                                 <!--BUSQUEDA-->
                                     <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                                            <div class="form-group">
                                         <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroAsigBus/>
+                                            </div>
                                     </div>
 
                                 <!--COMBO SUBEMPRESAS-->
                                     <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                                            <div class="form-group">
                                         <select class="form-control" required [(ngModel)]="suemid" (change)="_SuEmId();" #varsuemid="ngModel">
                                             <option *ngFor="let suem of _arrsuEmp" [value]="suem.SuEmId">
                                                 {{suem.SuEmRSocial}}
                                             </option>
                                         </select> 
+                                            </div>
                                     </div>
 
                                 <!--COMBO BUSPERSONA TIPO-->
                                     <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                                            <div class="form-group">
                                         <select class="form-control" required [(ngModel)]="BuPeTipo" #varBuPeTipo="ngModel">
                                             <option *ngFor="let bupeti of arrBuPeTipo" [value]="bupeti.id">
                                                 {{bupeti.cargo}}
                                             </option>
                                         </select> 
+                                            </div>
                                     </div>
                             </div>
 
                             <!--DATATABLE BUSPERSONA-->
-                            <div class="row">
+                            
                                 <!--TABLA PERSONAS DENTRO DE LAS DIFERENTES SUBEMPRESAS-->
-                                    <div class="table table-responsive">                               
-                                        <p-dataTable [value]="arrEmpPer" emptyMessage="Lista vacia"
-                                        [rows]="9" [paginator]="true" selectionMode="single" [globalFilter]="filtroAsigBus"
-                                         [(selection)]="selectedRow" (onRowSelect)="onRowSelectEmpPer($event)" >        
-                                            <!--
-                                                <p-column styleClass="col-button" [style]="{'width':'6em'}">
-                                                    <template let-col let-persubemp="rowData" pTemplate="body">                                        
-                                                        <button id="btnTable"  pButton class="btn" (click)="editPerSubEmp(persubemp.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
-                                                        <button id="btnTable"  pButton class="btn" (click)="elimPerSubEmp(persubemp.PuCoDeId)" icon="fa-trash"> </button>
-                                                    </template>
-                                                </p-column>
-                                            -->
-                                            <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}"  ></p-column>
-                                            <p-column field="PeNombres" header="Nombres" [style]="{'width':'8em'}"  ></p-column>
-                                            <p-column field="PeApellidos" header="Apellidos"  [style]="{'width':'8em'}"></p-column>
-                                            <p-column field="EmPeTipo" header="Cargo" [style]="{'width':'6em','text-align':'center'}"></p-column>
-                                        </p-dataTable>                  
-                                    </div>       
-                            </div> 
-                        </div>
+                            <div class="table table-responsive">                               
+                                <p-dataTable [value]="arrEmpPer" emptyMessage="Lista vacia"
+                                [rows]="9" [paginator]="true" selectionMode="single" [globalFilter]="filtroAsigBus"
+                                    [(selection)]="selectedRow" (onRowSelect)="onRowSelectEmpPer($event)" >        
+                                    <!--
+                                        <p-column styleClass="col-button" [style]="{'width':'6em'}">
+                                            <template let-col let-persubemp="rowData" pTemplate="body">                                        
+                                                <button id="btnTable"  pButton class="btn" (click)="editPerSubEmp(persubemp.PuCoDeId)" icon="fa-pencil-square-o" > </button>                                                
+                                                <button id="btnTable"  pButton class="btn" (click)="elimPerSubEmp(persubemp.PuCoDeId)" icon="fa-trash"> </button>
+                                            </template>
+                                        </p-column>
+                                    -->
+                                    <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}"  ></p-column>
+                                    <p-column field="PeNombres" header="Nombres" [style]="{'width':'8em'}"  ></p-column>
+                                    <p-column field="PeApellidos" header="Apellidos"  [style]="{'width':'8em'}"></p-column>
+                                    <p-column field="EmPeTipo" header="Cargo" [style]="{'width':'6em','text-align':'center'}"></p-column>
+                                </p-dataTable>                  
+                            </div>       
+                           
+                        
                    
                 </div>
                 
@@ -399,60 +418,61 @@
         </p-dialog>
     
     <!--MODAL NUEVO TELEFONO-->
-        <p-dialog  [(visible)]="displayNuevoTelMovil" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
-            <!--TITULO-->
+        <p-dialog  [(visible)]="displayNuevoTelMovil" modal="modal" [resizable]="false" 
+                    width="100%" height="100%" responsive="true" [closable]="false">
+          
             <p-header>Agregar Movil a {{titulo}} </p-header>
+
             <div class="contMAsigPhone">
-                <!--body-->
+             
                 <div class="bodyMAsigPhone">
-                        <div class="row">
-                    <!--MARCA-->
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="form-group">
-                            <label class="control-label">Marca:</label>
-                            <input class="form-control" type="text" [(ngModel)]="telefono.TeMarca" maxlength="45" required #martel="ngModel"/>
-                            <span *ngIf="!martel.valid && (martel.touched || martel.dirty)"  >  
-                                <div id="validation" [hidden]="!martel.errors.required"> obligatorio </div>
-                            </span> 
+                    <div class="row">
+                        <!--MARCA-->
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label class="control-label">Marca:</label>
+                                <input class="form-control" type="text" [(ngModel)]="telefono.TeMarca" maxlength="45" required #martel="ngModel"/>
+                                <span *ngIf="!martel.valid && (martel.touched || martel.dirty)"  >  
+                                    <div id="validation" [hidden]="!martel.errors.required"> obligatorio </div>
+                                </span> 
+                            </div>
                         </div>
-                    </div>
 
-                    <!--IMEI-->
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="form-group">
-                            <label class="control-label" >Imei:</label>
-                            <input class="form-control" type="text" [(ngModel)]="telefono.TeImei" maxlength="15"  required #imei="ngModel" />
-                            <span *ngIf="!imei.valid && (imei.touched || imei.dirty)"  >  
-                                <div id="validation" [hidden]="!imei.errors.required"> obligatorio </div>
-                            </span> 
+                        <!--IMEI-->
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label class="control-label" >Imei:</label>
+                                <input class="form-control" type="text" [(ngModel)]="telefono.TeImei" maxlength="15"  required #imei="ngModel" />
+                                <span *ngIf="!imei.valid && (imei.touched || imei.dirty)"  >  
+                                    <div id="validation" [hidden]="!imei.errors.required"> obligatorio </div>
+                                </span> 
+                            </div>
                         </div>
-                    </div>
-        
-                    <!--MODELO-->
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="form-group">
-                            <label class="control-label" >Modelo:</label>
-                            <input class="form-control" type="text" [(ngModel)]="telefono.TeModelo" maxlength="45"  required #modelo="ngModel" />
-                            <span *ngIf="!modelo.valid && (modelo.touched || modelo.dirty)"  >  
-                                <div id="validation" [hidden]="!modelo.errors.required"> obligatorio </div>
-                            </span> 
+            
+                        <!--MODELO-->
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label class="control-label" >Modelo:</label>
+                                <input class="form-control" type="text" [(ngModel)]="telefono.TeModelo" maxlength="45"  required #modelo="ngModel" />
+                                <span *ngIf="!modelo.valid && (modelo.touched || modelo.dirty)"  >  
+                                    <div id="validation" [hidden]="!modelo.errors.required"> obligatorio </div>
+                                </span> 
+                            </div>
                         </div>
-                    </div>
 
-                    <!--VERSION ANDROID-->
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="form-group">
-                            <label class="control-label">Ver. Android:</label>
-                            <input class="form-control" type="text" [(ngModel)]="telefono.TeVersionAndroid" maxlength="10"  #verAndro="ngModel" /> 
-                            <span *ngIf="!verAndro.valid && (verAndro.touched || verAndro.dirty)"  >  
-                                <div id="validation" [hidden]="!verAndro.errors.required"> obligatorio </div>
-                            </span>   
+                        <!--VERSION ANDROID-->
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label class="control-label">Ver. Android:</label>
+                                <input class="form-control" type="text" [(ngModel)]="telefono.TeVersionAndroid" maxlength="10"  #verAndro="ngModel" /> 
+                                <span *ngIf="!verAndro.valid && (verAndro.touched || verAndro.dirty)"  >  
+                                    <div id="validation" [hidden]="!verAndro.errors.required"> obligatorio </div>
+                                </span>   
+                            </div>
                         </div>
                     </div>
-                        </div>
                 </div>
 
-                <!--pie-->
                 <div class="pieMAsigPhone">
                     <div class="row">
                         <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">                                                                                                         

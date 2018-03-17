@@ -772,7 +772,7 @@ export class PcontrolComponent implements OnInit{
 //PUNTO CONTROL MAESTRO
     //funcion nueva Maestro de puntos de control (BOTON NUEVO)
     newPuntoControlMaestro(){
-        this.headertitle = "Nueva Lista De Puntos de Control";
+        this.headertitle = "Nueva Lista De Puntos";
         this.editar = 0; // si editar es cero es nuevo registro
         this._PuCoId=0;
         this.displayListaPuntos = true;
@@ -1945,9 +1945,9 @@ export class PcontrolComponent implements OnInit{
 
     //validar si nuevo registro es activo o inactivo
     validarCboPuCoActivo(PuCoActivo:number, arrPts=[], nroValidos:number):boolean{
-        console.log(PuCoActivo);
+        /*console.log(PuCoActivo);
         console.log(arrPts);
-        console.log(nroValidos);
+        console.log(nroValidos);*/
         let result:boolean, nroSi:number=0;
         if(arrPts.length==0){
             result=true;

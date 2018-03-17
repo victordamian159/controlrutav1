@@ -1,0 +1,17 @@
+.Reloj{
+    font-family: Courier New, Courier, monospace;
+    /*display: inline-block;*/
+    background: green;
+    color:white;
+    font-size: 2em;
+    float:right;
+    margin-bottom: 10px;
+}
+
+/* iphone 6 plus*/
+@media(max-width:480px){
+    .Reloj{
+        float:left;
+        margin-bottom: 20px;
+    }
+}

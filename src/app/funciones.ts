@@ -201,7 +201,7 @@
         _f =_cCeroFecha(_f);
         return _f;
     }       
-    /* ADAPTAR A FORMATO yyyy-mm-dd */
+    /* ADAPTAR (INVERTIR POSICION) A FORMATO yyyy-mm-dd */
     export function editf1(f1:string):string{
         let _f1:string,arrf1:any,_arrf1:any,aux:any,d:string,m:string,a:string;
         arrf1=f1.split("-");    d=arrf1[0]; m=arrf1[1]; a=arrf1[2];

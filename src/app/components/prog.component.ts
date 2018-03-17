@@ -54,6 +54,8 @@ export class ProgComponent implements OnInit{
         private emid:number;
         private userid:number;
         private PrId:number;
+        private valSuEmIdCreateProg:boolean;
+        private mnjValSuEmIdCreateProg:string;
         private disabledbutton: boolean = false;
         private errorMessage:string='';  //mensaje error del rest
         private isLoading: boolean = false;  
@@ -85,6 +87,7 @@ export class ProgComponent implements OnInit{
         private resBusUnidades:string; /* PARA EL FORMULARIO DE NUEVA PROGRAMACION */
         private modEdit:boolean; /* modEdit=1: editando registro  modEdit=0: no se esta editando registro */
         private placaEditarCelda:number;
+        private progValida:string;
         /* ARRAYS */
         private selectedPlacas: string[] = []; /* NO USO */
         private placas:any[]=[]; //se utiliza para almacenar lo q devuelve el rest de las placas
@@ -108,6 +111,8 @@ export class ProgComponent implements OnInit{
         private progRestMaestro:any[]=[]; /* NO USO */
         private progBDDetalle:any[]=[]; // para recoger resultado de la BD
         private _progBDDetalle:any[]=[]; /* NO USO */
+        private arrAllSubEmpAgrup:any[]=[];
+        private nroMiniBusHeader:number;
         private modo:string; 
 
     //COLUMNAS DEL DATATABLE PRIMENG
@@ -148,6 +153,7 @@ export class ProgComponent implements OnInit{
         private displayMensajeEspera=false;
         private displayErrorFechIngrFormUno=false;
 
+        
     ngOnInit(){
         /*console.log(fechaSgte("2017/02/07",32));*/  /* TERMINAR ESTO */
         this.ordenSorteo = [];
@@ -162,8 +168,6 @@ export class ProgComponent implements OnInit{
                 private placasservice: PlacasService,
                 private configService : ConfiguraService,
                 public ClassGlobal:GlobalVars){
-
-        //this.arrSubEmp=[{ EmId:1, SuEmActivo:true, SuEmDireccion:"", SuEmEmail:"", SuEmId:0, SuEmRSocial:"TODOS SUB-EMPPRESAS", SuEmRuc:"", SuEmTelefono: "", SuEmTiempoVuelta:null, SuEmUbigeo:"", UsFechaReg:null, UsId:null}]
         this.emid=this.ClassGlobal.GetEmId();
         this.userid=this.ClassGlobal.GetUsId();
         this.lengthProgDet=0;
@@ -172,6 +176,7 @@ export class ProgComponent implements OnInit{
         this._tipoProg =[ {id:0,nTipo:"automatico"},{id:1,nTipo:"manual"} ];
         this._formaProg=[ {id:"01", nForma:"pescadito"},{id:"02", nForma:"escala"}];
         this.nroMiniBus=0;
+        this.nroMiniBusHeader=0;
         this.nroTotalMinibuses=0;
         this.diasSemana=[
             {id:0,nro:1, nomb:'Lunes',value:1},
@@ -182,21 +187,53 @@ export class ProgComponent implements OnInit{
             {id:5,nro:6, nomb:'Sabado',value:6},
             {id:6,nro:7, nomb:'Domingo',value:0},
         ];
+        this.valSuEmIdCreateProg=false;
+        this.mnjValSuEmIdCreateProg='';
     }
     
     funcCboAllBusBySuEmId(){
-        //console.log(this.SuEmId);
-        this.placasservice.getAllPlacasBusByEmSuEm(this.emid,this.SuEmId).subscribe(
-            data=>{
-                //console.log('nro placas: '+data.length);
-                this.unidadesEstado(data);
-            },
-            error=>{},
-            ()=>{}
-        );
+        /*console.log(this.arrAllSubEmpAgrup);
+        console.log(this.arrAllSubEmpAgrup[0].PrDiasIncluidos);
+        console.log(editf1(_fecha2(this.arrAllSubEmpAgrup[0].PrFechaInicio)));
+        console.log(editf1(_fecha2(this.arrAllSubEmpAgrup[0].PrFechaFin)));
+
+        console.log(this.progMaestro.PrFechaInicio);
+        console.log(this.progMaestro.PrFechaFin);
+        console.log(this.diasIncluidos(this.dtSelectDias));*/
+        this.valSuEmIdCreateProg=this.funcBuscarSuEmId(this.arrAllSubEmpAgrup,this.SuEmId);
+        
+        if(this.valSuEmIdCreateProg==true){
+            this.resBusUnidades='';
+            this.mnjValSuEmIdCreateProg='Ya esta asignada';
+        }else if(this.valSuEmIdCreateProg==false){
+            this.mnjValSuEmIdCreateProg='';
+            this.placasservice.getAllPlacasBusByEmSuEm(this.emid,this.SuEmId).subscribe(
+                data=>{
+                    this.unidadesEstado(data);
+                },error=>{},
+                ()=>{}
+            );
+        }
         
     }
 
+    funcBuscarSuEmId(arrSubEmp=[], suemid:number):boolean{
+        let cen:number=0, i:number=0, result:boolean;
+        while(i<arrSubEmp.length && cen==0){
+            if(arrSubEmp[i].SuEmId!=suemid){
+                i++; cen=0;
+            }else if(arrSubEmp[i].SuEmId==suemid){
+                cen=1;
+            }
+            
+        }
+        if(cen==1){
+            result=true;
+        }else if(cen==0){
+            result=false;
+        }
+        return result;
+    }
     funcCalendarioNumerico(refFecha1:string, refFecha2:string){
         let diaHoy = new Date(); 
         let arrCalendar:any[]=[]; 
@@ -474,19 +511,68 @@ export class ProgComponent implements OnInit{
 
             /*TODAS LAS PROGRAMACIONES POR EMPRESA Y AÑO*/
             getAllProgramacionByEm( empId: number, anio: number){
-
+                let añoActual=new Date().getFullYear().toString();
                 this.programacionService.getAllProgramacionByEm(empId, anio).subscribe(
                         datos => { 
-                            this.progRest = datos; 
-                            console.log(datos);
-                            this.mostrargrillaProgramacionMaestro(this.progRest); 
-                        },
-                        err => {this.errorMessage = err}, 
+                            this.progRest = datos;                         
+                                this.configService.getAllConfiguraByEmPeriodo(this.emid,añoActual).subscribe(
+                                data=>{     
+                                    this.CoSiId=data[0].CoSiId;            
+                                    //console.log(this.CoSiId);                                                
+                                    if(this.CoSiId==2){
+                                        this.arrAllSubEmpAgrup=this.funcAgruparProgByFechas(this.progRest);
+                                        this.funcValidAllProgByFechas(this.arrAllSubEmpAgrup);
+                                    }else if(this.CoSiId==1){
+
+                                    }
+                                    this.mostrargrillaProgramacionMaestro(this.progRest); 
+                                },error=>{
+
+                                },()=>{})
+                            
+                        }, err => {this.errorMessage = err}, 
                         () =>this.isLoading = false
                     );
                 
             }
 
+            funcValidAllProgByFechas(arrProgByDate){
+                let arrSubEmp=[];
+                this.empSubEmpService.getallsubempresasbyemid(this.emid).subscribe(
+                    data=>{
+                        for(let subemp of data){
+                            arrSubEmp.push(subemp);
+                        }
+                        //console.log(arrProgByDate.length);
+                        //console.log(arrSubEmp.length);
+                        if(arrProgByDate.length==arrSubEmp.length){
+                            //this.progValida="Programacion Correcta";
+                            this.progValida="";
+                        }else if(arrProgByDate.length!=arrSubEmp.length){
+                            this.progValida="Error en la programacion, compruebe su validez";
+                        }
+                        
+                    },error=>{},
+                    ()=>{}
+                );
+            }
+        
+            //si para programacion por subempresas
+            funcAgruparProgByFechas(arrAllProg=[]){
+                //por ahora solo por la ultima programacion creada
+                let objProg=arrAllProg[arrAllProg.length-1], arrProgByFechas=[];
+
+                for(let i=0; i<arrAllProg.length; i++){
+                    if( objProg.dias==arrAllProg[i].dias &&
+                        objProg.PrDiasIncluidos==arrAllProg[i].PrDiasIncluidos &&
+                        objProg.PrFechaFin==arrAllProg[i].PrFechaFin &&
+                        objProg.PrFechaInicio==arrAllProg[i].PrFechaInicio ){
+                            arrProgByFechas.push(arrAllProg[i]);
+                    }
+                }
+
+                return arrProgByFechas;
+            }
             
     //ABRIR 1ERA VENTANA MODAL(BOTON NUEVO)
     NuevaProgCabecera(){
@@ -494,12 +580,12 @@ export class ProgComponent implements OnInit{
         this.modEdit=false;
         this.procNuevaProgrC();
         this.ordenSorteo=[]; //SORTEO DE PLACAS
-        
+        this.resBusUnidades='';
         //consulta por periodos
   
             this.configService.getAllConfiguraByEmPeriodo(this.emid , añoActual).subscribe(
             data=>{
-                    console.log(data); 
+                    //console.log(data); 
                     if(data.length!=0){
                         this.objConfigSystem=data[0];
                         this.CoId=this.objConfigSystem.CoId;
@@ -550,6 +636,7 @@ export class ProgComponent implements OnInit{
        
     }
 
+    
     //1ERA VENTANA MODAL aqui recien se guarda la tabla MAESTRO en el REST 
     guardarProgCabecera(){
         let progCab:any;  let fIni=this.progMaestro.PrFechaInicio; let fFin=this.progMaestro.PrFechaFin; let placas=[];
@@ -961,6 +1048,7 @@ export class ProgComponent implements OnInit{
     }
 
     AgregarHBase(hBaseValid:boolean, hIncrementoValid:boolean){
+        
         if(hBaseValid==true && hIncrementoValid==true){    
             if(this.nroMiniBus<this.nroTotalMinibuses){         
                 let indicePorInicio=this.buscarPrimerHMS(this.ordenSorteo);
@@ -976,9 +1064,10 @@ export class ProgComponent implements OnInit{
                 //console.log(indicePorInicio);
                 this.ordenSorteo[indicePorInicio].HoraBase=this.horaBase;
                 this.nroMiniBus=this.conteoHBAgregadas(this.ordenSorteo);
+                this.nroMiniBusHeader=this.nroMiniBus;
+                
                 let indexNextPos=this.buscarSigtePosicion(this.ordenSorteo);
             
-
                 if(indexNextPos-indicePorInicio==1){
                     if(this.nroTotalMinibuses==indexNextPos){
                         this.placaEditarCelda=this.ordenSorteo[indicePorInicio].BuPlaca;
@@ -989,7 +1078,12 @@ export class ProgComponent implements OnInit{
                     this.placaEditarCelda=this.ordenSorteo[indicePorInicio].BuPlaca;  
                 }
                 
+                if(this.nroMiniBus==this.nroTotalMinibuses){
+                    this.nroMiniBusHeader--;
+                }
+
             }else if(this.nroMiniBus==this.nroTotalMinibuses){
+                
                 console.log("programacion terminada");
             }
         }else{
@@ -1247,7 +1341,7 @@ export class ProgComponent implements OnInit{
                         if(this.progBDDetalle.length!=0){
 
                             this.extraerHoraBase(this.progBDDetalle, this.PrCantidadBuses);
-                            console.log(this.arrHoraBaseSal);
+                            //console.log(this.arrHoraBaseSal);
                             this.calendarioProgramacion(this.progBDDetalle,this.PrCantidadBuses, this.dias);
                            
                             this.tablaProgramaciones(this.progBDDetalle, this.PrCantidadBuses, this.dias, this.extrayendoPlacasBus(this.placas,'tablavista'));
@@ -1460,7 +1554,7 @@ export class ProgComponent implements OnInit{
             UsId:this.userid
         }
         this.displayEditProgC=false;
-        console.log(obj);
+        //console.log(obj);
         this.programacionService.saveProgramacion(obj)
             .subscribe( 
                 data => {this.progMaestro=data;  //RECUPERANDO OBJETO PARA SACAR EL PRID
@@ -1944,4 +2038,6 @@ export class ProgComponent implements OnInit{
         }
         return result;
     }
+
+    
 }

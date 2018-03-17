@@ -1,152 +1,40 @@
-#titulo{
-    color: black;
-    margin-top:20px;
-    margin-bottom:10px;
-    text-decoration: none;
-    text-align: left;
-}
-
-.contenedor{
-    margin-top:20px;
-    margin-left:30px;
-    margin-right:30px;
-    margin-bottom:60px;
-}
-
-#btn{
-    width: 100%;
-    padding: 10px 50px;
-    margin:0;
-}
-
-/* VALIDACION DE DATOS*/
-    #validation{
-        color:red; 
-        margin:0; 
-        padding:0;
-        position: absolute;
-        font-size: 14px;
-    }
-
-    #verdadero{
-        color:green;
-        padding: 0;
-        padding: 0;
-        position: absolute;
-        font-size: 14px;
-    }
-
-
-
-/* APARIENCIA BOTON NUEVO (ARRIBA DE GRILLA PRINCIPAL)*/
-    #btnNuevo{
-        padding:4px;
-        width: 100%;
-        background: #4CAF50; 
-    }
+#titulo{ color: black; margin-top:20px; margin-bottom:10px; text-decoration: none; text-align: left;}
+.contenedor{margin-top:20px; margin-left:30px; margin-right:30px; margin-bottom:60px;}
+#btn{ width: 100%; padding: 10px 50px; margin:0;}
+#validation{ color:red; margin:0; padding:0; position: absolute; font-size: 14px;}
+#verdadero{color:green; padding: 0; position: absolute; font-size: 14px; }
+#btnNuevo{ padding:4px; width: 100%; background: #4CAF50; }
 
 /* VENTANAS MODALES*/
     
     /* ventanas de confirmacion */
-        /* mensajes */
-        .mdlMnjsConf{
-            height: 30px;
-            width: 100%;
-            margin: 0;
-            padding: 0 20px;
-        }
-        /* pie botones */
-        .btnFormsMnjsComf{
-            margin-top: 30px;
-            width: 100%;
-            height: 40px;
-        }
+        .mdlMnjsConf{ height: 30px; width: 100%; margin: 0; padding: 0 20px;}
+        .btnFormsMnjsComf{ margin-top: 30px; width: 100%; height: 40px; }
+
     /* CUADRO SALIDAS */
-        /*LIMITA EL MAXIMO Y MINIMO DE LA VENTANA MODAL*/
-        ._cuadroSalidas{
-            overflow-y: auto; 
-            overflow-x: auto;
-            max-width: 1100px;
-            max-height: 520px;
-            margin:auto;
-        }
-        /* CONFIGURANDO LA VENTANA MODAL */
-        .cuadroSalidas{
-            margin-bottom: 20px;
-            width: 1100px;
-            height: 460px;
-        }
-        .btnClassCuadroSalidas{
-            height: 40px;
-            width: 100%;
-            
-        }
+        .contCuadroSalidas{width: 1100px; height: 520px;}
+        .bodyCuadroSalidas{overflow-y: auto; width: 100%; height: 480px; }
+        .btnClassCuadroSalidas{ height: 40px; width: 100%;}
+
     /* ESTILOS TABLA TARJETA DE CONTROL DETALLE */
-        .contTarjCtrlDet{overflow-y: auto; overflow-x: hidden; width: 450px; height: 500px;}
-        .bodyTarjCtrlDet{ width: 100%; height: 450px;/*border: 2px solid yellow;*/}
+        .contTarjCtrlDet{overflow-y: auto; overflow-x: hidden; width: 450px; height: 520px;}
+        .bodyTarjCtrlDet{ width: 100%; height: 480px;/*border: 2px solid yellow;*/}
         .pieTarjCtrlDet{ width:100%;height: 40px;}
 
-    /* CUADRO ASIGNAR TARJETA con programcion */
-            /*LIMITA EL MAXIMO Y MINIMO DE LA VENTANA MODAL*/
-            ._asignaUnaTarj{
-                overflow-y: hidden; 
-                overflow-x: auto;
-                max-width: 800px;
-                max-height: 1000px;
-                /*margin:auto;*/
-            }
-            /* CONFIGURANDO LA VENTANA MODAL */
-            .asignaUnaTarj{
-                margin:0px 15px;
-                width: 650px;
-                height: 520px;
-            }
-            .contenidoAsignarTarjetaIndividual{ height: 350px; width:100%; margin-bottom: 40px; }
-            .contenidoAsignarTarjetaMulti{ height: 350px; width:100%; margin-bottom: 40px;}
-            .btnCloseOnly{
-                /*border: 2px solid green;*/
-                width:100%;
-                margin:auto;
-                margin-top: 390px;
-                margin-bottom: 2px;
-                padding: 0;
-                bottom: 0px;
-            }
-            .btnModAsigT{
-                width:100%;
-                height: 40px;
-                margin:auto;
-                bottom: 10px;
-                padding: 0;
-                
-                /*margin-bottom: 0; position: absolute;float: right; */
-            }
-    /* asignar tarjeta sin programacion */
-            .asigTarjSinProgForm{ height: 520px; width: 670px; overflow-x: hidden;}
+    /* asignar tarjeta programacion  DESKTOP */
+            /*.asigTarjSinProgForm{ height: 520px; width: 670px; overflow-x: hidden;}*/
+            .contAsigTarj{ width: 650px; height: 520px;}
+            .btnCerrarPrevio{ width:100%; margin:auto; margin-top: 390px; margin-bottom: 2px; padding: 0; bottom: 0px;}
             .agTrjEncabezado{height: 80px; width: 650px;}
             .agTrjCuerpo{ height: 370px; width: 650px;}
             .agTrjPie{ height: 40px; width: 100%; margin-top: 20px; padding-bottom: 0;}
+
     /* buscar y agregar placa a salidas en dia sin programacion*/
-            .modAddPlacaCont{
-                height: 520px;
-                width: 550px;
-                overflow-x: hidden;
-            }
-            .modAddPlacaEncab{
-                width: 100%;
-                height: 80px;
-               
-            }
-            .modAddPlacaCuerpo{
-                width: 100%;
-                height:  390px;
-             
-            }
-            .modAddPlacaPie{
-                width: 100%;
-                height: 40px;
-              
-            }
+            .modAddPlacaCont{ height: 520px; width: 550px; overflow-x: hidden; }
+            .modAddPlacaEncab{ width: 100%; height: 80px; }
+            .modAddPlacaCuerpo{ width: 100%; height:  390px;}
+            .modAddPlacaPie{ width: 100%; height: 40px;}
+
     /* BOTONES (GUARDAR CANCELAR + OTROS) VENTANAS MODALES */
             .btn_modal{
                 width:100%; 
@@ -169,48 +57,28 @@
             }
     
     /* CUADRO DE SALIDAS - TODAS LAS VUELTAS */
-        #tablaSalidas{
-            max-width:6500px;
-        }
+        #tablaSalidas{ max-width:6500px;}
+        thead{ width: 100%; border:none;}
+        thead tr{ width: 6500px; border:none; }
 
-        thead{
-            width: 100%;
-            border:none;
-        }
-
-        thead tr{
-            width: 6500px;
-            border:none;
-        }
-
-        table thead tr th{
-            border:none;
-        }
+        table thead tr th{ border:none; }
         
         table tbody td{
            font-size: 14px;
             text-align:center;
-            /*border:none;*/
             margin:0;
             padding:10px 0;
             width:190px;
         }
 
-/*ESTILOS TABLAS*/
-    #btnTable{
-        background-color: #4CAF50;
-    }
-    .table{
-        margin-top:20px;
-    }
+    #btnTable{ background-color: #4CAF50; }
+    .table{ margin-top:20px; }
 
 /* estilos formulario dia con programacion*/
     /*calculo reten*/
         .contFormCalRetenDL{height: 350px; width: 330px;}
         .bodyFormCalRetenDL{height: 300px; width: 100%;}
         .pieFormCalRetenDL{height: 40px; width: 100%;}
-/* estilos formulario dia sin programacion */
-    
 
 /* RESPONSIVE */
     /*ipad PRO*/
@@ -226,52 +94,25 @@
     /* iphone 6 plus*/
     @media(max-width:480px){ 
         /* ESTILOS TABLA TARJETA DE CONTROL DETALLE */
-            ._tbTarjCtrlDet{
-                margin:0;
-                width: 380px;
-                height: 400px;
-            }
-            .btnTarjDetallePCtrl{
-                width:380px;
-                margin-top:15px;
-                height: 60px;
-                padding-top:20px;
-                margin:auto;
-                position: absolute;
-            }
+            ._tbTarjCtrlDet{ width: 340px; height: 490px;}
+            .btnTarjDetallePCtrl{ width:380px; margin-top:15px; height: 60px; padding-top:20px; margin:auto; position: absolute;}
+
         /* ESTILOS TABLA ASIGNAR TARJETA DE CONTROL */
-            .form-control{
-                margin-bottom:15px;
-            }
-            ._asignaUnaTarj{
-                border: 2px solid green;
-                max-width: 350px;
-                max-height: 470px;
-                margin:auto; padding: 0;
-                /*margin: 0px -15px;*/
-               
-            }
-            .asignaUnaTarj{
-                overflow: auto;
-                height: 640px;
-                width: 350px;
-                margin:auto;
-                border: 2px solid red;
-            }
-            .contenidoAsignarTarjetaIndividual{
-                height: 280px;
-                width: 350px;
-                margin-bottom: 40px;
-            }
-            .contenidoAsignarTarjetaMulti{
-                height: 330px;
-                width: 350px;
-                margin-bottom: 40px;
-            }
-            .btnModAsigT{
-                width: 360px;
-                position: relative;
-            }
+            .contAsigTarj{width: 340px; height: 490px;}
+            .btnCerrarPrevio{ width:100%; margin-top: 170px; margin-bottom: 20px;;}
+            .agTrjEncabezado{height: 270px; width: 100%;}
+            .agTrjCuerpo{ height: 600px; width: 100%;}
+            .agTrjPie{ height: 100px; width: 100%;  }
+
+        /* CUADRO SALIDAS */
+            .contCuadroSalidas{width: 340px; height: 490px;}
+            .bodyCuadroSalidas{overflow-y: auto; width: 99%; height: 410px; }
+            .btnClassCuadroSalidas{ height: 40px; width: 99%;}
+
+        /* ESTILOS TABLA TARJETA DE CONTROL DETALLE */
+            .contTarjCtrlDet{width: 340px; height: 490px;}
+            .bodyTarjCtrlDet{ width: 100%; height: 450px;}
+            .pieTarjCtrlDet{ width:100%;height: 40px;}
     }
 
     /* iphone 6 */

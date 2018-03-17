@@ -1,55 +1,51 @@
-<!--RUTA-->
 <div class="contenedor">
     <div class="row">
-
-        <!--TABLA MAESTRO RUTA-->
+        <!--TABLA -->
         <div class="col-xl-4 col-md-12 col-sm-12 col-xs-12">
-            <!--TITULO-->
-            <div class="titulo">Manejo de Ruta</div>
-            
-            <!--BUSQUEDA-->
+            <label>Manejo de Ruta</label>
+    
             <div class="row">
-                <div class="col-xl-6 col-md-12 col-sm-12 col-xs-12">
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
                     <input class="form-control" placeholder="Buscar..." type="text" #filtroGlobal />
                 </div>
-                <div class="col-xl-6 col-md-12 col-sm-12 col-xs-12">
+                </div>
+                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
                     <button class="btn_modal" type="button" (click)="nuevaRutaMaestro()" 
                     pButton icon="fa-file-text-o" label="Nueva Ruta"></button>
                 </div>
-            </div>
-            
-            <!--TABLA-->
-            <div class="row">
-                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <p-dataTable [value]="rutasPresentar"  [globalFilter]="filtroGlobal" 
-                        [rows]="6" [paginator]="true"  
-                            selectionMode="single" emptyMessage="Lista vacia" (onRowSelect)="onRowSelect($event)"> 
-                                <!--COLUMNAS-->
-                                <p-column styleClass="col-button" [style]="{'width':'3em'}">
-                                    <template let-col let-Ruta="rowData" pTemplate="body" >
-                                        <button style="background-color: #4CAF50" type="button" pButton (click)="editarRutaMaestro(Ruta.RuId)" icon="fa-pencil-square-o" class="btn"></button>
-                                        <button style="background-color: #4CAF50" type="button" pButton (click)="eliminarRutaMaestro(Ruta.RuId)" icon="fa-trash" class="btn"></button>					
-                                    </template>          
-                                </p-column>
-                                <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}"></p-column>
-                                <p-column field="RuDescripcion" header="Descripcion" [style]="{'width':'12em'}" ></p-column>
-                                <p-column field="RuFechaCreacion" header="Fundacion" [style]="{'width':'8em','text-align':'center'}" ></p-column>
-                                <!--<div class="ui-helper-clearfix" style="width:100%"></div>-->
-                        </p-dataTable>
-                
                 </div>
             </div>
-            <br>
-
+    
+            <div class="row">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="table table-responsive">
+                    <p-dataTable [value]="rutasPresentar"  [globalFilter]="filtroGlobal" 
+                        [rows]="4" [paginator]="true"  
+                        selectionMode="single" emptyMessage="Lista vacia" (onRowSelect)="onRowSelect($event)"> 
+                            <!--COLUMNAS-->
+                            <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                                <template let-col let-Ruta="rowData" pTemplate="body" >
+                                    <button style="background-color: #4CAF50" type="button" pButton (click)="editarRutaMaestro(Ruta.RuId)" icon="fa-pencil-square-o" class="btn"></button>
+                                    <button style="background-color: #4CAF50" type="button" pButton (click)="eliminarRutaMaestro(Ruta.RuId)" icon="fa-trash" class="btn"></button>					
+                                </template>          
+                            </p-column>
+                            <p-column field="nro" header="N°" [style]="{'width':'3em','text-align':'center'}"></p-column>
+                            <p-column field="RuDescripcion" header="Descripcion" [style]="{'width':'12em'}" ></p-column>
+                            <p-column field="RuFechaCreacion" header="Fundacion" [style]="{'width':'8em','text-align':'center'}" ></p-column>
+                            <!--<div class="ui-helper-clearfix" style="width:100%"></div>-->
+                    </p-dataTable>
+                        </div>
+                </div>
+            </div>
         </div>
-        
+
         <!--MAPA-->
         <div class="col-xl-8 col-md-12 col-sm-12 col-xs-12">
 
             <!--MAPA-->
             <div id="contMapa">
-                <!--<div class="form"><h5 id="mymaparuta">Trazar la ruta</h5></div>
-                <p-growl [value]="msgs"></p-growl>-->
                 <p-gmap 
                     #gmap
                     [options]="options" 
@@ -60,39 +56,39 @@
                     (onOverlayDragEnd)="handleDragEnd($event)">
                 </p-gmap>   
             </div>
-            <br>
+           
             <!--BOTONES-->
             <div id="pieMapa">
                 <div class="row justify-content-center">
                     <div class="col-xl-2 col-md-2 col-sm-6 col-xs-12" >
                         
-                        <button class="btn_modal" [hidden]="actBtnCancel"  pButton  label="Cancelar" 
+                        <button class="btn_mapa" [hidden]="actBtnCancel"  pButton  label="Cancelar" 
                                 icon="fa-close" (click)="funcBtnMCancel()" [disabled]="disButCancelar"
                         ></button>
                         
-                        <button class="btn_modal" [hidden]="actBtnEditar"  pButton label="Editar" 
+                        <button class="btn_mapa" [hidden]="actBtnEditar"  pButton label="Editar" 
                                 icon="fa-edit" (click)="showmodalEditar()" [disabled]="disButEditar"
                         ></button>  
 
-                        <button class="btn_modal" [hidden]="actBtnNuevo" pButton  label="Nuevo" 
+                        <button class="btn_mapa" [hidden]="actBtnNuevo" pButton  label="Nuevo" 
                                 icon="fa-file-o" (click)="nuevaRutaDetalle()" [disabled]="disButNuevaRuta"
                         ></button>
                     </div>
 
                     <div class="col-xl-2 col-md-2 col-sm-6 col-xs-12" >
-                        <button class="btn_modal" [hidden]="actBtnGuardar"  pButton  label="Guardar"
+                        <button class="btn_mapa" [hidden]="actBtnGuardar"  pButton  label="Guardar"
                                 icon="fa-save" (click)="guardarPuntosRutaDetalle()" [disabled]="disButSubirRuta"
                         ></button>
                     </div>
 
                     <div class="col-xl-2 col-md-2 col-sm-6 col-xs-12" >
-                        <button class="btn_modal" [hidden]="actBtnAtras"  pButton  label="Atras" 
+                        <button class="btn_mapa" [hidden]="actBtnAtras"  pButton  label="Atras" 
                                 icon="fa-mail-reply" (click)="deshacer()" [disabled]="disButDeshacer"
                         ></button>
                     </div>
 
                     <div class="col-xl-2 col-md-2 col-sm-6 col-xs-12" >
-                        <button class="btn_modal" [hidden]="actBtnBorrar" pButton label="Borrar" 
+                        <button class="btn_mapa" [hidden]="actBtnBorrar" pButton label="Borrar" 
                                 icon="fa-eraser" (click)="clear()"[disabled]="disButBorrar"
                         ></button>                    
                     </div>
@@ -100,14 +96,13 @@
                 </div>
             </div>
 
-        </div>
-        
+        </div>  
     </div>
 </div>
 
 <!--FORMULARIOS-->
 
-         <!--Modal boton nuevo ruta-Maestro-->
+         <!--Modal boton nuevo ruta-->
          <p-dialog [(visible)]="displayNuevaRutaModal" [resizable]="false" 
                     modal="modal" width="100%" height="100%"
                     responsive="true" [closable]=false>
@@ -119,10 +114,10 @@
                     <div class="form-group">
                         <label >Nombre: </label>
                         
-                            <input type="text" class="form-control" [(ngModel)]="Ruta.RuDescripcion" maxlength="20" required #desc="ngModel"/>
-                            <span *ngIf="!desc.valid && desc.touched"  >  
-                                <div id="validation" [hidden]="!desc.errors.required" > obligatorio </div>
-                            </span>
+                        <input type="text" class="form-control" [(ngModel)]="Ruta.RuDescripcion" maxlength="20" required #desc="ngModel"/>
+                        <span *ngIf="!desc.valid && desc.touched"  >  
+                            <div id="validation" [hidden]="!desc.errors.required" > obligatorio </div>
+                        </span>
                         
                     </div>
 
@@ -160,13 +155,14 @@
                         
                     </div>
                 </div>
+
                 <!--BOTONES-->
                 <div class="pieMAddRuta">
                     <div class="row">
-                        <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                             <button class="btn_modal" type="button" pButton icon="fa-save"  (click)="saveRutaMaestro(); desc.reset(); freg.reset(); fcrea.reset(); fkil.reset(); " [disabled]="!desc.valid || !freg.valid || !fcrea.valid || !fkil.valid"  label="Guardar"></button>
                         </div>
-                        <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                             <button class="btn_modal" type="button" pButton icon="fa-close" (click)="cancelRutaMaestro(); desc.reset(); freg.reset(); fcrea.reset(); fkil.reset(); " label="Cancelar"></button>
                         </div>
                     </div>
@@ -210,10 +206,10 @@
                 <div class="pieMMjsUser">
                    
                     <div class="row">
-                        <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                             <button class="btn_modal" type="button" pButton icon="fa-check" (click)="eliminarRuta()" label="Aceptar"></button>
                         </div>
-                        <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                             <button class="btn_modal" type="button" pButton icon="fa-close" (click)="displayConfirmar=false" label="Cancelar"></button>
                         </div>
                     </div>
@@ -233,10 +229,10 @@
                     
                     <!--<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">-->
                     <div class="row">
-                        <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                             <button class="btn_modal" type="button" pButton icon="fa-check" (click)="borrarRutaDetalleBd()" label="Aceptar"></button>
                         </div>
-                        <div class="col-xl-6 col-md-6 col-sm-6 col-xm-12">
+                        <div class="col-xl-6 col-md-6 col-sm-6 col-xs-12">
                             <button class="btn_modal" type="button" pButton icon="fa-close" (click)="cancelarBorrarRutaBd()" label="Cancelar"></button>
                         </div>
                     </div>

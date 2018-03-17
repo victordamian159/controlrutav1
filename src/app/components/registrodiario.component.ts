@@ -42,6 +42,9 @@ export class RegistroDiarioComponent implements OnInit{
 
             //any(objeto)
                 private objConfig:any;
+
+            //boolean disabled hidden
+                private disBtnSaveAllSuEm:boolean;
         //arrays
             private arrRegDiarioByEmId:any[];
             private arrRegDiarioDetalleByEmId:any[];
@@ -75,7 +78,9 @@ export class RegistroDiarioComponent implements OnInit{
             this.displayProcesoGuardando=false;
             this.displayErrorGuardar=false;
             this.displayOrdenSubEmpresas=false;
-           
+            
+            this.disBtnSaveAllSuEm=false;
+
             this.nTolVueltas=null;
             this.ReDiHoraInicioDiario=null;
             this.arrEtdRegDiario=[{id:'01',nomb:'POR REALIZAR'},{id:'02',nomb:'ACTUAL'},{id:'03',nomb:'COMPLETADO'}];
@@ -384,6 +389,8 @@ export class RegistroDiarioComponent implements OnInit{
             for(let i=0; i<this.selectedSubEmp.length; i++){
                 this.selectedSubEmp[i].Orden=i+1;
             }   
+            this.disBtnSaveAllSuEm=this.funcValidAllMarkerSubEmp(this.selectedSubEmp.length,this.arrSubEmp.length);
+            
         }
         
 
@@ -393,6 +400,7 @@ export class RegistroDiarioComponent implements OnInit{
             for(let i=0; i<this.selectedSubEmp.length; i++){
                 this.selectedSubEmp[i].Orden=i+1;
             }
+            this.disBtnSaveAllSuEm=this.funcValidAllMarkerSubEmp(this.selectedSubEmp.length,this.arrSubEmp.length);
         }
 
         onHeaderCheckboxToggleSubEmp(event){
@@ -405,6 +413,7 @@ export class RegistroDiarioComponent implements OnInit{
                     subemp.Orden=null;
                 }
             }
+            this.disBtnSaveAllSuEm=this.funcValidAllMarkerSubEmp(this.selectedSubEmp.length,this.arrSubEmp.length);
             //console.log(this.selectedSubEmp);
         }
 
@@ -442,5 +451,13 @@ export class RegistroDiarioComponent implements OnInit{
             return index;
         }
 
-
+        funcValidAllMarkerSubEmp(nroCheckSubEmp:number, nroSubEmp:number):boolean{
+            let valid:boolean;
+            if(nroCheckSubEmp==nroSubEmp){
+                valid=true;
+            }else if(nroCheckSubEmp!=nroSubEmp){
+                valid=false;
+            }
+            return valid;
+        }
 }

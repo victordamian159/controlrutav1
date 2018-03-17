@@ -6,11 +6,14 @@
             <div class="row">
                 <!--BUSQUEDA-->
                 <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
-                    <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+                    <div class="form-group">
+                    <input class="form-control" placeholder="Buscar..." type="text" #filtroGlobal/>
+                </div>
                 </div>
 
                 <!--NUEVO REGISTRO style="float:left"-->
                 <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
+                        <div class="form-group">
                     <button class="form-control" 
                         id="btnNuevo" type="button" 
                         pButton icon="fa-file-text-o" 
@@ -18,6 +21,7 @@
                         (click)="funcBtnNuevoRegistroDiario()" 
                         label="Nuevo Registro Diario" 
                     ></button>
+                        </div>
                 </div>
             </div>
 
@@ -140,13 +144,13 @@
                   responsive="true" [resizable]="false" [closable]="false">
             <!--tabla-->
             <div class="contFormMRegDiaOrdSubEmp">
-                <div class=" row bodyFormMRegDiaOrdSubEmp">
-                    
+                <div class="bodyFormMRegDiaOrdSubEmp">
+                    <div class="row">
                         <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
                             <p-dataTable [value]="arrSubEmp" scrollable="true" 
-                            (onRowSelect)="onRowSelectSubEmp($event)"
-                            (onRowUnselect)="onRowUnselectSubEmp($event)"
-                            (onHeaderCheckboxToggle)="onHeaderCheckboxToggleSubEmp($event)"
+                                (onRowSelect)="onRowSelectSubEmp($event)"
+                                (onRowUnselect)="onRowUnselectSubEmp($event)"
+                                (onHeaderCheckboxToggle)="onHeaderCheckboxToggleSubEmp($event)"
                                 scrollHeight="380px" scrollWidth="100%" 
                                 emptyMessage="Lista Vacia" [(selection)]="selectedSubEmp">
 
@@ -166,16 +170,18 @@
                                 </li>
                             </ul>
                         </div>
+                    </div>
                 </div>
             
                 <!--botones-->
                 <div class="pieFormMRegDiaOrdSubEmp">
                     <div class="row justify-content-end">
-                        <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
+                        <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
                             <button class="btn_modal" type="text" pButton icon="fa-check" 
-                            (click)="aceptarOrderSubEmp();" label="Aceptar"></button>
+                            (click)="aceptarOrderSubEmp();" label="Aceptar" [disabled]="!disBtnSaveAllSuEm"
+                            ></button>
                         </div>
-                        <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
+                        <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
                             <button class="btn_modal" type="text" pButton icon="fa-check" 
                             (click)="cancelOrderSubEmp();" label="Cancelar"></button>
                         </div>
@@ -190,18 +196,16 @@
             <!--tabla-->
             <div class="contFormMRegDiarioDet">
                 <div class="bodyFormMRegDiarioDet">
-                    
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <p-dataTable [value]="arrRegDiarioDetalleByEmId" scrollable="true"
-                                scrollHeight="370px" scrollWidth="100%" selectionMode="single"
-                                emptyMessage="Lista Vacia" >
-                                <p-column field="ReDiDeNroVuelta" header="N°"  [style]="{'width':'2em','text-align':'center'}"></p-column>
-                                <p-column field="ReDiDeNombreVuelta" header="Nombre"  [style]="{'width':'6em'}"></p-column>
-                                <!--<p-column field="ReDiDeNroVuelta" header="N° V."  [style]="{'width':'3em','text-align':'center'}"></p-column>-->
-                                <p-column field="ReDiDeEstado" header="Estado"  [style]="{'width':'6em'}"></p-column>
-                            </p-dataTable>
-                        </div>
-                   
+                    <div class="table table-responsive">
+                        <p-dataTable [value]="arrRegDiarioDetalleByEmId" scrollable="true"
+                            scrollHeight="320px" scrollWidth="100%" selectionMode="single"
+                            emptyMessage="Lista Vacia" >
+                            <p-column field="ReDiDeNroVuelta" header="N°"  [style]="{'width':'2em','text-align':'center'}"></p-column>
+                            <p-column field="ReDiDeNombreVuelta" header="Nombre"  [style]="{'width':'6em'}"></p-column>
+                            <!--<p-column field="ReDiDeNroVuelta" header="N° V."  [style]="{'width':'3em','text-align':'center'}"></p-column>-->
+                            <p-column field="ReDiDeEstado" header="Estado"  [style]="{'width':'6em'}"></p-column>
+                        </p-dataTable>
+                    </div>                 
                 </div>
             
                 <!--botones-->

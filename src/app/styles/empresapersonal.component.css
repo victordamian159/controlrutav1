@@ -1,10 +1,11 @@
 
 .contenedor{ margin-top:20px; margin-left:30px; margin-right:30px;  margin-bottom:60px;}
 #btn{ width: 100%; padding: 10px 50px; margin:0;}
-.form-control{ height: 38px; margin:0; padding: 0; margin-bottom:20px; width: 100%;}
-
-.form-group{ margin:0; padding-bottom:18px; padding-top:10px; }
-#validation{font-size: 13px; color:red;  margin-top:-20px;  padding:0; position: absolute;}
+/*.form-control{ height: 38px; margin:0; padding: 0; margin-bottom:20px; width: 100%;}*/
+/*.form-group{ margin-bottom:20px; }*/
+/*.form-group{ margin:0; padding-bottom:18px; padding-top:10px; }*/
+/*#validation{font-size: 14px; color:red;  margin-top:-20px;  padding:0; position: absolute;}*/
+#validation{ font-size: 14px; color:red; margin:0; padding:0; position: absolute;}
 .btn_modal{ width:100%; height:40px; font-size:15px; background-color:#4CAF50; text-align: center;}
 #btnNuevo{ padding:4px; width: 100%; background: #4CAF50; }
 
@@ -33,28 +34,33 @@
 /* RESPONSIVE */
     /*ipad PRO*/
     @media(max-width:1100px){ 
-        .container{max-height: 350px;
-                   max-width: 670px;}
+        
     }
     
     /* ipad*/
     @media(max-width:600px){ 
-        .container{max-height: 350px;
-                   max-width: 420px;}
-        .form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            /*background: yellow;*/
-            padding: 0;
-            margin: 0;
-        }
+       
     }
 
     /* iphone 6 plus*/
     @media(max-width:480px){ 
-        
-    }
+       
+
+        /* estilo nuevo usuario sistema nueva persona(campos necesarios)*/
+            .contFormNuevoUser{ height: 300px; width: 330px;}
+            .bodyFormNuevoUser{ height: 210px; width: 100%;}
+            .pieFormNuevoUser{ height: 40px; width: 100%;}
+
+        /*estilo agregar persona a subempresa*/
+            .contMAddEmpPer{ height: 540px; width: 340px;}
+            .bodyMAddEmpPer{overflow-x: hidden; overflow-y: auto; height: 440px; width:100%; }
+            .pieMAddEmpPer{ height: 90px; width: 100%}
+
+        /*nuevo registro empresapersona*/
+            .contFormNuevaPer{ height: 450px; width: 330px;}
+            .bodyFormNuevaPer{ height: 360px; width: 100%;}
+            .pieFormNuevaPer{ height: 90px; width: 100%;}
+        }
 
     /* iphone 6 */
     @media(max-width:380px){ 

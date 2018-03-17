@@ -1,6 +1,4 @@
 <div class="contenedor">
-
-    <!--CONTENIDO-->
     <div class="row">
         <!--TABLAS-->
         <div class="col-xl-4 col-md-5 col-sm-6 col-xs-12">
@@ -40,7 +38,7 @@
                     <div class="table table-responsive">
     
                         <p-dataTable [value]="pCMaestroMostrar"  [globalFilter]="filtroGlobal" 
-                        [rows]="6" [paginator]="true" 
+                        [rows]="3" [paginator]="true" 
                         selectionMode="single" 
                         emptyMessage="Lista vacia" (onRowSelect)="onRowSelectMaestro($event)"> 
 
@@ -62,7 +60,7 @@
             </div>        
         </div>
 
-        <!--GRAFICOS -->
+        <!--MAPA -->
         <div class="col-xl-8 col-md-7 col-sm-6 col-xs-12">
             <!--MAPA-->            
             <div id="contMapa">

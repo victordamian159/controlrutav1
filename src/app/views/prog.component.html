@@ -1,20 +1,26 @@
 <!--PRINCIPAL TABLAS-->
 <div class="contenedor">
     <label>Tabla Programaciones</label>
+
     <div class="row">
-        <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
-            <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+        <div class="col-xl-2 col-md-2 col-sm-6 col-xs-12">
+            <div class="form-group">
+                <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroGlobal/>
+            </div>
         </div>
-        <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12">
-           <button class="form-control" class="btn_modal" icon="fa-file-text-o" 
-           (click)="NuevaProgCabecera()" pButton  label="Nuevo"
-           ></button>
+        <div class="col-xl-2 col-md-2 col-sm-6 col-xs-12">
+            <div class="form-group">
+                <button class="form-control" class="btn_modal" icon="fa-file-text-o" 
+                (click)="NuevaProgCabecera()" pButton  label="Nuevo"
+                ></button>
+            </div>
         </div>
     </div>
 
     <!--TABLA PROGRAMACION MAESTRO-->
     <div class="row">
         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                <div id="validation">{{progValida}}</div>
             <div class="table table-responsive">
                 <p-dataTable [value]="programacionMaestroArrayHTML"  
                             [globalFilter]="filtroGlobal" 
@@ -94,7 +100,7 @@
                                         </div>
                                     </div>
 
-                                    <!--subempresas-->
+                                    <!--combo de subempresas-->
                                     <div class="form-group" [hidden]='CoSiId==1'>
                                         <label  class="control-label" >Sub-Empresas: {{resBusUnidades}}</label>
                                         <select class="form-control" [(ngModel)]="SuEmId" (change)="funcCboAllBusBySuEmId()" required #cboSubEmp="ngModel" >
@@ -102,9 +108,8 @@
                                                 {{SuEm.SuEmRSocial}}
                                             </option>
                                         </select>
-                                        <div id="validation" [hidden]="!cboSubEmp.touched || cboSubEmp.valid ">
-                                                Error, revise los datos ingresados
-                                        </div>
+                                        <div id="validation" [hidden]="!cboSubEmp.touched || cboSubEmp.valid "> Error, revise los datos</div>
+                                        <div id="validation" [hidden]="!valSuEmIdCreateProg">{{mnjValSuEmIdCreateProg}}</div>
                                     </div>
                                 </div>
 
@@ -227,7 +232,7 @@
 
     <!--3RA VENTANA, HORA BASE DE SALIDA-->
         <p-dialog [resizable]="false" [(visible)]="displayHoraBase" modal="modal" width="100%" responsive="true" [closable]="false" >
-            <p-header>Hora Placa ({{nroMiniBus+1}} de {{nroTotalMinibuses}}) : {{placaEditarCelda}}</p-header>
+            <p-header>Hora Placa ({{nroMiniBusHeader+1}} de {{nroTotalMinibuses}}) : {{placaEditarCelda}}</p-header>
             <div class="contFormHoraBase">
                 <div class="bodyFormHoraBase">
          
@@ -307,7 +312,7 @@
                             <!--GENERAR PROGRAMACION-->
                             <button class="btn_modal" type="text" pButton icon="fa-save" 
                             (click)="generarProgramacionDetalle(); hBase.reset(); hIncremento.reset();" 
-                            [hidden]="nroMiniBus!=nroTotalMinibuses"
+                            [hidden]="!(nroMiniBus==nroTotalMinibuses)"
                             label="Generar"></button>
                         </div>      
                     </div>
@@ -317,7 +322,7 @@
         </p-dialog>
 
     <!--EDITAR PROGRAMACION CABECERA-->
-        <p-dialog header="Editar Nombre de la Programacion" [(visible)]="displayEditProgC" [resizable]="false" modal="modal"
+        <p-dialog header="Editar Nombre" [(visible)]="displayEditProgC" [resizable]="false" modal="modal"
                    width="100%" height="100%" responsive="true" [closable]="false">
             <div class="contFormEditNombProg">
                 <div class="bodyFormEditNombProg">
@@ -349,11 +354,9 @@
         <p-dialog [(visible)]="displayProgramacion" modal="modal" width="100%" [closable]="false" [resizable]="false" *ngIf="nroColumn>=5">
             <p-header>Programacion</p-header>
 
-            <div class="row">
-                <div class="cont_modal">
-                    <div id="programacion">
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="row">
+            <div class="contFMPreview">
+                <div class="bodyFMPreview">
+                   
                                 <table *ngIf="60>nroColumn && nroColumn>=50" id="progTPlacas7">   
                                     <thead><tr><th *ngFor="let diaNRO of calNumb;">{{diaNRO}}</th></tr></thead>
                                     <thead><tr><th *ngFor="let diaNRO of calString;">{{diaNRO}}</th></tr></thead>
@@ -372,7 +375,6 @@
                                         </tr>
                                     </tbody>
                                 </table>
-
                                 <table *ngIf="40>nroColumn && nroColumn>=30" id="progTPlacas1">   
                                     <thead><tr><th *ngFor="let diaNRO of calNumb;">{{diaNRO}}</th></tr></thead>
                                     <thead><tr><th *ngFor="let diaNRO of calString;">{{diaNRO}}</th></tr></thead>
@@ -382,7 +384,6 @@
                                         </tr>
                                     </tbody>
                                 </table>
-
                                 <table *ngIf="30>nroColumn && nroColumn>=20" id="progTPlacas2">   
                                     <thead><tr><th *ngFor="let dia of calNumb;">{{dia}}</th></tr></thead>
                                     <thead><tr><th *ngFor="let diaNRO of calString;">{{diaNRO}}</th></tr></thead>
@@ -390,7 +391,6 @@
                                         <tr *ngFor="let c of _detalle"><td *ngFor="let placa of c">{{placa}}</td></tr>
                                     </tbody>
                                 </table>
-
                                 <table *ngIf="20>nroColumn && nroColumn>10" id="progTPlacas3">
                                     <thead><tr><th *ngFor="let dia of calNumb;">{{dia}}</th></tr> </thead>
                                     <thead><tr><th *ngFor="let diaNRO of calString;">{{diaNRO}}</th></tr></thead>
@@ -400,7 +400,6 @@
                                         </tr>
                                     </tbody>
                                 </table>
-
                                 <table *ngIf="10>=nroColumn && nroColumn>5" id="progTPlacas4">
                                     <thead><tr><th *ngFor="let dia of calNumb;">{{dia}}</th></tr></thead>
                                     <thead><tr><th *ngFor="let diaNRO of calString;">{{diaNRO}}</th></tr></thead>
@@ -410,7 +409,6 @@
                                         </tr>
                                     </tbody>
                                 </table>
-
                                 <table *ngIf="5>=nroColumn && nroColumn>0" id="progTPlacas5">
                                     <thead><tr><th *ngFor="let dia of calNumb;">{{dia}}</th></tr></thead>   
                                     <thead><tr><th *ngFor="let diaNRO of calString;">{{diaNRO}}</th></tr></thead>                               
@@ -421,21 +419,20 @@
                                     </tbody>
                                 </table>
                                 
-                            </div>
+                       
+                </div>
+             
+                <div class="pieFMPreview">
+                    <div class=" row justify-content-end">
+                        <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
+                            <button class="btn_modal"  icon="fa-download" pButton (click)="generarArchivo()" label="Bajar Archivo"></button>
                         </div>
+                        <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
+                            <button class="btn_modal"  icon="fa-close" pButton (click)="cerrarProg()"   label="Cerrar"></button>
+                        </div>  
                     </div>
-                </div>
-            </div>
-            
-            <!--BOTONES DE LA VENTANA-->
-            <div class="btn_Modal row justify-content-end">
-                <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12" style="padding:5px 10px; margin:0px;">
-                    <button class="btn_modal"  icon="fa-download" pButton (click)="generarArchivo()" label="Bajar Archivo"></button>
-                </div>
-                <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12" style=" padding:5px 10px; margin:0px; ">
-                    <button class="btn_modal"  icon="fa-close" pButton (click)="cerrarProg()"   label="Cerrar"></button>
-                </div>  
-            </div>      
+                </div>     
+            </div> 
         </p-dialog>
 
 
@@ -494,7 +491,7 @@
                 <div class="bodyMMjsUser">
                     <p>{{mensaje}}</p>
                 </div>
-                <div class="pieMMjsUser">             
+                <div class="pieMMjsUser" style="margin-top:40px;">             
                     <div class="row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                             <button class="btn_modal"  pButton (click)="errorDatos()" label="Aceptar"></button>

@@ -1,16 +1,10 @@
 /* estilo para desktop */
    
     .contenedor{ margin-top:20px; margin-left:30px; margin-right:30px; margin-bottom:0px;}
-
-    /* validacion de inputs*/
-    #validation{ font-size: 14px; color:red;  
-        margin:0; 
-        padding:0; 
-        position: absolute; }
-
-    /*style btns modales*/
+    #validation{ font-size: 14px; color:red; margin:0; padding:0; position: absolute; }
     .btn_modal{ width:100%; height:40px; font-size:15px; background-color:#4CAF50; text-align: center; }
-
+    /* estilo tabla principal */
+    #btnTable{ background-color: #4CAF50;  }
 
     /* desktop style form ingresar nueva persona*/
         .contFormNPersona{ height: 430px; width: 800px;}
@@ -19,9 +13,6 @@
 
         .pieFormNPersona{ height: 40px; width: 100%;}
         
-    /* estilo tabla principal */
-        #btnTable{ background-color: #4CAF50;  }
-    
     /* estilo mensajes configuracion modal*/
         .contModMjs{height: 100px; width: 300px;}
 
@@ -31,72 +22,54 @@
 /* RESPONSIVE */
     /*ipad PRO*/
     @media(max-width:1100px){ 
-        .container{max-height: 350px;
-                   max-width: 670px;}
+      
     }
     
     /* ipad*/
     @media(max-width:600px){ 
-        .container{max-height: 350px;
-                   max-width: 420px;}
-        .form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            /*background: yellow;*/
-            padding: 0;
-            margin: 0;
-        }
+      
     }
 
     /* iphone 6 plus*/
     @media(max-width:480px){ 
-        .container{max-height: 320px;max-width: 360px;}
-        .form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            /*background: yellow;*/
-            padding: 0 8px;
-            margin: 0;
-        }
+        /* desktop style form ingresar nueva persona*/
+            .contFormNPersona{ height: 510px; width: 330px;}
+            .bodyFormNPersona{height: 430px; width: 100%; overflow-x: hidden; overflow-y: auto;}
+            .pieFormNPersona{ height: 80px; width: 100%;}
+        
+        /* estilo mensajes configuracion modal*/
+            .contModMjs{height: 130px; width: 330px;}
+            .bodyModMjs{height: 50px; width: 100%; text-align:left}
+            .pieModMjs{height: 80px; width: 100%;}
     }
 
     /* iphone 6 */
     @media(max-width:380px){ 
-        .container{max-height: 260px;max-width: 340px;}
-        .form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            /*background: red;*/
-            padding: 0 8px;
-            margin: 0;
-        }
+        /* desktop style form ingresar nueva persona*/
+        .contFormNPersona{ height: 510px; width: 300px;}
+        .bodyFormNPersona{height: 430px; width: 100%; overflow-x: hidden; overflow-y: auto;}
+        .pieFormNPersona{ height: 80px; width: 100%;}
+    
+    /* estilo mensajes configuracion modal*/
+        .contModMjs{height: 130px; width: 300px;}
+        .bodyModMjs{height: 50px; width: 100%; text-align:left}
+        .pieModMjs{height: 80px; width: 100%;}
     }
 
     /* iphone 5 */
     @media(max-width:320px){ 
-        .container{max-height: 200px;max-width: 300px;}
-        .form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            /*background: blue;*/
-            padding: 0 8px;
-            margin: 0;
-        }
+         /* desktop style form ingresar nueva persona*/
+         .contFormNPersona{ height: 350px; width: 240px;}
+         .bodyFormNPersona{height: 270px; width: 100%; overflow-x: hidden; overflow-y: auto;}
+         .pieFormNPersona{ height: 80px; width: 100%;}
+     
+        /* estilo mensajes configuracion modal*/
+         .contModMjs{height: 130px; width: 240px;}
+         .bodyModMjs{height: 50px; width: 100%; text-align:left}
+         .pieModMjs{height: 80px; width: 100%;}
     }
 
     /* iphone 4 */
     @media(max-height:480px){
-        .container{max-height: 160px;max-width: 280px;}
-        .form-control{
-            width: 100%;
-        }
-        .col-xs-12{
-            /*background: blue;*/
-            padding: 0 8px;
-            margin: 0;
-        }
+        
     }

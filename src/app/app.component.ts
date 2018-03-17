@@ -18,11 +18,13 @@ export class AppComponent implements OnInit {
   private userid:number;
   private emid:number;
   private nombre:string;
+  
+
 
   ngOnInit(){
     //alert(this.dataUser);
     this.iniciarVarGlobals(this.dataUser);
-  }d
+  }
 
   /*ngDoCheck(){
     console.log('si detecta cambios');
