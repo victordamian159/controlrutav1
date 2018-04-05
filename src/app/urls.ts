@@ -13,6 +13,9 @@
 export var server:string="http://controlbus.us-east-1.elasticbeanstalk.com/rest/";
 
 //TABLAS
+export var url_alertaIncidencia=server+"alertaincidencia/";
+export var url_vistaEnLinea=server+"georeferencia/";
+export var url_trackerByPlaca=server+"georeferencia/";
 export var url_configura=server+"configura/";
 export var url_registrodiario=server+"registrodiario/";
 export var url_registrodiariodetalle=server+"registrodiariodetalle/";

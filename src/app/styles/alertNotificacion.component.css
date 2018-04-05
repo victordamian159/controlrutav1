@@ -1,7 +1,56 @@
 /*USADO EN EL MAPA Y TODO EL FORMULARIO (NO VENTANAS MODALES)  */
-.contenedor{
-    margin-top:20px;
-    margin-left:40px;
-    margin-right:40px;
-    margin-bottom:60px;
+.contenedor{margin-top:20px; margin-left:40px; margin-right:40px; margin-bottom:60px;}
+
+#validation{ color:red; margin:0; padding:0; position: absolute; font-size: 14px;}
+#verdadero{color:green; padding: 0; position: absolute; font-size: 14px; }
+#btnNuevo{ padding:4px; width: 100%; background: #4CAF50; }
+.btn_modal{ width:100%; height:40px; font-size:15px; background-color:#4CAF50; text-align: center; padding: 0; margin:0;}
+
+.contFModAlerta{height: 500px; width: 750px;}
+.bodyFModAlerta{height: 370px; width: 100%;}
+.pieFModAlerta{height: 130px; width: 100%;}
+
+.contFModPosAlert{height: 400px; width: 500px;}
+.bodyFModPosAlert{height:350px; width: 100%;}
+.pieFModPosAlert{margin-top:10px; height:40px; width: 100%;}
+
+/*responsive*/
+/*iphone 6 plus*/
+@media(max-width:480px){
+    /*crear alertas*/
+    .contFModAlerta{height: 500px; width: 340px;}
+    .bodyFModAlerta{height: 730px; width: 100%; /*outline-color: red; outline-style: solid;*/}
+    .mapaFModAlerta{height:350px; width:100%;}
+    .pieFModAlerta{height: 340px; width: 100%;}
+    
+    /*grilla*/
+    .contFModPosAlert{height: 450px; width: 340px;}
+    .bodyFModPosAlert{height:400px; width: 100%;}
+    .pieFModPosAlert{margin-top:10px; height:40px; width: 100%;}
+}
+/*iphone 6*/
+@media(max-width:380px){
+    /*crear alertas*/
+    .contFModAlerta{height: 450px; width: 300px;}
+    .bodyFModAlerta{height: 730px; width: 100%;}
+    .mapaFModAlerta{height:350px; width:100%;}
+    .pieFModAlerta{height: 340px; width: 100%;}
+
+    /*grilla*/
+    .contFModPosAlert{height: 450px; width: 300px;}
+    .bodyFModPosAlert{height:400px; width: 100%;}
+    .pieFModPosAlert{margin-top:10px; height:40px; width: 100%;}
+}
+/*iphone 5 plus*/
+@media(max-width:320px){
+    /*crear alertas*/
+    .contFModAlerta{height: 310px; width: 240px;}
+    .bodyFModAlerta{height: 730px; width: 100%;}
+    .mapaFModAlerta{height:350px; width:100%;}
+    .pieFModAlerta{height: 340px; width: 100%;}
+
+    /*grilla*/
+    .contFModPosAlert{height: 310px; width: 240px;}
+    .bodyFModPosAlert{height:260px; width: 100%;}
+    .pieFModPosAlert{margin-top:10px; height:40px; width: 100%;}
 }

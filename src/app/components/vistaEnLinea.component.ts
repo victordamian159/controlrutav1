@@ -2,8 +2,10 @@ import {Component,OnInit} from '@angular/core';
 import {Message} from 'primeng/primeng';
 import { TControlService } from '../service/tcontrol.service';
 import {GlobalVars} from 'app/variables';
-
-import {guionBySlash,_hora} from 'app/funciones';
+import {ProgramacionService} from '../service/prog.service';
+import {VistaEnLineaService} from '../service/vistaEnLinea.service';
+import {TrackerByPlacaService} from '../service/trackerByPlaca.service';
+import {fecha,guionBySlash,_hora,editf1} from 'app/funciones';
 declare var google: any;
 
 @Component({
@@ -19,7 +21,8 @@ export class consulVistaEnLineaComponent implements OnInit{
             private UsId:number;
             private PrId:number;
             private anio:number;
-        //string
+        
+            //string
             private fecha:string;
             private fechaUno:string;
         //boolean
@@ -27,24 +30,29 @@ export class consulVistaEnLineaComponent implements OnInit{
                 private displayAlertNotifXPlaca:boolean;
     //arrays
         private tipoMensaje:any[];
+        private options: any;
+        private overlays: any[];
+        private dialogVisible: boolean;
+        private markerTitle: string;
+        private selectedPosition: any;
+        private infoWindow: any;
+        private draggable: boolean;
+        private msgs: Message[] = [];
+        private placas:any[]=[];
+        private map:any;
+        private start:any;
 
-    private options: any;
-    private overlays: any[];
-    private dialogVisible: boolean;
-    private markerTitle: string;
-    private selectedPosition: any;
-    private infoWindow: any;
-    private draggable: boolean;
-    private msgs: Message[] = [];
-    private placas:any[]=[];
-    private map:any;
 
     ngOnInit() {
         this.options = { center: {lat: -18.00175398229809, lng: -70.24808406829834}, zoom: 14 }; 
         //this.initOverlays(); this.infoWindow = new google.maps.InfoWindow();
+        //this.initNodos();
         
     }
     constructor(private tcontrolserv:TControlService, 
+                private trackerByPlacaService:TrackerByPlacaService,
+                private programService:ProgramacionService,
+                private vistaEnLineaService:VistaEnLineaService,
                 public  ClassGlobal : GlobalVars ){
         this.EmId=this.ClassGlobal.GetEmId();
         this.UsId=this.ClassGlobal.GetUsId();
@@ -58,8 +66,35 @@ export class consulVistaEnLineaComponent implements OnInit{
         this.overlays=[];                
     }
 
+    initNodos(){
+        this.start=setInterval(
+            //this.nodos, console.log(this.EmId)
+            //function(){ console.log(this.EmId); }
+            ()=>{
+                //console.log(this.fechaUno);
+                //console.log(this.fecha);
+                //let fech=fecha(this.fecha);
+                let _fech=Date.parse(this.fecha)+24*60*60*1000;
+                console.log(_fech);
+                this.vistaEnLineaService.getallubicacionactualbyemtiempo(this.EmId,this.anio,_fech).subscribe( data=>{console.log(data);} );
+            }
+        ,1000);
+    }
+
+    stopNodos(){
+        clearInterval(this.start);
+        //console.log(this.EmId);
+    }
+
+    nodos(){
+        console.log(this.EmId);
+    }
+
     funcInputDtFecha(){
         this.fechaUno=guionBySlash(this.fecha);
+        /*console.log(this.fechaUno);
+        console.log(this.EmId);
+        console.log(this.anio);*/
         this.mProcGetByTabla(this.EmId, this.anio);
     }
 
@@ -120,16 +155,15 @@ export class consulVistaEnLineaComponent implements OnInit{
 
     //cargando la tabla por nro de vuelta y programacion
     mProcGetByTabla(EmId:number, anio:number){
-        this.tcontrolserv.getAllProgramacionByEm(EmId,anio)
-            .subscribe(
-                data=>{
-                    if(data.length!=0){
-                        this.mGetProcProgramacion(data)
-                    }                       
-                },
-                error=>{
+        this.tcontrolserv.getAllProgramacionByEm(EmId,anio).subscribe(
+            data=>{
+                console.log(data);
+                if(data.length!=0){
+                    this.mGetProcProgramacion(data)
+                }                       
+            },error=>{
 
-                }
+            },()=>{}
         );
         
     }
@@ -137,83 +171,54 @@ export class consulVistaEnLineaComponent implements OnInit{
     mGetProcProgramacion(arrProgramaciones=[]){
         //funcion para sacar la programacion activa
         this.PrId=arrProgramaciones[arrProgramaciones.length-1].prId;
-        //console.log(this.PrId);
-
-        this.tcontrolserv.getallregistrovueltasdiariasbyemprfe(this.EmId, this.PrId, this.fechaUno)
-            .subscribe(
-                data=>{
-                    if(data.length!=0){
-                        this.mgTablaPlacas(data);
-                    }
-                },
-                error=>{
-
+        console.log(this.PrId);
+        console.log(this.fechaUno);
+        console.log(editf1(this.fecha));
+        
+        this.programService.getAllProgramacionDetalleByPrFecha(this.PrId,editf1(this.fecha)).subscribe(
+            data=>{
+                console.log(data);
+                if(data.length!=0){
+                    this.mgTablaPlacas(data);
                 }
-            );
+            },error=>{
+
+            },()=>{}
+        );
+        /*
+        this.tcontrolserv.getallregistrovueltasdiariasbyemprfe(this.EmId, this.PrId, this.fechaUno).subscribe(
+            data=>{
+                console.log(data);
+                if(data.length!=0){
+                    this.mgTablaPlacas(data);
+                }
+            },error=>{
+
+            },()=>{}
+        );
+        */
+
     }
-    mgTablaPlacas(arrCuadro=[]){
+    mgTablaPlacas(arrProg=[]){
        // console.log(arrCuadro);
         let _arrCuadro:any[]=[], __arrCuadro:any[]=[];
-        _arrCuadro=this.sacarArrCuadroXNroVuelta(arrCuadro,1);
-        //console.log(_arrCuadro);
-        for(let i=0; i<_arrCuadro.length;i++){
-            __arrCuadro.push({
-                nro:0,
-                BuId:_arrCuadro[i].BuId,
-                BuPlaca:_arrCuadro[i].BuPlaca,
-                HoraLlegada:_arrCuadro[i].HoraLlegada,
-                Id:_arrCuadro[i].Id,
-                PrDeId:_arrCuadro[i].PrDeId,
-                PrDeOrden:_arrCuadro[i].PrDeOrden,
-                PuCoTiempoBus:_arrCuadro[i].PuCoTiempoBus,
-                ReDiDeId:_arrCuadro[i].ReDiDeId,
-                ReDiDeNroVuelta:_arrCuadro[i].ReDiDeNroVuelta,
-                ReDiId:_arrCuadro[i].ReDiId,
-                ReReId:_arrCuadro[i].ReReId,
-                ReReTiempo:_arrCuadro[i].ReReTiempo,
-                TaCoAsignado:_arrCuadro[i].TaCoAsignado,
-                TaCoHoraSalida:_hora(_arrCuadro[i].TaCoHoraSalida),
-                TaCoId:_arrCuadro[i].TaCoId,
-                TaCoMultiple:_arrCuadro[i].TaCoMultiple,
-
-                estado:''
-            });
-            if(__arrCuadro[i].TaCoAsignado==null){
-                __arrCuadro[i].TaCoAsignado=0;
-                __arrCuadro[i].EstadoAsignado="No Asignado";
-
-            }else if(__arrCuadro[i].TaCoAsignado=='1'){
-                __arrCuadro[i].EstadoAsignado=__arrCuadro[i].TaCoHoraSalida;
-
-            }else if(__arrCuadro[i].TaCoAsignado=='2'){
-                __arrCuadro[i].EstadoAsignado="Ausente";
-
-            }else if(__arrCuadro[i].TaCoAsignado=='3'){
-                __arrCuadro[i].EstadoAsignado="Castigado";
-
-            }else{//EN CASO DE QUE PRDEASIGNADO=1 PERO TACOSIGNADO!=1 , 2 o 3
-                __arrCuadro[i].EstadoAsignado="No Asignado";
-            } 
+        for(let bus of arrProg){
+            _arrCuadro=[{
+                BuId:bus.BuId,
+                PrDeAsignadoTarjeta:bus.BuId,
+                PrDeBase:bus.BuId,
+                PrDeCountVuelta:bus.BuId,
+                PrDeFecha:bus.BuId,
+                PrDeHoraBase:bus.BuId,
+                PrDeId:bus.BuId,
+                PrDeOrden:bus.BuId,
+                PrId:bus.BuId,
+                UsFechaReg:bus.BuId,
+                UsId:bus.BuId
+            }];
         }
-        for(let i=0; i<__arrCuadro.length; i++){
-            __arrCuadro[i].nro=i+1;
-        }
-        this.placas=__arrCuadro;
+        this.placas=_arrCuadro;
+     
     }
 
-    sacarArrCuadroXNroVuelta(arrCuadro=[], vueltaActual:number){
-        //console.log(arrCuadro);
-        //console.log(vueltaActual);
-        let result:any[]=[], arrMat:any[]=[];
-
-            for(let i=0; i<arrCuadro.length;i++){
-                //console.log(arrCuadro[i].ReDiDeNroVuelta);
-                if(arrCuadro[i].ReDiDeNroVuelta==vueltaActual){
-                    arrMat.push(arrCuadro[i]);
-                }
-            }
-            //console.log(arrMat);
-            result=arrMat.slice(0);
-        return result;
-    }
 }

@@ -23,7 +23,7 @@ import {reportBuses} from './components/reportBus.component';
 import {consulVistaEnLineaComponent} from './components/vistaEnLinea.component';
 import {consulAlertNotifComponent} from './components/alertNotificacion.component';
 import {consulIncidenciaComponent} from './components/incidencia.component';
-
+import {csl_TrackByPlacaComponent} from './components/trackerByPlaca.component';
 /*
   import {LoginComponent} from './login/_login/_login.component'; import { RegisterComponent } from './login/register/register.component';
   //COMPONENTES PARA EL LOGIN 
@@ -49,7 +49,8 @@ const app_routes: Routes = [
       {path: 'reportBus', component:reportBuses,canActivate: [AuthGuard]}, 
       {path: 'regdiario', component:RegistroDiarioComponent,canActivate:[AuthGuard]},
 
-      {path: 'consVistaEnLinea', component:consulVistaEnLineaComponent,canActivate: [AuthGuard]}, 
+      {path: 'consVistaEnLinea', component:consulVistaEnLineaComponent,canActivate: [AuthGuard]},
+      {path: 'consTrackByPlaca', component:csl_TrackByPlacaComponent,canActivate: [AuthGuard]}, 
       {path: 'consAlertNotific', component:consulAlertNotifComponent,canActivate: [AuthGuard]}, 
       {path: 'consIncidencias', component:consulIncidenciaComponent,canActivate: [AuthGuard]}, 
 

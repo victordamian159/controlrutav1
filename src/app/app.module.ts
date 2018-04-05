@@ -37,8 +37,9 @@ import { AuthGuard } from './components/auth.guard';
 import {RegistroDiarioComponent} from './components/registrodiario.component';
 //OPERACIONES
 
-/* MENU CONSULTAS */
+/* MENU CONSULTAS  */
 import {consulVistaEnLineaComponent} from './components/vistaEnLinea.component';
+import {csl_TrackByPlacaComponent} from './components/trackerByPlaca.component';
 import {consulAlertNotifComponent} from './components/alertNotificacion.component';
 import {consulIncidenciaComponent} from './components/incidencia.component';
 
@@ -47,6 +48,7 @@ import {reportPersonas} from './components/reportPersonas.component';
 import {reportBuses} from './components/reportBus.component';
 
 //OTROS COMPONENTES
+import {modConfirMnjComponent} from './components/modConfirMensaje.component';
 
 /* VAR AND FUNCTION GLOBALES */
 import {GlobalVars} from './variables';
@@ -80,7 +82,8 @@ import {DatosCompartidosService} from './service/dataComunicationApp.service';
     //SERVICE CONSULTAS 
         import {servAlertNotifService} from './service/alertNotificacion.service';
         import {servIncidenciaService} from './service/incidencia.service';
-        import {servVistaEnLineaService} from './service/vistaEnLinea.service';
+        import {VistaEnLineaService} from './service/vistaEnLinea.service';
+        import {TrackerByPlacaService} from './service/trackerByPlaca.service';
     //SERVICE REPORTES
 
 
@@ -125,8 +128,10 @@ import {DatosCompartidosService} from './service/dataComunicationApp.service';
     consulVistaEnLineaComponent,
     consulAlertNotifComponent,
     consulIncidenciaComponent,
+    csl_TrackByPlacaComponent,
     userNameComponent,
-    RelojComponent
+    RelojComponent,
+    modConfirMnjComponent,
   ],
   
   /*MODULOS FRAMWORK PRIMENG*/
@@ -183,7 +188,8 @@ import {DatosCompartidosService} from './service/dataComunicationApp.service';
       //classDataUsuario,
       servAlertNotifService,
       servIncidenciaService,
-      servVistaEnLineaService,
+      VistaEnLineaService,
+      TrackerByPlacaService,
       RegDiarioService,
       RegRetenService
       /* fake backend

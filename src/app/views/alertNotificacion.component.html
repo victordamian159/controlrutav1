@@ -1,104 +1,154 @@
 <div class="contenedor">
-    <!-- BUSCAR - BTNMENSAJE -->
+    <label>Alertas</label>
     <div class="row">
-        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="row">
-                <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
-                    <input placeholder="Buscar..." class="form-control" type="text">
+        <div class="col-xl-3 col-md-3 col-sm-4 col-xs-12">
+            <div class="form-group">
+            <input placeholder="Buscar..." class="form-control" type="text">
+            </div>
+        </div>
+        <!--{{fecha==''}}
+        {{longArrTarj==0}}
+        {{fecha=='' || longArrTarj==0}}-->
+        <div class="col-xl-2 col-md-2 col-sm-4 col-xs-12">
+                <div class="form-group">
+            <button class="form-control" id="btnNuevo" (click)="btnNvoMensaje()" [disabled]="fecha=='' || longArrTarj==0"
+                    pButton icon="fa-file-text-o" label="Nueva Alerta"></button>
                 </div>
-                <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
-                    <button class="form-control" (click)="btnNvoMensaje()" pButton icon="fa-file-text-o" label="Alerta-Notificacion"></button>
+        </div>
+        <div class="col-xl-2 col-md-2 col-sm-4 col-xs-12">
+            <!--
+                <div class="form-group">
+                    <label class="control-label">Fecha:</label>
+                    <input class="form-control" type="date" [disabled]="true">
                 </div>
-                <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
-                    <button class="form-control" (click)="btnVerIncid()" pButton icon="fa-file-text-o" label="Ver Incidencias"></button>
-                </div>
+            -->
+            <div class="form-group">
+                <input  class="form-control" [(ngModel)]="fecha" type="date" 
+                        (ngModelChange)='funcInputDateFpFecha();'>
             </div>
         </div>
     </div>
-
-    <!--TABLAS-->
-    <div class="row">
-        <!--TABLA MENSAJE EXISTENTES-->
-        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-            <p-dataTable [value]="mensajes" [globalFilter]="filtroGlobal2" scrollable="true" emptyMessage="No Hay Registros" scrollWidth="100%">
-                    <p-column field="nro" header="Nro" [style]="{'width':'3em','text-align':'center'}"></p-column>
-                    <p-column field="tipo" header="Tipo" [style]="{'width':'10em'}"></p-column>
-                    <p-column field="fecha" header="Fecha" [style]="{'width':'5em','text-align':'center'}"></p-column>
-                    <p-column field="usuario" header="Usuario" [style]="{'width':'10em'}"></p-column>
-            </p-dataTable>
-        </div> 
-    </div>
+    
+    <div class="table table-responsive">
+        <p-dataTable selectionMode="single"
+                [value]="arrIncidencia" [globalFilter]="filtroGlobal2" (onRowSelect)="onRowSelectAlIn($event)"
+                scrollable="true" emptyMessage="No Hay Registros" scrollWidth="100%">
+            <!--  
+                <p-column styleClass="col-button" [style]="{'width':'3em'}">
+                    <template let-col let-pcMostrar="rowData" pTemplate="body">
+                        <button pButton icon="fa-pencil-square-o" > </button>                  
+                        
+                        <button id="btnTable" pButton (click)="eliminarMaestro(pcMostrar.PuCoId)" icon="fa-trash">  </button>
+                        <button id="btnTable" pButton (click)="tablaDetalle(pcMostrar.PuCoId)" icon="fa-folder-open">  </button>
+                    
+                    </template>
+                </p-column>
+            -->
+            <p-column field="Nro" header="Nro" [style]="{'width':'2em','text-align':'center'}"></p-column>
+            <p-column field="sAlInTipo" header="Tipo" [style]="{'width':'3em','text-align':'center'}"></p-column>
+            <p-column field="AlInFecha" header="Fecha" [style]="{'width':'5em','text-align':'center'}"></p-column>
+            <p-column field="AlInDescripcion" header="Descripcion" [style]="{'width':'10em'}"></p-column>
+        </p-dataTable>
+    </div> 
+    
 </div>
 
-<!--MODALES-->
-<p-dialog [(visible)]="disFormModMensaje" modal="modal" [resizable]="false" width="100%" height="100%" responsive="true" [closable]="false">
-    <div class="row">
-        <div class="container">
+<!--formulario modal-->
+<p-dialog [(visible)]="disFormModMensaje" header="Alerta-Incidencia" modal="modal" [resizable]="false" 
+            width="100%" height="100%" responsive="true" [closable]="false">
+    <div class="contFModAlerta">
+        <div class="bodyFModAlerta">
             <div class="row">
-                <!--COMPONENTES-->
-                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="row">
-                        <!--FECHA ACTUAL-->
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="row">
-                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="form-group">
-                                        <label class="control-label">Fecha:</label>
-                                        <input class="form-control" type="date" [disabled]="true">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--TIPO MENSAJE-->
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="row">
-                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="form-group">
-                                        <label class="control-label">Tipo:</label>
-                                        <select class="form-control">
-                                            <option>Alerta</option>
-                                            <option>Notificacion</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--DESCRIPCION-->
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="row">
-                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="form-group">
-                                        <label class="control-label">Descripcion:</label>
-                                        <textarea class="form-control" rows="10" cols="50"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                            <button class="btn_modal" pButton label="Enviar" (click)="guardarMsj();"></button>
-                        </div>
-                        <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                            <button class="btn_modal" pButton label="Cancelar" (click)="cancelarMsj();"></button>
-                        </div>
+                <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
+                    <label>Tarjetas de Control:</label>
+                    <div class="table table-responsive">
+                        <p-dataTable [value]="arrTarj" (onRowSelect)="onRowSelectTabTarjControl($event)"
+                                        scrollable="true" emptyMessage="No Hay Registros" 
+                                        selectionMode="multiple" [(selection)]="selMulPlacas"
+                                        scrollWidth="100%" scrollHeight="280px" >
+                            <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
+                            <p-column field="Nro" header="Nro" [style]="{'width':'3em','text-align':'center'}"></p-column>
+                            <p-column field="BuPlaca" header="Placa" [style]="{'width':'5em','text-align':'center'}"></p-column>
+                        </p-dataTable>
                     </div>
                 </div>
-                <!--USUARIOS-->
-                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="row">
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <p-dataTable [value]="usuarios" [globalFilter]="filtroGlobal1" [(selection)]="selectedUsers" dataKey="Placa" scrollable="true" emptyMessage="No Hay Registros" scrollWidth="100%" >
-                                    <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
-                                    <p-column field="Nro" header="Nro" [style]="{'width':'3em','text-align':'center'}"></p-column>
-                                    <p-column field="Placa" header="Placa" [style]="{'width':'5em','text-align':'center'}"></p-column>
-                                    <p-column field="Chofer" header="Chofer" [style]="{'width':'10em'}"></p-column>
-                                    <p-column field="Cobrador" header="Cobrador" [style]="{'width':'10em'}"></p-column>
-                            </p-dataTable>
-                        </div>
+                <div class="col-xl-8 col-md-8 col-sm-12 col-xs-12">       
+                    <div class="mapaFModAlerta">                        
+                        <p-gmap #gmap [style]="{'width':'100%','height':'100%'}" 
+                                [options]="options" 
+                                [overlays]="overlays" 
+                                (onMapClick)="handleMapClick($event)" 
+                                (onOverlayClick)="handleOverlayClick($event)" 
+                                (onOverlayDragEnd)="handleDragEnd($event)"
+                        ></p-gmap>
                     </div>
                 </div>
+
+            </div>
+        </div>
+
+        <div class="pieFModAlerta">
+                <!--<div class="row justify-content-end"></div>-->
+                <div class="row">
+            <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">            
+                <div class="form-group">
+                    <input class="form-control" type="date" [disabled]="false" [(ngModel)]='AlInFecha'>
+                </div>
+
+                <div class="form-group">                
+                    <select class="form-control" [(ngModel)]="AlInTipo">      
+                        <option *ngFor="let AlIn of arrTipoNotf" [value]="AlIn.id">{{AlIn.nomb}}</option>
+                    </select>
+                </div> 
+            </div>
+            <div class="col-xl-5 col-md-5 col-sm-12 col-xs-12">
+                <div class="form-group">                           
+                    <textarea class="form-control" [(ngModel)]='AlInDescripcion' rows="4" cols="10" placeholder="observacion"></textarea>
+                </div>                
+            </div>
+                
+
+            <div class="col-xl-3 col-md-3 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <button class="btn_modal" icon="fa-save" pButton label="Enviar" (click)="guardarAlertaIncidencia();"></button>
+                </div>
+                <div class="form-group">
+                    <button class="btn_modal" icon="fa-close" pButton label="Cancelar" (click)="cancelAlertaIncidencia();"></button>
+                </div>
+            </div>
             </div>
         </div>
     </div>
 </p-dialog>
+
+<p-dialog [(visible)]="disFormUbicacionAlIn" header="Alerta-Incidencia" 
+            modal="modal" [resizable]="false" (onHide)="ocultado($event)"
+            width="100%" height="100%" responsive="true" [closable]="false">
+    <div class="contFModPosAlert">             
+        <!--<div style="width:500px; height:350px;">-->
+        <div class="bodyFModPosAlert">
+            <p-gmap #gmap [style]="{'width':'100%','height':'100%'}" 
+                    [options]="options" 
+                    [overlays]="_overlays" 
+                    (onMapClick)="_handleMapClick($event)" 
+                    (onOverlayClick)="_handleOverlayClick($event)" 
+                    (onOverlayDragEnd)="_handleDragEnd($event)"
+            ></p-gmap>
+        </div>
+        <div class="pieFModPosAlert">
+            <div class="row justify-content-end">
+                <div class="form-group">
+                        <button class="btn_modal" icon="fa-close" pButton 
+                                label="Cerrar" (click)="btnCanModMapaGrid();"></button>
+                    </div>
+                </div>
+        </div>
+    </div>
+</p-dialog>
+
+
+<!--mensajes confirmacion
+
+<app-ConfMnj (checked)="mdlConfAcpt($event)"></app-ConfMnj>
+
+-->

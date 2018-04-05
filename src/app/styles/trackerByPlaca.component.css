@@ -1,0 +1,11 @@
+.contenedor{ margin:0 20px; /*outline: 2px solid red;*/ overflow: hidden;}
+#formPData{ height: 580px; width:100%; margin: auto;}
+#formPMapa{height: 580px; width: 100%;}
+.btn_mapa{width:100%; height:40px; font-size:15px; background-color:#4CAF50;}
+
+/*modo escritorio*/
+    /*modal notificaciones*/
+    .contFormModAlertNotf{ height: 300px; max-width:350px; width: 350px;}
+    textarea {resize: none;}
+   
+/*responsive*/

@@ -382,7 +382,7 @@ export class TcontrolComponent implements OnInit{
         this._ruId=0;
         this.TaCoMultiple=-1;
         this._allTarjControl=[];
-        console.log(this.emID);
+        //console.log(this.emID);
         this.tcontrolservice.getAllProgramacionByEm(this.emID,0)
             .subscribe(
                 data=>{

@@ -477,7 +477,7 @@ export class ProgComponent implements OnInit{
                     data => {
                             this._progrMaestro = data;
                             this.progDescripcion = this._progrMaestro.PrDescripcion;
-                            console.log(this._progrMaestro);
+                            //console.log(this._progrMaestro);
                     },
                     err => {this.errorMessage=err},
                     () => this.isLoading=false
