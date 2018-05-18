@@ -6,6 +6,7 @@ import {ProgramacionService} from '../service/prog.service';
 import {VistaEnLineaService} from '../service/vistaEnLinea.service';
 import {TrackerByPlacaService} from '../service/trackerByPlaca.service';
 import {fecha,guionBySlash,_hora,editf1} from 'app/funciones';
+
 declare var google: any;
 
 @Component({
@@ -44,7 +45,7 @@ export class consulVistaEnLineaComponent implements OnInit{
 
 
     ngOnInit() {
-        this.options = { center: {lat: -18.00175398229809, lng: -70.24808406829834}, zoom: 14 }; 
+        this.options = { center: {lat: -18.00175398229809, lng: -70.24808406829834}, zoom: 14, gestureHandling: 'greedy' }; 
         //this.initOverlays(); this.infoWindow = new google.maps.InfoWindow();
         //this.initNodos();
         
@@ -60,7 +61,7 @@ export class consulVistaEnLineaComponent implements OnInit{
 
         //display booleans
         this.displayAlertNotifXPlaca=false;
-        this.draggable=true;
+        this.draggable=false;
 
         this.tipoMensaje=[{id:1, nomb:'Alerta'},{id:2, nomb:'Notificacion'}];
         this.overlays=[];                
@@ -68,18 +69,20 @@ export class consulVistaEnLineaComponent implements OnInit{
 
     initNodos(){
         this.start=setInterval(
-            //this.nodos, console.log(this.EmId)
-            //function(){ console.log(this.EmId); }
+            //this.nodos, console.log(this.EmId)function(){ console.log(this.EmId); }
             ()=>{
-                //console.log(this.fechaUno);
-                //console.log(this.fecha);
-                //let fech=fecha(this.fecha);
+                //console.log(this.fechaUno);console.log(this.fecha);let fech=fecha(this.fecha);
                 let _fech=Date.parse(this.fecha)+24*60*60*1000;
-                console.log(_fech);
-                this.vistaEnLineaService.getallubicacionactualbyemtiempo(this.EmId,this.anio,_fech).subscribe( data=>{console.log(data);} );
+                //console.log(_fech);
+                this.vistaEnLineaService.getallubicacionactualbyemtiempo(this.EmId,this.anio,_fech)
+                    .subscribe( data=>{this.overlays=[]; this.agregarMarkers(data);} );
             }
         ,1000);
     }
+
+    
+
+    
 
     stopNodos(){
         clearInterval(this.start);
@@ -103,7 +106,7 @@ export class consulVistaEnLineaComponent implements OnInit{
         handleMapClick(event) {
             this.dialogVisible = true;
             this.selectedPosition = event.latLng;
-            this.addMarker();
+            
         }
         
         //click sobre un objeto que esta sobre el mapa
@@ -122,17 +125,41 @@ export class consulVistaEnLineaComponent implements OnInit{
         }
         
         //agregar marcador
-        addMarker() {
+        agregarMarkers(arrMarkers=[]){
             //console.log(this.selectedPosition.lat()); console.log(this.selectedPosition.lng()); console.log(this.draggable);
 
             this.overlays.push(
-                new google.maps.Marker({
-                    position:{lat: this.selectedPosition.lat(), 
-                            lng: this.selectedPosition.lng()}, 
-                    title:'XPS-400',
-                    label:'XSZ-213',
-                    draggable: this.draggable
-                })
+                /*
+                    new google.maps.Marker({
+                        position:{lat: this.selectedPosition.lat(), 
+                                lng: this.selectedPosition.lng()}, 
+                        title:'XPS-400',
+                        label:'XSZ-213',
+                        draggable: this.draggable
+                    })
+                    BuId
+                    BuPlaca
+                    EmId
+                    GeFechaHora
+                    GeId
+                    GeLatitud
+                    GeLongitud
+                    GeOrden
+                    ReDiDeId
+                    SuEmId
+                    TaCoId
+                    TaCoNroVuelta
+                    UsFechaReg
+                */
+               new google.maps.Marker({
+                position:{
+                            lat: arrMarkers[0].GeLatitud, 
+                            lng: arrMarkers[0].GeLongitud
+                         }, 
+                title:arrMarkers[0].BuPlaca,
+                label:arrMarkers[0].BuPlaca,
+                draggable: this.draggable
+            })
             );
 
             this.markerTitle = null;
@@ -175,28 +202,14 @@ export class consulVistaEnLineaComponent implements OnInit{
         console.log(this.fechaUno);
         console.log(editf1(this.fecha));
         
-        this.programService.getAllProgramacionDetalleByPrFecha(this.PrId,editf1(this.fecha)).subscribe(
-            data=>{
-                console.log(data);
-                if(data.length!=0){
-                    this.mgTablaPlacas(data);
-                }
-            },error=>{
-
-            },()=>{}
-        );
-        /*
-        this.tcontrolserv.getallregistrovueltasdiariasbyemprfe(this.EmId, this.PrId, this.fechaUno).subscribe(
-            data=>{
-                console.log(data);
-                if(data.length!=0){
-                    this.mgTablaPlacas(data);
-                }
-            },error=>{
-
-            },()=>{}
-        );
-        */
+        
+        this.tcontrolserv.getalltarjetacontrolbybuidfecha(this.EmId, 0, editf1(this.fecha)).subscribe(
+            data=>{ 
+                console.log(data); this.mgTablaPlacas(data);                    
+            },erro=>{alert(erro+'error al hacer la consulta')
+            },() => {}
+        )
+        
 
     }
     mgTablaPlacas(arrProg=[]){
@@ -204,19 +217,44 @@ export class consulVistaEnLineaComponent implements OnInit{
         let _arrCuadro:any[]=[], __arrCuadro:any[]=[];
         for(let bus of arrProg){
             _arrCuadro=[{
+                Nro:0,
+                _TaCoAsignado:'',
                 BuId:bus.BuId,
-                PrDeAsignadoTarjeta:bus.BuId,
-                PrDeBase:bus.BuId,
-                PrDeCountVuelta:bus.BuId,
-                PrDeFecha:bus.BuId,
-                PrDeHoraBase:bus.BuId,
-                PrDeId:bus.BuId,
-                PrDeOrden:bus.BuId,
-                PrId:bus.BuId,
-                UsFechaReg:bus.BuId,
-                UsId:bus.BuId
+                BuPlaca:bus.BuPlaca,
+                PrId:bus.PrId,
+                PuCoDescripcion:bus.PuCoDescripcion,
+                PuCoId:bus.PuCoId,
+                PuCoTiempoBus:bus.PuCoTiempoBus,
+                ReDiDeId:bus.ReDiDeId,
+                RuId:bus.RuId,
+                TaCoAsignado:bus.TaCoAsignado,
+                TaCoCodEnvioMovil:bus.TaCoCodEnvioMovil,
+                TaCoCountMultiple:bus.TaCoCountMultiple,
+                TaCoCuota:bus.TaCoCuota,
+                TaCoFecha:bus.TaCoFecha,
+                TaCoFinish:bus.TaCoFinish,
+                TaCoHoraSalida:bus.TaCoHoraSalida,
+                TaCoId:bus.TaCoId,
+                TaCoMultiple:bus.TaCoMultiple,
+                TaCoNroVuelta:bus.TaCoNroVuelta,
+                TaCoTipoHoraSalida:bus.TaCoTipoHoraSalida,
+                TiSaId:bus.TiSaId,
+                UsFechaReg:bus.UsFechaReg,
+                UsId:bus.UsId
             }];
         }
+
+        for(let i=0; i<_arrCuadro.length; i++){
+            _arrCuadro[i].Nro=i+1;
+            if(_arrCuadro[i].TaCoAsignado==1){
+                _arrCuadro[i]._TaCoAsignado='Asignado';
+            }else if(_arrCuadro[i].TaCoAsignado==2){
+                _arrCuadro[i]._TaCoAsignado='Ausente';
+            }else if(_arrCuadro[i].TaCoAsignado==3){
+                _arrCuadro[i]._TaCoAsignado='Castigado';
+            }
+        }
+
         this.placas=_arrCuadro;
      
     }

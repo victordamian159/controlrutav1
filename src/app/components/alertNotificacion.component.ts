@@ -81,6 +81,7 @@ export class consulAlertNotifComponent implements OnInit{
                 AlInDescripcion:AlIn.AlInDescripcion,
                 AlInFecha:_fecha2(AlIn.AlInFecha),
                 AlInId:AlIn.AlInId,
+                BuPlaca:AlIn.BuPlaca,
                 AlInLatitud:AlIn.AlInLatitud,
                 AlInLongitud:AlIn.AlInLongitud,
                 AlInTipo:AlIn.AlInTipo,
