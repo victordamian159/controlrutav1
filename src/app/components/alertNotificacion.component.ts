@@ -94,9 +94,9 @@ export class consulAlertNotifComponent implements OnInit{
         }
         for(let i=0; i<_arrAlIn.length; i++){
             _arrAlIn[i].Nro=i+1;
-            if(_arrAlIn[i].AlInTipo==1){
+            if(_arrAlIn[i].AlInTipo==true){
                 _arrAlIn[i].sAlInTipo='Alerta';
-            }else if(_arrAlIn[i].AlInTipo==2){
+            }else if(_arrAlIn[i].AlInTipo==false){
                 _arrAlIn[i].sAlInTipo='Incidencia';
             }
         }
@@ -280,8 +280,8 @@ export class consulAlertNotifComponent implements OnInit{
         }
 
         onRowSelectAlIn(event){
-            console.log(event.data.AlInLatitud);
-            console.log(event.data.AlInLongitud);
+            //console.log(event.data.AlInLatitud);
+            //console.log(event.data.AlInLongitud);
             this._overlays=[];
             let lat=event.data.AlInLatitud;
             let lng=event.data.AlInLongitud;

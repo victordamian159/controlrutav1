@@ -159,6 +159,33 @@
         return  _fechaProg;
     }
 
+    export function hourToMillisecond(hora:string):number{
+        let milliseconds:number;
+            let arrH=hora.split(':'); let _arrH=[], numSecByHour:number, numSecByMin:number, numSecBySec:number; 
+            _arrH[0]=Number(arrH[0]); _arrH[1]=Number(arrH[1]); _arrH[2]=Number(arrH[2]);
+            /*hora */
+            if(_arrH[0]!=0){
+                numSecByHour=_arrH[0]*360;
+            }else if(_arrH[0]==0){
+                numSecByHour=_arrH[0];
+            }
+            /*minutos */
+            if(_arrH[1]!=0){
+                numSecByHour=_arrH[1]*60;
+            }else if(_arrH[1]==1){
+                numSecByHour=_arrH[1];
+            }
+            /*segundos */
+            if(_arrH[2]!=0){
+                numSecByHour=_arrH[2];
+            }else if(_arrH[2]==0){
+                numSecByHour=_arrH[2];
+            }
+
+            milliseconds=numSecByHour+numSecByMin+numSecBySec*1000;
+        return milliseconds;
+    }
+
     //CONVERTIR DATE A STRING PARA FECHA   (DD-MM-YYYY)  - ---   BD A GRILLA
     export function _fecha2(fecha: Date) :string{
         let fechaProg : string; let _fechaProg : string; 

@@ -19,7 +19,7 @@
                         pButton icon="fa-file-text-o" 
                         [disabled]="_ruId==0" 
                         (click)="funcBtnNuevoRegistroDiario()" 
-                        label="Nuevo Registro Diario" 
+                        label="Nuevo Reg. Diario" 
                     ></button>
                         </div>
                 </div>
@@ -29,12 +29,6 @@
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                     <div class=" table table-responsive">
-                        <!--
-                        <p-dataTable [value]="_allTarjControl" [rows]="5" [paginator]="true"  [globalFilter]="filtroGlobal" 
-                            [responsive]="false" emptyMessage="Lista Vacia" scrollable="true" scrollWidth="100%" selectionMode="single" 
-                            [(selection)]="selectedTarjCab" (onRowSelect)="onRowSelectCabecera($event)">
-                            scrollable="true" scrollHeight="360px" scrollWidth="100%"
-                        -->
                         <p-dataTable [value]="arrRegDiarioByEmId" 
                                      [globalFilter]="filtroGlobal"                                     
                                      [rows]="7" 

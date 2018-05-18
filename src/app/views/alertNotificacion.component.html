@@ -6,9 +6,6 @@
             <input placeholder="Buscar..." class="form-control" type="text">
             </div>
         </div>
-        <!--{{fecha==''}}
-        {{longArrTarj==0}}
-        {{fecha=='' || longArrTarj==0}}-->
         <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
                 <div class="form-group">
             <button class="form-control" id="btnNuevo" (click)="btnNvoMensaje()" [disabled]="fecha=='' || longArrTarj==0"
@@ -16,12 +13,6 @@
                 </div>
         </div>
         <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12">
-            <!--
-                <div class="form-group">
-                    <label class="control-label">Fecha:</label>
-                    <input class="form-control" type="date" [disabled]="true">
-                </div>
-            -->
             <div class="form-group">
                 <input  class="form-control" [(ngModel)]="fecha" type="date" 
                         (ngModelChange)='funcInputDateFpFecha();'>
@@ -44,10 +35,10 @@
                     </template>
                 </p-column>
             -->
-            <p-column field="Nro" header="Nro" [style]="{'width':'2em','text-align':'center'}"></p-column>
-            <p-column field="sAlInTipo" header="Tipo" [style]="{'width':'3em','text-align':'center'}"></p-column>
-            <p-column field="BuPlaca" header="Placa" [style]="{'width':'3em','text-align':'center'}"></p-column>
-            <p-column field="AlInFecha" header="Fecha" [style]="{'width':'5em','text-align':'center'}"></p-column>
+            <p-column field="Nro" header="N°" [style]="{'width':'2em','text-align':'center'}"></p-column>
+            <p-column field="sAlInTipo" header="Tipo" [style]="{'width':'8em'}"></p-column>
+            <p-column field="BuPlaca" header="Placa" [style]="{'width':'6em','text-align':'center'}"></p-column>
+            <p-column field="AlInFecha" header="Fecha" [style]="{'width':'8em','text-align':'center'}"></p-column>
             <p-column field="AlInDescripcion" header="Descripcion" [style]="{'width':'10em'}"></p-column>
         </p-dataTable>
     </div> 

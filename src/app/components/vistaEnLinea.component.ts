@@ -5,7 +5,7 @@ import {GlobalVars} from 'app/variables';
 import {ProgramacionService} from '../service/prog.service';
 import {VistaEnLineaService} from '../service/vistaEnLinea.service';
 import {TrackerByPlacaService} from '../service/trackerByPlaca.service';
-import {fecha,guionBySlash,_hora,editf1} from 'app/funciones';
+import {fecha,guionBySlash,_hora,editf1,hourToMillisecond} from 'app/funciones';
 
 declare var google: any;
 
@@ -26,6 +26,7 @@ export class consulVistaEnLineaComponent implements OnInit{
             //string
             private fecha:string;
             private fechaUno:string;
+            private hora:string;
         //boolean
             //display modal
                 private displayAlertNotifXPlaca:boolean;
@@ -68,25 +69,52 @@ export class consulVistaEnLineaComponent implements OnInit{
     }
 
     initNodos(){
-        this.start=setInterval(
-            //this.nodos, console.log(this.EmId)function(){ console.log(this.EmId); }
-            ()=>{
-                //console.log(this.fechaUno);console.log(this.fecha);let fech=fecha(this.fecha);
-                let _fech=Date.parse(this.fecha)+24*60*60*1000;
-                //console.log(_fech);
-                this.vistaEnLineaService.getallubicacionactualbyemtiempo(this.EmId,this.anio,_fech)
-                    .subscribe( data=>{this.overlays=[]; this.agregarMarkers(data);} );
-            }
-        ,1000);
+        let val=this.validarFechaHora(this.hora, this.fecha);//validar si hay fecha y hora en los inputs
+
+        //vista en linea
+        if(val==true){
+            this.start=setInterval(
+                ()=>{
+                    let _fech=Date.parse(this.fecha)+24*60*60*1000;
+                    this.vistaEnLineaService.getallubicacionactualbyemtiempo(this.EmId,this.anio,_fech)
+                        .subscribe( data=>{ if(data.length!=0){this.overlays=[]; this.agregarMarkers(data);} else if(data.length==0){clearInterval(this.start); alert('No hay vehiculos en el mapa');}} );
+                }
+            ,1000);
+
+        //vista sin linea
+        }else if(val==false){
+
+        }
     }
 
-    
+    validarFechaHora(hora:string, fecha:string):boolean{
+        let val:boolean, longHora:number;
+        
 
-    
+        if(hora==undefined){
+            longHora=0;
+        }else if(hora!=''){
+            longHora=hora.length
+        }
+
+        if(longHora!=0){
+            let mllHora=hourToMillisecond(hora);
+
+            let _fech=Date.parse(this.fecha)+24*60*60*1000 + mllHora;
+            console.log(_fech);
+                    this.vistaEnLineaService.getallubicacionactualbyemtiempo(this.EmId,this.anio,_fech)
+                        .subscribe( data=>{this.overlays=[]; this.agregarMarkers(data);} );
+
+        }else if(longHora==0){
+            val=true;
+        }
+        console.log(val);
+        return val;
+    }
 
     stopNodos(){
+        console.log(this.start);
         clearInterval(this.start);
-        //console.log(this.EmId);
     }
 
     nodos(){
@@ -95,9 +123,6 @@ export class consulVistaEnLineaComponent implements OnInit{
 
     funcInputDtFecha(){
         this.fechaUno=guionBySlash(this.fecha);
-        /*console.log(this.fechaUno);
-        console.log(this.EmId);
-        console.log(this.anio);*/
         this.mProcGetByTabla(this.EmId, this.anio);
     }
 
@@ -161,11 +186,8 @@ export class consulVistaEnLineaComponent implements OnInit{
                 draggable: this.draggable
             })
             );
-
             this.markerTitle = null;
             this.dialogVisible = false;
-
-            //console.log(this.overlays);
         }
         
         //evento al finalizar arratras objeto
@@ -184,7 +206,7 @@ export class consulVistaEnLineaComponent implements OnInit{
     mProcGetByTabla(EmId:number, anio:number){
         this.tcontrolserv.getAllProgramacionByEm(EmId,anio).subscribe(
             data=>{
-                console.log(data);
+                //console.log(data);
                 if(data.length!=0){
                     this.mGetProcProgramacion(data)
                 }                       
@@ -198,25 +220,24 @@ export class consulVistaEnLineaComponent implements OnInit{
     mGetProcProgramacion(arrProgramaciones=[]){
         //funcion para sacar la programacion activa
         this.PrId=arrProgramaciones[arrProgramaciones.length-1].prId;
-        console.log(this.PrId);
-        console.log(this.fechaUno);
-        console.log(editf1(this.fecha));
-        
         
         this.tcontrolserv.getalltarjetacontrolbybuidfecha(this.EmId, 0, editf1(this.fecha)).subscribe(
             data=>{ 
-                console.log(data); this.mgTablaPlacas(data);                    
+                //console.log(data); 
+                this.mgTablaPlacas(data);                    
             },erro=>{alert(erro+'error al hacer la consulta')
             },() => {}
         )
         
 
     }
+    onRowSelectCenterPlaca(event){
+        console.log(event);
+    }
     mgTablaPlacas(arrProg=[]){
-       // console.log(arrCuadro);
-        let _arrCuadro:any[]=[], __arrCuadro:any[]=[];
+        let _arrCuadro:any[]=[];
         for(let bus of arrProg){
-            _arrCuadro=[{
+            _arrCuadro.push({
                 Nro:0,
                 _TaCoAsignado:'',
                 BuId:bus.BuId,
@@ -241,22 +262,23 @@ export class consulVistaEnLineaComponent implements OnInit{
                 TiSaId:bus.TiSaId,
                 UsFechaReg:bus.UsFechaReg,
                 UsId:bus.UsId
-            }];
+            });
         }
-
+        //console.log(_arrCuadro);
         for(let i=0; i<_arrCuadro.length; i++){
             _arrCuadro[i].Nro=i+1;
-            if(_arrCuadro[i].TaCoAsignado==1){
+            if(_arrCuadro[i].TaCoAsignado=="1"){
                 _arrCuadro[i]._TaCoAsignado='Asignado';
-            }else if(_arrCuadro[i].TaCoAsignado==2){
+            
+            }else if(_arrCuadro[i].TaCoAsignado=="2"){
                 _arrCuadro[i]._TaCoAsignado='Ausente';
-            }else if(_arrCuadro[i].TaCoAsignado==3){
+            
+            }else if(_arrCuadro[i].TaCoAsignado=="3"){
                 _arrCuadro[i]._TaCoAsignado='Castigado';
             }
         }
-
+        //console.log(_arrCuadro);
         this.placas=_arrCuadro;
-     
     }
 
 }
