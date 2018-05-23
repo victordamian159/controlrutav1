@@ -25,7 +25,7 @@
                                     [disabled]="validReDiId==-1"
                                     (change)="funcCboRegistroDiario($event)"
                                     [(ngModel)]="reDiDeId">
-                                    <option *ngFor="let regDiario of arrRegDiarioVuelta" [value]="regDiario.ReDiId" >{{regDiario.ReDiDeNombreVuelta}}</option>                                       
+                                    <option *ngFor="let regDiario of arrRegDiarioVuelta" [value]="regDiario.ReDiDeId" >{{regDiario.ReDiDeNombreVuelta}}</option>                                       
                                 </select>
                             </div>     
                         </div>
@@ -63,6 +63,7 @@
                     </p-dataTable>
                 </div>
             </div>
+   
             <div class="col-xl-8 col-md-8 col-sms-6 col-xs-12">                           
                 <div id="formPMapa">                     
                     <p-growl [value]="msgs"></p-growl>

@@ -9,3 +9,8 @@
     textarea {resize: none;}
    
 /*responsive*/
+@media(max-width:480px){
+    #formPMapa{
+        height: 400px;
+    }
+}

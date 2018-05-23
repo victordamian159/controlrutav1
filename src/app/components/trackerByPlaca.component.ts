@@ -62,8 +62,8 @@ export class csl_TrackByPlacaComponent implements OnInit{
         let arrsubemps:any[]=[];
         this.empSubEmpService.getallsubempresasbyemid(emid).subscribe(
             data => { 
-                arrsubemps=data; this.arrSubEmp=arrsubemps;
-
+                arrsubemps=data; 
+                this.arrSubEmp=arrsubemps;
             },err => {},
         );
     }
@@ -71,20 +71,24 @@ export class csl_TrackByPlacaComponent implements OnInit{
     //funciones
     funcInputDtFecha(){
         this.regDiarioService.getAllRegistroDiarionByemId(this.EmId).subscribe(
-            data=>{
-                let arr=this.extFechaRegDiario(data); let index=arr.indexOf(editf1(this.fecha));
+            data=>{                
+                let arr=this.extFechaRegDiario(data); 
+                let index=arr.indexOf(editf1(this.fecha));
                 this.validReDiId=index;
+                //saber si existe registro diario
                 if(index!=-1){                                    
+                    //console.log(data[index]);
                     this.regDiarioService.getAllregistrodiarioDetalleByPrId(data[index].ReDiId).subscribe(
                         data=>{
+                            console.log(data);
                             this.arrRegDiarioVuelta=data;
                         },error=>{
-
                         },()=>{}
                     );
                 }else if(index==-1){
                     alert('No hay Registro Diario');
-                }                            
+                }                
+
             },error=>{
 
             },()=>{
@@ -118,23 +122,21 @@ export class csl_TrackByPlacaComponent implements OnInit{
         for(let i=0; i<arrbus.length; i++){
             arrbus[i].Nro=i+1;
         }
-        console.log(arrbus);
         this.arrBusBySubEmp=arrbus;
     }
 
     funcCboRegistroDiario(arr=[]){
-        console.log(this.anio);
-        console.log(this.SuEmId);
         console.log(this.reDiDeId);
     }
     
     onRowSelectPlaca(event){
-        console.log(event.data);
         this.BuId=event.data.BuId;
-        
-        //this.trackerByPlacaService.getallrecorridovueltabyemburedi(this.EmId,this.anio, this.BuId, this.reDiDeId).subscribe(
-        this.trackerByPlacaService.getallrecorridovueltabyemburedi(this.EmId,this.anio, 10, 564).subscribe(
+        console.log(this.BuId);
+        console.log(this.reDiDeId);
+
+        this.trackerByPlacaService.getallrecorridovueltabyemburedi(this.EmId,this.anio, this.BuId, this.reDiDeId).subscribe(
             data=>{
+                console.log(data);
                 if(data.length!=0){
                     this.overlays=[];
                     this.cargarRuta(data);
@@ -159,7 +161,7 @@ export class csl_TrackByPlacaComponent implements OnInit{
     mProcGetByTabla(EmId:number, anio:number){
         this.tcontrolserv.getAllProgramacionByEm(EmId,anio).subscribe(
             data=>{
-                console.log(data);
+                //console.log(data);
                 if(data.length!=0){
                     this.mGetProcProgramacion(data)
                 }                       
@@ -205,37 +207,51 @@ export class csl_TrackByPlacaComponent implements OnInit{
     }
 
     cargarRuta(puntosRuta=[]){
-        let coordenadas:any[]=[];
-        for(let n=0; n<puntosRuta.length; n++){
+        /*
+            let coordenadas:any[]=[];
+            for(let n=0; n<puntosRuta.length; n++){
+                coordenadas.push({
+                    lat:puntosRuta[n].GeLatitud,
+                    lng:puntosRuta[n].GeLongitud
+                });
+            }
+
+            //ULTIMA LINEA DE CIERRE #0B610B 
             coordenadas.push({
-                lat:puntosRuta[n].GeLatitud,
-                lng:puntosRuta[n].GeLongitud
-            });
-        }
+                lat:puntosRuta[0].GeLatitud,
+                lng:puntosRuta[0].GeLongitud
+            })
 
-        /*ULTIMA LINEA DE CIERRE #0B610B */ 
-        coordenadas.push({
-            lat:puntosRuta[0].GeLatitud,
-            lng:puntosRuta[0].GeLongitud
-        })
-        if(this.overlays.length!=0){
-            this.overlays.unshift(
-                new google.maps.Polyline({
-                    path: coordenadas, 
-                    strokeColor: '#21610B',
-                    strokeOpacity : 1,
-                    strokeWeight :4 
-            }));
-        }else if(this.overlays.length==0){
+            if(this.overlays.length!=0){
+                this.overlays.unshift(
+                    new google.maps.Polyline({
+                        path: coordenadas, 
+                        strokeColor: '#21610B',
+                        strokeOpacity : 1,
+                        strokeWeight :4 
+                }));
+            }else if(this.overlays.length==0){
+                this.overlays.push(
+                    new google.maps.Polyline({
+                        path: coordenadas, 
+                        strokeColor: '#21610B',
+                        strokeOpacity : 1,
+                        strokeWeight :4 
+                }));
+            }
+        */
+        //this.overlays = [
+        //new google.maps.Marker({position: {lat: 36.879466, lng: 30.667648}, title:"Konyaalti"}),
+
+        for(let i=0; i<puntosRuta.length; i++){
             this.overlays.push(
-                new google.maps.Polyline({
-                    path: coordenadas, 
-                    strokeColor: '#21610B',
-                    strokeOpacity : 1,
-                    strokeWeight :4 
-            }));
-        }
-        
+                new google.maps.Marker({
+                    position:{lat:puntosRuta[i].GeLatitud, 
+                              lng:puntosRuta[i].GeLongitud},
+                    title:"",
 
+                })
+            )
+        }
     }
 }

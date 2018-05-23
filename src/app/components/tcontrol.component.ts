@@ -1411,7 +1411,7 @@ export class TcontrolComponent implements OnInit{
                    // this.tarjeta._TaCoId=0; 
                     this.tarjeta._TaCoId = event.data.TaCoId; /* ACTUALIZA EL CAMPO PARA PODER USARLO SI ES CASO SE QUIERA EDITAR EL REGISTRO */ 
                     this.TaCoId=event.data.TaCoId;
-                    //console.log(this.TaCoId);
+                    console.log(event.data);
                     this.procgetAllTarjCtrlDetBytaCoId(this.TaCoId);
                 }
 
