@@ -11,6 +11,14 @@ export class ProgramacionService{
     constructor (private http: Http){}
 
     //consultar por Id Empresa, Ruta Empresa (mostrar en la grilla)
+    getAllProgramacionByPrBa( PrBaId: number){
+        return this.http        
+            .get(this.baseUrl+"getallprogramacionbyprba?prBaId="+PrBaId)
+            .map((r:Response) => r.json())
+            .catch(this.handleError);
+    }
+
+    //consultar por Id Empresa, Ruta Empresa (mostrar en la grilla)
     getAllProgramacionByEm( emId: number, anio: number){
         return this.http        
             .get(this.baseUrl+"getallprogramacionbyem?emId="+emId+"&anio="+anio)

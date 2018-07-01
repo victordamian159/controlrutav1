@@ -614,6 +614,30 @@
         return arrProtoProg;
     }
 
+    export function numRandom(long:number){
+        let array = ["c"],nro, i=0, j=0, cen=0; 
+            
+            //ALGORITMO NROS ALEATORIOS
+            while(i<long){
+                nro = Math.floor(Math.random()*long)+1;//NUMEROS ALEATORIOS ENTRE 0 Y LONG
+                while(j<array.length ){
+                    if(array[j]!=nro){
+                        cen=0;
+                    }else if(array[j]==nro){ 
+                        cen=1; j=array.length;
+                    }
+                    j++;
+                }
+                if(cen==0){  
+                    array[i]=nro;   
+                    i++;    
+                }
+                cen=0; j=0;
+            }
+        return array
+            
+    }
+
     //fecha mayor entre dos fechas (fechDos > fechUno)  aaaa-mm-dd
     export function fechaMayor(fechUno:string, fechDos:string):boolean{
         let result:boolean,f1=fechUno.split('-'), f2=fechDos.split('-');

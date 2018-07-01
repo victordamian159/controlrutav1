@@ -4,11 +4,13 @@ import {ProgramacionService} from '../service/prog.service';
 import {PlacasService} from '../service/placas.service';
 import {EmpSubEmpService} from '../service/empSubemp.service';
 import {ConfiguraService} from '../service/configura.service';
-import {GlobalVars} from 'app/variables'
-import {hora,formatFechInArr,_fnroDias,fecha,arrABI,arrANBI,_hora, 
-        tipoAnio,_fecha1,_fecha2,slash_posFecha,horaValida,
+import {RegDiarioService} from '../service/registrodiario.service';
+import {GlobalVars} from 'app/variables';
+import {ProgBaseService} from '../service/programacionBase.service';
+import {hora,formatFechInArr,_fnroDias,fecha,cCeroFechaForEditar,arrABI,arrANBI,_hora, 
+        tipoAnio,_fecha1,_fecha2,slash_posFecha,guion_posFecha,horaValida,
         formatFech,addDays,operSHoras,_addDays,editf1,
-        fechaActual1,fechaMayor, cambianBuIdxNroPlaca} from 'app/funciones';
+        fechaActual1,fechaMayor, cambianBuIdxNroPlaca,numRandom} from 'app/funciones';
 
 
 declare var jsPDF: any; //PARA PASAR HTML A PDF 
@@ -44,6 +46,14 @@ export class ProgComponent implements OnInit{
         }
 
     /* VARIABLES */
+        private PrDescripcion:string;
+        private PrFecha:Date;
+        private PrBaDiasIncluidos:string;
+        private PrBaHoraBase:string;
+        private PrBaId:number;
+        private PrBaDescripcion:string;
+        private PrBaFechaInicio:string;
+        private PrBaFechaFin:string;
         private PrFechaInicio:string;
         private PrFechaFin:string;
         private indexPlacaTabHSal:number;
@@ -89,6 +99,7 @@ export class ProgComponent implements OnInit{
         private placaEditarCelda:number;
         private progValida:string;
         /* ARRAYS */
+        //private arrHoraBase:any[]=[];
         private selectedPlacas: string[] = []; /* NO USO */
         private placas:any[]=[]; //se utiliza para almacenar lo q devuelve el rest de las placas
         private placasComplet:any[]=[];
@@ -96,9 +107,9 @@ export class ProgComponent implements OnInit{
         private arrayPlacas:any[] = []; //ESTATICO
         private _arrayPlacas:any[] = []; //DINAMICO
         private ordenSorteo:any[] = []; 
-        private programacionMaestroArrayMemoria :any[]=[]; /* NO USO */
+        //private programacionMaestroArrayMemoria :any[]=[]; /* NO USO */
         private programacionMaestroArrayHTML :any[] = [];  //array para la grilla HTML
-        private progMaestroArray:any[]= [];/* NO USO */
+        private arrAllProgmByPrBa:any[]= [];/* NO USO */
         private progDetalleArray:any[]=[];/* NO USO */
         private programacionArrayDetalleBD:any[]=[]; //array objetos detalle para mandar al rest
         private _programacionArrayDetalleBD:any[]=[];
@@ -108,14 +119,14 @@ export class ProgComponent implements OnInit{
         private dtSelectDias:any[]=[];
         //variables, se recupera las programaciones desde el servidor rest
         private progRest:any[]=[];
-        private progRestMaestro:any[]=[]; /* NO USO */
+        //private progRestMaestro:any[]=[]; /* NO USO */
         private progBDDetalle:any[]=[]; // para recoger resultado de la BD
-        private _progBDDetalle:any[]=[]; /* NO USO */
+        //private _progBDDetalle:any[]=[]; /* NO USO */
         private arrAllSubEmpAgrup:any[]=[];
         private nroMiniBusHeader:number;
         private modo:string; 
 
-    //COLUMNAS DEL DATATABLE PRIMENG
+    // COLUMNAS DEL DATATABLE PRIMENG
         private columnas:any[]=[];
         private _columnas : SelectItem[];
         private _detalle:any[]=[];
@@ -130,14 +141,19 @@ export class ProgComponent implements OnInit{
         private arrSubEmp:any[]=[];
         private SuEmId:number;
         private CoSiId:number;
+        private CoNroMaxVueltas:number;
         private CoId:number;
         private objConfigSystem:any;
-
+        private arrAllSubEmp:any[]=[];
+        private arrAllSubEmpByDays:any[]=[];
+        private arrAllProgBase:any[]=[];
     /* DISPLAY VENTANAS MODALES */
+        private displayConfDelProgram:boolean =false;
         private displayNuevaProgramacion: boolean = false;
         private displayProgramacionBase: boolean = false;
         private displayProgramacion: boolean = false;
-        private displayConfEliminarCabecera: boolean = false; /* CONFIRMAR ELIMINAR REG PROGRAMACION */
+        private displayNuevaSubProg:boolean=false;
+        private displayConfDelProgBase: boolean = false; /* CONFIRMAR ELIMINAR REG PROGRAMACION */
         private displayAvisoNoPuedeBorrarProg:boolean=false;
         private displayAceptarProgNueva : boolean = false;
         private displayIniciandoProgramacion:boolean=false;
@@ -147,19 +163,21 @@ export class ProgComponent implements OnInit{
         private displayDescargaProg : boolean = false;
         private displayEditProgC : boolean = false;
         private displayDatosPDF:boolean=false;
-        private displayHoraBase:boolean=false;
+        private displayFormHorasBase:boolean=false;
         private displayErrorCargarPlacas=false;
         private displayTerminoTodoGenerarProg=false;
         private displayMensajeEspera=false;
         private displayErrorFechIngrFormUno=false;
-
+        private displayNewProgmBase=false;
+        private displayOrdSubEmpBaseRegDiario=false;
+        private displaySorteoProg=false;
         
     ngOnInit(){
         /*console.log(fechaSgte("2017/02/07",32));*/  /* TERMINAR ESTO */
         this.ordenSorteo = [];
         //this.getAllPlacasBusByEmSuEm(this.emid,0); 
-        this.getAllProgramacionByEm(this.emid,this.anio); /* EMID + AÑO */
-       
+        //this.getAllProgramacionByEm(this.emid,this.anio); /* EMID + AÑO */
+       this.getAllProgramacionBaseByEm(this.emid,this.anio);
         //console.log(this.descartarFechas(this.calendarioNumerico('2017-11-13', '2017-12-13'), '1,1,1,0,1,0,1'));
     }
     
@@ -167,11 +185,15 @@ export class ProgComponent implements OnInit{
                 private empSubEmpService:EmpSubEmpService,
                 private placasservice: PlacasService,
                 private configService : ConfiguraService,
+                private progBaseService:ProgBaseService,
+                private regDiarioService:RegDiarioService,
                 public ClassGlobal:GlobalVars){
         this.emid=this.ClassGlobal.GetEmId();
         this.userid=this.ClassGlobal.GetUsId();
         this.lengthProgDet=0;
         this.anio=0;
+        this.PrBaId=0;
+        this.PrId=0;
         this.progMaestro.EmId = 1; /* ELIMINAR ESTO */
         this._tipoProg =[ {id:0,nTipo:"automatico"},{id:1,nTipo:"manual"} ];
         this._formaProg=[ {id:"01", nForma:"pescadito"},{id:"02", nForma:"escala"}];
@@ -192,14 +214,7 @@ export class ProgComponent implements OnInit{
     }
     
     funcCboAllBusBySuEmId(){
-        /*console.log(this.arrAllSubEmpAgrup);
-        console.log(this.arrAllSubEmpAgrup[0].PrDiasIncluidos);
-        console.log(editf1(_fecha2(this.arrAllSubEmpAgrup[0].PrFechaInicio)));
-        console.log(editf1(_fecha2(this.arrAllSubEmpAgrup[0].PrFechaFin)));
-
-        console.log(this.progMaestro.PrFechaInicio);
-        console.log(this.progMaestro.PrFechaFin);
-        console.log(this.diasIncluidos(this.dtSelectDias));*/
+        console.log("SuEmId: "+this.SuEmId);
         this.valSuEmIdCreateProg=this.funcBuscarSuEmId(this.arrAllSubEmpAgrup,this.SuEmId);
         
         if(this.valSuEmIdCreateProg==true){
@@ -253,7 +268,7 @@ export class ProgComponent implements OnInit{
         let arrDaysSemana:any[]=[];
         arrCalendar[0]=fecha(refFecha1).getTime();
         while(i<nroDias){ 
-            arrCalendar[i]=new Date(arrCalendar[0]+(i*(24*60*60*1000)));  
+            arrCalendar[i]=new Date( arrCalendar[0]+(i*(24*60*60*1000)) + 24*60*60*1000);  
             i++; 
         }
         arrCalendar[0]=new Date(arrCalendar[0]);
@@ -407,15 +422,119 @@ export class ProgComponent implements OnInit{
                     this.programacionService.deleteProgramacionByid(prid).subscribe(
                         realizar => {
                                         this.getAllProgramacionByEm(this.emid,this.anio); 
-                                        this.displayConfEliminarCabecera=false;
+                                        this.displayConfDelProgBase=false;
                                     },
                         err => {this.mensaje="No puede borrar esta programacion, esta siendo utilizada";
                                 this.displayAvisoNoPuedeBorrarProg=true;    
-                                this.displayConfEliminarCabecera=false;
+                                this.displayConfDelProgBase=false;
                                 console.log(err);}
                     );
                 }
         /* GETTERS -> RECUPERANDO DATOS */
+            /*consulta programaciones base */
+            getAllProgramacionBaseByEm(EmId:number,anio:number){
+                this.progBaseService.getAllProgramacionBaseByEm(EmId,anio).subscribe(
+                    data=>{
+                        this.mgAllProgramacionBaseByEm(data);
+                        let añoActual=new Date().getFullYear().toString();             
+                        this.configService.getAllConfiguraByEmPeriodo(this.emid,añoActual).subscribe(
+                        data=>{     
+                            this.CoSiId=data[0].CoSiId;            
+                            this.CoNroMaxVueltas=data[0].CoNroMaxVueltas;                       
+                            //empresa con varias subempresas
+                            if(this.CoSiId==2){
+                                this.empSubEmpService.getallsubempresasbyemid(this.emid).subscribe(
+                                    data=>{
+                        
+                                        //agrupando programaciones por fechas - retorna array de arrays de programaciones
+                                        this.arrAllSubEmpAgrup=this.funcAgruparProgByFechas(this.progRest);
+
+                                        //validar nro de programaciones por subempresa creadas
+                                        console.log(this.arrAllSubEmpAgrup); 
+                                        
+                                        //validando el ultimo grupo de programaciones
+                                        this.funcValidAllProgByFechas(this.arrAllSubEmpAgrup[this.arrAllSubEmpAgrup.length-1]);
+                                    },error=>{
+
+                                    },()=>{}
+                                );
+                                
+
+                            //empresa con una sola subempresa
+                            }else if(this.CoSiId==1){
+
+                            }
+                            
+                        },error=>{
+
+                        },()=>{})
+                    },
+                );
+            }
+            mgAllProgramByPrBa(arrProgByPrBa=[]){
+                let arrProgm:any[]=[]
+                for(let progm of arrProgByPrBa){
+                    arrProgm.push({
+                        Nro:0,
+                        EmConsorcio:progm.EmConsorcio,
+                        PrBaId:progm.PrBaId,
+                        PrCantidadBuses:progm.PrCantidadBuses,
+                        PrDiasIncluidos:progm.PrDiasIncluidos,
+                        PrFecha:progm.PrFecha,
+                        PrFechaFin:progm.PrFechaFin,
+                        PrFechaInicio:progm.PrFechaInicio,
+                        PrTipo:progm.PrTipo,
+                        _PrTipo:"",
+                        PrAleatorio:progm.PrAleatorio,
+                        _PrAleatorio:"",
+                        SuEmId:progm.SuEmId,
+                        SuEmRSocial:progm.SuEmRSocial,
+                        dias:progm.dias,
+                        prDescripcion:progm.prDescripcion,
+                        PrId:progm.prId
+                    });
+                }
+                for(let i=0; i<arrProgm.length; i++){
+                    arrProgm[i].Nro=i+1;
+                    if(arrProgm[i].PrTipo=='0'){
+                        arrProgm[i]._PrTipo="Pescadito";
+                    }else{
+                        arrProgm[i]._PrTipo="Escala";
+                    }
+                    if(arrProgm[i].PrAleatorio==true){
+                        arrProgm[i]._PrAleatorio="Automatico";
+                    }else{
+                        arrProgm[i]._PrAleatorio="Manual";
+                    }
+                }
+                this.arrAllProgmByPrBa=arrProgm;
+            }
+
+            mgAllProgramacionBaseByEm(arrProgBase=[]){
+                let arrAllProgBase:any[]=[]; 
+                for(let progBase of arrProgBase){
+                    arrAllProgBase.push({
+                        Nro:0,
+                        EmConsorcio:progBase.EmConsorcio,
+                        EmId:progBase.EmId,
+                        PrBaDescripcion:progBase.PrBaDescripcion,
+                        _PrBaFecha:_fecha1(progBase.PrBaFecha),
+                        _PrBaFechaFin:_fecha1(progBase.PrBaFechaFin),
+                        _PrBaFechaInicio:_fecha1(progBase.PrBaFechaInicio),
+                        PrBaFecha:progBase.PrBaFecha,
+                        PrBaFechaFin:progBase.PrBaFechaFin,
+                        PrBaFechaInicio:progBase.PrBaFechaInicio,
+                        PrBaId:progBase.PrBaId,
+                        PrDiasIncluidos:progBase.PrDiasIncluidos,
+                        _PrDiasIncluidos:this.convertDiasIncluidos(progBase.PrDiasIncluidos),
+                        dias:progBase.dias,
+                    });
+                }
+                for(let i=0; i<arrAllProgBase.length;i++){
+                    arrAllProgBase[i].Nro=i+1;
+                }
+                this.arrAllProgBase=arrAllProgBase;
+            }
             /*CONSULTA PROGRAMACION DETALLE*/
             getallprogramaciondetallebyprid(_prid:number, arrPlacaSorteo=[]){
                 this.programacionService.getAllProgramacionDetalleByPrId(_prid).subscribe(
@@ -508,24 +627,43 @@ export class ProgComponent implements OnInit{
                         () =>{this.isLoading = false}
                     );
             }
+            /* all programaciones base */
 
             /*TODAS LAS PROGRAMACIONES POR EMPRESA Y AÑO*/
             getAllProgramacionByEm( empId: number, anio: number){
-                let añoActual=new Date().getFullYear().toString();
+                //let añoActual=new Date().getFullYear().toString();
                 this.programacionService.getAllProgramacionByEm(empId, anio).subscribe(
                         datos => { 
-                            this.progRest = datos;                         
+                            this.progRest = datos;            
+                                let añoActual=new Date().getFullYear().toString();             
                                 this.configService.getAllConfiguraByEmPeriodo(this.emid,añoActual).subscribe(
                                 data=>{     
                                     this.CoSiId=data[0].CoSiId;            
-                                    //console.log(this.CoSiId);                                                
+                                    this.CoNroMaxVueltas=data[0].CoNroMaxVueltas;                       
+                                    //empresa con varias subempresas
                                     if(this.CoSiId==2){
-                                        this.arrAllSubEmpAgrup=this.funcAgruparProgByFechas(this.progRest);
-                                        this.funcValidAllProgByFechas(this.arrAllSubEmpAgrup);
+                                        this.empSubEmpService.getallsubempresasbyemid(empId).subscribe(
+                                            data=>{
+                                
+                                                //agrupando programaciones por fechas - retorna array de arrays de programaciones
+                                                this.arrAllSubEmpAgrup=this.funcAgruparProgByFechas(this.progRest);
+
+                                                //validar nro de programaciones por subempresa creadas
+                                                console.log(this.arrAllSubEmpAgrup); 
+                                                
+                                                //validando el ultimo grupo de programaciones
+                                                this.funcValidAllProgByFechas(this.arrAllSubEmpAgrup[this.arrAllSubEmpAgrup.length-1]);
+                                            },error=>{
+
+                                            },()=>{}
+                                        );
+                                        
+
+                                    //empresa con una sola subempresa
                                     }else if(this.CoSiId==1){
 
                                     }
-                                    this.mostrargrillaProgramacionMaestro(this.progRest); 
+                                    this.mostrargrillaProgramacionMaestro(datos); 
                                 },error=>{
 
                                 },()=>{})
@@ -536,20 +674,19 @@ export class ProgComponent implements OnInit{
                 
             }
 
-            funcValidAllProgByFechas(arrProgByDate){
+            funcValidAllProgByFechas(arrProgByDate=[]){
                 let arrSubEmp=[];
                 this.empSubEmpService.getallsubempresasbyemid(this.emid).subscribe(
                     data=>{
                         for(let subemp of data){
                             arrSubEmp.push(subemp);
                         }
-                        //console.log(arrProgByDate.length);
-                        //console.log(arrSubEmp.length);
+                        
+                        //si numero de programaciones es igual al nro de subempresas
                         if(arrProgByDate.length==arrSubEmp.length){
-                            //this.progValida="Programacion Correcta";
                             this.progValida="";
                         }else if(arrProgByDate.length!=arrSubEmp.length){
-                            this.progValida="Error en la programacion, compruebe su validez";
+                            this.progValida="Error en el numero de programaciones creadas";
                         }
                         
                     },error=>{},
@@ -557,25 +694,113 @@ export class ProgComponent implements OnInit{
                 );
             }
         
-            //si para programacion por subempresas
+            //agrupando programaciones creadas entre fechas
             funcAgruparProgByFechas(arrAllProg=[]){
-                //por ahora solo por la ultima programacion creada
-                let objProg=arrAllProg[arrAllProg.length-1], arrProgByFechas=[];
-
-                for(let i=0; i<arrAllProg.length; i++){
-                    if( objProg.dias==arrAllProg[i].dias &&
-                        objProg.PrDiasIncluidos==arrAllProg[i].PrDiasIncluidos &&
-                        objProg.PrFechaFin==arrAllProg[i].PrFechaFin &&
-                        objProg.PrFechaInicio==arrAllProg[i].PrFechaInicio ){
-                            arrProgByFechas.push(arrAllProg[i]);
-                    }
+                let arrProgByFechas=[], i:number=0,j:number=0, _arrAllProg=arrAllProg, objBuscar:any, cen=0;
+                //recorrer todas las programaciones para validar si es igual o no
+                
+                for(let i=0; i<arrAllProg.length;i++){
+                    arrProgByFechas.push([]);
                 }
 
+                while(_arrAllProg.length>1 && j<arrAllProg.length){
+                        objBuscar=_arrAllProg[0];
+
+                        //buscando dentro del array de programaciones
+                        while(i<_arrAllProg.length){
+                        
+                            if( objBuscar.dias==_arrAllProg[i].dias &&  objBuscar.PrDiasIncluidos==_arrAllProg[i].PrDiasIncluidos && 
+                                objBuscar.PrFechaFin==_arrAllProg[i].PrFechaFin &&  objBuscar.PrFechaInicio==_arrAllProg[i].PrFechaInicio){
+                                    console.log('j: '+j+'---'+'i: '+i);
+                                    //guardo elemento donde corresponde
+                                    arrProgByFechas[j].push(_arrAllProg[i]);
+                                    //elimino elemento del array de busqueda
+                                    _arrAllProg.splice(i,1);
+                                    i=0;
+                                    
+                            }else{
+                                i++;
+                            }
+                            
+                        }
+                        cen=0;
+                        i=0;
+                        j++;
+                  
+                }
+
+                i=0
+                while(i<arrProgByFechas.length){
+                    if(arrProgByFechas[i].length==0){
+                        arrProgByFechas.splice(i,1);
+                        i=0;
+                    }else{
+                        i++;
+                    }
+                }
+               
+                //buscar posicion de ultimo elemento restante
+                if(_arrAllProg.length==1){
+                    if(arrProgByFechas.length==1){
+                        objBuscar=_arrAllProg[0];
+                        
+                        //si el ultimo elemento es igual a uno del unico grupo
+                        if(objBuscar.dias==arrProgByFechas[0][0].dias &&  
+                            objBuscar.PrDiasIncluidos==arrProgByFechas[0][0].PrDiasIncluidos && 
+                            objBuscar.PrFechaFin==arrProgByFechas[0][0].PrFechaFin && 
+                            objBuscar.PrFechaInicio==arrProgByFechas[0][0].PrFechaInicio){
+                            arrProgByFechas[0].push(objBuscar);
+                        }else{
+                            arrProgByFechas.push(_arrAllProg);                
+                        }
+                    
+                    }else if(arrProgByFechas.length>1){
+                
+                        //buscar posicion
+                        j=0;i=0; let cen=0;
+                        while(j<arrProgByFechas.length && cen==0){
+                            objBuscar=_arrAllProg[0];
+        
+                            while(i<arrProgByFechas[j].length){
+                                //son iguales : nrodias, diasincluidos, fechainicio, fechafinal
+                                if( objBuscar.dias==arrProgByFechas[j][i].dias &&  
+                                    objBuscar.PrDiasIncluidos==arrProgByFechas[j][i].PrDiasIncluidos && 
+                                    objBuscar.PrFechaFin==arrProgByFechas[j][i].PrFechaFin && 
+                                    objBuscar.PrFechaInicio==arrProgByFechas[j][i].PrFechaInicio){
+                                        //guardo elemento donde corresponde
+                                        arrProgByFechas[j].push(objBuscar);
+                                        cen=1;
+                                        
+                                }else{
+                                    cen=0;
+                                }
+                                i++;
+                            }
+                            cen=0;
+                            i=0;
+                            j++;
+                        }
+                        if(cen==0){
+                            arrProgByFechas.push(_arrAllProg[0])
+                        }
+                    }
+                }else{
+
+                }
+    
                 return arrProgByFechas;
+
             }
             
-    //ABRIR 1ERA VENTANA MODAL(BOTON NUEVO)
-    NuevaProgCabecera(){
+            //funcion para verificar si hay un elemento diferente
+            /*funcValidarIgualdadElemento(arrData=[]){
+                let _arrData=arrData.join('');
+            }*/
+    funcBtnNewProgmBase(){
+        this.displayNewProgmBase=true;
+    }
+    
+    funcBtnNewSubProgm(){
         let añoActual=new Date().getFullYear().toString();
         this.modEdit=false;
         this.procNuevaProgrC();
@@ -592,7 +817,7 @@ export class ProgComponent implements OnInit{
                         this.CoSiId=this.objConfigSystem.CoSiId;
                         //console.log(this.objConfigSystem);
 
-                        this.displayNuevaProgramacion=true;        
+                        this.displayNuevaSubProg=true;        
                         this.progBDDetalle=[]; 
                         this.lengthProgDet=0; 
                         this.dtSelectDias=[];
@@ -639,71 +864,86 @@ export class ProgComponent implements OnInit{
     
     //1ERA VENTANA MODAL aqui recien se guarda la tabla MAESTRO en el REST 
     guardarProgCabecera(){
-        let progCab:any;  let fIni=this.progMaestro.PrFechaInicio; let fFin=this.progMaestro.PrFechaFin; let placas=[];
+        let progCab:any,
+            fIni=this.progMaestro.PrFechaInicio, 
+            fFin=this.progMaestro.PrFechaFin,
+            placas=[];
       
         //let placas=this.extrayendoPlacasBus(this.placas,'nuevaprog');
         
+        //todos son una sola empresa
         if(this.CoSiId==1){
             this.SuEmId=0;
         }
 
+
+        //buscando todas las placas
         this.placasservice.getAllPlacasBusByEmSuEm(this.emid, this.SuEmId).subscribe(
             data=>{
-                //console.log(data);
+                console.log(data);
                 placas=data;
-                let validez=this.validandoFechas(fIni,fFin); let validFechInit:boolean;                                
+                console.log(this.PrFechaInicio);
+                console.log(this.PrFechaFin);
+                console.log('CoSiId: '+this.CoSiId);
+                console.log(this.PrDiasIncluidos);
+                this.PrCantidadBuses=this.bAct;
+                this.dtSelectDias=this.funcDiasIncluidosSemana(this.PrDiasIncluidos);
+                let valTotalNumDiasProg=this.validandoFechas(this.PrFechaInicio,this.PrFechaFin), validFechInit:boolean;                                
+                console.log(this.diasSemana);
+                console.log(this.dtSelectDias);
 
                 //prgoramacion por subempresas
-                if(this.CoSiId==2){
-                    validFechInit=this.fechaInicioXDiasSemana(this.progMaestro.PrFechaInicio,this.diasSemana,this.dtSelectDias);
+                    if(this.CoSiId==2){
+                        
+                        validFechInit=this.fechaInicioXDiasSemana(this.PrFechaInicio,this.diasSemana,this.dtSelectDias);
                 //programacion por empresa
-                }else if(this.CoSiId==1){
-                    //el valor de validFechInit, no cambiara
-                    validFechInit=this.validarProgFechaInicio(this.progMaestro.PrFechaInicio, this.programacionMaestroArrayHTML, this.diasSemana);
-                }
+                    }else if(this.CoSiId==1){
+                        //el valor de validFechInit, no cambiara
+                        
+                        validFechInit=this.validarProgFechaInicio(this.PrFechaInicio, this.arrAllProgBase, this.diasSemana);
+                    }
 
-                //console.log(validFechInit);
-                
+                console.log("validFechInit: "+validFechInit);
+                console.log("valTotalNumDiasProg: "+valTotalNumDiasProg);
                 //validando el numero de dias de entre las fechas de la nueva programacion
-                if(validez==1){
-                    
-                        //validando fecha de inicio
-                        if(validFechInit==true){
-                            this.tipoProgramacion(placas,placas.length,this.tipoProg );//FORMA SORTEO
-            
-                            progCab = {
-                                PrId : this.progMaestro.PrId, //number
-                                EmId : this.emid, //number
-                                PrCantidadBuses : this.bAct, //number
-                                PrDescripcion : this.progMaestro.PrDescripcion, //string
-                                PrFecha : new Date(), //string
-                                PrFechaInicio : fecha(this.progMaestro.PrFechaInicio), //string
-                                PrFechaFin : fecha(this.progMaestro.PrFechaFin), //string
-                                PrTipo : Number(this.formaProg), //string escala pescadito
-                                PrAleatorio : Number(this.tipoProg), //string manual automatico(aleatorio)
-                                PrDiasIncluidos:this.diasIncluidos(this.dtSelectDias),
-                                UsId : this.userid, //number
-                                SuEmId:this.SuEmId,
-                                UsFechaReg : new Date() //string
-                            }
-            
-                            console.log(progCab);
-                            this.procSaveProgramacion(progCab);
-                            
-                            console.log(this.arrayPlacas);
-                            console.log(this.ordenSorteo);
-                            this.displayNuevaProgramacion=false; //cerrar 1era ventana
-                            this.displayProgramacionBase=true; //abrir 2da ventana
-                        }else if(validFechInit==false){
-                            this.displayErrorFechIngrFormUno=true;
-                            this.mensaje="La fecha de inicio ("+this.progMaestro.PrFechaInicio+
-                                        "), interfiere en la ultima programacion o no esta dentro de los dias de trabajo";
+                if(valTotalNumDiasProg==1){
+                    //validando fecha de inicio
+                    if(validFechInit==true){
+                        this.tipoProgramacion(placas,placas.length,this.tipoProg );//FORMA SORTEO
+        
+                        /*progCab = {
+                            PrId : this.progMaestro.PrId, //number
+                            EmId : this.emid, //number
+                            PrCantidadBuses : this.bAct, //number
+                            PrDescripcion : this.progMaestro.PrDescripcion, //string
+                            PrFecha : new Date(), //string
+                            PrFechaInicio : fecha(this.progMaestro.PrFechaInicio), //string
+                            PrFechaFin : fecha(this.progMaestro.PrFechaFin), //string
+                            PrTipo : Number(this.formaProg), //string escala pescadito
+                            PrAleatorio : Number(this.tipoProg), //string manual automatico(aleatorio)
+                            PrDiasIncluidos:this.diasIncluidos(this.dtSelectDias),
+                            UsId : this.userid, //number
+                            SuEmId:this.SuEmId,
+                            UsFechaReg : new Date() //string
                         }
+        
+                        console.log(progCab);
+                        this.procSaveProgramacion(progCab);*/
+                        
+                        console.log(this.arrayPlacas);
+                        console.log(this.ordenSorteo);
+                        this.displayNuevaSubProg=false; //cerrar 1era ventana
+                        this.displaySorteoProg=true; //abrir 2da ventana
+
+                    }else if(validFechInit==false){
+                        this.displayErrorFechIngrFormUno=true;
+                        this.mensaje="La fecha de inicio ("+this.PrFechaInicio+"), interfiere en la ultima programacion o no esta dentro de los dias de trabajo";
+                    }
                     
             
-                }else if(validez==0){
+                }else if(valTotalNumDiasProg==0){
                     this.displayErrorFechIngrFormUno=true;
-                    this.mensaje="Error en las fechas ingresada, es menos de 9 dias o mayor a 62 dias";
+                    this.mensaje="Error en las fechas ingresada, es menos de  7 dias o mayor a 62 dias";
         
                 }
             },
@@ -715,6 +955,20 @@ export class ProgComponent implements OnInit{
 
        
         
+    }
+
+    funcDiasIncluidosSemana(diasSemInclu:string){
+        let arrDias=diasSemInclu.split(","), arrDiasSemana=this.diasSemana;
+        let i:number=0, _arrDias=[];
+        while(i<arrDias.length){
+            if(arrDias[i]=="1"){
+                _arrDias.push({
+                    value:arrDiasSemana[i].value
+                });
+            }
+            i++;
+        }
+        return _arrDias;
     }
 
     aceptarErrorFechasValidas(){
@@ -860,7 +1114,7 @@ export class ProgComponent implements OnInit{
         let ndias = val2 - val1 + 1;
         console.log('ndias: '+ndias);
         //console.log(ndias);
-        if(ndias>9  &&  ndias<=62){
+        if(ndias>6  &&  ndias<=62){
             result = 1 ; //LAS FECHAS SON CORRECTAS
             return result;
         }else{
@@ -937,7 +1191,7 @@ export class ProgComponent implements OnInit{
         this.bAct = bAct;
         //this.bNAct= bNAct;
         this.resBusUnidades="  En Sorteo: "+this.bAct;
-        console.log(this.bAct);
+        console.log("buses activos: "+this.bAct);
     }
 
 
@@ -946,24 +1200,49 @@ export class ProgComponent implements OnInit{
     programacionSegundoModal(){
         let arrProgDetalle=[];
         //this.programacionArrayDetalleBD=[];
-        console.log(this.progMaestro.PrCantidadBuses);
-        console.log(this.ordenSorteo.length);
-        if(this.progMaestro.PrCantidadBuses!=this.ordenSorteo.length){
+        //console.log(this.PrCantidadBuses);
+        //console.log(this.ordenSorteo);
+
+        if(this.PrCantidadBuses!=this.ordenSorteo.length){
             this.mensaje="Error en las Placas Del Sorteo";
             this.displayFaltanPlacas=true;
-        }else if(this.progMaestro.PrCantidadBuses == this.ordenSorteo.length){
+
+        }else if(this.PrCantidadBuses == this.ordenSorteo.length){
+
             this.displayProgramacionBase=false; 
               
             this.placaEditarCelda=this.ordenSorteo[0].BuPlaca;
             this.progDetalle.PrDeFecha = new Date();
             
+            
+            //console.log(arrProgDetalle);
+            //this._programacionArrayDetalleBD=arrProgDetalle.slice(0);  // SEPARO ESTO PARA DESPUES CARGARLO CON LOS PRDEID
+            
+            
+            let objProg={
+                SuEmId: this.SuEmId,
+                PrId: 0,
+                PrFechaInicio: fecha(this.PrFechaInicio),
+                PrFechaFin: fecha(this.PrFechaFin),
+                PrDiasIncluidos: this.PrDiasIncluidos,
+                PrBaId: this.PrBaId,
+                UsFechaReg: new Date(),
+                UsId: this.userid,
+                EmId: this.emid,
+                PrDescripcion: this.PrDescripcion,
+                PrCantidadBuses: this.PrCantidadBuses,
+                PrFecha: new Date(),
+                PrTipo: this.tipoProg.toString(),
+                PrAleatorio: Number(this.formaProg)
+            };
+            //console.log(objProg);
             //CARGAR EN ARRAY DE OBJETOS PARA MANDAR A LA BD
             for(let i=0; i<this.ordenSorteo.length ; i++){
                 arrProgDetalle.push({
                     PrId : this.PrId,
                     BuId : this.ordenSorteo[i].BuId,
                     PrDeFecha: new Date(),
-                    PrDeBase: this.progDetalle.PrDeBase,
+                    PrDeBase: true,
                     PrDeOrden: i+1,
                     UsId: this.userid,
                     UsFechaReg: new Date(),
@@ -971,14 +1250,27 @@ export class ProgComponent implements OnInit{
                     PrDeId:0,
                     PrDeAsignadoTarjeta:0,
                     PrDeCountVuelta:0,
-                    PrDeHoraBase:0,
+                    PrDeHoraBase:0
                 });  
             } 
-            //console.log(arrProgDetalle);
-            this._programacionArrayDetalleBD=arrProgDetalle.slice(0);  // SEPARO ESTO PARA DESPUES CARGARLO CON LOS PRDEID
-            
-            this.guardarProgDetalle(arrProgDetalle, this.emid, this.PrId, true);
-
+            //this.procSaveProgramacion(objProg);
+            //this.guardarProgDetalle(arrProgDetalle, this.emid, this.PrId, true);
+            this.programacionService.saveProgramacion(objProg).subscribe(
+                data=>{
+                    this.PrId=data.PrId; 
+                    console.log(arrProgDetalle);
+                    console.log(this.emid);
+                    console.log(this.PrId);                                                                                 
+                    this.programacionService.saveProgramacionDetalle(arrProgDetalle,this.emid,this.PrId,true).subscribe(
+                        data=>{
+                            console.log(data);
+                            this.programacionService.getAllProgramacionByPrBa(this.PrBaId).subscribe(
+                                data=>{this.mgAllProgramByPrBa(data); this.displaySorteoProg=false;},error=>{}
+                            );  
+                        },error=>{}
+                    );                    
+                },error=>{},()=>{}
+            )
 
             for(let i=0; i<this.ordenSorteo.length; i++){
                 this.ordenSorteo[i].nro=i+1;
@@ -1052,7 +1344,7 @@ export class ProgComponent implements OnInit{
         if(hBaseValid==true && hIncrementoValid==true){    
             if(this.nroMiniBus<this.nroTotalMinibuses){         
                 let indicePorInicio=this.buscarPrimerHMS(this.ordenSorteo);
-                //console.log('indicePorInicio: '+indicePorInicio);
+                console.log('indicePorInicio: '+indicePorInicio);
                 //cargando hora base a la tabla 
                 if(indicePorInicio>0){
                     let horaBaseSgte=operSHoras(this.horaBase,this.horaIncremento); this.horaBase=horaBaseSgte;
@@ -1116,7 +1408,7 @@ export class ProgComponent implements OnInit{
                     if(realizar==true){
                         this.mensajeEspera="";
                         this.displayMensajeEspera= false; 
-                        this.displayHoraBase=true;
+                        this.displayFormHorasBase=true;
                     }else if(realizar==false){
                         this.mensajeEspera="Error al iniciar la Programacion";
                         this.displayAceptarProgNueva= true; 
@@ -1136,7 +1428,7 @@ export class ProgComponent implements OnInit{
     //cargar tabla hora base
     tablahorabase(arrplacaSorteo=[]){
         this.ordenSorteo=[];
-        this.displayHoraBase=false;
+        this.displayFormHorasBase=false;
         this.getallprogramaciondetallebyprid(this.PrId, arrplacaSorteo); 
         //this.guardarProgDetalle(arrplacaSorteo, this.emid, this.PrId, true);
     }
@@ -1168,23 +1460,23 @@ export class ProgComponent implements OnInit{
     }
     
     //CERRAR PROG 1ER MODAL
-    cancelNewProgramacion(){
-         this.displayNuevaProgramacion=false;
+    cancelNuevaSubProg(){
+         this.displayNuevaSubProg=false;
          this.progMaestro={};
          
     }
 
     //CERRAR 2 MODALES (1ER Y 2DO MODAL ) cerrar ventanas new programacion (2do Modal)
     cancelarProgBaseSegundoModal(){
-        this.displayProgramacionBase = false; //1era MODAL
-        this.displayNuevaProgramacion=false;  //2da MODAL
+        this.displayNuevaSubProg=false; //1era MODAL
+        this.displaySorteoProg=false;  //2da MODAL
         
         //BORRAR ULTIMA PROGRAMACION SEMI CREADA
-        this.procEliminarProgr(this.progMaestro.PrId);
+        //this.procEliminarProgr(this.progMaestro.PrId);
     }
 
     cancelarProgBaseTercerModal(){
-        this.displayHoraBase=false;
+        this.displayFormHorasBase=false;
         this.horaBase="";
         this.nroMiniBus=0;
         this.nroTotalMinibuses=-1;
@@ -1196,7 +1488,7 @@ export class ProgComponent implements OnInit{
     mostrargrillaProgramacionMaestro(arrProg=[]){
         
         let arrAllProgrm=[];
-        //progRest es la variable q almacena las programaciones recuperadas desde el Rest de internet
+      
         for(let prog of arrProg){
             arrAllProgrm.push({
                 nro:0,
@@ -1219,6 +1511,7 @@ export class ProgComponent implements OnInit{
         }
 
         arrAllProgrm=this.arrAllProgramacion(arrAllProgrm);
+
         this.programacionMaestroArrayHTML=arrAllProgrm.slice(0);
     }
 
@@ -1314,25 +1607,50 @@ export class ProgComponent implements OnInit{
         
     }
 
-    //seleccionar fila de la tabla
-    onRowSelectMaestro(event){
+    onRowSelArrAllProgBase(event){    
+        this.PrFechaInicio=cCeroFechaForEditar(slash_posFecha(event.data._PrBaFechaInicio));
+        this.PrFechaFin=cCeroFechaForEditar(slash_posFecha(event.data._PrBaFechaFin));
+        this.PrDiasIncluidos=event.data.PrDiasIncluidos;
+        this.PrBaId=event.data.PrBaId;
+        this.PrDescripcion=event.data.PrBaDescripcion;
+        this.PrFecha=event.data.PrBaFecha;
+        this.programacionService.getAllProgramacionByPrBa(this.PrBaId).subscribe(
+            data=>{
+                //console.log(data);
+                this.mgAllProgramByPrBa(data);
+                
+            },error=>{
+
+            }
+        );
+      
+    }
+
+    //seleccionar fila de la tabla - mostrar la programacion
+    onRowSelProgram(event){
         let fi, ff , prId , PrDiasIncluidosNumber:string;
 
-        prId = event.data.prId;  this.PrCantidadBuses = event.data.PrCantidadBuses; 
-        PrDiasIncluidosNumber=event.data.PrDiasIncluidosNumber; this.dias = event.data.dias; 
+        prId = event.data.prId;  
+        this.PrCantidadBuses = event.data.PrCantidadBuses; 
+        PrDiasIncluidosNumber=event.data.PrDiasIncluidosNumber; //no se para que es :s
+        this.dias = event.data.dias; //total dias programacion
         this.PrFechaInicio=formatFech(event.data.PrFechaInicio);
         this.PrFechaFin=formatFech(event.data.PrFechaFin);
 
         this.modo='tablavista';
         
-        fi = this.formatoCal(event.data.PrFechaInicio);  ff = this.formatoCal(event.data.PrFechaFin);
+        fi = this.formatoCal(event.data.PrFechaInicio);  
+        ff = this.formatoCal(event.data.PrFechaFin);
         
         this.getAllPlacasBusByEmSuEm(this.emid,0);
         //this.calendarioProg(fi,ff,PrDiasIncluidosNumber);
         
 
         //LIMPIANDO VARIABLES   this.columnas : COLUMNAS    this._columnas : ITEMS COLUMNAS DATATABLE
-        this.columnas=[]; this._columnas=[]; this.progBDDetalle=[]; this.arrayPlacas=[];
+        this.columnas=[]; 
+        this._columnas=[]; 
+        this.progBDDetalle=[]; 
+        this.arrayPlacas=[];
 
         //CONSULTA PROGRAMACION DETALLE
         this.programacionService.getAllProgramacionDetalleByPrId(prId).subscribe(
@@ -1577,25 +1895,27 @@ export class ProgComponent implements OnInit{
     }
 
     //BOTON ELIMINAR REGISTRO 
-    eliminarRegistroGrilla(_PrId : number){
-        //console.log("eliminar "+_PrId);
+    dtDelRegProgram(_PrId : number){
         this.mensaje = "¿Esta Seguro de Eliminar Este Registro de la Tabla?";
-        this.displayConfEliminarCabecera = true
-        this.iDReg = _PrId;
+        this.displayConfDelProgram = true
+        //this.iDReg = _PrId;
+        this.PrId=_PrId;
     }
 
     //PROCEDIMIENTO ALMACENADO PARA ELIMINAR
-    borrarRegistro(){
-         this.programacionService.deleteProgramacionByid(this.iDReg).subscribe(
-            realizar => {
-                            this.getAllProgramacionByEm(this.emid,this.anio); 
-                            this.iDReg=0;
-                            
-                            this.displayConfEliminarCabecera=false;
-                        },
-            err => {this.mensaje="No puede borrar esta programacion, esta siendo utilizada";
+    borrarRegProgBase(){
+         this.programacionService.deleteProgramacionByid(this.PrId).subscribe(
+            realizar => {   //this.getAllProgramacionBaseByEm(this.emid,this.anio); 
+                            this.programacionService.getAllProgramacionByPrBa(this.PrBaId).subscribe(
+                                data=>{
+                                    this.mgAllProgramByPrBa(data);
+                                    this.iDReg=0;
+                                    this.displayConfDelProgram=false;
+                                },error=>{}
+                            );                                                    
+                },err => {this.mensaje="No puede borrar esta programacion, esta siendo utilizada";
                     this.displayAvisoNoPuedeBorrarProg=true;    
-                    this.displayConfEliminarCabecera=false;
+                    this.displayConfDelProgBase=false;
                     console.log(err);}
          );
     }
@@ -2020,7 +2340,9 @@ export class ProgComponent implements OnInit{
         return resultado;
     }
 
-    /* fecha inicio dentro de dias de la semana */
+    /* fecha inicio dentro de dias de la semana 
+                            (yyyy-mm-dd)    1,2,3,4,5,6,0    
+    */
     fechaInicioXDiasSemana(fechaInicio:string,arrDiasSemana=[],dtSelectDias=[]):boolean{
         //console.log(dtSelectDias);  console.log(fecha(fechaInicio).getDay()); console.log(arrDiasSemana);
         let i:number=0, cen:number=0,  dia=fecha(fechaInicio).getDay(), result:boolean;
@@ -2039,5 +2361,202 @@ export class ProgComponent implements OnInit{
         return result;
     }
 
-    
+    /* formulario 1 
+        nuevo CREAR PROGRAMACION BASE */
+        // btn Next
+        private funcFormOneNextProgBase():void{
+            this.PrBaDiasIncluidos=this.diasIncluidos(this.dtSelectDias)
+            this.displayFormHorasBase=true;
+
+            let calendar=this.funcCalendarioNumerico(this.PrBaFechaInicio,this.PrBaFechaFin), _calendar=[], arrCalSubEmp=[];
+            for(let i=0; i<calendar.length; i++){
+                _calendar.push(_fecha1(calendar[i]));
+            }
+
+            this.empSubEmpService.getallsubempresasbyemid(this.emid).subscribe(
+                data=>{
+                    console.log(data);
+                    let arrSubEmp=data, longArrSubEmp=data.length;
+
+                    //iniciando array de fechas + sorteo aleatorio
+                    for(let i=0; i<_calendar.length; i++){
+                        this.arrAllSubEmp.push({
+                            fecha:_calendar[i],
+                            arrSubEmps:[],
+                            Estado:'Si'
+                        })
+                    }
+
+                    let j=0, i=0,randomNum=[];
+                    while(i<this.arrAllSubEmp.length){
+                        randomNum=numRandom(longArrSubEmp)       
+                        while(j<longArrSubEmp){                                                  
+                            this.arrAllSubEmp[i].arrSubEmps.push({  
+                                                                    Id:j, 
+                                                                    SuEmId:arrSubEmp[j].SuEmId, 
+                                                                    SuEmRSocial:arrSubEmp[j].SuEmRSocial, 
+                                                                    SuEmSorteo:randomNum[j] 
+                                                                });     
+                            j++;
+                        }
+                        j=0;
+                        i++;
+                    }
+
+                    this.placasservice.getAllPlacasBusByEmSuEm(this.emid,0).subscribe(
+                            data=>{
+                                this.nroTotalMinibuses=data.length
+                                for(let i=0; i<data.length;i++){
+                                    this.ordenSorteo.push({
+                                        nro:i+1,
+                                        HoraBase:'HH:MM:SS'
+                                    })
+                                }
+                            });
+                    
+
+                });
+        
+        }
+        // btn cancel
+        private funcFormOneCancelProgBase():void{
+            this.displayNewProgmBase=false;
+        }
+
+    /* formulario 2 agregando horas base */
+        // btn Next
+        private funcFormTwoNextProgBaseHb():void{
+            this.displayOrdSubEmpBaseRegDiario=true;
+            //console.log(this.arrAllSubEmp);
+            //console.log(this.ordenSorteo);
+            let arrHB=[], PrBaHoraBase:string;
+            for(let i=0;i<this.ordenSorteo.length;i++){ 
+                arrHB.push(this.ordenSorteo[i].HoraBase);
+            }
+            PrBaHoraBase=arrHB.join(',');
+            console.log(PrBaHoraBase);
+            this.PrBaHoraBase=PrBaHoraBase
+            this.arrAllSubEmpByDays=this.arrAllSubEmp[0].arrSubEmps;
+        }
+
+        // btn cancel
+        private funcFormTwoCancelProgBaseHb():void{
+            this.displayOrdSubEmpBaseRegDiario=false;
+        }
+
+    /* formulario 3
+        orden de las subempresas - generar todos los registros diarios
+    */
+        funcBtnOkOrderSubEmpAperRegDiario(){
+            let objProgBase={
+                PrBaId: this.PrBaId,
+                UsFechaReg: new Date(),
+                UsId: this.userid,
+                EmId: this.emid,
+                PrBaDescripcion: this.PrBaDescripcion,
+                PrBaFecha: new Date(),
+                PrBaFechaInicio: fecha(this.PrBaFechaInicio),
+                PrBaFechaFin: fecha(this.PrBaFechaFin),
+                PrBaDiasIncluidos: this.PrBaDiasIncluidos,
+                PrBaHoraBase: this.PrBaHoraBase
+            }
+            this.progBaseService.saveProgBase(objProgBase).subscribe(
+                data=>{
+                    let arrObjInitRegDays=[], arrHoraBase=[];
+                    //arrHoraBase=this.funcGetHoraBase(this.PrBaHoraBase);
+                   
+                    //tomar el id de data para crear un array de objetos para registro diario
+                    for(let i=0; i<this.arrAllSubEmp.length;i++){
+                        arrObjInitRegDays.push({
+                            ReDiFeha: fecha(guion_posFecha(cCeroFechaForEditar(this.arrAllSubEmp[i].fecha))), //sacar del array del combo
+                            ReDiOrdenSubEmpresa: this.funcGetOrderArrProgSubEmp(this.arrAllSubEmp,i),//sacar del array del combo
+                            ReDiTotalVuelta: this.CoNroMaxVueltas,
+                            ReDiId: 0,
+                            PrBaId: data.PrBaId,
+                            UsFechaReg: new Date(),
+                            UsId: this.userid,
+                            EmId: this.emid,
+                            ReDiHoraInicioDiario:hora("04:28:00") //este campo se tiene que eliminar ya que este es la primera salida del hora base
+                        });
+                    }
+                    console.log(arrObjInitRegDays);
+                    this.regDiarioService.generarofprogramacionbase(arrObjInitRegDays).subscribe(
+                        data=>{console.log(data);}
+                    );
+                },error=>{
+                },()=>{}
+            );   
+        }
+        /*funcGetHoraBase(PrBaHoraBase:string){
+            let _PrBaHoraBase=PrBaHoraBase.split(','),__PrBaHoraBase:any[]=[];
+            
+            for(let i=0;i<_PrBaHoraBase.length;i++){
+                __PrBaHoraBase.push(hora(_PrBaHoraBase[i]));
+            }
+            return __PrBaHoraBase;
+        }*/
+        //sacar orden de subempresas de dias de programacion
+        funcGetOrderArrProgSubEmp(arrAllSubEmp=[],pos:number):string{
+            let orderSubEmp:string,
+                longArrSuEmId=arrAllSubEmp[pos].arrSubEmps.length, 
+                arrSubEmp=[], arrAux=[],aux:number, _arrSorteo=[];
+                
+                for(let i=0; i<longArrSuEmId; i++){ 
+                    _arrSorteo.push(arrAllSubEmp[pos].arrSubEmps[i].SuEmSorteo);
+                }
+
+                //ordenar sorteo
+                for(let i=0; i<longArrSuEmId;i++){
+                    for(let j=0; j<longArrSuEmId;j++){
+                        if(_arrSorteo[j]>_arrSorteo[j+1]){
+                            aux=_arrSorteo[j];
+                            _arrSorteo[j]=_arrSorteo[j+1];
+                            _arrSorteo[j+1]=aux;
+                        }
+                    }
+                }
+                //ordenar las subempresas por el sorteo(ordenado)  - algoritmo busqueda
+                let i=0,j=0,cen=0;
+                while(i<_arrSorteo.length){
+                    while(j<longArrSuEmId&&cen==0){
+                        if(_arrSorteo[i]==arrAllSubEmp[pos].arrSubEmps[j].SuEmSorteo){
+                            _arrSorteo[i]=arrAllSubEmp[pos].arrSubEmps[j].SuEmId;
+                            cen=1;
+                        }else{
+                            cen=0; j++;
+                        }
+                    }
+                    cen=0;
+                    i++;
+                    j=0;
+                }
+
+                orderSubEmp=_arrSorteo.join(',');
+               
+            return orderSubEmp;
+        }
+
+        funcBtnCancelOrderSubEmpAperRegDiario(){
+
+        }
+        funcCboFechProg(){
+
+        }
+        onEditCompleteFieldOrderSubEmp(event){
+            console.log('cathy');
+                console.log(event);
+        }
+        //cuando cancelo con escape
+        onEditCancelFieldOrderSubEmp(event){
+                console.log('linares');
+                console.log(event);
+        }
+        //cuando hago clic sobre la celda
+        onEditInitFieldOrderSubEmp(event){
+                console.log('rojas');
+                console.log(event);
+        }
+
+
+
 }

@@ -80,8 +80,12 @@ export class RegDiarioService{
                 .catch((error:any) => Observable.throw(error.json().error || 'server error') );
         }
 
-       
-
+       ///registrodiario/generarofprogramacionbase
+       generarofprogramacionbase(arrObjAllRegDays:Object[]){
+            return this.http.post(this.baseUrl+ "generarofprogramacionbase/", arrObjAllRegDays) // ...using post request
+							.map((res:Response) => res.json()) // ...and calling .json() on the response to return data
+							.catch((error:any) => Observable.throw(error.json().error || 'Server error')); //
+       }
 //ERROR
     handleError (error:any){
         let errorMsg = error.message;

@@ -84,6 +84,7 @@ import {DatosCompartidosService} from './service/dataComunicationApp.service';
         import {servIncidenciaService} from './service/incidencia.service';
         import {VistaEnLineaService} from './service/vistaEnLinea.service';
         import {TrackerByPlacaService} from './service/trackerByPlaca.service';
+        import {ProgBaseService} from './service/programacionBase.service';
     //SERVICE REPORTES
 
 
@@ -185,6 +186,7 @@ import {DatosCompartidosService} from './service/dataComunicationApp.service';
       UserSystemService,
       GlobalVars,  /* CLASS GLOBAL :s */
       DatosCompartidosService,
+      ProgBaseService,
       //classDataUsuario,
       servAlertNotifService,
       servIncidenciaService,

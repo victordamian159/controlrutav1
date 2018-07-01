@@ -24,20 +24,39 @@ tr:nth-child(even){background-color: #f2f2f2; width: 100%;}
         .pieFormEditNombProg{height: 40px; width: 100%;}
 
     /*crear programacion*/
-        /*form 1*/
-        .contFormMNPUno{width: 700px; height: 400px;}
-        .bodyFormMNPUno{width: 100%; height: 360px;}
-        .pieFormMNPUno{width: 100%; height: 40px;}
+        /*programacion base
+        .contFormProgDiasInc{width:450px; height: 400px;}
+        .bodyFormProgDiasInc{width: 100%; height: 360px;}
+        .pieFormProgDiasInc{width: 100%; height: 40px;}*/
+
+    /*PROGRAMACION BASE*/
+        /*1er formulario programacion base*/
+        .contFormProgBase{width:400px; height: 400px;}
+        .bodyFormProgBase{height: 360px; width: 100%; }
+        .pieFormProgBase{height: 40px; width: 100%; }
+
+        /*estilos form hora base */
+        .contFormHoraBase{height:400px; width: 400px;}
+        .bodyFormHoraBase{height: 360px; width: 100%;}
+        .pieFormHoraBase{height: 40px; width: 100%;}
+
+        /*form registro diario*/
+        .contFormMRegDiaOrdSubEmp{width:400px; height: 400px;}
+        .bodyFormMRegDiaOrdSubEmp{width: 100%; height: 360px; }
+        .pieFormMRegDiaOrdSubEmp{width: 100%; height: 40px;}
+
+    /*NUEVA PROGRAMACION*/
+        /*form 1 nueva programacion*/
+        .contFormNewProgInitUno{width: 300px; height: 400px; overflow: hidden;}
+        .bodyFormNewProgInitUno{width: 100%; height: 360px;}
+        .pieFormNewProgInitUno{width: 100%; height: 40px;}
 
         /*form 2*/
-        .contFormMNPDos{width: 400px; height: 400px;}
-        .bodyFormMNPDos{width: 100%; height: 360px;}
-        .pieFormMNPDos{width: 100%; height: 40px;}
+        .contFormNewProgSorteoDos{width: 300px; height: 400px;}
+        .bodyFormNewProgSorteoDos{width: 100%; height: 360px;}
+        .pieFormNewProgSorteoDos{width: 100%; height: 40px;}
 
-        /*estilos form hora base (form modal 3)*/
-        .contFormHoraBase{height:500px; width: 400px;}
-        .bodyFormHoraBase{height: 450px; width: 100%;}
-        .pieFormHoraBase{height: 40px; width: 100%;}
+        
 
     /*estilos mensaje de usuario*/
         .conMMjsUser{  height: 100px; width: 390px;}
