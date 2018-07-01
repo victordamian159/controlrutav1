@@ -1235,7 +1235,7 @@ export class ProgComponent implements OnInit{
                 PrTipo: this.tipoProg.toString(),
                 PrAleatorio: Number(this.formaProg)
             };
-            //console.log(objProg);
+            console.log(objProg);
             //CARGAR EN ARRAY DE OBJETOS PARA MANDAR A LA BD
              
             //this.procSaveProgramacion(objProg);
@@ -1260,9 +1260,9 @@ export class ProgComponent implements OnInit{
                             PrDeHoraBase:0
                         });  
                     }
-                    console.log(arrProgDetalle);
+                    /*console.log(arrProgDetalle);
                     console.log(this.emid);
-                    console.log(this.PrId);                                                                                 
+                    console.log(this.PrId);   */                                                                              
                     this.programacionService.saveProgramacionDetalle(arrProgDetalle,this.emid,this.PrId,true).subscribe(
                         data=>{
                             console.log(data);

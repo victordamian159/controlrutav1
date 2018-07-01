@@ -1,26 +1,22 @@
 <div class="contenedor">
     <div class="row">
         <!--TABLA -->
-        <div class="col-xl-4 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12">
             <label>Manejo de Ruta</label>
-    
-            <div class="row">
-                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="form-group">
-                    <input class="form-control" placeholder="Buscar..." type="text" #filtroGlobal />
+            <div id="contData">
+                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">     
+                    <div class="row justify-content-left">     
+                                                  
+                        <input placeholder="Buscar..." 
+                        type="text" #filtroGlobal />
+                
+                        <button class="btn_modal" type="button" (click)="nuevaRutaMaestro()" 
+                        pButton icon="fa-file-text-o" label="Nueva Ruta"></button>
+                    </div>
+                    <br>
                 </div>
-                </div>
-                <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="form-group">
-                    <button class="btn_modal" type="button" (click)="nuevaRutaMaestro()" 
-                    pButton icon="fa-file-text-o" label="Nueva Ruta"></button>
-                </div>
-                </div>
-            </div>
-    
-            <div class="row">
-                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="table table-responsive">
+  
+                <div class="table table-responsive">
                     <p-dataTable [value]="rutasPresentar"  [globalFilter]="filtroGlobal" 
                         [rows]="4" [paginator]="true"  
                         selectionMode="single" emptyMessage="Lista vacia" (onRowSelect)="onRowSelect($event)"> 
@@ -36,15 +32,13 @@
                             <p-column field="RuFechaCreacion" header="Fundacion" [style]="{'width':'8em','text-align':'center'}" ></p-column>
                             <!--<div class="ui-helper-clearfix" style="width:100%"></div>-->
                     </p-dataTable>
-                        </div>
                 </div>
+                
             </div>
         </div>
 
-        <!--MAPA-->
-        <div class="col-xl-8 col-md-12 col-sm-12 col-xs-12">
 
-            <!--MAPA-->
+        <div class="col-xl-8 col-md-12 col-sm-12 col-xs-12">
             <div id="contMapa">
                 <p-gmap 
                     #gmap
@@ -56,12 +50,9 @@
                     (onOverlayDragEnd)="handleDragEnd($event)">
                 </p-gmap>   
             </div>
-           
-            <!--BOTONES-->
             <div id="pieMapa">
                 <div class="row justify-content-center">
-                    <div class="col-xl-2 col-md-2 col-sm-6 col-xs-12" >
-                        
+                    
                         <button class="btn_mapa" [hidden]="actBtnCancel"  pButton  label="Cancelar" 
                                 icon="fa-close" (click)="funcBtnMCancel()" [disabled]="disButCancelar"
                         ></button>
@@ -73,29 +64,25 @@
                         <button class="btn_mapa" [hidden]="actBtnNuevo" pButton  label="Nuevo" 
                                 icon="fa-file-o" (click)="nuevaRutaDetalle()" [disabled]="disButNuevaRuta"
                         ></button>
-                    </div>
+                    
 
-                    <div class="col-xl-2 col-md-2 col-sm-6 col-xs-12" >
+                        <!---->
                         <button class="btn_mapa" [hidden]="actBtnGuardar"  pButton  label="Guardar"
                                 icon="fa-save" (click)="guardarPuntosRutaDetalle()" [disabled]="disButSubirRuta"
                         ></button>
-                    </div>
-
-                    <div class="col-xl-2 col-md-2 col-sm-6 col-xs-12" >
+                        <!---->
                         <button class="btn_mapa" [hidden]="actBtnAtras"  pButton  label="Atras" 
                                 icon="fa-mail-reply" (click)="deshacer()" [disabled]="disButDeshacer"
                         ></button>
-                    </div>
-
-                    <div class="col-xl-2 col-md-2 col-sm-6 col-xs-12" >
+                        <!---->
                         <button class="btn_mapa" [hidden]="actBtnBorrar" pButton label="Borrar" 
                                 icon="fa-eraser" (click)="clear()"[disabled]="disButBorrar"
                         ></button>                    
-                    </div>
+                    
 
                 </div>
             </div>
-
+           
         </div>  
     </div>
 </div>
