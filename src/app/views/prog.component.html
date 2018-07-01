@@ -23,7 +23,7 @@
                         <p-column styleClass="col-button" [style]="{'width':'3em'}">
                             <template let-col let-progrRowMaestro="rowData" pTemplate="body">
                                 <!--<button type="button" pButton id="btnTable" (click)="editarCabecera(progrRowMaestro)" icon="fa-pencil-square-o" ></button>-->
-                                <button type="button" pButton id="btnTable" (click)="eliminarRegistroGrilla(progrRowMaestro.PrBaId)" icon="fa-trash" ></button>
+                                <button type="button" pButton id="btnTable" (click)="funcBtnDTProgm(progrRowMaestro.PrBaId)" icon="fa-trash" ></button>
                             </template>
                         </p-column> 
                         <p-column field="Nro" header="N°"  [style]="{'width':'4em','text-align':'center'}"></p-column>

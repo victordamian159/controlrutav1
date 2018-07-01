@@ -1237,27 +1237,29 @@ export class ProgComponent implements OnInit{
             };
             //console.log(objProg);
             //CARGAR EN ARRAY DE OBJETOS PARA MANDAR A LA BD
-            for(let i=0; i<this.ordenSorteo.length ; i++){
-                arrProgDetalle.push({
-                    PrId : this.PrId,
-                    BuId : this.ordenSorteo[i].BuId,
-                    PrDeFecha: new Date(),
-                    PrDeBase: true,
-                    PrDeOrden: i+1,
-                    UsId: this.userid,
-                    UsFechaReg: new Date(),
-
-                    PrDeId:0,
-                    PrDeAsignadoTarjeta:0,
-                    PrDeCountVuelta:0,
-                    PrDeHoraBase:0
-                });  
-            } 
+             
             //this.procSaveProgramacion(objProg);
             //this.guardarProgDetalle(arrProgDetalle, this.emid, this.PrId, true);
             this.programacionService.saveProgramacion(objProg).subscribe(
                 data=>{
+                    console.log(data);
                     this.PrId=data.PrId; 
+                    for(let i=0; i<this.ordenSorteo.length ; i++){
+                        arrProgDetalle.push({
+                            PrId : this.PrId,
+                            BuId : this.ordenSorteo[i].BuId,
+                            PrDeFecha: new Date(),
+                            PrDeBase: true,
+                            PrDeOrden: i+1,
+                            UsId: this.userid,
+                            UsFechaReg: new Date(),
+        
+                            PrDeId:0,
+                            PrDeAsignadoTarjeta:0,
+                            PrDeCountVuelta:0,
+                            PrDeHoraBase:0
+                        });  
+                    }
                     console.log(arrProgDetalle);
                     console.log(this.emid);
                     console.log(this.PrId);                                                                                 
@@ -2551,7 +2553,16 @@ export class ProgComponent implements OnInit{
                 console.log('rojas');
                 console.log(event);
         }
-
+        funcBtnDTProgm(PrBaId:number){
+            console.log(PrBaId); 
+            this.progBaseService.deleteProgBaseById(PrBaId).subscribe(
+                data=>{
+                    this.progBaseService.getAllProgramacionBaseByEm(this.emid,this.anio).subscribe(
+                        data=>{this.mgAllProgramacionBaseByEm(data);}
+                    );
+                }
+            );
+        }
 
 
 }
