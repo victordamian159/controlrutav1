@@ -1470,9 +1470,6 @@ export class ProgComponent implements OnInit{
     cancelarProgBaseSegundoModal(){
         this.displayNuevaSubProg=false; //1era MODAL
         this.displaySorteoProg=false;  //2da MODAL
-        
-        //BORRAR ULTIMA PROGRAMACION SEMI CREADA
-        //this.procEliminarProgr(this.progMaestro.PrId);
     }
 
     cancelarProgBaseTercerModal(){
@@ -1480,8 +1477,6 @@ export class ProgComponent implements OnInit{
         this.horaBase="";
         this.nroMiniBus=0;
         this.nroTotalMinibuses=-1;
-        //BORRAR ULTIMA PROGRAMACION SEMI CREADA
-        this.procEliminarProgr(this.progMaestro.PrId);
     }
 
     //datos para grilla HTML Maestro (consulta especialmente hecha para mostrar en el res)
