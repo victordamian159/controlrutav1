@@ -107,6 +107,14 @@ export class ProgramacionService{
 						.catch((error:any) => Observable.throw(error.json().error || 'Server error')); 
 	}
 
+    getallprogramaciondetallebyprbafecha(PrBaid:number, prDeFecha:string){
+        return this.http        
+            .get(this.baseUrl2+"getallprogramaciondetallebyprbafecha?prBaId="+PrBaid+"&prDeFecha="+prDeFecha)
+            .map((r:Response) => r.json())
+            .catch(this.handleError);
+
+    }
+
 //ERROR
     handleError (error:any){
         let errorMsg = error.message;

@@ -92,17 +92,15 @@
                         <div class="row">                                                          
                             <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-group">
-                                    <!--<label  class="control-label">Descripcion:</label>-->
-                                    <input class="form-control" type="text" 
-                                            [(ngModel)]="PrBaDescripcion" 
-                                            maxlength="30" placeholder="descripcion"
-                                            required #valPrBaDes="ngModel" />
+                                    <label  class="control-label">Descripcion:</label>
+                                    <input class="form-control" type="text" [(ngModel)]="PrBaDescripcion" 
+                                            maxlength="30" required #valPrBaDes="ngModel" />
                                     <span *ngIf="!valPrBaDes.valid && valPrBaDes.touched"  >   
                                         <div id="validation" [hidden]="!valPrBaDes.errors.required"> Obligatorio </div>
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="col-xl-6 col-md-6 col-sm-6 col-xs-6">
                                 <div class="form-group">
                                     <label  class="control-label">Del:</label>
                                     <input class="form-control" name="finicio"  type="date" 
@@ -114,7 +112,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-xl-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="col-xl-6 col-md-6 col-sm-6 col-xs-6">
                                 <div class="form-group">
                                     <label  class="control-label" >Hasta:</label>
                                     <input class="form-control" name="ffinal"  type="date" 
@@ -262,7 +260,7 @@
                         <div class="row justify-content-between">
                             <div class="col-xl-7 col-md-6 col-sm-12 col-xs-12">
                                 <div class="form-group">
-                                        <label>Fechas:</label>  
+                                        <!--<label>Fechas:</label>  -->
                                     <select class="form-control" (change)="funcCboFechProg($event)">
                                         <option *ngFor="let SubEmp of arrAllSubEmp">{{SubEmp.fecha}} - {{SubEmp.Estado}}</option>
                                     </select>
@@ -270,15 +268,14 @@
                             </div>
                         
                             <div class="col-xl-4 col-md-4 col-sm-12 col-xs-12">
-                                <br>
                                 <button class="btn_modal" type="text" pButton icon="fa-check" 
                                 (click)="aceptarOrderSubEmp();" label="Aceptar" [disabled]="!disBtnSaveAllSuEm"
                                 ></button>
                             </div>
                             
                         </div>
-                        <!--(onRowSelect)="onRowSelArrOrderSubEmp($event)" 
-                            (onRowUnselect)="onRowUnSelArrOrderSubEmp($event)"-->
+                       
+                        <br>
                         <p-dataTable [value]="arrAllSubEmpByDays" scrollable="true" 
                             (onEditComplete)="onEditCompleteFieldOrderSubEmp($event)"
                             (onEditCancel)="onEditCancelFieldOrderSubEmp($event)"
@@ -299,12 +296,12 @@
                     <div class="row justify-content-end">
                         <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                             <!--[disabled]="!disBtnSaveAllSuEm"-->
-                            <button class="btn_modal" type="text" pButton icon="fa-check" 
-                            (click)="funcBtnOkOrderSubEmpAperRegDiario();" label="Aceptar" 
+                            <button class="btn_modal" type="text" pButton icon="fa-save" 
+                            (click)="funcBtnOkOrderSubEmpAperRegDiario();" label="Guardar" 
                             ></button>
                         </div>
                         <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
-                            <button class="btn_modal" type="text" pButton icon="fa-check" 
+                            <button class="btn_modal" type="text" pButton icon="fa-close" 
                             (click)="funcBtnCancelOrderSubEmpAperRegDiario();" label="Cancelar"></button>
                         </div>
                     </div>

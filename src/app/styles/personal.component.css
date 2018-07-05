@@ -20,14 +20,17 @@
         
         .pieModMjs{height: 40px; width: 100%;}
 /* RESPONSIVE */
-    /*ipad PRO*/
-    @media(max-width:1100px){ 
+    /*lenovo tab 7 essential vertical*/
+    @media(max-width:600px){
+      /* desktop style form ingresar nueva persona*/
+      .contFormNPersona{ height: 590px; width: 400px;}
+      .bodyFormNPersona{height: 510px; width: 100%; overflow-x: hidden; overflow-y: auto;}
+      .pieFormNPersona{ height: 80px; width: 100%;}
       
-    }
-    
-    /* ipad*/
-    @media(max-width:600px){ 
-      
+  /* estilo mensajes configuracion modal*/
+      .contModMjs{height: 130px; width: 300px;}
+      .bodyModMjs{height: 50px; width: 100%; text-align:left}
+      .pieModMjs{height: 80px; width: 100%;}
     }
 
     /* iphone 6 plus*/

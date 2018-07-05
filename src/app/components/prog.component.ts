@@ -434,7 +434,7 @@ export class ProgComponent implements OnInit{
             /*consulta programaciones base */
             getAllProgramacionBaseByEm(EmId:number,anio:number){
                 this.progBaseService.getAllProgramacionBaseByEm(EmId,anio).subscribe(
-                    data=>{
+                    data=>{console.log(data);
                         this.mgAllProgramacionBaseByEm(data);
                         let añoActual=new Date().getFullYear().toString();             
                         this.configService.getAllConfiguraByEmPeriodo(this.emid,añoActual).subscribe(
@@ -1611,62 +1611,68 @@ export class ProgComponent implements OnInit{
         this.PrBaId=event.data.PrBaId;
         this.PrDescripcion=event.data.PrBaDescripcion;
         this.PrFecha=event.data.PrBaFecha;
+        this.dias=event.data.dias;
+
         this.programacionService.getAllProgramacionByPrBa(this.PrBaId).subscribe(
             data=>{
                 //console.log(data);
                 this.mgAllProgramByPrBa(data);
-                
-            },error=>{
-
-            }
+            },error=>{}
         );
       
     }
 
     //seleccionar fila de la tabla - mostrar la programacion
     onRowSelProgram(event){
-        let fi, ff , prId , PrDiasIncluidosNumber:string;
 
-        prId = event.data.prId;  
-        this.PrCantidadBuses = event.data.PrCantidadBuses; 
-        PrDiasIncluidosNumber=event.data.PrDiasIncluidosNumber; //no se para que es :s
-        this.dias = event.data.dias; //total dias programacion
-        this.PrFechaInicio=formatFech(event.data.PrFechaInicio);
-        this.PrFechaFin=formatFech(event.data.PrFechaFin);
+        console.log(event.data);
+        let PrId=event.data.PrId;
+        this.PrCantidadBuses=event.data.PrCantidadBuses;
+        /*
+            let fi, ff , prId , PrDiasIncluidosNumber:string;
 
-        this.modo='tablavista';
-        
-        fi = this.formatoCal(event.data.PrFechaInicio);  
-        ff = this.formatoCal(event.data.PrFechaFin);
-        
-        this.getAllPlacasBusByEmSuEm(this.emid,0);
-        //this.calendarioProg(fi,ff,PrDiasIncluidosNumber);
-        
+            prId = event.data.prId;  
+            this.PrCantidadBuses = event.data.PrCantidadBuses; 
+            PrDiasIncluidosNumber=event.data.PrDiasIncluidosNumber; //no se para que es :s
+            this.dias = event.data.dias; //total dias programacion
+            this.PrFechaInicio=formatFech(event.data.PrFechaInicio);
+            this.PrFechaFin=formatFech(event.data.PrFechaFin);
 
-        //LIMPIANDO VARIABLES   this.columnas : COLUMNAS    this._columnas : ITEMS COLUMNAS DATATABLE
-        this.columnas=[]; 
-        this._columnas=[]; 
-        this.progBDDetalle=[]; 
-        this.arrayPlacas=[];
+            this.modo='tablavista';
+            
+            fi = this.formatoCal(event.data.PrFechaInicio);  
+            ff = this.formatoCal(event.data.PrFechaFin);
+            
+            this.getAllPlacasBusByEmSuEm(this.emid,0);
+            //this.calendarioProg(fi,ff,PrDiasIncluidosNumber);
+            
 
+            //LIMPIANDO VARIABLES   this.columnas : COLUMNAS    this._columnas : ITEMS COLUMNAS DATATABLE
+            this.columnas=[]; 
+            this._columnas=[]; 
+            this.progBDDetalle=[]; 
+            this.arrayPlacas=[];
+        */
         //CONSULTA PROGRAMACION DETALLE
-        this.programacionService.getAllProgramacionDetalleByPrId(prId).subscribe(
-            data => {
-                        this.progBDDetalle = data; 
-                        if(this.progBDDetalle.length!=0){
-
-                            this.extraerHoraBase(this.progBDDetalle, this.PrCantidadBuses);
+        this.programacionService.getAllProgramacionDetalleByPrId(PrId).subscribe(
+            data => {console.log(data);
+                        let arrDataProgDet=data; this.progBDDetalle=data;
+                        
+                        if(arrDataProgDet.length!=0){
+                            //this.extraerHoraBase(arrDataProgDet, this.PrCantidadBuses);
                             //console.log(this.arrHoraBaseSal);
-                            this.calendarioProgramacion(this.progBDDetalle,this.PrCantidadBuses, this.dias);
+                            this.calendarioProgramacion(arrDataProgDet,this.PrCantidadBuses, this.dias);
                            
-                            this.tablaProgramaciones(this.progBDDetalle, this.PrCantidadBuses, this.dias, this.extrayendoPlacasBus(this.placas,'tablavista'));
+                            this.tablaProgramaciones(arrDataProgDet, 
+                                                    this.PrCantidadBuses, 
+                                                    this.dias, 
+                                                    this.extrayendoPlacasBus(this.placas,'tablavista'));
                         }else if(this.progBDDetalle.length==0){
                             this.mensaje="Error al Generar la Programacion, Vuelva a Generarlo";
                             this.displayErrorTablaProgramacion=true;
                         }
-                    },
-            err => {this.errorMessage=err},
-            () => this.isLoading=false
+                    
+                   }
         );
     }
 
@@ -1829,10 +1835,9 @@ export class ProgComponent implements OnInit{
         }
 
         /*console.log(arrCalendarioBase);
-        console.log(arrcalendarioNumerico);
-        console.log(_arrcalendarioString);
         console.log(arrcalendarioString);*/
-
+        console.log(arrcalendarioNumerico);
+        console.log(arrcalendarioString);
         this.calNumb=arrcalendarioNumerico;
         this.calString=arrcalendarioString;
     }
@@ -2402,6 +2407,7 @@ export class ProgComponent implements OnInit{
 
                     this.placasservice.getAllPlacasBusByEmSuEm(this.emid,0).subscribe(
                             data=>{
+                                console.log(data);
                                 this.nroTotalMinibuses=data.length
                                 for(let i=0; i<data.length;i++){
                                     this.ordenSorteo.push({
@@ -2476,6 +2482,9 @@ export class ProgComponent implements OnInit{
                             ReDiHoraInicioDiario:hora("04:28:00") //este campo se tiene que eliminar ya que este es la primera salida del hora base
                         });
                     }
+                    this.displayOrdSubEmpBaseRegDiario=false;
+                    this.displayFormHorasBase=false;
+                    this.displayNewProgmBase=false;
                     console.log(arrObjInitRegDays);
                     this.regDiarioService.generarofprogramacionbase(arrObjInitRegDays).subscribe(
                         data=>{console.log(data);}

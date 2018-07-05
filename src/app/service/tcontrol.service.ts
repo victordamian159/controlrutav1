@@ -55,6 +55,17 @@ export class TControlService{
 			.catch( (error:any) => Observable.throw(error.json.error || 'server error') );
 	}
 
+
+	//CUADRO DE VUELTAS DE LA EMPRESA
+	getallregistrovueltasdiariasbyemprbafe(EmId:number, PrBaId:number, fecha:string){
+		return this.http
+			.get(this.baseUrl+"getallregistrovueltasdiariasbyemprbafe?emId="+EmId+'&prBaId='+PrBaId+"&fechaDiario="+fecha)
+			//.get(this.baseUrl6+'prid/'+PrId)
+			.map( (r:Response) => r.json())
+			.catch( (error:any) => Observable.throw(error.json.error || 'server error') );
+	}
+
+
 	//CONSULTA PROGRAMACION DETALLE
 	getAllProgramacionDetalleByPrFecha(PrId:number, date: string){
         return this.http
@@ -62,7 +73,8 @@ export class TControlService{
             //.get(this.baseUrl6+'prid/'+PrId)
             .map( (r:Response) => r.json())
             .catch( (error:any) => Observable.throw(error.json.error || 'server error') );
-    }
+	}
+	
 
 	//CONSULTA RECUPERAR PUNTOS DE CONTROL  (1,0)
 	getAllPuntoControlByEmRu(emId: number,ruId:number) {

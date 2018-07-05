@@ -8,9 +8,6 @@ tr:nth-child(even){background-color: #f2f2f2; width: 100%;}
 #btnTable{background-color: #4CAF50;}
 .table{ margin-top:20px;}
 
-/*.btn_Modal{ margin-top: 30px;}
-#programacion{margin-bottom: 20px; max-width: 900px; max-height: 350px;}   
-.cont_modal{ overflow-y: auto; overflow-x: auto; height:100%; width: 100%; margin:auto;}*/
 
 /*estilos escritorio*/
     /*vista programacion HTML*/
@@ -22,12 +19,6 @@ tr:nth-child(even){background-color: #f2f2f2; width: 100%;}
         .contFormEditNombProg{height:170px; width: 300px; overflow: hidden; margin: 0; padding: 0;}
         .bodyFormEditNombProg{height: 130px; width: 100%;}
         .pieFormEditNombProg{height: 40px; width: 100%;}
-
-    /*crear programacion*/
-        /*programacion base
-        .contFormProgDiasInc{width:450px; height: 400px;}
-        .bodyFormProgDiasInc{width: 100%; height: 360px;}
-        .pieFormProgDiasInc{width: 100%; height: 40px;}*/
 
     /*PROGRAMACION BASE*/
         /*1er formulario programacion base*/
@@ -84,17 +75,30 @@ tr:nth-child(even){background-color: #f2f2f2; width: 100%;}
     /* ENTRE 30  Y 20 DIAS */
     #progTPlacas5{ width:500px;}
 
+
 /* RESPONSIVE */
-    /*ipad PRO*/
-    @media(max-width:1100px){ 
-   
-    }
-    
-    /* ipad*/
-    @media(max-width:770px){ 
-      
+
+/*tablets*/
+    /*lenovo tab 7 essential vertical*/
+    @media(max-width:600px){
+        .contFormProgBase{width: 400px; height:540px;}
+        .bodyFormProgBase{width: 100%; height:85%;}
+        .pieFormProgBase{width: 100%; height:15%}
+
+        .contFormHoraBase{width: 400px; height:600px; }
+        .bodyFormHoraBase{ width:100%; height: 85%;}
+        .pieFormHoraBase{ width: 100%;height: 15%; }
+
+
+        .contFormMRegDiaOrdSubEmp{width:400px; height: 500px;}
+        .bodyFormMRegDiaOrdSubEmp{width: 100%; height: 360px; }
+        .pieFormMRegDiaOrdSubEmp{width: 100%; height: 40px;}
     }
 
+   
+
+
+/*telefonos */
     /* iphone 6 plus*/
     @media(max-width:480px){ 
         
