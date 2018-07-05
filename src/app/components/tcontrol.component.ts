@@ -403,8 +403,14 @@ export class TcontrolComponent implements OnInit{
                                     if(arrprog.length>0 ){
                                         alert('Programacion Encontrada');
                                         this.actiInputBtnAsignaTarjeta=1;
+                                        this.arrProgramaciones=arrprog;
+
+                                        console.log(this.arrProgramaciones);
+                                        this._PrBaId=this.arrProgramaciones[this.arrProgramaciones.length-1].PrBaId; 
+                                        this.PrBaId=this.arrProgramaciones[this.arrProgramaciones.length-1].PrBaId;
+
                                         //this.getAllProgramacionBaseByEm(this.emID,0); 
-                                        this.mcobprogramacion(arrProgrBases);
+                                        //this.mcobprogramacion(arrProgrBases);
                                     }else if(arrprog.length==0 ){
                                         this.mensaje="No hay programacion en la fecha indicada";
                                         this.displayNoProgEnFecha = true;
@@ -786,6 +792,8 @@ export class TcontrolComponent implements OnInit{
         //CONSULTA PROG DETALLE PROGRAMACIONDETALLE(X FECHA)
         getallprogramaciondetallebyprbafecha(PrBaId:number, fecha: string, nroTarjetas:number){
                 this.progDetalle=[];
+                console.log(PrBaId);
+                console.log(fecha);
                 this.progService.getallprogramaciondetallebyprbafecha(PrBaId, fecha).subscribe(
                     data => {  
                         this.progDetalle=data;
@@ -795,10 +803,7 @@ export class TcontrolComponent implements OnInit{
                             this.tcontrolservice.getallregistrovueltasdiariasbyemprbafe(this.emID, this.PrBaId,this.fechaAsTarjDos).subscribe(
                                 data=>{
                                     console.log(data);
-                                    this.concatenarRegDiarioProgxFecha(
-                                        this.mgprogDetalle(this.progDetalle), 
-                                        data
-                                      );
+                                    this.concatenarRegDiarioProgxFecha(this.mgprogDetalle(this.progDetalle), data);
                                 },error=>{}
 
                             );
@@ -863,6 +868,7 @@ export class TcontrolComponent implements OnInit{
         /* GET ALL TARJCTRLDET BY TACOID */
             procgetAllTarjCtrlDetBytaCoId(taCoId:number){
                 let tarjDet:any[]=[];
+                console.log(taCoId);
                 this.tcontrolservice.getAllTarjetaControlDetalleBytaCoId(taCoId).subscribe(
                     data => { 
                                 console.log(data);
@@ -1010,7 +1016,7 @@ export class TcontrolComponent implements OnInit{
             }
 
         //COMBO PROGRAMACION CABECERA (CARGA ARRAY PARA MOSTRAR OPCIONES EN EL COMBOBOX)
-            mcobprogramacion(arrProgrBases=[]){
+            /*mcobprogramacion(arrProgrBases=[]){
                 this._programacion=[];
                 let arrProg=[];
                 for(let prog of arrProgrBases){
@@ -1024,23 +1030,10 @@ export class TcontrolComponent implements OnInit{
                         PrBaId:prog.PrBaId,
                         PrDiasIncluidos:prog.PrDiasIncluidos,
                         dias:prog.dias
-                        /*
-                        EmConsorcio:prog.EmConsorcio,
-                        PrAleatorio:prog.PrAleatorio,
-                        PrCantidadBuses:prog.PrCantidadBuses,
-                        PrFecha:_fecha1(prog.PrFecha),
-                        PrFechaFin:_fecha1(prog.PrFechaFin),
-                        PrFechaInicio:_fecha1(prog.PrFechaInicio),
-                        PrTipo:prog.PrTipo,
-                        dias:prog.dias,
-                        //PrDescripcion:prog.prDescripcion.substr(0,4) +" de "+_fecha1(prog.PrFechaInicio)+" a  "+_fecha1(prog.PrFechaFin) ,
-                        PrDescripcion:_fecha1(prog.PrFechaInicio)+" a  "+_fecha1(prog.PrFechaFin) ,
-                        PrId:prog.prId
-                        */
                     });
                 }
                 this.arrProgramaciones=arrProg;
-            }
+            }*/
             
         //cuadro de registro diario
             extraRegistroDiario(arrregdiario=[]){
@@ -1308,7 +1301,6 @@ export class TcontrolComponent implements OnInit{
                 //buscar si se esta usando un punto de control
                 this.tcontrolservice.getalltarjetacontrolbybuidfecha(this.emID,0, this.fechaAsTarjUno).subscribe(
                     data=>{
-                        //console.log(data);
                         this.buscarDatosTarjetaXNroVuelta(data,this.ReDiDeNroVuelta);
                     },
                     error=>{
@@ -1319,11 +1311,11 @@ export class TcontrolComponent implements OnInit{
             }
             buscarDatosTarjetaXNroVuelta(arrCuadroXFecha=[], ReDiDeNroVuelta:number){
                 let arr=this.sacarArrCuadroPrincipalXNroVuelta(arrCuadroXFecha,ReDiDeNroVuelta);
-                //console.log(arr);
+               
                 if(arr.length!=0){
                     this._PuCoId=arr[0].PuCoId
-                    this.PrBaId=arr[0].PrId
-                    this._PrBaId=arr[0].PrId
+                    this.PrBaId=arr[0].PrBaId
+                    this._PrBaId=arr[0].PrBaId
                     this.tVueltaBus=arr[0].PuCoTiempoBus;
                 }
                 
@@ -1343,12 +1335,11 @@ export class TcontrolComponent implements OnInit{
         //objeto anterior al seleccionado
         buscarHoraSalidaAnterior(placa:string){
             let objSalidaAnterior:any;
-
+            console.log('aqui el problema');
             let arrCuadro:any[]=[];
-            this.tcontrolservice.getallregistrovueltasdiariasbyemprbafe(this.emID,0,this.fechaAsTarjDos).subscribe(
+            this.tcontrolservice.getallregistrovueltasdiariasbyemprbafe(this.emID,this.PrBaId,this.fechaAsTarjDos).subscribe(
                 data => {
-                            arrCuadro=data;
-                            //console.log(arrCuadro);        
+                            arrCuadro=data;    
                             if(arrCuadro.length!=0 && arrCuadro.length>0){
                                 objSalidaAnterior=this.funcBuscarHoraSalidaAnterior(arrCuadro, this.ReDiDeNroVuelta,placa);
                                 //console.log(objSalidaAnterior);
@@ -1363,7 +1354,7 @@ export class TcontrolComponent implements OnInit{
                             }
                             
                         },
-                error=> {alert('Error en el cuadro de salidas dia libre, vuelva a intentarlo');},
+                error=> {alert('Error en el cuadro de salidas dia con programacion, vuelva a intentarlo');},
                 ()   => {}
             );
         }
@@ -1474,6 +1465,8 @@ export class TcontrolComponent implements OnInit{
                     if(this.ReDiDeNroVuelta>1){
                         this.buscarHoraSalidaAnterior(BuPlaca);
                         this.TarjetaBus_Anterior=this.estadoTarjetaAnterior(this.extraRegistroDiario(this.arrCuadro), this.ReDiDeNroVuelta, this._BuId);
+                        
+                        
                         if(this.TarjetaBus_Anterior.TaCoAsignado=='1'){
                             this.modoTarjeta=0; //cuando la anterior tarjcontrol es asignado        FORMULARIO ADAPTADO
                            
@@ -1605,8 +1598,14 @@ export class TcontrolComponent implements OnInit{
                     this.estadoPlaca=-1;
                     this.mnjNroTarjetaValido="";
                     
-                    this.getalltarjetacontrolbybuidfecha(this.emID,0,this.fechaAsTarjUno); //grilla principal :s
+                    //this.getalltarjetacontrolbybuidfecha(this.emID,0,this.fechaAsTarjUno); //grilla principal :s
                     this.getallprogramaciondetallebyprbafecha(this._PrBaId,this.fechaAsTarjUno, this.nroTarjetas); // tabla programacion
+                    /*console.log(this.PrBaId);
+                    this.progService.getallprogramaciondetallebyprbafecha(this.PrBaId, this.fechaAsTarjUno).subscribe(
+                        data=>{
+                            console.log(data);
+                        },error=>{}
+                    );*/
                 }
             }
 
@@ -1681,6 +1680,7 @@ export class TcontrolComponent implements OnInit{
               
                 /* ID ULTIMA PROGRAMACION  - esto tiene que cambiar por la variable global*/
                 //quitar esta parte, sustituirlo por algo mas comodo
+                console.log(this.arrProgramaciones);
                 this._PrBaId=this.arrProgramaciones[this.arrProgramaciones.length-1].PrBaId; 
                 this.PrBaId=this.arrProgramaciones[this.arrProgramaciones.length-1].PrBaId;
                
@@ -2991,14 +2991,6 @@ export class TcontrolComponent implements OnInit{
                     cen=1;
                 }
             }
-            /*
-                this.tVueltaBus
-                this.PrId
-                this.ReDiId
-                this._RuId  
-                this._PuCoId 
-                this.ReDiDeId
-            */
             if(cen==1){
                 result=arrTarjetasCreadas[i].PuCoId;
             }else if(cen==0){
@@ -3052,8 +3044,6 @@ export class TcontrolComponent implements OnInit{
                 this.actBtnCuadroSalidasDL=true;
                 this.actBtnAddPlacaDL=false;
             }
-            //console.log(this._puntosControl);
-            //console.log(this._PuCoId);
 
             if(this._PuCoId!=0){
                 indexArrPtoControl=this.buscarIndexPuntoControl(this._PuCoId, this._puntosControl);
