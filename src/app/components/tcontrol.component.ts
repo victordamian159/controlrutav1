@@ -1350,7 +1350,7 @@ export class TcontrolComponent implements OnInit{
                                 }
                                 
                             }else{
-                                //console.log('Error la descarga del cuadro de salidas, vuelva a intentarlo BANT');
+                                alert('Error la descarga del cuadro de salidas, vuelva a intentarlo BANT');
                             }
                             
                         },
@@ -1363,7 +1363,8 @@ export class TcontrolComponent implements OnInit{
             //console.log(arrCuadro); console.log(ReDiDeNroVuelta); console.log(Placa);
             let i:number=0, cen:number=0, result:any;
             while(i<arrCuadro.length && cen==0){
-                if(arrCuadro[i].ReDiDeNroVuelta==ReDiDeNroVuelta && arrCuadro[i].BuPlaca==Placa ){
+                if(arrCuadro[i].ReDiDeNroVuelta==(ReDiDeNroVuelta-1) 
+                    && arrCuadro[i].BuPlaca==Placa ){
                     cen=1;
                 }else{
                     cen=0;
@@ -1371,9 +1372,11 @@ export class TcontrolComponent implements OnInit{
                 }
             }
             //console.log('i: '+i); console.log(arrCuadro[i-1]); console.log('cen: '+cen);
+            //placa encontrada
             if(cen==1){
                 if(  (i-1)>=0    ){
-                    result=arrCuadro[i-1];
+                    result=arrCuadro[i];
+                    //console.log(arrCuadro[i]);
                 }else{
                     result=-1;
                 }
@@ -1464,19 +1467,42 @@ export class TcontrolComponent implements OnInit{
                  
                     if(this.ReDiDeNroVuelta>1){
                         this.buscarHoraSalidaAnterior(BuPlaca);
-                        this.TarjetaBus_Anterior=this.estadoTarjetaAnterior(this.extraRegistroDiario(this.arrCuadro), this.ReDiDeNroVuelta, this._BuId);
-                        
-                        
-                        if(this.TarjetaBus_Anterior.TaCoAsignado=='1'){
-                            this.modoTarjeta=0; //cuando la anterior tarjcontrol es asignado        FORMULARIO ADAPTADO
-                           
-                        }else if(this.TarjetaBus_Anterior.TaCoAsignado=='2' || this.TarjetaBus_Anterior.TaCoAsignado=='3'){
-                            this.modoTarjeta=1; //cuando la anterior tarjcontrol es ausente o castiga   FORMULARIO ADAPTADO 
-                        }
+                        console.log(this._BuId);
+                        console.log(this.ReDiDeNroVuelta);
+         
+                        this.tcontrolservice.getallregistrovueltasdiariasbyemprbafe(this.emID,this.PrBaId,this.fechaAsTarjDos).subscribe(
+                            data => {
+                                let arrCuadro=data;
+                                this.TarjetaBus_Anterior=this.estadoTarjetaAnterior(arrCuadro, this.ReDiDeNroVuelta, this._BuId);
+                                console.log(this.TarjetaBus_Anterior);
+                                if(this.TarjetaBus_Anterior.TaCoAsignado=='1'){
+                                    this.modoTarjeta=0; //cuando la anterior tarjcontrol es asignado        FORMULARIO ADAPTADO
+                                
+                                }else if(this.TarjetaBus_Anterior.TaCoAsignado=='2' || this.TarjetaBus_Anterior.TaCoAsignado=='3'){
+                                    this.modoTarjeta=1; //cuando la anterior tarjcontrol es ausente o castiga   FORMULARIO ADAPTADO 
+                                }
 
-                        this.HoraLlegadaTarjAnterior=_hora(this.TarjetaBus_Anterior.HoraLlegada); // para la segunda vuelta a más
-                        //inputs formulario una sola tarjeta
-                     
+                                this.HoraLlegadaTarjAnterior=_hora(this.TarjetaBus_Anterior.HoraLlegada); // para la segunda vuelta a más
+                                //inputs formulario una sola tarjeta
+
+                                //activando o desactivando input segun el estado de la placa
+                                if(this.estadoPlaca==0){
+                                    if(this.nroTarjetas==1){
+                                        this.ftnActivarInputFormUnaTarjeta(this.ReDiDeNroVuelta, this.modoTarjeta, this.val);
+                                    }else if(this.nroTarjetas>1){
+                                        this.ftnActivarInputFormMultiplesTarjeta(this.ReDiDeNroVuelta, this.modoTarjeta, this.estadoPlaca, this.val);
+                                    }
+                                }else if(this.estadoPlaca==1 || this.estadoPlaca==2 || this.estadoPlaca==3){
+                                    this.ftnActivarInputFormMultiplesTarjeta(this.ReDiDeNroVuelta, this.modoTarjeta, this.estadoPlaca, this.val);
+                                }
+
+                                //mensaje nro maximo de tarjetas a crear
+                                if(this.estadoPlaca==0){
+                                    this.nroMultiTarjetas=this.nroTarjetas;
+                                }else if(this.estadoPlaca==1 || this.estadoPlaca==2 || this.estadoPlaca==3){
+                                    this.nroMultiTarjetas=this.nroTarjetas-1;
+                                }
+                            });
                     }else if(this.ReDiDeNroVuelta==1){
                         if(nroRow>1){
                             this.buscarHoraSalidaAnterior(BuPlaca);
@@ -1486,23 +1512,7 @@ export class TcontrolComponent implements OnInit{
 
                     }
 
-                    //activando o desactivando input segun el estado de la placa
-                    if(this.estadoPlaca==0){
-                        if(this.nroTarjetas==1){
-                            this.ftnActivarInputFormUnaTarjeta(this.ReDiDeNroVuelta, this.modoTarjeta, this.val);
-                        }else if(this.nroTarjetas>1){
-                            this.ftnActivarInputFormMultiplesTarjeta(this.ReDiDeNroVuelta, this.modoTarjeta, this.estadoPlaca, this.val);
-                        }
-                    }else if(this.estadoPlaca==1 || this.estadoPlaca==2 || this.estadoPlaca==3){
-                        this.ftnActivarInputFormMultiplesTarjeta(this.ReDiDeNroVuelta, this.modoTarjeta, this.estadoPlaca, this.val);
-                    }
-
-                    //mensaje nro maximo de tarjetas a crear
-                    if(this.estadoPlaca==0){
-                        this.nroMultiTarjetas=this.nroTarjetas;
-                    }else if(this.estadoPlaca==1 || this.estadoPlaca==2 || this.estadoPlaca==3){
-                        this.nroMultiTarjetas=this.nroTarjetas-1;
-                    }
+                    
                 }
 
             /* FUNCION ROW BTNELIMINAR CABECERA*/
@@ -1720,11 +1730,9 @@ export class TcontrolComponent implements OnInit{
             /* SOLA UNA TARJETA, AQUI SE GUARDA TANTO CABECERA COMO DETALLE Y 
                 SE EDITA  LA   TABLA PROGRAMACION DETALLE EL CAMPO ASIGNADO*/
             guardarTarjeta( tiempoSalidaValid:any,  tiempoRetenValid:any ){
-        
                 // ASIGNAR VAL=01  ;   CASTIGADO VAL=03  AUSENTE VAL=02 
                 let  PrDeAsignadoTarjeta:number, TaCoFinish:number=0, HoraSalidaRecEslavon:string, TaCoHoraSalida:string; 
-                //console.log(this.campFormAsigUnaTarjeta.value.tReten);  console.log(tiempoSalidaValid);  console.log(tiempoRetenValid); console.log(this.estadoPlaca);  console.log(this.val); 
-
+        
                 //primera vuelta
                 if(this.ReDiDeNroVuelta==1){
                     if(this.val=='01'){
@@ -1745,7 +1753,7 @@ export class TcontrolComponent implements OnInit{
                         this.guardarObjetoTarjeta(TaCoHoraSalida, TaCoFinish);
                     // caso vuelve a aperturar una tarjeta
                     }else if(this.val=='01'){
-
+                        console.log(this.TarjetaBus_Anterior.TaCoAsignado);
                        //apertura una tarjeta
                         if(this.TarjetaBus_Anterior.TaCoAsignado=='1'){
                              //usar la hroa llegada anterior + reten -- tarjeta anterior asignado
@@ -1785,33 +1793,27 @@ export class TcontrolComponent implements OnInit{
                     TaCoId : this._TaCoId,
                     PuCoId : this._PuCoId,
                     RuId : Number(this._ruId),
-                    BuId :this._BuId,
-                    
+                    BuId :this._BuId,                    
                     TaCoFecha :fecha(this.fechaAsigTarjs),
                     TaCoHoraSalida :hora(TaCoHoraSalida),
                     TaCoCuota :0,
-                    UsId :this.UsId,
-                    
+                    UsId :this.UsId,                    
                     UsFechaReg :new Date(),
-                    TaCoNroVuelta : this.ReDiDeNroVuelta,
-                    //PrId : Number(this.PrId),
+                    TaCoNroVuelta : this.ReDiDeNroVuelta,                    
                     PrId:pridAsignado,
-                    TiSaId:this.TiSaObj.TiSaId,
-                    
+                    TiSaId:this.TiSaObj.TiSaId,                    
                     TaCoAsignado :Number(this.val),
                     TaCoTipoHoraSalida:Number('01'), //manual o automatico
                     ReDiDeId:this.ReDiDeId,
-                    TaCoFinish:TaCoFinish,
-                    
+                    TaCoFinish:TaCoFinish,                    
                     CoId:this.CoId,
                     TaCoCountMultiple: 1,
                     TaCoMultiple: this.TaCoMultiple,
                     TaCoCodEnvioMovil: 0,
-
                     TaCoTiempoReten:0
                 }; 
                 
-                //console.log(_tarjeta);
+                console.log(_tarjeta);
             
                 tarjEncontrado=this.buscarTarjetaAsignada(_tarjeta); //buscar si esta asignado o no
 
@@ -2559,10 +2561,10 @@ export class TcontrolComponent implements OnInit{
 
         //buscar estado tarjeta anterior
         estadoTarjetaAnterior(arrCuadro=[], nroVueltaActual:number, BuId:number){
-            this.extraRegistroDiario(this.arrCuadro); 
-            //console.log(arrCuadro); //console.log(BuId); console.log(nroVueltaActual);
-            let i=0, TaCoAsignado:string,HoraLlegada:any, resultado:any, _BuId:number, Placa:number, cen:number=0; 
+            let i=0, TaCoAsignado:string,HoraLlegada:any, resultado:any, 
+                    _BuId:number, Placa:number, cen:number=0; 
             while(i<arrCuadro.length && cen==0){
+               
                 if(arrCuadro[i].ReDiDeNroVuelta==(nroVueltaActual-1) && arrCuadro[i].BuId==BuId){
                     TaCoAsignado=arrCuadro[i].TaCoAsignado;
                     HoraLlegada=arrCuadro[i].HoraLlegada;
@@ -2570,10 +2572,11 @@ export class TcontrolComponent implements OnInit{
                     Placa=arrCuadro[i].BuPlaca;
                     cen=1;
                 }else{
-                    cen=0;
+                    cen=0;i++;
                 }
-                i++;
+                
             }
+           
             resultado={
                 TaCoAsignado:TaCoAsignado,
                 IndiceRegAnterior:i-1,
@@ -2736,7 +2739,9 @@ export class TcontrolComponent implements OnInit{
             this.displayEditarTarjeta = false;
         }
         funEstTarjApertura(){
-            //console.log(this.val);  console.log(this.nroTarjetas);  console.log(this.modoTarjeta);
+            //console.log(this.val);    
+            console.log(this.modoTarjeta);
+            console.log(this.nroTarjetas);
             if(this.nroTarjetas==1){
                 this.ftnActivarInputFormUnaTarjeta(this.ReDiDeNroVuelta, this.modoTarjeta, this.val);
             }else if(this.nroTarjetas>1){
@@ -2746,7 +2751,9 @@ export class TcontrolComponent implements OnInit{
         }
 
         ftnActivarInputFormUnaTarjeta(ReDiDeNroVuelta:number, estadoTarjetaAnterior:number, estadoTarjetaApertura:string){
-            //console.log(ReDiDeNroVuelta);  console.log(estadoTarjetaAnterior);  console.log(estadoTarjetaApertura);
+            console.log(ReDiDeNroVuelta);  //2
+            console.log(estadoTarjetaAnterior); //-1  
+            console.log(estadoTarjetaApertura); //01
             
             if(ReDiDeNroVuelta!=0 && estadoTarjetaAnterior!=-1 && estadoTarjetaApertura!='x'){
                 //primera vuelta, no existe estadoAnterior

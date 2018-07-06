@@ -22,18 +22,18 @@ tr:nth-child(even){background-color: #f2f2f2; width: 100%;}
 
     /*PROGRAMACION BASE*/
         /*1er formulario programacion base*/
-        .contFormProgBase{width:400px; height: 400px;}
-        .bodyFormProgBase{height: 360px; width: 100%; }
+        .contFormProgBase{width:400px; height: 460px;}
+        .bodyFormProgBase{height: 420px; width: 100%; }
         .pieFormProgBase{height: 40px; width: 100%; }
 
         /*estilos form hora base */
-        .contFormHoraBase{height:400px; width: 400px;}
-        .bodyFormHoraBase{height: 360px; width: 100%;}
+        .contFormHoraBase{height:460px; width: 400px;}
+        .bodyFormHoraBase{height: 420px; width: 100%;}
         .pieFormHoraBase{height: 40px; width: 100%;}
 
         /*form registro diario*/
-        .contFormMRegDiaOrdSubEmp{width:400px; height: 400px;}
-        .bodyFormMRegDiaOrdSubEmp{width: 100%; height: 360px; }
+        .contFormMRegDiaOrdSubEmp{width:400px; height: 460px;}
+        .bodyFormMRegDiaOrdSubEmp{width: 100%; height: 420px; }
         .pieFormMRegDiaOrdSubEmp{width: 100%; height: 40px;}
 
     /*NUEVA PROGRAMACION*/

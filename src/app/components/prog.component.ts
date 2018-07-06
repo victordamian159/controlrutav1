@@ -46,6 +46,7 @@ export class ProgComponent implements OnInit{
         }
 
     /* VARIABLES */
+        private fechaSorteoSuEm:string;
         private PrDescripcion:string;
         private PrFecha:Date;
         private PrBaDiasIncluidos:string;
@@ -98,8 +99,9 @@ export class ProgComponent implements OnInit{
         private modEdit:boolean; /* modEdit=1: editando registro  modEdit=0: no se esta editando registro */
         private placaEditarCelda:number;
         private progValida:string;
-        /* ARRAYS */
+    /* ARRAYS */
         //private arrHoraBase:any[]=[];
+        private selectedArrAllSubEmpSorteoByDays:any[]=[];
         private selectedPlacas: string[] = []; /* NO USO */
         private placas:any[]=[]; //se utiliza para almacenar lo q devuelve el rest de las placas
         private placasComplet:any[]=[];
@@ -1346,7 +1348,7 @@ export class ProgComponent implements OnInit{
         if(hBaseValid==true && hIncrementoValid==true){    
             if(this.nroMiniBus<this.nroTotalMinibuses){         
                 let indicePorInicio=this.buscarPrimerHMS(this.ordenSorteo);
-                console.log('indicePorInicio: '+indicePorInicio);
+               
                 //cargando hora base a la tabla 
                 if(indicePorInicio>0){
                     let horaBaseSgte=operSHoras(this.horaBase,this.horaIncremento); this.horaBase=horaBaseSgte;
@@ -2377,7 +2379,7 @@ export class ProgComponent implements OnInit{
 
             this.empSubEmpService.getallsubempresasbyemid(this.emid).subscribe(
                 data=>{
-                    console.log(data);
+                    //console.log(data);
                     let arrSubEmp=data, longArrSubEmp=data.length;
 
                     //iniciando array de fechas + sorteo aleatorio
@@ -2407,7 +2409,7 @@ export class ProgComponent implements OnInit{
 
                     this.placasservice.getAllPlacasBusByEmSuEm(this.emid,0).subscribe(
                             data=>{
-                                console.log(data);
+                                //console.log(data);
                                 this.nroTotalMinibuses=data.length
                                 for(let i=0; i<data.length;i++){
                                     this.ordenSorteo.push({
@@ -2437,7 +2439,7 @@ export class ProgComponent implements OnInit{
                 arrHB.push(this.ordenSorteo[i].HoraBase);
             }
             PrBaHoraBase=arrHB.join(',');
-            console.log(PrBaHoraBase);
+            //console.log(PrBaHoraBase);
             this.PrBaHoraBase=PrBaHoraBase
             this.arrAllSubEmpByDays=this.arrAllSubEmp[0].arrSubEmps;
         }
@@ -2445,6 +2447,8 @@ export class ProgComponent implements OnInit{
         // btn cancel
         private funcFormTwoCancelProgBaseHb():void{
             this.displayOrdSubEmpBaseRegDiario=false;
+            this.displayNewProgmBase=false;
+            this.displayFormHorasBase=false;
         }
 
     /* formulario 3
@@ -2543,12 +2547,56 @@ export class ProgComponent implements OnInit{
         }
 
         funcBtnCancelOrderSubEmpAperRegDiario(){
-
+            this.displayNewProgmBase=false;
+            this.displayFormHorasBase=false;
+            this.displayOrdSubEmpBaseRegDiario=false;
         }
         funcCboFechProg(){
-
+            //console.log(this.fechaSorteoSuEm); console.log(this.arrAllSubEmp);
+            this.arrAllSubEmpByDays=this.buscarArrSorteoSuEmByFecha(this.fechaSorteoSuEm,this.arrAllSubEmp);
         }
-        onEditCompleteFieldOrderSubEmp(event){
+
+        onRowSelectSorteoSubEmp(event){
+            for(let i=0; i<this.selectedArrAllSubEmpSorteoByDays.length; i++){
+                //this.selectedSubEmp[i].Orden=i+1;
+            }   
+            //this.disBtnSaveAllSuEm=this.funcValidAllMarkerSubEmp(this.selectedArrAllSubEmpSorteoByDays.length,this.arrSubEmp.length);
+            
+        }
+        
+
+        onRowUnSelectSorteoSubEmp(event){
+            let index=this.funcBuscarEnArrayByValue(event.data.fecha,this.arrAllSubEmpByDays);
+            this.arrSubEmp[index].Orden=null;
+            for(let i=0; i<this.selectedArrAllSubEmpSorteoByDays.length; i++){
+                this.selectedArrAllSubEmpSorteoByDays[i].Orden=i+1;
+            }
+            //this.disBtnSaveAllSuEm=this.funcValidAllMarkerSubEmp(this.selectedSubEmp.length,this.arrSubEmp.length);
+        }
+
+        onHeaderSorteoCheckboxToggleSubEmp(event){
+            if(event.checked==true){
+                for(let i=0; i<this.arrSubEmp.length; i++){
+                    this.arrSubEmp[i].Orden=i+1;
+                }
+            }else if(event.checked==false){
+                for(let subemp of this.arrSubEmp){
+                    subemp.Orden=null;
+                }
+            }
+            //this.disBtnSaveAllSuEm=this.funcValidAllMarkerSubEmp(this.selectedSubEmp.length,this.arrSubEmp.length);
+            //console.log(this.selectedSubEmp);
+        }
+        funcValidAllMarkerSubEmp(nroCheckSubEmp:number, nroSubEmp:number):boolean{
+            let valid:boolean;
+            if(nroCheckSubEmp==nroSubEmp){
+                valid=true;
+            }else if(nroCheckSubEmp!=nroSubEmp){
+                valid=false;
+            }
+            return valid;
+        }
+        /*onEditCompleteFieldOrderSubEmp(event){
             console.log('cathy');
                 console.log(event);
         }
@@ -2561,7 +2609,7 @@ export class ProgComponent implements OnInit{
         onEditInitFieldOrderSubEmp(event){
                 console.log('rojas');
                 console.log(event);
-        }
+        }*/
         funcBtnDTProgm(PrBaId:number){
             console.log(PrBaId); 
             this.progBaseService.deleteProgBaseById(PrBaId).subscribe(
@@ -2573,5 +2621,38 @@ export class ProgComponent implements OnInit{
             );
         }
 
+        buscarArrSorteoSuEmByFecha(fecha:string, arrSorteo=[]){
+            let i=0,cen=0, result;
+            while(i<arrSorteo.length && cen==0){
+                if(fecha==arrSorteo[i].fecha){
+                    cen=1;
+                }else{
+                    cen=0;  i++;
+                }    
+            }
+            
+            if(cen==1){
+                result=arrSorteo[i].arrSubEmps;
+            }else if(cen==0){
+                result=-1;
+            }
+            return result;
+        }
 
+        funcBuscarEnArrayByValue(value:string, array=[]):number{
+            let i:number=0, cen:number=0, index:number;
+            while(i<array.length && cen==0){
+                if(array[i].SuEmId==value){
+                    cen=1;
+                }else if(array[i].SuEmId!=value){
+                    cen=0; i++;
+                }
+            }
+            if(cen==0){
+                index=-1;
+            }else if(cen==1){
+                index=i;
+            }
+            return index;
+        }
 }

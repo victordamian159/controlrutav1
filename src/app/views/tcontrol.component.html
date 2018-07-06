@@ -5,9 +5,7 @@
             <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12 ">
                 <label>Tarjetas de Control</label>
             </div>
-            <div class="col-xl-8 col-md-4 col-sm-6 col-xs-12">
-                <app-reloj></app-reloj>
-            </div>
+           
         </div>
        
         <!--BUSQUEDA + BTNNUEVO + COMBO RUTA + COMBO PCONTROL-->
@@ -78,7 +76,7 @@
             <p-dataTable [value]="_allTarjControl" [globalFilter]="filtroGlobal" 
                         emptyMessage="Lista Vacia" 
                         selectionMode="single" dataKey="BuPlaca"
-                        [rows]="7" [paginator]="true"
+                        [rows]="6" [paginator]="true"
                         [(selection)]="selectedTarjCab" (onRowSelect)="onRowSelectCabecera($event)">
 
                 <!--campos de la datatable-->
@@ -100,6 +98,8 @@
         </div>
                 
             
+        
+            <app-reloj></app-reloj>
         
     </div>
 
@@ -255,7 +255,7 @@
                 <div *ngIf='TaCoMultiple==0 '>                   
                     <div class="agTrjCuerpo ">
                         <div class="row">
-                            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                            <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                 <label>Placa:</label>   
                                 <input class="form-control" placeholder="Buscar..." type="text" id="gb1" #filtroTableIndividual/>
@@ -263,7 +263,7 @@
                             </div>    
                                     
                             <!--ESTADO TARJETA: {{msjestadoplaca}}-->        
-                            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                            <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
                                 <label>Estado Tarjeta:</label>
                                 <select class="form-control" [(ngModel)]="val" (change)="funEstTarjApertura();" required #ValTarj="ngModel">
@@ -278,7 +278,7 @@
                             </div>    
 
                             <!--TIEMPO RETEN(HH:MM:SS):  ReReTiempo  tarjeta._TaCoHoraSalida-->
-                            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                            <div class="col-xl-4 col-md-4 col-sm-6 col-xs-12">
                                 <div  [hidden]="actInputReten">
                                         <div class="form-group">
                                     <label>Reten(HH:MM:SS):</label>
@@ -304,19 +304,20 @@
                                 </div>
                                 </div>     
                             </div>
-                            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
+                            
+                            <!--<div class="col-xl-3 col-md-3 col-sm-6 col-xs-12">
                                 <div [hidden]="actInputReten">
-                                        <div class="form-group">
-                                    <!--NUEVO REGISTRO style="float:left"  SIN PROGRAMACION -->
+                                    <div class="form-group">
+                                    
                                         <button class="form-control" 
                                             id="btnNuevo" type="button"  
                                             pButton icon="fa-file-text-o"             
                                             (click)="formCalcularRetenDP();" 
                                             label="Cal. Reten"
                                         ></button>
+                                    </div>
                                 </div>
-                            </div>
-                            </div>
+                            </div>-->
                         </div>           
                                             
                         <p-dataTable [value]="arrprogxfecha" dataKey="BuPlaca"
