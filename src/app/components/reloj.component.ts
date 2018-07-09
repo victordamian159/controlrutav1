@@ -43,7 +43,9 @@ funcInitTime(){
     data=>{ 
         if(data.length!=0){
             this.objConfigSystem=data[0];
+            
             this.horaActual=this.objConfigSystem.CoTiempoActual; this.hora=_hora(this.horaActual);
+            console.log(this.hora);
             let arrHora=this.hora.split(':');    
             this.nhh=Number(arrHora[0]); 
             this.nmm=Number(arrHora[1]); 

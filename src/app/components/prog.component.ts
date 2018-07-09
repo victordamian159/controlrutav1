@@ -252,25 +252,13 @@ export class ProgComponent implements OnInit{
         return result;
     }
     funcCalendarioNumerico(refFecha1:string, refFecha2:string){
-        let diaHoy = new Date(); 
-        let arrCalendar:any[]=[]; 
-        let i:number=1; 
-
-        let f1=refFecha1.split('-'); 
-        let f2=refFecha2.split('-'); 
-        let nf1, nf2;
-        
+        let arrCalendar:any[]=[], i=1, arrDaysSemana:any[]=[];; 
+        let f1=refFecha1.split('-'), f2=refFecha2.split('-'), nf1, nf2;
         nf1=_fnroDias(f1); nf2=_fnroDias(f2); 
-        
-
-        let nroDias:number=nf2 - nf1; 
-        let initfecha = fecha(refFecha1);
-
-       
-        let arrDaysSemana:any[]=[];
+        let nroDias=nf2 - nf1 +1;    
         arrCalendar[0]=fecha(refFecha1).getTime();
         while(i<nroDias){ 
-            arrCalendar[i]=new Date( arrCalendar[0]+(i*(24*60*60*1000)) + 24*60*60*1000);  
+            arrCalendar[i]=new Date( arrCalendar[0]+(i*(24*60*60*1000)));  
             i++; 
         }
         arrCalendar[0]=new Date(arrCalendar[0]);
@@ -1627,9 +1615,10 @@ export class ProgComponent implements OnInit{
     //seleccionar fila de la tabla - mostrar la programacion
     onRowSelProgram(event){
 
-        console.log(event.data);
         let PrId=event.data.PrId;
         this.PrCantidadBuses=event.data.PrCantidadBuses;
+        this.SuEmId=event.data.SuEmId;
+        //borrar, esto es cuando no habia programacion base
         /*
             let fi, ff , prId , PrDiasIncluidosNumber:string;
 
@@ -1655,20 +1644,18 @@ export class ProgComponent implements OnInit{
             this.progBDDetalle=[]; 
             this.arrayPlacas=[];
         */
-        //CONSULTA PROGRAMACION DETALLE
+       
         this.programacionService.getAllProgramacionDetalleByPrId(PrId).subscribe(
-            data => {console.log(data);
-                        let arrDataProgDet=data; this.progBDDetalle=data;
-                        
-                        if(arrDataProgDet.length!=0){
-                            //this.extraerHoraBase(arrDataProgDet, this.PrCantidadBuses);
-                            //console.log(this.arrHoraBaseSal);
-                            this.calendarioProgramacion(arrDataProgDet,this.PrCantidadBuses, this.dias);
-                           
-                            this.tablaProgramaciones(arrDataProgDet, 
-                                                    this.PrCantidadBuses, 
-                                                    this.dias, 
-                                                    this.extrayendoPlacasBus(this.placas,'tablavista'));
+            data => {
+                        let arrDataProgDet=data; 
+                        this.progBDDetalle=data;                        
+                        if(arrDataProgDet.length!=0){                                                      
+                            this.calendarioProgramacion(arrDataProgDet,this.PrCantidadBuses, this.dias);                
+                            this.placasservice.getAllPlacasBusByEmSuEm(this.emid,this.SuEmId).subscribe(
+                                data=>{                            
+                                    this.tablaProgramaciones(arrDataProgDet,this.PrCantidadBuses, this.dias, this.extrayendoPlacasBus(data,'tablavista'));
+                                },error=>{console.log(error);}
+                            );
                         }else if(this.progBDDetalle.length==0){
                             this.mensaje="Error al Generar la Programacion, Vuelva a Generarlo";
                             this.displayErrorTablaProgramacion=true;
@@ -1677,8 +1664,8 @@ export class ProgComponent implements OnInit{
                    }
         );
     }
-
-    extraerHoraBase(arrProg=[], nroRows:number){
+    //this.extraerHoraBase(arrDataProgDet, this.PrCantidadBuses); 
+    /*extraerHoraBase(arrProg=[], nroRows:number){
         let i:number=0; let arrHoraBase:any[]=[];
 
         while(i<nroRows){
@@ -1693,7 +1680,7 @@ export class ProgComponent implements OnInit{
             }
         }
         this.arrHoraBaseSal=arrHoraBase;
-    }
+    }*/
 
     onEditCompleteHB(event){
         let hBSal=event.data.HoraBase; let index=event.data.nro-1;
@@ -1835,11 +1822,8 @@ export class ProgComponent implements OnInit{
                 arrcalendarioString.push('Sa');
             }
         }
-
-        /*console.log(arrCalendarioBase);
-        console.log(arrcalendarioString);*/
-        console.log(arrcalendarioNumerico);
-        console.log(arrcalendarioString);
+        arrcalendarioNumerico.shift();
+        arrcalendarioString.shift();
         this.calNumb=arrcalendarioNumerico;
         this.calString=arrcalendarioString;
     }
@@ -2372,7 +2356,10 @@ export class ProgComponent implements OnInit{
             this.PrBaDiasIncluidos=this.diasIncluidos(this.dtSelectDias)
             this.displayFormHorasBase=true;
 
-            let calendar=this.funcCalendarioNumerico(this.PrBaFechaInicio,this.PrBaFechaFin), _calendar=[], arrCalSubEmp=[];
+            let calendar=this.funcCalendarioNumerico(this.PrBaFechaInicio,this.PrBaFechaFin), 
+                _calendar=[], 
+                arrCalSubEmp=[];
+                console.log(calendar);
             for(let i=0; i<calendar.length; i++){
                 _calendar.push(_fecha1(calendar[i]));
             }
@@ -2380,7 +2367,8 @@ export class ProgComponent implements OnInit{
             this.empSubEmpService.getallsubempresasbyemid(this.emid).subscribe(
                 data=>{
                     //console.log(data);
-                    let arrSubEmp=data, longArrSubEmp=data.length;
+                    let arrSubEmp=data, 
+                    longArrSubEmp=data.length;
 
                     //iniciando array de fechas + sorteo aleatorio
                     for(let i=0; i<_calendar.length; i++){
@@ -2467,6 +2455,10 @@ export class ProgComponent implements OnInit{
                 PrBaDiasIncluidos: this.PrBaDiasIncluidos,
                 PrBaHoraBase: this.PrBaHoraBase
             }
+            this.displayOrdSubEmpBaseRegDiario=false;
+            this.displayFormHorasBase=false;
+            this.displayNewProgmBase=false;
+            
             this.progBaseService.saveProgBase(objProgBase).subscribe(
                 data=>{
                     let arrObjInitRegDays=[], arrHoraBase=[];
@@ -2495,7 +2487,8 @@ export class ProgComponent implements OnInit{
                     );
                 },error=>{
                 },()=>{}
-            );   
+            );
+               
         }
         /*funcGetHoraBase(PrBaHoraBase:string){
             let _PrBaHoraBase=PrBaHoraBase.split(','),__PrBaHoraBase:any[]=[];
