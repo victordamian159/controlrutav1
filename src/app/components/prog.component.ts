@@ -1075,6 +1075,8 @@ export class ProgComponent implements OnInit{
             }
             i++;
         }
+        console.log(arrCalNumber);
+        console.log(arrCalString);
         this.calNumb=arrCalNumber.slice(0);
         this.calString=arrCalString.slice(0);
     }
@@ -1769,11 +1771,8 @@ export class ProgComponent implements OnInit{
                 
                 let progrVista=this.insertHoraSalidaBaseVista(this.arrHoraBaseSal,this._detalle);
               
-                this._detalle=progrVista
-                this.calNumb.unshift(" "); 
-                this.calString.unshift(" "); 
-                this.calNumb.unshift(" "); 
-                this.calString.unshift(" "); 
+                this._detalle=progrVista;
+
                 this.nroColumn=nroDias;
                     
                 this.displayProgramacion = true;
@@ -1822,8 +1821,9 @@ export class ProgComponent implements OnInit{
                 arrcalendarioString.push('Sa');
             }
         }
-        arrcalendarioNumerico.shift();
-        arrcalendarioString.shift();
+        arrcalendarioNumerico.unshift(" ");
+        arrcalendarioString.unshift(" ");
+        
         this.calNumb=arrcalendarioNumerico;
         this.calString=arrcalendarioString;
     }
@@ -2440,11 +2440,13 @@ export class ProgComponent implements OnInit{
         }
 
     /* formulario 3
+        guardar programacion base
         orden de las subempresas - generar todos los registros diarios
     */
         funcBtnOkOrderSubEmpAperRegDiario(){
             let objProgBase={
-                PrBaId: this.PrBaId,
+                //PrBaId: this.PrBaId,
+                PrBaId: 0,
                 UsFechaReg: new Date(),
                 UsId: this.userid,
                 EmId: this.emid,
@@ -2483,7 +2485,11 @@ export class ProgComponent implements OnInit{
                     this.displayNewProgmBase=false;
                     console.log(arrObjInitRegDays);
                     this.regDiarioService.generarofprogramacionbase(arrObjInitRegDays).subscribe(
-                        data=>{console.log(data);}
+                        data=>{console.log(data);
+                            this.progBaseService.getAllProgramacionBaseByEm(this.emid,this.anio).subscribe(
+                                data=>{this.mgAllProgramacionBaseByEm(data);}
+                            );
+                        }
                     );
                 },error=>{
                 },()=>{}

@@ -588,7 +588,8 @@ export class TcontrolComponent implements OnInit{
             let index:number;
             this.tcontrolservice.getallregistrovueltasdiariasbyemprbafe(emid,prid,fecha).subscribe(
                 data => {
-                            arrCuadro=data;  //console.log(arrCuadro);
+                            arrCuadro=data;  
+                            
                             if(arrCuadro.length!=0 && arrCuadro.length>0){                                         
                                 this.estadoPlaca=-1; //no hay placa seleccionada de la tabla
                                 this.arrCuadro=arrCuadro;  
@@ -1500,7 +1501,7 @@ export class TcontrolComponent implements OnInit{
             /* FUNCION ROW BTNELIMINAR CABECERA*/
                 /* BOTON ELIMINAR REGISTRO  BTN ROW CABECERA*/
                     eliminarC(TaCoId :number){
-                        /*console.log(TaCoId);*/
+                        console.log(TaCoId);
                         this._TaCoId = TaCoId;
                         
                         this.displayConfirmarEliminar = true;
@@ -2533,6 +2534,7 @@ export class TcontrolComponent implements OnInit{
                     arrMatCuadro[i].EstadoAsignado="No Asignado";
                 } 
             }
+            console.log(arrMatCuadro);
             this.arrprogxfecha=arrMatCuadro;
         }
 
@@ -2717,8 +2719,8 @@ export class TcontrolComponent implements OnInit{
         }
         funEstTarjApertura(){
             //console.log(this.val);    
-            console.log(this.modoTarjeta);
-            console.log(this.nroTarjetas);
+            console.log("modoTarjeta: "+this.modoTarjeta);
+            console.log("nroTarjetas: "+this.nroTarjetas);
             if(this.nroTarjetas==1){
                 this.ftnActivarInputFormUnaTarjeta(this.ReDiDeNroVuelta, this.modoTarjeta, this.val);
             }else if(this.nroTarjetas>1){
@@ -2728,9 +2730,9 @@ export class TcontrolComponent implements OnInit{
         }
 
         ftnActivarInputFormUnaTarjeta(ReDiDeNroVuelta:number, estadoTarjetaAnterior:number, estadoTarjetaApertura:string){
-            console.log(ReDiDeNroVuelta);  //2
-            console.log(estadoTarjetaAnterior); //-1  
-            console.log(estadoTarjetaApertura); //01
+            console.log("ReDiDeNroVuelta: "+ReDiDeNroVuelta);  //2
+            console.log("estadoTarjetaAnterior: "+estadoTarjetaAnterior); //-1  
+            console.log("estadoTarjetaApertura: "+estadoTarjetaApertura); //01
             
             if(ReDiDeNroVuelta!=0 && estadoTarjetaAnterior!=-1 && estadoTarjetaApertura!='x'){
                 //primera vuelta, no existe estadoAnterior
